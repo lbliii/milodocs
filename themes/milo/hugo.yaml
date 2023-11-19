@@ -1,0 +1,34 @@
+# Hugo Global Settings 
+## Site Details
+baseURL: '/'
+languageCode: 'en-us'
+title: 'Milo'
+## Markdown
+markup:
+  goldmark:
+    renderer:
+      hardWraps: false
+      unsafe: true
+      xhtml: false
+  highlight:
+    noClasses: false
+## Min Version
+module:
+  hugoVersion:
+    extended: true
+    min: "0.116.0"
+## Misc
+enableGitInfo: true 
+enableEmoji: true 
+enableRobotsTXT: true 
+## SEO
+sitemap:
+  changeFreq: monthly 
+  fileName: sitemap.xml 
+  priority: 0.8 
+
+# Theme Feature Settings
+params: 
+  article:
+    childArticles:
+      display: true 

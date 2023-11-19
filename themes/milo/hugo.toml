@@ -1,8 +1,0 @@
-baseURL = '/'
-languageCode = 'en-us'
-title = 'Milo'
-
-[module]
-  [module.hugoVersion]
-    extended = false
-    min = "0.116.0"

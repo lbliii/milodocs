@@ -3,12 +3,17 @@
 <head>
   {{ partial "head.html" . }}
 </head>
-<body>
+<body class="bg-white">
   <header>
     {{ partial "header.html" . }}
   </header>
-  <main>
-    {{ block "main" . }}{{ end }}
+  {{partial "navigation/top.html"}}
+  <main class="max-w-screen-xl 2xl:max-w-screen-2xl mx-auto flex">
+    {{partial "navigation/sidebar-left.html" . }}
+    <div id="contentContainer">
+      {{- if .IsHome}}{{ block "home" . }}{{ end }}{{else}}{{ block "main" . }}{{ end }}{{- end}}
+    </div>
+    {{partial "navigation/sidebar-right.html" . }}
   </main>
   <footer>
     {{ partial "footer.html" . }}

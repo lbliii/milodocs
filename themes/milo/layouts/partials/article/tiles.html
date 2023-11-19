@@ -1,0 +1,37 @@
+{{if and (.Pages) (.Site.Params.article.childArticles.display)}}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {{ range sort .Pages "Weight" "$order"}}
+        {{ if  .Params.hidden }}
+            {{/* Do not show the hidden child page or its descendants */}}
+        {{else}}
+        <div class="rounded-lg shadow-md p-4 tile transition duration-300 space-y-2">
+            <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-2">
+                {{with .Params.icon}}<img src="{{.}}" class="h-8">{{end}}
+                <div class="text-xl text-black font-brand-bold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title }}{{end}}</div>
+                {{ with .Description | truncate 90}}
+                <p class="text-gray-600 text-sm">{{ . }}</p>
+                {{ end }}
+            </a>
+            {{if eq .BundleType "branch"}}
+
+            <ul class="flex flex-wrap list-none p-0">
+                {{ range first 7 .Pages }}
+                    {{ if  .Params.hidden }}
+                        {{/* Do not show the hidden child page or its descendants */}}
+                    {{else}}
+                            <li class="my-2 mr-2">
+                                <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="text-xs p-2 text-black font-brand-thin hover:text-white bg-white hover:bg-black rounded">
+                                    {{if eq .Parent.Title "Run Commands"}}{{ with replace .Title "pachctl " "" }}{{ . }}{{ end }}{{else}}{{if .Params.linkTitle}}{{.Params.linkTitle}}{{else}}{{ .Title | truncate 22 }}{{end}}{{end}}
+                                </a>
+                            </li>
+                    {{end}}
+                {{ end }}
+            </ul>
+            {{end}}
+        </div>
+        {{end}}
+    {{ end }}
+</div>
+
+{{end}}

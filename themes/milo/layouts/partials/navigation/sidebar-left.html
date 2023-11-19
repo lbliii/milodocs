@@ -1,0 +1,27 @@
+{{- $rootSection := .}}
+<aside id="sidebar" class="hidden md:block w-60">
+    <div class="sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto"> 
+      <ul class="list-none">
+      {{ range .Site.Sections }}
+          <li class="flex flex-col list-none mr-2">
+              <a class="flex flex-row text-lg p-2 font-brand-semibold hover:bg-gray-100 hover:text-brand rounded transition duration-300" href="{{ .RelPermalink }}" data-link>
+                {{- with .Params.icon -}}<object data="{{.}}" type="image/svg+xml" class="w-5 mr-2"></object>{{- end -}} {{ .Title }}
+              </a>
+          </li>
+      {{ end }}
+    </ul>
+  </div>
+</aside>
+
+<script>
+  // JavaScript to highlight the active link
+  document.addEventListener("DOMContentLoaded", function() {
+      var links = document.querySelectorAll('[data-link]');
+      var currentUrl = window.location.href;
+      links.forEach(function(link) {
+          if (link.href === currentUrl) {
+              link.classList.add('text-brand');
+          }
+      });
+  });
+</script>

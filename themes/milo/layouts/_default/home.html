@@ -1,7 +1,4 @@
-{{ define "main" }}
+{{ define "home" }}
   {{ .Content }}
-  {{ range site.RegularPages }}
-    <h2 class=""><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-    {{ .Summary }}
-  {{ end }}
+  {{partial "article/tiles.html" . }}
 {{ end }}
