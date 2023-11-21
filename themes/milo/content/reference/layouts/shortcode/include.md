@@ -29,4 +29,4 @@ This shortcode relies on Hugo's markdown rendering to automatically handle code 
 
 ## Source Code 
 
-{{%include "layouts/shortcodes/include.html" "go" "" "noend"%}}
+{{%include "layouts/shortcodes/include.html" "go" %}}

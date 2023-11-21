@@ -54,4 +54,4 @@ The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, 
 
 ## Source Code 
 
-{{%include "layouts/shortcodes/pdoc.html" "go" "" "noend"%}}
+{{%include "layouts/shortcodes/pdoc.html" "go" %}}

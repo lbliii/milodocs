@@ -4,7 +4,7 @@ description: Learn about the CSS  used in the Milo Docs theme.
 weight: 100
 ---
 
-The CSS used in the {{<prodName>}} theme is powered by TailwindCSS.
+The CSS used in the {{<prod>}} theme is powered by TailwindCSS.
 
 ## Before You Start
 
