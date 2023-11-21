@@ -11,7 +11,7 @@ markup:
       unsafe: true
       xhtml: false
   highlight:
-    noClasses: false
+    noClasses: true
 ## Min Version
 module:
   hugoVersion:
@@ -29,6 +29,10 @@ sitemap:
 
 # Theme Feature Settings
 params: 
+  names:
+    organization: 'Emdash'
+    product: 'Milo Docs'
   article:
     childArticles:
       display: true 
+  

@@ -1,0 +1,41 @@
+<!-- layouts/shortcodes/det.html -->
+{{ $type := index (.Params) 0 }}
+{{ $path := index (.Params) 1 }} 
+{{ $title := index (.Params) 2}}
+
+{{ $baseurl := "/references/" }}
+{{ $anchor := "" }}
+{{ $linkText := "" }}
+
+{{ $trimmed_path := strings.TrimPrefix "~" $path }}
+{{ $path_parts := split $trimmed_path "." }}  
+
+{{ if eq $type "supermodule" }}
+  {{/*  url pattern for supermodule: {baseurl}/directory/supermodule/  */}}
+  {{ $baseurl = printf "%s%s/%s/" $baseurl (index $path_parts 0) (index $path_parts 1) }}
+  {{ $linkText = (index $path_parts 1) }}
+{{ else if eq $type "submodule" }}
+  {{/*  url pattern for submodule: {baseurl}/directory/supermodule/submodule.html */}}
+  {{ $baseurl = printf "%s%s/%s/%s.html" $baseurl (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) }}
+  {{ $linkText = printf "%s.%s" (index $path_parts 2) (index $path_parts 1) }}
+{{ else if eq $type "class" }}
+  {{/*  url pattern for class: {baseurl}/directory/supermodule/submodule.html#directory.supermodule.submodule.class */}}
+  {{ $baseurl = printf "%s%s/%s/%s.html" $baseurl (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) }}
+  {{ $anchor = printf "#%s.%s.%s.%s" (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) (index $path_parts 3) }}
+  {{ $linkText = printf "%s.%s()" (index $path_parts 2) (index $path_parts 3) }}
+{{ else if eq $type "function" }}
+  {{/*  url pattern for function: {baseurl}/directory/supermodule/submodule.html#directory.supermodule.submodule.function */}}
+  {{ $baseurl = printf "%s%s/%s/%s.html" $baseurl (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) }}
+  {{ $anchor = printf "#%s.%s.%s.%s" (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) (index $path_parts 3) }}
+  {{ $linkText = printf "%s.%s()" (index $path_parts 2) (index $path_parts 3) }}
+{{ else if eq $type "method" }}
+  {{/*  url pattern for method: {baseurl}/directory/supermodule/submodule.html#directory.supermodule.submodule.class.method */}}
+  {{ $baseurl = printf "%s%s/%s/%s.html" $baseurl (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) }}
+  {{ $anchor = printf "#%s.%s.%s.%s.%s" (index $path_parts 0) (index $path_parts 1) (index $path_parts 2) (index $path_parts 3) (index $path_parts 4) }}
+  {{ $linkText = printf "%s.%s.%s()" (index $path_parts 2) (index $path_parts 3) (index $path_parts 4) }}
+  {{else}}
+    {{ errorf "The %q shortcode requires a type parameter as arg 0 (module, submodule, class, function, method). See %s" .Name .Position }}
+{{ end }}
+
+
+<a href="{{ $baseurl }}{{ $anchor }}" class="font-bold underline">{{with $title}}{{.}}{{else}}{{ $linkText }}{{end}}</a>

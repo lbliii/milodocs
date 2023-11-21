@@ -1,4 +1,7 @@
 {{ define "home" }}
-  {{ .Content }}
-  {{partial "article/tiles.html" . }}
+    {{ .Content }}
+    <div class="py-4">
+      {{partial "article/tiles.html" . }}
+    </div>
+    
 {{ end }}

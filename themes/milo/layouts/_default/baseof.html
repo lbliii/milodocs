@@ -10,7 +10,7 @@
   {{partial "navigation/top.html"}}
   <main class="max-w-screen-xl 2xl:max-w-screen-2xl mx-auto flex">
     {{partial "navigation/sidebar-left.html" . }}
-    <div id="contentContainer">
+    <div id="pageContainer">
       {{- if .IsHome}}{{ block "home" . }}{{ end }}{{else}}{{ block "main" . }}{{ end }}{{- end}}
     </div>
     {{partial "navigation/sidebar-right.html" . }}

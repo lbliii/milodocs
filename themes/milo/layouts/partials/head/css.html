@@ -1,9 +1,13 @@
-{{- with resources.Get "css/main.css" }}
-  {{- if eq hugo.Environment "development" }}
-    <link rel="stylesheet" href="{{ .RelPermalink }}">
-  {{- else }}
-    {{- with . | minify | fingerprint }}
-      <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
-    {{- end }}
-  {{- end }}
+
+{{- $cssResources := slice (resources.Get "css/main.css") }}
+{{- $cssResources = $cssResources | append (resources.Get "css/colors.css") }}
+
+
+{{- if eq hugo.Environment "development" }}
+  {{- $cssBundle := $cssResources | resources.Concat "css/bundle.css" }}
+  <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}">
+{{- else }}
+  {{- $opts := dict "minify" true }}
+  {{- $cssBundle := $cssResources | resources.Concat "css/bundle.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}" integrity="{{ $cssBundle.Data.Integrity }}" crossorigin="anonymous">
 {{- end }}

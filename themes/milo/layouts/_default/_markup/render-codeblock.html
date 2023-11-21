@@ -1,0 +1,25 @@
+<div class="relative bg-zinc-800 text-white rounded text-sm">
+    <!-- Code content -->
+    {{- transform.Highlight .Inner .Type -}}
+
+    <!-- Copy code button -->
+    <button class="absolute top-2 right-2 bg-zinc-600 hover:bg-zinc-900 transition duration-300 text-white rounded px-2 py-1 text-xs focus:outline-none" onclick="copyCodeToClipboard(this)">Copy</button>
+</div>
+
+<script>
+    function copyCodeToClipboard(buttonElement) {
+        const codeBlock = buttonElement.previousElementSibling.querySelector('code');
+        const textArea = document.createElement('textarea');
+        textArea.value = codeBlock.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        // Optional: Provide feedback to the user
+        buttonElement.textContent = 'Copied!';
+        setTimeout(() => {
+            buttonElement.textContent = 'Copy';
+        }, 2000);
+    }
+</script>

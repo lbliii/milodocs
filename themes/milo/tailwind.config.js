@@ -4,14 +4,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'brand-1': '',
-        'brand-2': '',
-        'brand-3': '',
-        'brand-4': '',
-        'brand-5':'',
-        'brand-6':'',
-        'brand-7':'',
-      }
+        "brand": "var(--color-brand)",
+        "brand-1": "var(--color-brand-1)",
+        "brand-2": "var(--color-brand-2)",
+        "brand-3": "var(--color-brand-3)",
+        "brand-4": "var(--color-brand-4)",
+        "brand-5": "var(--color-brand-5)",
+        "brand-6": "var(--color-brand-6)",
+        "brand-7": "var(--color-brand-7)"
+      },
     },
   },
   plugins: [],

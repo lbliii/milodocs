@@ -1,27 +1,90 @@
-{{- $rootSection := .}}
-<aside id="sidebar" class="hidden md:block w-60">
-    <div class="sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto"> 
-      <ul class="list-none">
-      {{ range .Site.Sections }}
-          <li class="flex flex-col list-none mr-2">
-              <a class="flex flex-row text-lg p-2 font-brand-semibold hover:bg-gray-100 hover:text-brand rounded transition duration-300" href="{{ .RelPermalink }}" data-link>
-                {{- with .Params.icon -}}<object data="{{.}}" type="image/svg+xml" class="w-5 mr-2"></object>{{- end -}} {{ .Title }}
-              </a>
-          </li>
-      {{ end }}
-    </ul>
-  </div>
+<aside id="sidebar" class="hidden md:flex transform md:translate-x-0 fixed md:relative w-60 text-black flex-shrink-0">
+    <div class="sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto w-full">
+        {{ $currentpg := . }}
+        <!-- Feed the directory template with key information such as current location and the root section -->
+        {{ with .Site.Sections }}
+        {{ template "directory" (dict "dir" . "current" $currentpg "level" 1 ) }}
+        {{ end }}
+    </div>
 </aside>
 
+<!-- Directory Template to render the nested structure recursively -->
+{{ define "directory" }}
+<ul class="space-y-2 {{if eq $.level 1}} pl-0 {{else}}pl-2{{end}} list-none">
+    {{ range .dir }}
+    {{ if and (not .Params.hidden) }}
+    <li class="flex flex-col mr-2">
+        <a class="flex flex-row {{if eq $.level 1}}text-lg font-brand-semibold{{else if eq $.level 2}}text-md{{else}}text-sm{{end}} p-2 hover:bg-gray-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
+            href="{{ .RelPermalink }}" data-level="{{ $.level }}">
+            {{with .Params.icon}}<img src="{{.}}" class="w-5 mr-2">{{end}} {{if .Title}}{{.Title}}{{else}}{{ path.BaseName . | humanize }}{{end}}
+        </a>
+        <!-- Recursive call for nested pages
+        if page has children, add only 1 level; otherwise, add 2 -->
+        {{if eq .Type "section"}}
+        {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
+        {{else}}
+        {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
+        {{end}}
+    </li>
+    {{ end }}
+    {{ end }}
+</ul>
+{{ end }}
+
 <script>
-  // JavaScript to highlight the active link
-  document.addEventListener("DOMContentLoaded", function() {
-      var links = document.querySelectorAll('[data-link]');
-      var currentUrl = window.location.href;
-      links.forEach(function(link) {
-          if (link.href === currentUrl) {
-              link.classList.add('text-brand');
-          }
-      });
-  });
+    // JavaScript to highlight the active link
+    document.addEventListener("DOMContentLoaded", function() {
+        var links = document.querySelectorAll('[data-level]');
+        var currentUrl = window.location.href;
+        links.forEach(function (link) {
+            if (link.href === currentUrl) {
+                link.classList.add('text-brand');
+            }
+        });
+
+        // Function to handle the visibility of nested lists
+        function handleVisibility() {
+            links.forEach(function (link) {
+                if (link.href === currentUrl) {
+                    link.classList.add('text-brand');
+
+                    // Unhide all ancestor ul elements
+                    var ancestor = link.closest('li');
+                    while (ancestor) {
+                        if (ancestor.tagName.toLowerCase() === 'ul') {
+                            ancestor.classList.remove('hidden');
+                        }
+                        ancestor = ancestor.parentElement;
+                    }
+
+                    // Unhide direct siblings at the same level
+                    var parentLi = link.closest('li');
+                    var siblingLis = Array.from(parentLi.children).filter(function (child) {
+                        return child !== parentLi;
+                    });
+                    siblingLis.forEach(function (siblingLi) {
+                        var siblingUl = siblingLi.querySelector('ul');
+                        if (siblingUl) {
+                            siblingUl.classList.remove('hidden');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Function to handle the scrolling
+        function handleScroll() {
+            links.forEach(function (link) {
+                if (link.href === currentUrl) {
+                    link.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                }
+            });
+        }
+
+        // Execute the visibility handling function
+        handleVisibility();
+
+        // Delay the execution of the scrolling function slightly to ensure it executes last
+        setTimeout(handleScroll, 0);
+    });
 </script>

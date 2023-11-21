@@ -1,10 +1,9 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-
-  {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
-  {{ $dateHuman := .Date | time.Format ":date_long" }}
-  <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
-
-  {{ .Content }}
-  {{ partial "article/tiles.html" . }}
+  <h1 class="text-black">{{ .Title }}</h1>
+  <div id="articleContent">
+    {{ .Content }}
+  </div>
+  <div class="py-4">
+    {{ partial "article/tiles.html" . }}
+  </div>
 {{ end }}

@@ -1,0 +1,19 @@
+{{ $path := .Get 0 }}
+{{ $lang := .Get 1 | default "s" }}
+{{ $start := .Get 2 }}
+{{ $stop := .Get 3 }}
+{{ $content := readFile $path }}
+{{ $chunked := split $content "\n" }}
+{{ $snippet := "" }}
+{{ $capture := false }}
+{{- range $chunked }}
+    {{ if and (not $capture) (in . $start) }}
+        {{ $capture = true }}
+    {{ else if and $capture (in . $stop) }}
+        {{ $capture = false }}
+    {{ else if $capture }}
+        {{ $snippet = print $snippet . "\n" }}
+    {{ end }}
+{{- end }}
+
+{{ printf "```%s\n%s\n```" $lang $snippet | safeHTML }}

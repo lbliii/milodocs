@@ -1,0 +1,11 @@
+{{/* 
+    - Traverses the heading tree and generates an anchor for each heading
+    - See docs for info: https://gohugo.io/templates/render-hooks/#heading-link-example 
+*/}}
+
+{{$id := .Page.Title | anchorize }}
+
+<h{{ .Level }} id="{{ .Anchor | safeURL }}" class="group block {{if gt .Level 1 }}py-4{{end}}">
+    {{ .Text | safeHTML }}
+    <a id="{{$id}}-{{ .Anchor | safeURL }}" href="#{{$id}}-{{ .Anchor | safeURL }}" class="hidden group-hover:inline text-current ml-2">#</a>
+</h{{ .Level }}>

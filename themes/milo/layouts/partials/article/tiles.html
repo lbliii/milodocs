@@ -10,7 +10,7 @@
                 {{with .Params.icon}}<img src="{{.}}" class="h-8">{{end}}
                 <div class="text-xl text-black font-brand-bold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title }}{{end}}</div>
                 {{ with .Description | truncate 90}}
-                <p class="text-gray-600 text-sm">{{ . }}</p>
+                <p class="text-zinc-500 text-sm">{{ . }}</p>
                 {{ end }}
             </a>
             {{if eq .BundleType "branch"}}
