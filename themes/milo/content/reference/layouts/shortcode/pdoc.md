@@ -5,7 +5,7 @@ description: learn how to use the pdoc shortcode
 
 It's common for developers to build packages in Python that need auto-generated code documentation based off of Python strings.
 
-To better support integrating that collection to your larger docs site, I've built out a `pdoc` shortcode that enables you to automatically target links for:
+To better support integrating that collection to your larger docs site, I've built out a `{{</*pdoc*/>}}` shortcode that enables you to automatically target links for:
 
 - **Supermodules** 
 - **Submodules**
@@ -13,13 +13,13 @@ To better support integrating that collection to your larger docs site, I've bui
 - **Classes** 
 - **Methods**  
 
-## How it Works 
-
-The shortcode converts your target into a link based on the provided arguments.
-
 {{<notice tip "How complex is the package?">}}
 If you are integrating pdoc documentation for a package that has submodules, use the default `pdoc` shortcode. For simple packages without submodules, use `pdoc-2`.
 {{</notice>}}
+
+## How it Works 
+
+The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, and `linktitle` (optional). If `linktitle` is not set, it automatically configures the link text as show in the following sections.
 
 ### pdoc 
 

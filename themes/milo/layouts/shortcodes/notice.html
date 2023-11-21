@@ -1,24 +1,37 @@
 {{ $type := .Get 0 | default "info" }}
 {{ $title := .Get 1 }}
-<div class="notice p-4 mt-2 mb-2 rounded-md shadow-md {{ with $type }}{{ if eq . "warning" }}bg-brand-7 {{ else if eq . "danger" }}bg-brand-6 {{ else if eq . "info" }}bg-brand-3 {{ else if eq . "tip" }}bg-brand-5 {{ end }}{{ else }}{{ end }}">
+<div class="notice p-4 mt-2 mb-2 rounded-md shadow-md 
+    {{- with $type }}
+        {{if eq . "danger" }} bg-brand-7
+        {{else if eq . "warning" }} bg-brand-6
+        {{else if eq . "security" }} bg-brand-5
+        {{else if eq . "tip" }} bg-brand-4
+        {{else if eq . "note" }} bg-brand-3 
+        {{else if eq . "info" }} bg-brand-2 
+        {{else if eq . "snack" }} bg-brand-1 
+        {{ end }}
+    {{- end }}
+">
     <div class="flex">
         <div class="flex-shrink-0">
            <img src="/icons/
-           {{- with $type}}
-            {{- if eq . "warning" -}} shield
-            {{- else if eq . "danger" -}} shield
-            {{- else if eq . "info" -}} note
-            {{- else if eq . "note" -}} note
-            {{- else if eq . "tip" -}} bulb 
+            {{- with $type}}
+                {{- if eq . "danger" -}} danger
+                {{- else if eq . "warning" -}} warning
+                {{- else if eq . "security" -}} shield
+                {{- else if eq . "info" -}} compass
+                {{- else if eq . "note" -}} note
+                {{- else if eq . "tip" -}} bulb 
+                {{- else if eq . "snack" -}} cookie 
+                {{- end -}}
             {{- end -}}
-            {{- else -}} star
-           {{- end -}}.svg">
+           .svg">
         </div>
         <div class="ml-3 w-full text-black text-sm">
             {{- if $title -}}
             <div class="font-bold mb-2">{{ $title }}</div>
             {{- end -}}
-            {{- .Inner | markdownify -}}
+            {{- .Inner | markdownify }}
         </div>
     </div>
 </div>

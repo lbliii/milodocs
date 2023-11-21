@@ -3,6 +3,8 @@
 This is the supermodule of the demo package.
 """
 
+# Start 1 
+
 def demo_function(arg1, arg2):
     """Demo Function
 
@@ -16,6 +18,8 @@ def demo_function(arg1, arg2):
         int: The sum of arg1 and arg2.
     """
     return arg1 + arg2
+
+# End 1
 
 class DemoClass:
     """Demo Class
