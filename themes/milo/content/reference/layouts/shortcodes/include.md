@@ -21,7 +21,7 @@ This shortcode relies on Hugo's markdown rendering to automatically handle code 
 
 ### This File 
 
-{{%include "reference/layouts/shortcode/include.md" "md" %}}
+{{%include "reference/layouts/shortcodes/include.md" "md" %}}
 
 ### Python File With Comments
 
