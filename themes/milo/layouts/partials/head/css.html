@@ -1,6 +1,8 @@
 
 {{- $cssResources := slice (resources.Get "css/main.css") }}
+{{- $cssResources = $cssResources | append (resources.Get "css/fonts.css") }}
 {{- $cssResources = $cssResources | append (resources.Get "css/colors.css") }}
+
 
 
 {{- if eq hugo.Environment "development" }}

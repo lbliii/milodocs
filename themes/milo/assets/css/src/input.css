@@ -1,43 +1,47 @@
 @tailwind base;
 
 @layer base {
-    h1 {
-    @apply text-3xl ;
-    }
-    h2 {
-    @apply text-2xl;
-    }
-    h3 {
-    @apply text-xl ;
-    }
-    h4 {
-    @apply text-lg ;
-    }
-    h5 {
-    @apply text-base;
-    }
-    h6 {
-    @apply text-sm;
-    }
+  h1 {
+    @apply text-3xl font-black;
+  }
+  h2 {
+    @apply text-2xl font-bold;
+  }
+  h3 {
+    @apply text-xl font-bold;
+  }
+  h4 {
+    @apply text-lg font-bold;
+  }
+  h5 {
+    @apply text-base font-bold;
+  }
+  h6 {
+    @apply text-sm font-bold;
+  }
 
-    #articleContent > * {
-        @apply py-4;
-    }
-    #articleContent li li {
-        @apply ml-12 py-1;
-    }
-    #articleContent ul {
-        @apply list-disc ml-6;
-    }
-    #articleContent ol {
+  main {
+    @apply font-brand-regular;
+  }
+
+  #articleContent > * {
+    @apply py-3;
+  }
+  #articleContent li li {
+    @apply ml-12 py-1;
+  }
+  #articleContent ul {
+    @apply list-disc ml-6;
+  }
+  #articleContent ol {
     list-style: none;
     counter-reset: item;
-    }
-    #articleContent ol > li {
+  }
+  #articleContent ol > li {
     @apply py-2;
     counter-increment: item;
-    }
-    #articleContent ol > li::before {
+  }
+  #articleContent ol > li::before {
     content: counter(item);
     border-radius: 50%;
     width: 1.5em;
@@ -47,8 +51,8 @@
     line-height: 1.5em;
     margin-right: 0.5em;
     @apply bg-zinc-200;
-    }
-    #articleContent li > ol > li::before  {
+  }
+  #articleContent li > ol > li::before {
     content: counter(item);
     border-radius: 50%;
     width: 1.5em;
@@ -58,79 +62,96 @@
     line-height: 1.5em;
     margin-right: 0.5em;
     @apply bg-zinc-200;
-    }
-    #articleContent code {
-    @apply bg-zinc-100 p-1 rounded text-xs;
-    }
-    #articleContent pre {
-        @apply overflow-x-auto overflow-y-visible
-    }
-    #articleContent .highlight pre {
-        @apply p-2
-    }
-    #articleContent .highlight pre code {
+  }
+  #articleContent code {
+    @apply bg-zinc-100 p-1 rounded text-xs font-brand-light;
+  }
+  #articleContent pre {
+    @apply overflow-x-auto overflow-y-visible;
+  }
+  #articleContent .highlight pre {
+    @apply p-2;
+  }
+  #articleContent .highlight pre code {
     @apply p-0 bg-transparent !important;
-    }
-    #articleContent {
-        @apply text-black
-    }
+  }
+  #articleContent {
+    @apply text-black;
+  }
 
-    /* Table Styles */
-    table {
+   #articleContent strong {
+    @apply font-brand-semibold;
+   }
+
+  #articleContent li > div {
+    @apply m-4;
+  }
+
+  #articleContent pre code {
+    @apply p-0 m-0;
+  }
+
+  #articleContent a {
+    @apply text-brand;
+  }
+  #articleContent a:hover {
+    @apply text-brand-1 transition duration-300;
+  }
+
+  /* Table Styles */
+  table {
     @apply w-full border-collapse text-sm;
-    }
-    table th,
-    table td {
+  }
+  table th,
+  table td {
     @apply p-3 text-left align-top border-t;
-    }
-    table th {
+  }
+  table th {
     @apply bg-gray-100 text-gray-700 font-semibold;
-    }
-    table tr:hover {
+  }
+  table tr:hover {
     @apply bg-gray-200;
-    }
+  }
 
-    /* Responsive Table Styles */
-    @media (max-width: 640px) {
+  /* Responsive Table Styles */
+  @media (max-width: 640px) {
     table {
-        @apply block;
+      @apply block;
     }
     table thead {
-        @apply hidden;
+      @apply hidden;
     }
     table tbody tr {
-        @apply block mb-4 shadow-md;
+      @apply block mb-4 shadow-md;
     }
     table tbody tr:last-child {
-        @apply mb-0;
+      @apply mb-0;
     }
     table td {
-        @apply flex justify-between p-2;
+      @apply flex justify-between p-2;
     }
-    }
+  }
 
-
-
-    .dark .bg-white {
+  .dark .bg-white {
     @apply bg-zinc-900;
-    }
-    .dark .bg-zinc-100 {
+  }
+  .dark .bg-zinc-100 {
     @apply bg-zinc-800;
-    }
-    .dark .bg-zinc-200 {
+  }
+  .dark .bg-zinc-200 {
     @apply bg-zinc-700;
-    }
-    .dark .text-black {
-        @apply text-white
-    }
-    .dark .text-zinc {
-        @apply text-white
-    }
-    .dark .text-zinc-500 {
-        @apply text-zinc-200
-    }
-    .dark .notice {
-    box-shadow: inset 0 9000px 0px rgba(0, 0, 0, 0.200);
+  }
+  .dark .text-black {
+    @apply text-white;
+  }
+  .dark .text-zinc {
+    @apply text-white;
+  }
+  .dark .text-zinc-500 {
+    @apply text-zinc-200;
+  }
+  .dark .notice {
+    box-shadow: inset 0 9000px 0px rgba(0, 0, 0, 0.2);
   }
 }
 

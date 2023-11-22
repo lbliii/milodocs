@@ -5,14 +5,14 @@
 
     /* HPE Brand Colors */
 
-    --color-brand:rgb(172, 193, 138);
-    --color-brand-1:rgba(131, 122, 117, 0.667);
-    --color-brand-2:rgb(172, 193, 138);
-    --color-brand-3:rgb(138, 193, 149);
-    --color-brand-4:#ADD9F4;
-    --color-brand-5:#dbd985;
-    --color-brand-6:#d4ac84;
-    --color-brand-7:#F3B3A6;
+    --color-brand:rgb(172, 193, 138); /*primary color*/
+    --color-brand-1:rgba(131, 122, 117, 0.667); /*secondary color*/
+    --color-brand-2:rgb(172, 193, 138); /*tertiary color*/
+    --color-brand-3:rgb(138, 193, 149); /*note color*/
+    --color-brand-4:#ADD9F4; /*tip color */
+    --color-brand-5:#dbd985; /*security color */
+    --color-brand-6:#d4ac84; /*warning color */
+    --color-brand-7:#F3B3A6; /*danger color */
 }
 
 .dark {
