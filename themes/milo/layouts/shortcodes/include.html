@@ -1,11 +1,14 @@
 {{ $path := .Get 0 }}
 {{ $lang := .Get 1 | default "s" }}
-{{ $start := .Get 2 | }}
+{{ $start := .Get 2 | default nil }}
 {{ $stop := .Get 3 | default nil}}
 {{ $content := readFile $path }}
 {{ $chunked := split $content "\n" }}
 {{ $snippet := "" }}
 {{ $capture := false }}
+{{if eq $start nil }}
+{{ $capture = true }}
+{{end}}
 {{- range $chunked }}
     {{ if and (not $capture) (in . $start) }}
         {{ $capture = true }}
