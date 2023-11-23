@@ -1,12 +1,7 @@
 ---
-<<<<<<< HEAD
 title: defaults
 description: Learn about the default layouts that make up the Milo Docs theme.
 weight: 100
----
-=======
-title: default
-description: Learn about the default layouts that make up the Milo Docs theme.
 ---
 
 Layouts in the `_default` folder define the major content types and outputs of your Hugo site. 
@@ -33,6 +28,3 @@ The following layouts are added by the Milo Docs theme.
 |**glossary.html**| renders markdown files as a stacked list in a directory (`dir/_index.md`).|`branch`|`layout: glossary`|
 |**tutorial.html**| renders markdown files as a wizard with steps (`dir/_index.md`).|`branch`|`layout: tutorial`|
 |**tutorialstep.html**| renders a child markdown file as a tutorial step (`tutorial/step.md`).|`leaf`|`layout: tutStep`|
-
-
->>>>>>> a69ec458b3ea11c71d48381dd708f24d500f1260
