@@ -10,4 +10,3 @@ The `baseof.html` template is the centralization point that glues the site theme
 ## Source Code 
 
 {{%include "layouts/_default/baseof.html" "golang" %}}
-
