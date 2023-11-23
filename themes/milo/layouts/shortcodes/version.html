@@ -1,0 +1,16 @@
+{{- $source := index (.Params) 0 | default "local" }}
+{{- $major := ""}}
+{{- $minor := ""}}
+{{- $patch := ""}}
+{{- $value := ""}}
+{{- if eq $source "global" }}
+{{- $major = .Site.Params.Version.Major }}
+{{- $minor = .Site.Params.Version.Minor }}
+{{- $patch = .Site.Params.Version.Patch }}
+{{- else}}
+{{- $major = .Page.Params.Version.Major }}
+{{- $minor = .Page.Params.Version.Minor }}
+{{- $patch = .Page.Params.Version.Patch }}
+{{- end}}
+{{- $value = print $major "." $minor "." $patch }}
+{{- $value }}
