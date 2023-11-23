@@ -14,7 +14,7 @@
     {{ range .dir }}
     {{ if and (not .Params.hidden) }}
     <li class="flex flex-col mr-2">
-        <a class="flex flex-row {{if eq $.level 1}}text-lg font-brand-semibold{{else if eq $.level 2}}text-md{{else}}text-sm{{end}} p-2 hover:bg-gray-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
+        <a class="flex flex-row {{if eq $.level 1}}text-lg font-brand-semibold{{else if eq $.level 2}}font-brand-semibold text-md{{else if eq $.level 3}} font-bold {{else}}text-sm{{end}} p-2 hover:bg-gray-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
             href="{{ .RelPermalink }}" data-level="{{ $.level }}">
             {{with .Params.icon}}<img src="{{.}}" class="w-5 mr-2">{{end}} {{if .Title}}{{.Title}}{{else}}{{ path.BaseName . | humanize }}{{end}}
         </a>
@@ -23,7 +23,7 @@
         {{if eq .Type "section"}}
         {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
         {{else}}
-        {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 2)) }}
+        {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
         {{end}}
     </li>
     {{ end }}
@@ -49,7 +49,7 @@
     function handleVisibility() {
         links.forEach(function (link) {
             if (link.href === currentUrl) {
-                link.classList.add('text-brand');
+                link.classList.add('text-brand', 'font-bold');
 
                 // Unhide all ancestor ul elements
                 var ancestor = link.closest('li');
