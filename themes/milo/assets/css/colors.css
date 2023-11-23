@@ -21,3 +21,6 @@
     --icon-color: #ffffff; /* Change this to your dark mode color */
 }
 
+ #articleContent [id]:target {
+    scroll-margin-top: 50px;
+}
