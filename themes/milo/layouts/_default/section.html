@@ -1,9 +1,9 @@
 {{ define "main" }}
-  <h1 class="text-black">{{ .Title }}</h1>
-  <div id="articleContent">
+  <h1 class="text-black p-4">{{ .Title }}</h1>
+  <div id="articleContent" class="p-4">
     {{ .Content }}
   </div>
-  <div class="py-4">
+  <div class="p-4">
     {{ partial "article/tiles.html" . }}
   </div>
 {{ end }}

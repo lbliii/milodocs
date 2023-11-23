@@ -19,7 +19,7 @@ This shortcode relies on Hugo's markdown rendering to automatically handle code 
 
 ### Examples 
 
-### This File 
+### This File
 
 {{%include "reference/layouts/shortcodes/include.md" "md" %}}
 

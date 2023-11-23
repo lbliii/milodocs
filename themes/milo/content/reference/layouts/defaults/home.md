@@ -1,8 +1,10 @@
 ---
 title: home
-description: Learn about the home template for the Milo Docs theme.
+description: Learn about the home page template for the Milo Docs theme.
+weight: 200
 ---
 
 ## Source Code 
 
-{{%include "layouts/_default/baseof.html" "go" %}}
+{{%include "layouts/_default/home.html" "golang" %}}
+

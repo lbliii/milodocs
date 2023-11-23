@@ -1,5 +1,5 @@
 ---
-title: default
+title: defaults
 description: Learn about the default layouts that make up the Milo Docs theme.
 ---
 
@@ -27,5 +27,3 @@ The following layouts are added by the Milo Docs theme.
 |**glossary.html**| renders markdown files as a stacked list in a directory (`dir/_index.md`).|`branch`|`layout: glossary`|
 |**tutorial.html**| renders markdown files as a wizard with steps (`dir/_index.md`).|`branch`|`layout: tutorial`|
 |**tutorialstep.html**| renders a child markdown file as a tutorial step (`tutorial/step.md`).|`leaf`|`layout: tutStep`|
-
-
