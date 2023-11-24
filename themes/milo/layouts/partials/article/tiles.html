@@ -1,4 +1,7 @@
 {{if and (.Pages) (.Site.Params.article.childArticles.display)}}
+{{$titleTrunc := .Site.Params.article.childArticles.titleTrunc }}
+{{$descTrunc := .Site.Params.article.childArticles.descTrunc }}
+{{$count := .Site.Params.article.childArticles.count }}
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {{ range sort .Pages "Weight" "$order"}}
@@ -8,15 +11,15 @@
         <div class="rounded-lg shadow-md p-4 tile transition duration-300 space-y-2">
             <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-2">
                 {{with .Params.icon}}<img src="/icons/sections/light/{{.}}" class="h-8 section-icon">{{end}}
-                <div class="text-xl text-black font-brand-bold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title }}{{end}}</div>
-                {{ with .Description | truncate 90}}
+                <div class="text-xl text-black font-brand-bold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title | truncate $titleTrunc}}{{end}}</div>
+                {{ with .Description | truncate $descTrunc}}
                 <p class="text-zinc-900 text-sm font-brand-thin">{{ . }}</p>
                 {{ end }}
             </a>
             {{if eq .BundleType "branch"}}
 
             <ul class="flex flex-wrap list-none p-0">
-                {{ range first 7 .Pages }}
+                {{ range first $count .Pages }}
                     {{ if  .Params.hidden }}
                         {{/* Do not show the hidden child page or its descendants */}}
                     {{else}}

@@ -1,6 +1,6 @@
 ---
 title: shortcodes
-description: Learn about the shortcode layouts that make up the Milo Docs theme.
+description: Learn how to apply shortcodes to display or transform content in markdown files.
 weight: 100
 icon: "layers.svg"
 ---

@@ -23,7 +23,7 @@ The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, 
 
 ### pdoc 
 
-|Type (Arg0)|Target (arg1)|Result|
+|Type (arg0)|Target (arg1)|Result|
 |-|-|-|
 |supermodule|`~pkg.super`| `/references/pkg/super`|
 |submodule|`~pkg.super.sub`| `/references/pkg/super` |
@@ -34,7 +34,7 @@ The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, 
 
 ### pdoc-2 
 
-|Type (Arg0)|Target (arg1)|Result|
+|Type (arg0)|Target (arg1)|Result|
 |-|-|-|
 |function|`~pkg.super.func_name`| `/references/pkg.html#pkg.func` |
 |class|`~pkg.super.sub.class`| `/references/pkg.html#pkg.class`|
@@ -53,5 +53,9 @@ The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, 
 ```
 
 ## Source Code 
+
+{{<notice tip "Want to change the main directory?">}}
+You can change the default directory where this shortcode looks for  pdoc collections by updating the value of `$baseurl`. Alternatively, you could make this shortcode more advanced and remove that static baseurl piece altogether. 
+{{</notice>}}
 
 {{%include "layouts/shortcodes/pdoc.html" "go" %}}

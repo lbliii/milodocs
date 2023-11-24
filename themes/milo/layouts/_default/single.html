@@ -3,4 +3,7 @@
   <div id="articleContent" class="p-4">
     {{ .Content }}
   </div>
+  <div class="p-4">
+    {{partial "article/next-prev.html" . }}
+  </div>
 {{ end }}

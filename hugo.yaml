@@ -4,3 +4,10 @@ title: 'Milo Docs theme'
 theme: milo
 
 
+# Output Formats
+outputs: 
+  home: [ "HTML", "JSON", "RSS"]
+  page: [ "HTML", "JSON"]
+  section: [ "HTML", "JSON"]
+  list: [ "HTML", "JSON"]
+  taxonomies: [ "HTML", "JSON"]

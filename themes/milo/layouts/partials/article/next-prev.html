@@ -1,0 +1,18 @@
+{{- if .Site.Params.article.nextPrev.display -}}
+{{$trunc := .Site.Params.article.nextPrev.trunc}}
+<div class="mt-8 flex justify-between items-center">
+    {{with .NextInSection }}
+        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-black text-white py-2 px-4 rounded-r-md shadow-lg transition duration-300"> {{.Title | truncate $trunc}} </a>
+    {{else}}
+    <span class="py-2 px-4"> <!-- Placeholder for alignment -->
+    </span>
+    {{ end }}
+
+    {{with .PrevInSection }}
+        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-black text-white py-2 px-4 rounded-l-md shadow-lg transition duration-300"> {{.Title | truncate $trunc}} </a>
+    {{else}}
+        <span class="py-2 px-4"> <!-- Placeholder for alignment -->
+        </span>
+    {{ end }}
+</div>
+{{- end -}}

@@ -26,6 +26,13 @@ sitemap:
   changeFreq: monthly 
   fileName: sitemap.xml 
   priority: 0.8 
+# Output Formats
+outputs: 
+  home: [ "HTML", "JSON"]
+  page: [ "HTML", "JSON"]
+  section: [ "HTML", "JSON"]
+  list: [ "HTML", "JSON"]
+  taxonomies: [ "HTML", "JSON"]
 
 # Theme Feature Settings
 params: 
@@ -39,5 +46,10 @@ params:
     continuous: false
   article:
     childArticles:
-      display: true 
-  
+      display: true
+      count: 7 
+      titleTrunc: 90
+      descTrunc: 90
+    nextPrev: 
+      display: true
+      trunc: 35

@@ -1,6 +1,6 @@
 ---
 title: defaults
-description: Learn about the default layouts that make up the Milo Docs theme.
+description: Learn how to apply unique article layouts for different content types.
 icon: "base.svg"
 weight: 300
 ---

@@ -1,0 +1,18 @@
+{
+    "id": {{- with .File }}{{- .UniqueID | jsonify }}{{- else}}""{{- end }},
+    "title": "{{- if .Title}}{{- .Title }}{{else}}{{- humanize .File.TranslationBaseName -}}{{- end}}",
+    "description":{{- with .Description}} {{. | jsonify}}{{- else }}"no description"{{- end}},
+    "lastCommit": "{{ .GitInfo.AuthorDate }}",
+    "version": "{{- if .Page.Params.version.isLatest}}latest{{else}}{{- .Page.Params.version.major }}.{{- .Page.Params.version.minor }}.{{- .Page.Params.version.patch }}{{- end}}",
+    "section": {{- with .Section }}{{. | jsonify}} {{- else }}"no section"{{- end}},
+    "parent": "{{with .Parent}}{{- .Title }}{{- else }}no parent{{end}}",
+    "isPage": {{- .IsPage | jsonify }},
+    "isSection": {{- .IsSection | jsonify }},
+    "pageKind": {{- .Kind  | jsonify }},
+    "bundleType": {{- .BundleType | jsonify }},
+    "uri": "{{- .Permalink }}",
+    "relURI": "{{- .RelPermalink }}",
+    "body": {{ .Plain | jsonify }},
+    {{- if .Page.Params.hidden}}"hidden": "{{- .Params.hidden}}",{{- end}}
+    "tags": [{{- range $tindex, $tag := .Params.tags }}{{- if $tindex }}, {{- end }}"{{- $tag| htmlEscape -}}"{{- end }}]
+}
