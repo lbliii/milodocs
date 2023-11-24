@@ -2,17 +2,18 @@
 {{$trunc := .Site.Params.article.nextPrev.trunc}}
 <div class="mt-8 flex justify-between items-center">
     {{with .NextInSection }}
-        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-black text-white py-2 px-4 rounded-r-md shadow-lg transition duration-300"> {{.Title | truncate $trunc}} </a>
+        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-zinc-100 text-white hover:text-brand py-2 px-4 rounded-r-md transition duration-300"> {{.Title | truncate $trunc}} </a>
     {{else}}
     <span class="py-2 px-4"> <!-- Placeholder for alignment -->
     </span>
     {{ end }}
 
     {{with .PrevInSection }}
-        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-black text-white py-2 px-4 rounded-l-md shadow-lg transition duration-300"> {{.Title | truncate $trunc}} </a>
+        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-zinc-100 text-white hover:text-brand py-2 px-4 rounded-l-md transition duration-300"> {{.Title | truncate $trunc}} </a>
     {{else}}
-        <span class="py-2 px-4"> <!-- Placeholder for alignment -->
-        </span>
+        {{- range first 1 .Pages}}
+        <a href="{{.RelPermalink}}" class="bg-brand hover:bg-zinc-100 text-white py-2 px-4 rounded-r-md transition duration-300"> {{.Title | truncate $trunc}} </a>
+        {{- end}}
     {{ end }}
 </div>
 {{- end -}}
