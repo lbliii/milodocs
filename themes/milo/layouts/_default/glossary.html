@@ -1,0 +1,8 @@
+{{ define "main" }}
+<div class="flex">
+{{ partial "navigation/glossary.html" . }}
+  <article id="article-container" class="flex flex-col w-full hide-scrollbar mx-2">
+    {{ partial "glossary/entries.html" . }}
+  </article>
+</div>
+{{ end }}

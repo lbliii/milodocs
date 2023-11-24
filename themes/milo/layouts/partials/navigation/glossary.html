@@ -1,0 +1,8 @@
+{{ $letters := "abcdefghijklmnopqrstuvwxyz" }}
+<aside class="hidden md:block transform md:translate-x-0 fixed md:relative left-0 md:w-32 opacity-40 hover:opacity-100 transition duration-300">
+    <div id="az" class="sticky top-10 pt-2 h-screen overflow-y-auto flex flex-col hide-scrollbar">
+        {{range $i, $letter := split $letters "" }}
+        <a href="#{{$letter}}" class="p-1 font-brand-bold text-black text-center text-xs hover:text-brand transition duration-300 ">{{$letter | upper}}</a>
+        {{end}}
+    </div>
+</aside>

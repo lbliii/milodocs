@@ -1,0 +1,32 @@
+
+{{ $letters := "abcdefghijklmnopqrstuvwxyz" }}
+{{$currentPage := . }}
+{{ $pages := $currentPage.Pages }}
+{{$filter := "pachctl "}}
+
+<div class="container mx-auto p-4">
+    {{ range $i, $letter := split $letters "" }}
+    <div class="mb-4">
+        <h1 id="{{$letter}}"><a href="#{{$letter}}">{{$letter | upper}}</a></h1>
+        {{ range $pages }}
+            {{ $base := substr .Title 8 1 | lower}}
+            {{ if eq $base $letter }} 
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6 w-full glossary-entry">
+                <div class="flex flex-col md:flex-row justify-between">
+                    <a href="{{ .Permalink }}" class="">
+                        <div class="mb-2 md:mb-0">
+                            <h2 class="text-xl font-bold">
+                                {{ with replace .Title $filter "" }}{{ . }}{{ end }}
+                            </h2>
+                            <p>{{ .Description }}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {{ end }}
+        {{ end }}
+    </div>
+{{ end }}
+
+
+</div>

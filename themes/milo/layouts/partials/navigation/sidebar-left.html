@@ -1,4 +1,4 @@
-<aside id="sidebar-left" class="hidden md:flex transform md:translate-x-0 fixed md:relative w-60 text-black flex-shrink-0">
+<aside id="sidebar-left" class="hidden md:flex md:translate-x-0 w-60 text-black">
     <div id="linkTree" class="sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto w-full">
         {{ $currentpg := . }}
         <!-- Feed the directory template with key information such as current location and the root section -->
@@ -15,7 +15,7 @@
     {{ if and (not .Params.hidden) }}
     <li class="flex flex-col mr-2">
         <a class="flex flex-row {{if eq $.level 1}}text-lg font-brand-bold{{else if eq $.level 2}}font-brand-semibold text-md{{else if eq $.level 3}} font-brand-medium {{else if eq $.level 4}} {{else}} text-sm{{end}} p-2 hover:bg-zinc-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
-            href="{{ .RelPermalink }}" data-level="{{ $.level }}">
+            href="{{ .RelPermalink }}" data-level="{{ $.level }}" data-current="{{ if eq .RelPermalink $.current.RelPermalink }}true{{else}}false{{end}}">
             {{with .Params.icon}}<img src="/icons/sections/light/{{.}}" class="section-icon w-5 mr-2">{{end}} {{if .Title}}{{.Title}}{{else}}{{ path.BaseName . | humanize }}{{end}}
         </a>
         <!-- Recursive call for nested pages
@@ -30,74 +30,3 @@
     {{ end }}
 </ul>
 {{ end }}
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    var links = document.querySelectorAll('[data-level]');
-    var currentUrl = window.location.href;
-    var activeLinkId = null; // Variable to store the ID of the active link
-
-    // Find the active link and set its ID
-    links.forEach(function (link) {
-        if (link.href === currentUrl) {
-            link.classList.add('text-brand');
-            activeLinkId = link.id; // Set the ID of the active link
-        }
-    });
-
-    // Function to handle the visibility of nested lists
-    function handleVisibility() {
-        links.forEach(function (link) {
-            if (link.href === currentUrl) {
-                link.classList.add('text-brand', 'font-bold');
-
-                // Unhide all ancestor ul elements
-                var ancestor = link.closest('li');
-                while (ancestor) {
-                    if (ancestor.tagName.toLowerCase() === 'ul') {
-                        ancestor.classList.remove('hidden');
-                    }
-                    ancestor = ancestor.parentElement;
-                }
-
-                // Unhide direct siblings at the same level
-                var parentLi = link.closest('li');
-                var siblingLis = Array.from(parentLi.children).filter(function (child) {
-                    return child !== parentLi;
-                });
-                siblingLis.forEach(function (siblingLi) {
-                    var siblingUl = siblingLi.querySelector('ul');
-                    if (siblingUl) {
-                        siblingUl.classList.remove('hidden');
-                    }
-                });
-            }
-        });
-
-        // Scroll the active link into view if it's not in view
-        var activeLink = document.getElementById(activeLinkId);
-        if (activeLink) {
-            var container = document.getElementById('linkTree');
-            if (container && !isElementInViewport(activeLink, container)) {
-                activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-            }
-        }
-    }
-
-    // Function to check if an element is in the viewport
-    function isElementInViewport(element, container) {
-        var rect = element.getBoundingClientRect();
-        var containerRect = container.getBoundingClientRect();
-        return (
-            rect.top >= containerRect.top &&
-            rect.left >= containerRect.left &&
-            rect.bottom <= containerRect.bottom &&
-            rect.right <= containerRect.right
-        );
-    }
-
-    // Call the handleVisibility function
-    handleVisibility();
-});
-
-</script>

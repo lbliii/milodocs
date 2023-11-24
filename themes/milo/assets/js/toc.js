@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Adjust the condition with the offset
       if (
-        rect.top - offset >= 0 &&
-        rect.bottom <= window.innerHeight - offset
+        rect.top + offset >= 0 &&
+        rect.bottom <= window.innerHeight + offset
       ) {
         // Section is in view
         const sectionId = section.id;

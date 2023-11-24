@@ -1,0 +1,27 @@
+
+{{ $letters := "abcdefghijklmnopqrstuvwxyz" }}
+{{$currentPage := . }}
+{{ $pages := $currentPage.Pages }}
+
+<div id="enteries-container">
+    {{ range $i, $letter := split $letters "" }}
+        <h1 id="{{$letter}}"><a href="#{{$letter}}">{{$letter | upper}}</a></h1>
+        {{ range $pages }}
+            {{ $base := slicestr .Title 0 1 | lower}}
+            {{ if eq $base $letter }} 
+                <div class="flex flex-col md:flex-row justify-between mx-8 mb-6 p-4 glossary-entry rounded-lg shadow-lg transition duration-300">
+                    <a href="{{ .Permalink }}" class="w-full">
+                        <div class="mb-2 md:mb-0 w-full">
+                            <h2 class="text-xl font-bold">
+                                {{ .Title }}
+                            </h2>
+                            <p>{{ .Description }}</p>
+                        </div>
+                    </a>
+                </div>
+     
+            {{ end }}
+        {{ end }}
+
+{{ end }}
+</div>
