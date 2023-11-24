@@ -1,5 +1,7 @@
 {{ define "home" }}
-    {{ .Content }}
+    <div id="articleContent" class="text-black p-4">
+      {{ .Content }}
+    </div>
     <div class="p-4">
       {{partial "article/tiles.html" . }}
     </div>
