@@ -1,8 +1,10 @@
 {{ define "main" }}
   <h1 class="text-black p-4">{{ .Title }}</h1>
+  {{if .Content}}
   <div id="articleContent" class="p-4">
     {{ .Content }}
   </div>
+  {{end}}
   <div class="p-4">
     {{ partial "article/tiles.html" . }}
   </div>

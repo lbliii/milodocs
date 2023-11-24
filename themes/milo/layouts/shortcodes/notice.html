@@ -16,13 +16,13 @@
         <div class="flex-shrink-0">
            <img src="/icons/
             {{- with $type}}
-                {{- if eq . "danger" -}} danger
-                {{- else if eq . "warning" -}} warning
-                {{- else if eq . "security" -}} shield
-                {{- else if eq . "info" -}} compass
-                {{- else if eq . "note" -}} note
-                {{- else if eq . "tip" -}} bulb 
-                {{- else if eq . "snack" -}} cookie 
+                {{- if eq . "danger" -}} notice/danger
+                {{- else if eq . "warning" -}} notice/warning
+                {{- else if eq . "security" -}} notice/security
+                {{- else if eq . "info" -}} notice/info
+                {{- else if eq . "note" -}} notice/note
+                {{- else if eq . "tip" -}} notice/tip 
+                {{- else if eq . "snack" -}} notice/snack 
                 {{- end -}}
             {{- end -}}
            .svg">

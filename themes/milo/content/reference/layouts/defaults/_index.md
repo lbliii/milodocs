@@ -1,6 +1,8 @@
 ---
 title: defaults
 description: Learn about the default layouts that make up the Milo Docs theme.
+icon: "base.svg"
+weight: 300
 ---
 
 Layouts in the `_default` folder define the major content types and outputs of your Hugo site. 

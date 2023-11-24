@@ -2,6 +2,7 @@
 title: CSS
 description: Learn about the CSS  used in the Milo Docs theme.
 weight: 100
+icon: "swatches.svg"
 ---
 
 The CSS used in the {{<prod>}} theme is powered by [TailwindCSS](https://tailwindcss.com/docs/installation).

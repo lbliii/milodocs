@@ -19,9 +19,19 @@ The `{{</*prod*/>}}` shortcode prints out a string for your main product name de
        product: 'Milo Docs'
    ```
 
+{{<notice warning "Header Constraints for TOCs">}}
+To ensure Hugo resolves this shortcode correctly in the **Table of Contents** of your articles, make sure that you use the `%` wrapper instead of `< >` in your headers.
+
+Example Error Output: `HAHAHUGOSHORTCOD...`
+{{</notice>}}
+
 ### Examples
 
 This is the {{<prod>}} theme.
+
+```s
+This is the {{</*prod*/>}} theme.
+```
 
 ## Source Code 
 

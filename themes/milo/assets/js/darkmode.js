@@ -6,15 +6,22 @@ document.addEventListener("DOMContentLoaded", function (event) {
   if (savedTheme) {
     document.documentElement.classList.toggle("dark", savedTheme === "dark");
     updateButtonText();
+    updateSectionIcons();
   }
 
   darkModeToggle.addEventListener("click", () => {
-    document.documentElement.classList.toggle("dark");
+    const isDarkMode = document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", !isDarkMode);
+
+    // Update the theme mode and button text
     localStorage.setItem(
       "theme-mode",
       document.documentElement.classList.contains("dark") ? "dark" : "light"
     );
     updateButtonText();
+
+    // Update the section icons
+    updateSectionIcons();
   });
 
   function updateButtonText() {
@@ -23,5 +30,18 @@ document.addEventListener("DOMContentLoaded", function (event) {
     darkModeToggle.innerHTML = isDarkMode
       ? '<img src="/icons/dark.svg">'
       : '<img src="/icons/light.svg">';
+  }
+
+  function updateSectionIcons() {
+    const isDarkMode = document.documentElement.classList.contains("dark");
+    const sectionIcons = document.querySelectorAll(".section-icon");
+
+    sectionIcons.forEach((icon) => {
+      const src = icon.getAttribute("src");
+      const newSrc = isDarkMode
+        ? src.replace("/icons/sections/light/", "/icons/sections/dark/")
+        : src.replace("/icons/sections/dark/", "/icons/sections/light/");
+      icon.setAttribute("src", newSrc);
+    });
   }
 });
