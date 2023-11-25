@@ -1,6 +1,6 @@
 ---
 title: toc.html
-description:
+description:  Learn how to use the toc partial layout.
 ---
 
 ## How it Works 

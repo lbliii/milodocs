@@ -1,6 +1,6 @@
 ---
 title: chat.html
-description:
+description: Learn how to use the chat partial layout.
 ---
 
 ## How it Works 
