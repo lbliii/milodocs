@@ -1,5 +1,5 @@
 ---
-title: next-prev
+title: next-prev.html
 description: Learn how to use the next-prev partial layout.
 ---
 

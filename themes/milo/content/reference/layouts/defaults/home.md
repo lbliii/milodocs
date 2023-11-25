@@ -1,5 +1,5 @@
 ---
-title: home
+title: home.html
 description: Learn about the home page template for the Milo Docs theme.
 weight: 200
 ---

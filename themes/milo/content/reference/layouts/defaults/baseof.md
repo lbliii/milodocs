@@ -1,5 +1,5 @@
 ---
-title: baseof
+title: baseof.html
 description: Learn about the baseof template for the Milo Docs theme.
 weight: 100
 ---

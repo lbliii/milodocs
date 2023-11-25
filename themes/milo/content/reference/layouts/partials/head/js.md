@@ -1,5 +1,5 @@
 ---
-title: js
+title: js.html
 description: Learn about the head/js partial.
 weight: 100
 ---

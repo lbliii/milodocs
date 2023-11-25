@@ -1,5 +1,5 @@
 ---
-title: glossary
+title: glossary.html
 description: Learn about the glossary page template for the theme.
 weight: 
 ---

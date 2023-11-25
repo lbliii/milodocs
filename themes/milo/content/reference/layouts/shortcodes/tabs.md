@@ -1,5 +1,5 @@
 ---
-title: tabs
+title: tabs.html
 description: learn how to use the tabs shortcode
 ---
 

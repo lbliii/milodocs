@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Algolia configuration
   const searchClient = algoliasearch(
-    "4TYL7GJO66",
-    "4b6a7e6e3a2cf663b3e4f8a372e8453a"
+    "4TYL7GJO66", // APP ID 
+    "4b6a7e6e3a2cf663b3e4f8a372e8453a" // Search Only API Key
   );
-  const searchIndex = searchClient.initIndex("default"); // Replace 'your_index_name' with your Algolia index name
+  const searchIndex = searchClient.initIndex("default"); // Replace 'default' with your Algolia index name
 
   // Function to group search results by parent
   function groupResultsByParent(hits) {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .map((hit) => {
               return `
                 <a href="${hit.uri}">
-                <div class="mb-4 text-black hover:bg-brand hover:text-white tile rounded-lg p-4 my-2 bg-zinc-100 transition duration-300 shadow-md">
+                <div class="mb-4 text-black hover:bg-brand hover:text-white rounded-lg p-4 my-2 bg-zinc-100 transition duration-300 shadow-md">
                   <h3 class="text-lg font-bold">${hit.title}</h3>
                   <p class="text-sm text-zinc-200">${hit.description}</p>
                 </div>

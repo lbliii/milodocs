@@ -1,5 +1,5 @@
 ---
-title: prod
+title: prod.html
 description: learn how to use the prod shortcode
 ---
 

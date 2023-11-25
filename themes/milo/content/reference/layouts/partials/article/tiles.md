@@ -1,5 +1,5 @@
 ---
-title: tiles
+title: tiles.html
 description: Learn how to use the tiles partial layout.
 ---
 

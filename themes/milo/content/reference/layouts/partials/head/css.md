@@ -1,5 +1,5 @@
 ---
-title: css
+title: css.html
 description: Learn about the head/css partial.
 weight: 100
 ---

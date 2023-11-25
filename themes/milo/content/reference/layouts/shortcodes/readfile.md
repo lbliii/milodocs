@@ -1,5 +1,5 @@
 ---
-title: readfile
+title: readfile.html
 description: learn how to use the readfile shortcode
 ---
 

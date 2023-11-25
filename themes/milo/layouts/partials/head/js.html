@@ -1,5 +1,6 @@
 {{- $jsResources := slice }}
 {{- $jsResources = $jsResources | append (resources.Get "js/main.js") }}
+{{- $jsResources = $jsResources | append (resources.Get "js/chat.js") }}
 {{- $jsResources = $jsResources | append (resources.Get "js/darkmode.js") }}
 {{- $jsResources = $jsResources | append (resources.Get "js/search.js") }}
 {{- $jsResources = $jsResources | append (resources.Get "js/tiles.js") }}

@@ -1,5 +1,5 @@
 ---
-title: pdoc
+title: pdoc.html
 description: learn how to use the pdoc shortcode
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: include
+title: include.html
 description: learn how to use the literal shortcode
 ---
 <!--start -->

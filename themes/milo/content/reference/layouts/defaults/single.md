@@ -1,5 +1,5 @@
 ---
-title: single
+title: single.html
 description: Learn about the single page template for the Milo Docs theme.
 weight: 400
 ---

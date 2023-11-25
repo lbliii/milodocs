@@ -1,5 +1,5 @@
 ---
-title: notice
+title: notice.html
 description: learn how to use the notice shortcode
 ---
 

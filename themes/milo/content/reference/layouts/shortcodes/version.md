@@ -1,5 +1,5 @@
 ---
-title: version
+title: version.html
 description: learn how to use the version shortcode
 ---
 
