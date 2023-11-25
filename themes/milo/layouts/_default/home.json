@@ -4,26 +4,19 @@
     {{- if and $index (gt $index 0) }},{{ end }}
     {{- partial "json.json" . }}
     {{- end }}
-        {{- if eq .Kind "section"}}
-            {{- range .Pages }}
-                {{- if ne .Type "json" }}
-                ,{{- partial "json.json" . }}
-                {{- end }}
-                {{- if eq .Kind "section"}}
-                    {{- range .Pages }}
-                        {{- if ne .Type "json" }}
-                        ,{{- partial "json.json" . }}
-                        {{- end }}
-                        {{- if eq .Kind "section"}}
-                            {{- range .Pages }}
-                                {{- if ne .Type "json" }}
-                                ,{{- partial "json.json" . }}
-                                {{- end }}
-                            {{- end }}
-                        {{- end }}
-                    {{- end }}
-                {{- end }}
-            {{- end }}
-        {{- end }}
+    {{- if eq .Kind "section"}}
+        {{- template "section" . }}
     {{- end }}
+    {{ end }}
 ]
+
+{{ define "section" }}
+{{- range .Pages }}
+    {{- if ne .Type "json" }}
+    ,{{- partial "json.json" . }}
+    {{- end }}
+    {{- if eq .Kind "section"}}
+        {{- template "section" . }}
+    {{- end }}
+{{- end }}
+{{ end }}

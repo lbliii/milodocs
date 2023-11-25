@@ -6,4 +6,10 @@ weight: 400
 
 ## Source Code 
 
+### HTML Output 
+
 {{%include "layouts/_default/single.html" "golang" %}}
+
+### JSON Output 
+
+{{%include "layouts/_default/single.json" "golang" %}}

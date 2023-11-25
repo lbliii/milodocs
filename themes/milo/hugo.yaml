@@ -38,7 +38,7 @@ outputs:
 params: 
   names:
     organization: 'Emdash'
-    product: 'Milo Docs'
+    product: 'MiloDocs'
   version: 
     major: 0
     minor: 0
