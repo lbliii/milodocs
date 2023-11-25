@@ -155,6 +155,10 @@
     }
   }
 
+  #articleContent .notice a {
+    @apply text-black underline font-brand-bold;
+  }
+
   /* Dark Theme Overrides */
   .dark .bg-white {
     @apply bg-zinc-900;
