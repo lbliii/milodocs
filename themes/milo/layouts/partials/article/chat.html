@@ -1,8 +1,7 @@
-
 <div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col flex justify-end">
     <div id="chat-messages" class="flex flex-col overflow-y-auto hide-scrollbar text-base">
     </div>
-    <div id="chat-controls" class="flex flex-row text-xs">
+    <div id="chat-controls" class="flex flex-row text-xs mt-2">
         <form onsubmit="submitQuestion(event)" class="flex flex-row">
             <input id="question" type="text" placeholder="Ask the docs" class="h-10 border rounded-lg p-1 mr-1 focus:outline-none focus:ring-2 focus:ring-brand" />
             <button id="sendButton" class="flex justify-center bg-brand my-1  hover:bg-black text-white p-1 mr-1 rounded-lg shadow-lg transition duration-300"><img src="/icons/send.svg" class="flex"></button>
@@ -10,7 +9,6 @@
         <button id="clearAll" onclick="clearConversation()" class="flex justify-center  bg-zinc-800 my-1 hover:bg-red-600 text-white p-1 rounded-lg shadow-lg transition duration-300"><img src="/icons/delete.svg"></button>
     </div>
 </div>
-
 
 <script>
     // Define a function to handle form submission
@@ -38,7 +36,7 @@ function addChatBubble(text, sender) {
     let pair = chatMessages.lastElementChild;
     if (!pair || !pair.classList.contains('chat-pair') || sender === 'user') {
         pair = document.createElement('div');
-        pair.className = 'chat-pair bg-zinc-100 flex flex-col space-y-2 my-2 p-2 rounded-lg';
+        pair.className = 'chat-pair bg-zinc-100 flex flex-col  my-2 p-2 rounded-lg';
         chatMessages.appendChild(pair);
     }
     const bubble = document.createElement('div');
