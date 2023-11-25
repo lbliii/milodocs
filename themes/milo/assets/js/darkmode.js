@@ -34,13 +34,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   function updateSectionIcons() {
     const isDarkMode = document.documentElement.classList.contains("dark");
-    const sectionIcons = document.querySelectorAll(".section-icon");
+    const sectionIcons = document.querySelectorAll(".icon");
 
     sectionIcons.forEach((icon) => {
       const src = icon.getAttribute("src");
       const newSrc = isDarkMode
-        ? src.replace("/icons/sections/light/", "/icons/sections/dark/")
-        : src.replace("/icons/sections/dark/", "/icons/sections/light/");
+        ? src.replace("/icons/light/", "/icons/dark/")
+        : src.replace("/icons/dark/", "/icons/light/");
       icon.setAttribute("src", newSrc);
     });
   }

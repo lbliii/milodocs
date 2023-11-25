@@ -10,7 +10,7 @@
         {{else}}
         <div class="rounded-lg shadow-md p-4 tile transition duration-300 space-y-2">
             <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-2">
-                {{with .Params.icon}}<img src="/icons/sections/light/{{.}}" class="h-8 section-icon">{{end}}
+                {{with .Params.icon}}<img src="/icons/light/{{.}}" class="h-8 icon">{{end}}
                 <div class="text-xl text-black font-brand-bold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title | truncate $titleTrunc}}{{end}}</div>
                 {{ with .Description | truncate $descTrunc}}
                 <p class="text-zinc-900 text-sm font-brand-thin">{{ . }}</p>

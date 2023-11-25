@@ -14,18 +14,18 @@
 ">
     <div class="flex">
         <div class="flex-shrink-0">
-           <img src="/icons/
+           <img src="/icons/light/
             {{- with $type}}
-                {{- if eq . "danger" -}} notice/danger
-                {{- else if eq . "warning" -}} notice/warning
-                {{- else if eq . "security" -}} notice/security
-                {{- else if eq . "info" -}} notice/info
-                {{- else if eq . "note" -}} notice/note
-                {{- else if eq . "tip" -}} notice/tip 
-                {{- else if eq . "snack" -}} notice/snack 
+                {{- if eq . "danger" -}} danger
+                {{- else if eq . "warning" -}} warning
+                {{- else if eq . "security" -}} security
+                {{- else if eq . "info" -}} info
+                {{- else if eq . "note" -}} note
+                {{- else if eq . "tip" -}} tip 
+                {{- else if eq . "snack" -}} snack 
                 {{- end -}}
             {{- end -}}
-           .svg">
+           .svg" class="icon">
         </div>
         <div class="ml-3 w-full text-black text-sm">
             {{- if $title -}}
