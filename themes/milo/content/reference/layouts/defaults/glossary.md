@@ -1,7 +1,6 @@
 ---
 title: glossary.html
 description: Learn about the glossary page template for the theme.
-weight: 
 ---
 
 It's common to want to build out a glossary of terms that are either unique to your product or essential to understanding the larger industry it lives in. 

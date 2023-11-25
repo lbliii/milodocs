@@ -1,7 +1,6 @@
 ---
 title: section.html
 description: Learn about the section page template for the Milo Docs theme.
-weight: 300
 ---
 
 ## Source Code 
