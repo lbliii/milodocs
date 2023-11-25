@@ -3,7 +3,7 @@ title: tabs.html
 description: learn how to use the tabs shortcode
 ---
 
-Tabs are a great way to organize content that is contextually relevant but divergent in format or procedure (without necessarily needing its own page). This combination of shortcodes allows you to create a tabbed interface.
+Tabs are a great way to organize content that is contextually relevant but divergent in format or procedure (without necessarily needing its own page). This combination of shortcodes allows you to create a tabbed interface. I first encountered this implementation strategy while reading the [MiniKube docs](https://minikube.sigs.k8s.io/docs/start/).
 
 ## How it Works
 
