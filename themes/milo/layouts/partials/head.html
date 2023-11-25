@@ -1,5 +1,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<meta name="title" content="{{with .Parent}}{{.Title}}{{end}}: {{ .Title }}" />
+<meta name="description" content="{{with .Description}}{{.}}{{else}}{{.Summary}}{{end}}" />
+<meta name="keywords" content="{{ .Keywords }}" />
+<meta name="author" content="{{ .Params.author }}" />
+<meta name="generator" content="Hugo v0.119.0">
+
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
 {{ partialCached "head/css.html" . }}
 {{ partialCached "head/js.html" . }}

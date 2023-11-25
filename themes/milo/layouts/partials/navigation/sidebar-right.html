@@ -1,7 +1,8 @@
-{{- $rootSection := .}}
-<aside id="sidebar-right" class="hidden md:block w-60">
-    <div class="toc sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto text-sm text-black transition duration-300"> 
-        {{ .TableOfContents }}
-  </div>
+<aside id="sidebar-right" class="hidden lg:block w-60">
+  {{if .Site.Params.article.toc.display}}
+    {{partial "article/toc.html" . }}
+  {{end}}
+  {{if .Site.Params.article.chat.display}}
+    {{partial "article/chat.html" . }}
+  {{end}}
 </aside>
-

@@ -53,3 +53,7 @@ params:
     nextPrev: 
       display: true
       trunc: 35
+    chat: 
+      display: true
+    toc: 
+      display: true
