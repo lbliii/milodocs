@@ -1,5 +1,5 @@
 ---
-title: clear content
+title: Clear Content
 description: Learn how to clear out the default content and start fresh.
 weight: 200
 ---

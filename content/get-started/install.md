@@ -1,7 +1,7 @@
 ---
-title: install
+title: Install
 description: Learn how to install Hugo and the theme.
-weight: 100
+weight: 200
 ---
 
 Getting from 0 to 1 takes ~5 minutes. 
