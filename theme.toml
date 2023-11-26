@@ -1,0 +1,19 @@
+name = 'MiloDocs'
+license = 'MIT'
+licenselink = 'https://github.com/lbliii/milo-theme/LICENSE'
+description = 'A theme for Tech Writers & Docs Engineers'
+
+# The home page of the theme, where the source can be found
+homepage = 'https://github.com/lbliii/milo-theme'
+
+# If you have a running demo of the theme
+demosite = 'h'ttps://milodocs-theme.netlify.app/'
+
+# Taxonomy terms
+tags = ['blog', 'company']
+features = ['chatgpt', 'algolia', 'darkmode','glossary']
+
+# If the theme has a single author
+[author]
+  name = 'Lawrence Lane'
+  homepage = 'https://github.com/lbliii'

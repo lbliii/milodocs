@@ -1,15 +1,8 @@
-# Theme Name
-
-## Features
-
-## Installation
-
-## Configuration
-
-
-## Notes to Self
-
-### Set Up Fresh Theme Using Tailwind
+---
+title: How to Create a Hugo Theme with TailwindCSS
+description:
+hidden: true
+---
 
 1. Run the following:
    ```bash
