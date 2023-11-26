@@ -24,7 +24,7 @@ function submitQuestion(event) {
 
 // Define a function to fetch answer from the API
 async function fetchAnswer(question) {
-    const response = await fetch(`https://pach-docs-chatgpt-6ukzwpb5kq-uc.a.run.app/?query=${encodeURIComponent(question)}`);
+    const response = await fetch(`https://milodocs-lc4762co7a-uc.a.run.app/?query=${encodeURIComponent(question)}`);
     const data = await response.json();
     const answer = data.answer || 'Sorry, I could not fetch the answer.';
     addChatBubble(answer, 'bot');

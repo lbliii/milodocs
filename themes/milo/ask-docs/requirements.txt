@@ -1,0 +1,6 @@
+langchain
+pinecone_client
+python-dotenv
+openai
+tiktoken
+functions-framework==3.*

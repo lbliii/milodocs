@@ -1,16 +1,15 @@
 [
     {{- range $index, $page := .Pages }}
     {{- if ne $page.Type "json" }}
-    {{- if and $index (gt $index 0) }},{{ end }}
+    {{- if and $index (gt $index 0) }},{{- end }}
     {{- partial "json.json" . }}
     {{- end }}
-    {{- if eq .Kind "section"}}
+    {{- if eq .Kind "section" }}
         {{- template "section" . }}
     {{- end }}
-    {{ end }}
+    {{-  end }}
 ]
-
-{{ define "section" }}
+{{- define "section" }}
 {{- range .Pages }}
     {{- if ne .Type "json" }}
     ,{{- partial "json.json" . }}
@@ -19,4 +18,4 @@
         {{- template "section" . }}
     {{- end }}
 {{- end }}
-{{ end }}
+{{- end }}

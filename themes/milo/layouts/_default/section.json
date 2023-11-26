@@ -7,10 +7,10 @@
     {{- if eq .Kind "section"}}
         {{- template "section" . }}
     {{- end }}
-    {{ end }}
+    {{- end }}
 ]
 
-{{ define "section" }}
+{{- define "section" }}
 {{- range .Pages }}
     {{- if ne .Type "json" }}
     ,{{- partial "json.json" . }}
@@ -19,4 +19,4 @@
         {{- template "section" . }}
     {{- end }}
 {{- end }}
-{{ end }}
+{{- end }}

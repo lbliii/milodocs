@@ -13,7 +13,7 @@ load_dotenv()
 openai_key = os.environ.get('OPENAI_API_KEY')
 pinecone_key = os.environ.get('PINECONE_API_KEY')
 pinecone_environment = os.environ.get('PINECONE_ENVIRONMENT')
-pinecone_index = "langchain1"
+pinecone_index = os.environ.get('PINECONE_INDEX')
 
 docs_index_path = "./docs.json" 
 docs_index_schema = ".[]" # [{"body:..."}] -> .[].body; see JSONLoader docs for more info
