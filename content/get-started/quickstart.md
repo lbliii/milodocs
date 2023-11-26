@@ -30,7 +30,7 @@ list: ["HTML", "JSON"]
 taxonomies: ["HTML", "JSON"]
 EOL
 
-git submodule add https://github.com/lbliii/milodocs themes/milo
+git submodule add https://github.com/lbliii/milodocs themes/milodocs
 hugo server
 open http://localhost:1313
 ```
