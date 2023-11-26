@@ -2,7 +2,7 @@
 ## Site Details
 baseURL: '/'
 languageCode: 'en-us'
-title: 'Milo'
+title: 'MiloDocs'
 ## Markdown
 markup:
   goldmark:
