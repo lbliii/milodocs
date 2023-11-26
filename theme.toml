@@ -7,7 +7,7 @@ description = 'A theme for Tech Writers & Docs Engineers'
 homepage = 'https://github.com/lbliii/milo-theme'
 
 # If you have a running demo of the theme
-demosite = 'h'ttps://milodocs-theme.netlify.app/'
+demosite = 'https://milodocs-theme.netlify.app/'
 
 # Taxonomy terms
 tags = ['blog', 'company']

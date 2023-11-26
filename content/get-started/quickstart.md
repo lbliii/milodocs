@@ -19,7 +19,7 @@ cat <<EOL > hugo.yaml
 baseURL: '/'
 languageCode: 'en-us'
 title: 'My Hugo Site'
-theme: milodocs
+theme: 'milodocs'
 
 # Output Formats
 outputs:
