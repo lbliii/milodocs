@@ -1,5 +1,6 @@
 ---
 title: Milo Theme Docs
+description: A Tech Docs Hugo theme built by a docs engineer for technical writers.
 cascade:
     version:
         isLatest: true
