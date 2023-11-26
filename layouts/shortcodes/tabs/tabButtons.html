@@ -1,5 +1,5 @@
 <!-- tabs/tabButtons.html -->
-<div class="flex ml-4 mt-2 space-x-2" data-tab-id="{{ .Get "id" | lower | urlize }}">
+<div class="flex flex-col md:flex-row  ml-4 mt-2  md:space-x-4" data-tab-id="{{ .Get "id" | lower | urlize }}">
     {{ .Inner }}
 </div>
 

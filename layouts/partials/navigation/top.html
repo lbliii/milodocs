@@ -3,12 +3,12 @@
         <div id="topNavItemsContainer" class="flex space-x-2">
             <!-- Logo -->
             <!-- Links -->
-            <div id="topNavLinks" class="hidden md:flex items-center space-x-4 text-black transition duration-300 justify-start w-1/3 font-brand-light text-sm">
+            <div id="topNavLinks" class="flex items-center mx-2 space-x-4 text-black transition duration-300 justify-start w-1/3 font-brand-light text-sm">
                 <a href="/"><img src="/icons/light/home.svg" class="icon"></a>
-                <a href="/" class="">Link 1</a>
-                <a href="/" class="">Link 2</a>
+                <a href="/" class="hidden md:block">Link 1</a>
+                <a href="/" class="hidden md:block">Link 2</a>
                 <!-- Dropdown -->
-                <div id="topNavPrimaryDropdown" class="relative group z-50">
+                <div id="topNavPrimaryDropdown" class="hidden md:relative group z-50">
                     <a href="/products" class="">Dropdown</a>
                     <div class="absolute left-0 mt-0 w-48 bg-white border border-gray-200 rounded-md overflow-hidden shadow-lg group-hover:block hidden p-1">
                         <a href="/">Example</a>
@@ -21,9 +21,9 @@
             </div>
             <div id="topNavEnd" class="flex w-1/3 justify-end">
                 <!-- Dark Mode -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <button id="chatTocToggle"><img src="/icons/toggle-left.svg"></button>
-                    <button id="darkModeToggle"><img src="/icons/light.svg"></button>
+                <div class="flex items-center space-x-4">
+                    <button id="chatTocToggle" class="hidden md:block"><img src="/icons/toggle-left.svg"></button>
+                    <button id="darkModeToggle" class=""><img src="/icons/light.svg"></button>
                 </div>
             </div>
         </div>
