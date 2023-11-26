@@ -1,4 +1,4 @@
-baseURL: 'https://docsexmachina.io/'
+baseURL: 'https://milodocs-theme.netlify.app/'
 languageCode: 'en-us'
 title: 'Milo Docs theme'
 theme: milo
