@@ -1,13 +1,58 @@
-baseURL: 'https://milodocs-theme.netlify.app/'
+# Hugo Global Settings 
+## Site Details
+baseURL: '/'
 languageCode: 'en-us'
-title: 'Milo Docs theme'
-theme: milo
-
-
+title: 'Milo'
+## Markdown
+markup:
+  goldmark:
+    renderer:
+      hardWraps: false
+      unsafe: true
+      xhtml: false
+  highlight:
+    noClasses: true
+## Min Version
+module:
+  hugoVersion:
+    extended: true
+    min: "0.116.0"
+## Misc
+enableGitInfo: true 
+enableEmoji: true 
+enableRobotsTXT: true 
+## SEO
+sitemap:
+  changeFreq: monthly 
+  fileName: sitemap.xml 
+  priority: 0.8 
 # Output Formats
 outputs: 
-  home: [ "HTML", "JSON", "RSS"]
+  home: [ "HTML", "JSON"]
   page: [ "HTML", "JSON"]
   section: [ "HTML", "JSON"]
   list: [ "HTML", "JSON"]
   taxonomies: [ "HTML", "JSON"]
+
+# Theme Feature Settings
+params: 
+  names:
+    organization: 'Emdash'
+    product: 'MiloDocs'
+  version: 
+    major: 0
+    minor: 0
+    patch: 3
+  article:
+    childArticles:
+      display: true
+      count: 7 
+      titleTrunc: 90
+      descTrunc: 90
+    nextPrev: 
+      display: true
+      trunc: 35
+    chat: 
+      display: true
+    toc: 
+      display: true
