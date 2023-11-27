@@ -35,5 +35,34 @@ hugo new site <siteName>
    gh repo clone lbliii/milo-theme
    ```
 
-## Configuration
+{{<notice note "submodule sandbox">}}
+You can install this theme as a submodule, however the default content files will not be removable. I may separate these in the future depending on what people would like.
+{{</notice>}}
 
+## 4. Add Theme to Config
+
+```s
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'My New Hugo Site'
+theme = 'milodocs'
+```
+
+## 5. Init Repo
+
+Time to start saving your progress! 
+1. Run the following:
+   ```s
+   git init
+   ```
+2. Add a comment.
+3. Push your new site and theme to your remote git repo.
+
+## 6. Deploy locally 
+
+1. Navigate into the `siteName` repo.
+2. Run the following:
+   ```s
+   hugo server
+   ```
+3. Open localhost (typically [localhost:1313](http://localhost:1313)).

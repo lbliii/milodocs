@@ -36,7 +36,16 @@ hugo new site <siteName>
 You can install this theme as a submodule, however the default content files will not be removable. I may separate these in the future depending on what people would like.
 {{</notice>}}
 
-## 4. Init Repo
+## 4. Add Theme to Config
+
+```s
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'My New Hugo Site'
+theme = 'milodocs'
+```
+
+## 5. Init Repo
 
 Time to start saving your progress! 
 1. Run the following:
@@ -46,7 +55,7 @@ Time to start saving your progress!
 2. Add a comment.
 3. Push your new site and theme to your remote git repo.
 
-## 5. Deploy locally 
+## 6. Deploy locally 
 
 1. Navigate into the `siteName` repo.
 2. Run the following:
