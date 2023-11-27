@@ -14,7 +14,7 @@
     {{ range .dir }}
     {{ if and (not .Params.hidden) }}
     <li class="flex flex-col mr-2">
-        <a class="flex flex-row items-center {{if eq $.level 1}}text-lg font-brand-bold{{else if eq $.level 2}}font-brand-semibold text-md{{else if eq $.level 3}} font-brand-medium {{else if eq $.level 4}} {{else}} text-sm{{end}} p-2 hover:bg-zinc-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
+        <a class="flex flex-row items-center {{if eq $.level 1}}text-lg font-brand font-bold{{else if eq $.level 2}}font-semibold text-md{{else if eq $.level 3}} font-medium {{else if eq $.level 4}} {{else}} text-sm{{end}} p-2 hover:bg-zinc-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand font-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
             href="{{ .RelPermalink }}" data-level="{{ $.level }}" data-current="{{ if eq .RelPermalink $.current.RelPermalink }}true{{else}}false{{end}}" data-parent="{{.Parent.RelPermalink}}">
             {{with .Params.icon}}<img src="/icons/light/{{.}}" alt="" class="icon w-5 h-5 mr-2">{{end}} {{if .Title}}{{.Title}}{{else}}{{ path.BaseName . | humanize }}{{end}}
         </a>

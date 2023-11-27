@@ -24,7 +24,7 @@
 
   /* Global Font Family */
   main {
-    @apply font-brand-regular;
+    @apply font-brand;
   }
 
   /*  Article Content Styles */ 
@@ -41,7 +41,7 @@
   }
 
   #articleContent strong {
-    @apply font-brand-semibold;
+    @apply font-brand font-semibold;
   }
 
   /* List Styles */
@@ -54,7 +54,7 @@
 
   /* Nested Code, Tables, Notices in Ordered Lists*/
   #articleContent ol > li p:first-child {
-    @apply inline font-brand-regular;
+    @apply inline;
   }
   #articleContent ol > li p:not(:first-child),
   ol > li > section,
@@ -96,7 +96,7 @@
   }
   /* Single Line Code */
   #articleContent code {
-    @apply bg-zinc-100 p-1 rounded text-xs font-brand-light;
+    @apply bg-zinc-100 p-1 rounded text-xs font-light;
   }
 
   /* Syntax Highlighted Code */
@@ -156,7 +156,7 @@
   }
 
   #articleContent .notice a {
-    @apply text-black underline font-brand-bold;
+    @apply text-black underline font-bold;
   }
 
   /* Dark Theme Overrides */

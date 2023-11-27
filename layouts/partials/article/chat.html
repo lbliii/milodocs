@@ -40,7 +40,7 @@ function addChatBubble(text, sender) {
         chatMessages.appendChild(pair);
     }
     const bubble = document.createElement('div');
-    bubble.className = `chat-bubble ${sender} p-2 rounded-lg text-black ${sender === 'user' ? 'font-brand-semibold' : 'font-brand-regular'}`;
+    bubble.className = `chat-bubble ${sender} p-2 rounded-lg text-black ${sender === 'user' ? 'font-brand font-semibold' : 'font-brand font-regular'}`;
     bubble.innerText = text;
     pair.appendChild(bubble);
     if (sender === 'user') {
