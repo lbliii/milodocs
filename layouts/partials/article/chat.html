@@ -61,7 +61,11 @@ function addChatBubble(text, sender) {
 
         deleteButtonWrapper.appendChild(deleteButton);
         pair.appendChild(deleteButtonWrapper);
-        }
+    }
+    
+    // Scroll to the bottom of the chat container
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
     saveChatHistory();
 }
 

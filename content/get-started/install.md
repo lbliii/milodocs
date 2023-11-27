@@ -1,7 +1,7 @@
 ---
 title: Install
 description: Learn how to install Hugo and the theme.
-weight: 200
+weight: 100
 ---
 
 Getting from 0 to 1 takes ~5 minutes. 
@@ -24,6 +24,8 @@ hugo new site <siteName>
 
 ## 3. Install This Project
 
+Use this option when you want to customize the theme.
+
 1. Open your `<siteName>` project directory.
 2. Navigate to the `themes/` directory. 
 3. Run the following command:
@@ -31,6 +33,11 @@ hugo new site <siteName>
    ```bash
    gh repo clone lbliii/milo-theme
    ```
+
+{{<notice note "submodule sandbox">}}
+You can install this theme as a submodule, however the default content files will not be removable. I may separate these in the future depending on what people would like.
+{{</notice>}}
+
 ## 4. Init Repo
 
 Time to start saving your progress! 

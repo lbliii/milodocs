@@ -8,6 +8,7 @@ cascade:
         minor: 0 
         patch: 2
     author: lawrence lane
+    themeContent: true
 ---
 
 # Welcome to {{%prod%}} Theme
