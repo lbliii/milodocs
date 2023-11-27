@@ -115,7 +115,7 @@
 
   /* Link Styles */
   #articleContent a {
-    @apply text-brand;
+    @apply text-brand underline;
   }
   #articleContent a:hover {
     @apply text-brand-1 transition duration-300;

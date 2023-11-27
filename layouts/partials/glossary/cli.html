@@ -13,7 +13,7 @@
             {{ if eq $base $letter }} 
             <div class="bg-white p-4 rounded-lg shadow-lg text-black mb-6 w-full glossary-entry">
                 <div class="flex flex-col md:flex-row justify-between ">
-                    <a href="{{ .Permalink }}" aria-lable="{{.Title}}" class="">
+                    <a href="{{ .Permalink }}" aria-label="{{.Title}}" class="">
                         <div class="mb-2 md:mb-0">
                             <h2 class="text-xl font-bold">
                                 {{ with replace .Title $filter "" }}{{ . }}{{ end }}
