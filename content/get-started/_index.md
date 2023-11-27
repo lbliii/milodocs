@@ -24,4 +24,4 @@ icon: "fast_forward.svg"
 - **Discovery UX Components**: Algolia Search & ChatGPT UIs are OOTB for easy hookup
 - **Battle Tested Shortcodes**: I've been deploying Hugo for tech docs for 5+ years; this is my personal collection of need-to-haves, made as agnostically as possible
 - **TailwindCSS + VanillaJS**: You'll be able to modify this theme to your liking using the basics with minimal dependencies
-- **Brandable**: Colors and fonts have their own CSS files; the TailwindCSS extensions mapped to these styles use generic names like `brand-bold`, `brand-semibold`, and `brand-color-1`.
+- **Brandable**: Colors and fonts have their own CSS files; the TailwindCSS extensions mapped to these styles use generic names like `font-brand`, `font-semibold`, and `brand-color-1`.
