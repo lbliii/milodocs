@@ -1,0 +1,13 @@
+{{- $details := . }}
+{{- with $details.security}}
+<h4>Security</h4>
+<div class="bg-zinc-100 p-1 rounded text-sm">
+    <ul>
+        {{- range $details.security }} 
+            {{- range $key, $val := . }}
+                <li>{{ $key }} {{$val}}</li>
+            {{- end }} 
+        {{- end }}
+    </ul>
+</div>
+{{- end }}

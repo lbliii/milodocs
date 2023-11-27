@@ -1,0 +1,35 @@
+{{- $details := . }}
+{{- with $details.responses}}
+<h4>Responses</h4>
+<div class="space-y-2">
+    {{- range $statusCode, $response := $details.responses }}
+    <div class="bg-zinc-100 p-1 rounded">
+        <h5>{{ $statusCode }}</h5>
+        <p>{{ $response.description }}</p>
+        
+        {{- with (index $response.content "application/json").schema }}
+        <div class="bg-zinc-200 p-1 rounded">
+            <h6>Schema</h6>
+
+            {{ range $key, $value := . }}
+                {{- if eq $key "$ref" }}
+                    <!-- Extract component name and display its details -->
+                    {{ $componentName := index (split $value "/") 3 }}
+                    {{ with index $.Site.Data.exampleApi.components.schemas $componentName }}
+                        <!-- Display component details -->
+                        <p>Type: {{ .type }}</p>
+                        <!-- Add more fields as required -->
+                    {{ end }}
+                {{- else }}
+                    <!-- Inline schema or other properties -->
+                    
+                    <p>{{ $key }}: {{ $value }}</p>
+                {{- end }}
+            {{- end }}
+
+        </div>
+        {{- end }}
+    </div>
+    {{- end }}
+</div>
+{{- end }}
