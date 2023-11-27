@@ -69,3 +69,4 @@ Time to start saving your progress!
 You've done the hardest part: installing and deploying [Hugo](https:gohugo.io) with a theme. See the next page to learn how to clear out my default content and start drafting.
 
 {{</notice>}}
+

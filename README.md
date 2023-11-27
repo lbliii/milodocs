@@ -7,6 +7,24 @@
 
 ## Installation
 
+### Quickstart (MacOS)
+
+Copy and paste this into your terminal.
+
+```s
+brew install hugo
+site_name="milodocs_$(date +%s%N | md5sum | head -c 8)"
+hugo new site "$site_name"
+cd "$site_name"
+git clone https://github.com/lbliii/milodocs themes/milodocs
+echo 'theme = "milodocs"' >> hugo.toml
+git init
+git add .
+git commit -m "Initial commit"
+hugo server -D -p 1313
+```
+Open [localhost:1313](localhost:1313)
+
 Getting from 0 to 1 takes ~5 minutes. 
 
 ### 1. Install Hugo 
