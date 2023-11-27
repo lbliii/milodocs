@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   function updateButtonContent() {
     const isChatVisible = !chatContainer.classList.contains("hidden");
     chatTocToggle.innerHTML = isChatVisible
-      ? '<img src="/icons/toggle-right.svg" class="mr-4">'
-      : '<img src="/icons/toggle-left.svg" class="mr-4">';
+      ? '<img src="/icons/toggle-right.svg" alt="toggle" class="mr-4">'
+      : '<img src="/icons/toggle-left.svg" alt="toggle" class="mr-4">';
   }
 });

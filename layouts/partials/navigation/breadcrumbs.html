@@ -1,10 +1,16 @@
-<nav aria-label="breadcrumb" class="breadcrumb flex flex-wrap text-xs px-2 items-center md:px-4">
-    <div class="flex space-x-2 md:space-x-4 lg:space-x-6">
-      {{ range after 1 .Ancestors.Reverse }}
-        <a href="{{ .Permalink }}" class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile transition duration-300">
+<nav aria-label="Breadcrumb Navigation" class="breadcrumb flex flex-wrap text-sm px-2 items-center md:px-4">
+  <ol class="flex space-x-2 md:space-x-4 lg:space-x-6">
+    {{ range after 1 .Ancestors.Reverse }}
+      <li>
+        <a href="{{ .Permalink }}" class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile transition duration-300" aria-label="Breadcrumb Item">
             {{ .Title }}
         </a>
-      {{ end }}
-    </div>
+      </li>
+    {{ end }}
+    <li>
+      <a href="{{ .Permalink }}" class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile transition duration-300" aria-label="Breadcrumb Item" aria-current="page">
+          {{ .Title }}
+      </a>
+    </li>
+  </ol>
 </nav>
-  
