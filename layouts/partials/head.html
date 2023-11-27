@@ -4,7 +4,7 @@
 <meta name="description" content="{{with .Description}}{{.}}{{else}}{{.Summary}}{{end}}" />
 <meta name="keywords" content="{{ .Keywords }}" />
 <meta name="author" content="{{ .Params.author }}" />
-<meta name="generator" content="Hugo v0.119.0">
+{{ if .IsHome }}{{ hugo.Generator }}{{ end }}
 
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
 {{ partialCached "head/css.html" . }}

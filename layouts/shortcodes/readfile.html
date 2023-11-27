@@ -1,6 +1,6 @@
 {{$file := .Get "file"}}
 {{$content := $file | readFile}}
 
-{{ $content | replaceRE "^## .+\n" "" | markdownify }}
+{{ $.Page.RenderString $content | replaceRE "^## .+\n" "" }}
 
   

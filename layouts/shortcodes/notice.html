@@ -31,7 +31,7 @@
             {{- if $title -}}
             <div class="font-brand-bold mb-2">{{ $title }}</div>
             {{- end -}}
-            {{- .Inner | markdownify }}
+            {{ $.Page.RenderString .Inner }}
         </div>
     </div>
 </div>

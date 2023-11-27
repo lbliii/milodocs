@@ -4,7 +4,7 @@
 {{$count := .Site.Params.article.childArticles.count }}
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {{ range sort .Pages "Weight" "$order"}}
+    {{ range .Pages }}
         {{ if  .Params.hidden }}
             {{/* Do not show the hidden child page or its descendants */}}
         {{else}}
