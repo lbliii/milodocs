@@ -4,6 +4,7 @@
   font-style: italic;
   font-weight: 900;
   src: url('/fonts/Rubik-BlackItalic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Extra Bold Italic */
@@ -12,6 +13,7 @@
   font-style: italic;
   font-weight: 800;
   src: url('/fonts/Rubik-ExtraBoldItalic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Bold Italic */
@@ -20,6 +22,7 @@
   font-style: italic;
   font-weight: 700;
   src: url('/fonts/Rubik-BoldItalic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Semi-Bold Italic */
@@ -28,6 +31,7 @@
   font-style: italic;
   font-weight: 600;
   src: url('/fonts/Rubik-SemiBoldItalic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Medium Italic */
@@ -36,6 +40,7 @@
   font-style: italic;
   font-weight: 500;
   src: url('/fonts/Rubik-MediumItalic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Italic */
@@ -44,6 +49,7 @@
   font-style: italic;
   font-weight: normal;
   src: url('/fonts/Rubik-Italic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Light Italic */
@@ -52,6 +58,7 @@
   font-style: italic;
   font-weight: 300;
   src: url('/fonts/Rubik-LightItalic.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Black */
@@ -59,6 +66,7 @@
   font-family: 'RubikBlack';
   font-weight: 900;
   src: url('/fonts/Rubik-Black.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Extra Bold */
@@ -66,6 +74,7 @@
   font-family: 'RubikExtraBold';
   font-weight: 800;
   src: url('/fonts/Rubik-ExtraBold.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Bold */
@@ -73,6 +82,7 @@
   font-family: 'RubikBold';
   font-weight: 700;
   src: url('/fonts/Rubik-Bold.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Semi-Bold */
@@ -80,6 +90,7 @@
   font-family: 'RubikSemiBold';
   font-weight: 600;
   src: url('/fonts/Rubik-SemiBold.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Medium */
@@ -87,6 +98,7 @@
   font-family: 'RubikMedium';
   font-weight: 500;
   src: url('/fonts/Rubik-Medium.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Regular */
@@ -94,6 +106,7 @@
   font-family: 'RubikRegular';
   font-weight: normal;
   src: url('/fonts/Rubik-Regular.ttf') format('truetype');
+  font-display: swap;
 }
 
 /* Rubik Light */
@@ -101,4 +114,5 @@
   font-family: 'RubikLight';
   font-weight: 300;
   src: url('/fonts/Rubik-Light.ttf') format('truetype');
+  font-display: swap;
 }
