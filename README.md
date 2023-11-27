@@ -7,6 +7,26 @@
 
 ## Installation
 
+Getting from 0 to 1 takes ~5 minutes. 
+
+## 1. Install Hugo 
+
+```bash
+brew install hugo
+```
+See Hugo Docs for more options:
+- [MacOS](https://gohugo.io/installation/macos/)
+- [Linux](https://gohugo.io/installation/linux/)
+- [Windows](https://gohugo.io/installation/windows/)
+
+## 2. Create a New Site 
+
+```s
+hugo new site <siteName>
+```
+
+## 3. Install This Project
+
 Use this option when you want to customize the theme.
 
 1. Open your `<siteName>` project directory.
@@ -16,5 +36,6 @@ Use this option when you want to customize the theme.
    ```bash
    gh repo clone lbliii/milo-theme
    ```
+   
 ## Configuration
 
