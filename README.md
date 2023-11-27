@@ -32,7 +32,7 @@ hugo new site <siteName>
 3. Run the following command:
 
    ```bash
-   gh repo clone lbliii/milo-theme
+   gh repo clone lbliii/milodocs
    ```
 
 ### 4. Add Theme to Config

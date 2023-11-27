@@ -29,7 +29,7 @@ hugo new site <siteName>
 3. Run the following command:
 
    ```bash
-   gh repo clone lbliii/milo-theme
+   gh repo clone lbliii/milodocs
    ```
 
 {{<notice note "submodule sandbox">}}

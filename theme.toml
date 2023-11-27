@@ -1,10 +1,10 @@
 name = 'MiloDocs'
 license = 'MIT'
-licenselink = 'https://github.com/lbliii/milo-theme/LICENSE'
+licenselink = 'https://github.com/lbliii/milodocs/LICENSE'
 description = 'A theme for Tech Writers & Docs Engineers'
 
 # The home page of the theme, where the source can be found
-homepage = 'https://github.com/lbliii/milo-theme'
+homepage = 'https://github.com/lbliii/milodocs'
 
 # If you have a running demo of the theme
 demosite = 'https://milodocs-theme.netlify.app/'
