@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const isDarkMode = document.documentElement.classList.contains("dark");
 
     darkModeToggle.innerHTML = isDarkMode
-      ? '<img src="/icons/dark.svg" aria-lable="activate lightmode" alt="moon">'
-      : '<img src="/icons/light.svg" aria-lable="activate darkmode" alt="sun">';
+      ? '<img src="/icons/dark.svg" aria-lable="activate lightmode" class="w-5" alt="moon">'
+      : '<img src="/icons/light.svg" aria-lable="activate darkmode" class="w-5" alt="sun">';
   }
 
   function updateSectionIcons() {
