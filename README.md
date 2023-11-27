@@ -35,10 +35,6 @@ hugo new site <siteName>
    gh repo clone lbliii/milo-theme
    ```
 
-{{<notice note "submodule sandbox">}}
-You can install this theme as a submodule, however the default content files will not be removable. I may separate these in the future depending on what people would like.
-{{</notice>}}
-
 ## 4. Add Theme to Config
 
 ```s
