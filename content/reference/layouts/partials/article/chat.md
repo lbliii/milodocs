@@ -3,13 +3,13 @@ title: chat.html
 description: Learn how to use the chat partial layout.
 ---
 
-Using an LLM to enhance the discoverability of your content is quickly becoming a baseline requirement for documentation. Thankfully, it's not too hard to do thanks to Hugo's output to JSON.
+Using an LLM to enhance the discoverability of your content is quickly becoming a baseline requirement for documentation. Thankfully, it's not too hard to do thanks to [Hugo's output to JSON](https://gohugo.io/methods/page/outputformats/).
 
  At a high level, you'll need to provide some server-side code in Python or JS that routes user questions to chatGPT after being passed some embeddings (created from your docs JSON) for context.
 
 ## How it Works 
 
-This partial sends an API request to a GCP cloud function you'll need to step up that uses [Flask](https://flask.palletsprojects.com/en/3.0.x/) (built in) to:
+This partial sends an API request to a GCP cloud function you'll need to set up that uses [Flask](https://flask.palletsprojects.com/en/3.0.x/) (built in) to:
 
  1. Search a [Pinecone](https://www.pinecone.io/) vector database filled with embeddings created from your documentation.
  2. Perform a similarity search and return the 4 most relevant chunks. 
