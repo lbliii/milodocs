@@ -4,9 +4,9 @@
     <div id="chat-controls" class="flex flex-row text-xs mt-2">
         <form onsubmit="submitQuestion(event)" class="flex flex-row">
             <input id="question" type="text" aria-label="Question Input" placeholder="Ask the docs" class="h-10 border rounded-lg p-1 mr-1 focus:outline-none focus:ring-2 focus:ring-brand" />
-            <button id="sendButton" aria-label="Send" class="flex justify-center bg-brand my-1  hover:bg-black text-white p-1 mr-1 rounded-lg shadow-lg transition duration-300"><img src="/icons/send.svg" alt="Send" class="flex"></button>
+            <button id="sendButton" aria-label="Send" class="flex items-center bg-brand my-1  hover:bg-black text-white p-1 mr-1 rounded-lg shadow-lg transition duration-300"><img src="/icons/send.svg" alt="Send" class="w-5 h-5"></button>
         </form>
-        <button id="clearAll" aria-label="Delete All" onclick="clearConversation()" class="flex justify-center  bg-black my-1 hover:bg-red-600 text-white p-1 rounded-lg shadow-lg transition duration-300"><img src="/icons/delete.svg" alt="Delete"></button>
+        <button id="clearAll" aria-label="Delete All" onclick="clearConversation()" class="flex items-center bg-black my-1 hover:bg-red-600 text-white p-1 rounded-lg shadow-lg transition duration-300"><img src="/icons/delete.svg" alt="Delete" class="w-5 h-5"></button>
     </div>
 </div>
 
