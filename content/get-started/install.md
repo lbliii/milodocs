@@ -24,8 +24,6 @@ hugo new site <siteName>
 
 ## 3. Install This Project
 
-Use this option when you want to customize the theme.
-
 1. Open your `<siteName>` project directory.
 2. Navigate to the `themes/` directory. 
 3. Run the following command:
