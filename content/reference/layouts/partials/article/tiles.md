@@ -8,4 +8,4 @@ description: Learn how to use the tiles partial layout.
 
 ## Source Code 
 
-{{%include "layouts/partials/article/next-prev.html" "go" %}}
+{{%include "layouts/partials/article/tiles.html" "go" %}}
