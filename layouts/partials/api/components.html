@@ -1,0 +1,19 @@
+{{- $components := . }}
+<div id="components" class="flex flex-col w-full mb-4 space-y-4">
+    <h2>Components</h2>
+    {{- range $schemaName, $schema := $components }}
+        <div id="{{$schemaName | lower}}-schema" class="bg-zinc-100 p-2 rounded space-y-2">
+            <h3>{{ $schemaName }}</h3>
+            <div id="{{$schemaName | lower}}-properties" class="text-sm space-y-2">
+                {{- range $propertyName, $propertyDetails := $schema.properties }}
+                <div id="{{$schemaName | lower }}-{{$propertyName}}-property" class="space-y-2">
+                <span class="font-bold">{{ $propertyName }}</span>
+                <!-- type & format -->
+                <code class="text-xs p-1 bg-zinc-200">{{ $propertyDetails.type }}</code> <span class="text-xs">{{- with $propertyDetails.format}}({{.}}){{- else}}{{- end }}</span>
+                <p>{{- with $propertyDetails.description}}{{.}}{{- else}}{{- end }}</p>
+                </div>
+                {{- end }}
+            </div>
+        </div>
+    {{- end}}
+</div>

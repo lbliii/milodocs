@@ -148,16 +148,7 @@ components:
             type: string
         available:
           type: boolean
-
-  responses:
-    UnauthorizedError:
-      description: Authentication information is missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-
-  schemas:
+    
     Error:
       type: object
       properties:
@@ -166,3 +157,12 @@ components:
           format: int32
         message:
           type: string
+
+
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
