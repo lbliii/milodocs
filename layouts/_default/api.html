@@ -1,31 +1,31 @@
 {{- define "main" }}
-{{$reference := .Page.Params.reference}}
-{{- range $reference, $data := .Site.Data}}
-{{- with $data}}
+{{- $reference := .Page.Params.reference -}}
+{{- range $data, $reference := .Site.Data}}
+{{- with $reference}}
 <div class="container mx-auto p-4 text-black">
     <!-- API Information Card -->
     <div class="p-4 border border-gray-200 rounded mb-4">
         <h2>{{ .info.title }}</h2>
-        <p>{{ .info.description }}</p>
+        <p>{{ $.Page.RenderString .info.description }}</p>
         <p><strong>Version:</strong> {{ .info.version }}</p>
     </div>
     <!-- Endpoints List -->
-    <div class="flex">
+    <div class="flex flex-col">
         {{ range $path, $value := .paths }}
         <div id="left-panel" class="flex flex-col w-1/2 mb-4 space-y-8">
         <h2>{{ $path }}</h2>
         <!-- Methods List -->
             {{ range $method, $details := $value }}
-     
+            {{$context := dict "reference" $reference "path" $path "method" $method "details" $details }}
             <div id="{{$path}}-{{$method}}-method" class="pl-2 space-y-2">
                 <h3>{{ $method | title }}</h3>
                 <p class="text-sm">{{ $details.summary }}</p>
                 <!-- Method Security -->
                 {{- partial "api/security.html" $details }}
                 <!-- Method Parameters -->
-                {{- partial "api/parameters.html" $details }}
+                {{- partial "api/parameters.html" $context }}
                 <!-- Method Responses -->
-                {{- partial "api/responses.html" $details }}
+                {{- partial "api/responses.html" $context }}
             </div>
             {{ end }}
         </div>

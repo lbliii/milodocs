@@ -1,24 +1,30 @@
+{{- $details := .details }}
+{{- $schemas := .reference.components.schemas }}
 
-{{- $details := . }}
 {{- with $details.responses}}
 <h4>Responses</h4>
 <div class="space-y-2">
     {{- range $statusCode, $response := . }}
-    <div class="bg-zinc-100 p-1 rounded">
-        <h5>{{ $statusCode }}</h5>
-        <p>{{ $response.description }}</p>
+    {{- $bg := "" }}
+    {{- if or (eq $statusCode "200") (eq $statusCode "204") }}
+        {{- $bg = "bg-green-100" }}
+    {{- else }}
+        {{- $bg = "bg-red-100" }}
+    {{- end }}
+    <div class="flex flex-col">
+        <h5 class="{{$bg}} p-2 rounded">{{ $statusCode }}</h5>
         {{- with (index $response.content "application/json").schema }}
-        <div class="bg-zinc-200 p-1 rounded space-y-2">
-            <h6>Schema</h6>
-            {{- with .type }}
-            <p>Type: <code>{{ . }}</code></p>
-            {{- end }}
+        <div class="p-2 space-y-2">
+            {{- $response.description }} 
             {{- if eq .type "array"}}
+            (<span class="text-xs">{{ .type }}</span>)
                 {{- with .items}}
                     {{- range $ref, $value := . }}
-                    {{ $path := strings.TrimPrefix "#/" $value }} <!-- example: components/schemas/Item  -->
-                    {{/*  convert / to dots and add .Site.Data  */}}
-                    {{$path}}
+                    {{ $path := strings.TrimPrefix "#/components/schemas/" $value }} <!-- example: components/schemas/Item  -->
+                    {{- with (index $schemas $path) }}
+                    {{$componentContext := dict "schemaName" $path "schema" . "nested" true }}
+                    {{- partial "api/component.html" $componentContext }}
+                    {{- end }}
                     {{- end }}
                 {{- end }}
             {{- end }}

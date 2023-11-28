@@ -1,0 +1,20 @@
+{{- $parameter := .parameter }}
+{{- $parametersMap := .parametersMap }}
+{{- if $parameter.name }}
+    <li>
+        <span class="font-bold">{{ $parameter.name }}</span>
+        (<code class="p-1 rounded text-xs">{{ $parameter.in }}</code>):
+        <p>{{ $parameter.description | markdownify }}</p>
+    </li>
+{{- else }}
+    {{- range $parameterName, $parameter := $parameter }}
+        {{ $path := strings.TrimPrefix "#/components/parameters/" . }}
+        {{- with (index $parametersMap $path) }}
+            <li>
+                <span class="font-bold">{{ .name }}</span>
+                (<code class="p-1 rounded text-xs">{{ .in }}</code>):
+                <p>{{ .description | markdownify }}</p>
+            </li>
+        {{- end }}
+    {{- end }}
+{{- end }}
