@@ -1,0 +1,15 @@
+{{/*  Methods expect a context with:
+    - .reference: a reference to the whole api spec
+    - .path: the path of the endpoint these methods belong to
+    - .methods: the methods that belong to the path   
+*/}}
+{{$reference := .reference}}
+{{$path := .path}}
+<div id="left-panel" class="flex flex-col w-1/2 mb-4 space-y-8">
+    {{- range $method, $details := .methods }}
+        {{- $context := dict "reference" $reference "path" $path "method" $method "details" $details }}
+        {{- partial "api/method.html" $context }}
+    {{- end }}
+</div>
+
+

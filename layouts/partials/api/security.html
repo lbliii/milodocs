@@ -1,9 +1,17 @@
-{{- $details := . }}
-{{- with $details.security}}
+{{/* api/security.html expects a context with:
+     - .reference: Reference object containing shared data
+     - .path: The API path
+     - .method: The HTTP method
+     - .details: Details about the method, including security info
+*/}}
+{{$reference := .reference }}
+{{$path := .path | anchorize}}
+{{$method := .method}}
+{{- with .details.security}}
 <h4>Security</h4>
-<div class="bg-zinc-100 p-1 rounded text-sm">
+<div id="{{$path}}-{{$method}}-security" class="bg-zinc-100 p-1 rounded text-sm">
     <ul>
-        {{- range $details.security }} 
+        {{- range . }} 
             {{- range $key, $val := . }}
                 <li>{{ $key }} {{$val}}</li>
             {{- end }} 

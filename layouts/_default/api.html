@@ -10,31 +10,10 @@
         <p><strong>Version:</strong> {{ .info.version }}</p>
     </div>
     <!-- Endpoints List -->
-    <div class="flex flex-col">
-        {{ range $path, $value := .paths }}
-        <div id="left-panel" class="flex flex-col w-1/2 mb-4 space-y-8">
-        <h2>{{ $path }}</h2>
-        <!-- Methods List -->
-            {{ range $method, $details := $value }}
-            {{$context := dict "reference" $reference "path" $path "method" $method "details" $details }}
-            <div id="{{$path}}-{{$method}}-method" class="pl-2 space-y-2">
-                <h3>{{ $method | title }}</h3>
-                <p class="text-sm">{{ $details.summary }}</p>
-                <!-- Method Security -->
-                {{- partial "api/security.html" $details }}
-                <!-- Method Parameters -->
-                {{- partial "api/parameters.html" $context }}
-                <!-- Method Responses -->
-                {{- partial "api/responses.html" $context }}
-            </div>
-            {{ end }}
-        </div>
-        <div id="right-panel" class="flex flex-col w-1/2 mb-4 space-y-4">
-        </div>
-    {{ end }}
-    </div>
+
+    {{- partial "api/endpoints.html" . }}
     <!-- Components -->
-    {{- partial "api/components.html" .components.schemas }}
+    {{- partial "api/components.html" .components.schemas }}  
 </div>
 {{- end}}
 {{- end}}
