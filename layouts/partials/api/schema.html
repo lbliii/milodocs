@@ -1,0 +1,52 @@
+{{$schema := .schema}}
+{{$schemas := .schemas}}
+{{- with $schema }}
+<p class="font-bold">{{.type}}</p>
+    <ul class="space-y-2">
+        {{- range $key, $schema := .properties }}
+        <li class="space-y-1">
+            {{$context := dict "key" $key "schema" $schema "schemas" $schemas }}
+            {{ template "nestedSchemaDetails" $context }}
+            {{- range $i, $item := .items }}
+                {{- if reflect.IsMap $item }} 
+                <!-- Handle case where $item is a map of $refs -->
+                {{- $itemRef := index $item "$ref"}}
+                {{ $path := strings.TrimPrefix "#/components/schemas/" $itemRef }}
+                {{$context := dict "key" $key "schema" $item "schemas" $schemas}}
+                {{- else if reflect.IsSlice $item}}
+                xxxxx {{.}} <!-- example output: [map[$ref:#/components/schemas/saved_credit_card_view] map[$ref:#/components/schemas/saved_paypal_account_view]]-->
+                {{range . }}
+                {{- $itemRef := index . "$ref"}}
+                {{$itemRef}}
+                {{end}}
+                {{- else }}
+                123456 <div class="bg-red-100">{{.}}</div> <!-- example output: #/components/schemas/webhooks_type  -->
+                {{- end }}
+            {{- end }}
+        </li>
+        {{- end }}
+    </ul>
+{{- end }}
+{{- define "nestedSchemaDetails"}}
+<span class="font-medium">{{.key}}</span>
+{{- with .schema }}
+{{- with .type}}
+<span class="font-thin">{{.}}</span>
+{{- end}}
+{{- with .format}}
+<span class="font-thin">({{.}})</span>
+{{- end}}
+<div class="pl-2 space-y-1">
+    {{with .description}}
+    <p class="text-sm">{{. | markdownify }}</p>
+    {{end}}
+    {{- with .example}}
+    <p class="text-xs"><span class="font-bold">Examples:</span> {{.}}</p>
+    {{- end}}
+    {{- with .enum}}
+    <p class="text-xs"><span class="font-bold">Enums:</span> {{.}}</p>
+    {{- end}}
+</div>
+{{- end }}
+{{- end }}
+

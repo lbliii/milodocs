@@ -1,0 +1,26 @@
+{{/* api/parameter.html expects a context with:
+     - .parameter: The parameter object
+     - .parametersMap: A map of all parameters
+*/}}
+{{- $parameter := .parameter }}
+{{- $parametersMap := .parametersMap }}
+{{- if $parameter.name }}
+<!-- If the parameter is not a reference, we can use it directly -->
+    <li>
+        <span class="font-bold">{{ $parameter.name }}</span>
+        (<code class="p-1 rounded text-xs">{{ $parameter.in }}</code>):
+        <p>{{ $parameter.description | markdownify }}</p>
+    </li>
+{{- else }}
+<!-- If the parameter is a reference, we need to look it up in the map -->
+    {{- range $parameterName, $parameter := $parameter }}
+        {{ $path := strings.TrimPrefix "#/components/parameters/" . }}
+        {{- with (index $parametersMap $path) }}
+            <li>
+                <span class="font-bold">{{ .name }}</span>
+                (<code class="p-1 rounded text-xs">{{with .schema.type}}{{.}}{{end}} {{with .in}}- {{.}}{{end}}</code>) {{with .required}}<span class="bg-zinc-100 p-1 rounded">required</span>{{end}}
+                <p>{{ .description | markdownify }}</p>
+            </li>
+        {{- end }}
+    {{- end }}
+{{- end }}

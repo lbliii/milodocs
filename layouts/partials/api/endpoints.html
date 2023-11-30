@@ -1,0 +1,17 @@
+{{/*  Endpoints expects a context that includes:
+    - info: the info to the OpenAPI spec
+    - paths: the paths object from the OpenAPI spec
+    - components: the components object from the OpenAPI spec
+    - security: the security object from the OpenAPI spec
+    - servers: the servers object from the OpenAPI spec
+*/}}
+{{$reference := . }}
+<div class="flex flex-col">
+    {{- range $path, $methods := .paths }}
+        <div class="my-4">
+        <h2>{{$path}}</h2>
+        {{- $context := dict "reference" $reference "path" $path "methods" $methods }}
+        {{- partial "api/methods.html" $context }}
+        </div>
+    {{- end }}
+</div>

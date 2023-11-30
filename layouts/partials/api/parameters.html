@@ -1,0 +1,22 @@
+{{/* api/parameters.html expects a context with:
+     - .reference: Reference object containing shared data
+     - .path: The API path
+     - .method: The HTTP method
+     - .details: Details about the method, including security info
+*/}}
+{{$reference := .reference }}
+{{$path := .path | anchorize}}
+{{$method := .method}}
+{{$details := .details}}
+{{- $parameters := .reference.components.parameters}}
+{{- with .details.parameters }}
+<h4>Parameters</h4>
+<div id="{{$path}}-{{$method}}-params" class="p-1 rounded text-sm">
+    <ul class="space-y-2">
+        {{- range . }}
+            {{- $context := dict "parameter" . "parametersMap" $parameters }}
+            {{- partial "api/parameter.html" $context }}
+        {{- end }}
+    </ul>
+</div>
+{{- end }}
