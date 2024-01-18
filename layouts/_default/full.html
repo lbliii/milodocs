@@ -1,0 +1,7 @@
+{{ define "main" }}
+    {{- range .Site.Pages}}
+    <div id="articleContent" class="p-4 text-black">
+        {{ .Content }}
+    </div>
+    {{- end}}
+{{ end }}

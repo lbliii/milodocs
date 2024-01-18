@@ -1,0 +1,8 @@
+{{- $components := . }}
+<div id="components" class="flex flex-col w-full mb-4 space-y-4">
+    <h2>Components</h2>
+    {{- range $schemaName, $schema := $components }}
+    {{$componentContext := dict "schemaName" $schemaName "schema" $schema "nested" false}}
+        {{- partial "api/component.html" $componentContext}}
+    {{- end}}
+</div>
