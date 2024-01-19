@@ -1,0 +1,44 @@
+{{/*  Method expects a context with:
+    - .reference: a reference to the whole api spec
+    - .path: the path of the endpoint these methods belong to
+    - .method: the method that belongs to the path
+    - .details: the details of the method
+*/}}
+
+{{- $reference := .reference -}}
+{{- $path := .path -}}
+{{- $method := .method -}}
+{{- $details := .details -}}
+
+{{- $bg := "" -}}
+{{- if eq .method "get" -}}
+    {{- $bg = "bg-green-400" -}}
+{{- else if eq .method "post" -}}
+    {{- $bg = "bg-blue-400" -}}
+{{- else if eq .method "put" -}}
+    {{- $bg = "bg-yellow-400" -}}
+{{- else if eq .method "delete" -}}
+    {{- $bg = "bg-red-400" -}}
+{{- end -}}
+
+{{if eq $method "parameters"}}
+    TODO: global endpoint parameters
+{{- else -}}
+<!-- One Method (GET/POST/PUT/UPDATE/DELETE)-->
+<div id="{{.path | anchorize}}-{{.method}}-method" class="my-4 space-y-2">
+    <div class="flex items-center space-x-2">
+        <!-- Name -->
+        <h2 class=" p-1 rounded {{$bg}}">{{ $method | upper }}</h2>
+        <!-- Summary -->
+        <span class="font-thin text-black">{{ $details.summary }}</span>
+    </div>
+    <!-- Description -->
+    <p class="text-sm text-black">{{$details.description | markdownify }}</p>
+    <!-- Security, Params, & Responses passed as context -->
+    {{- $context := dict "reference" $reference "path" $path "method" $method "details" $details -}}
+    {{- partial "api/security.html" $context -}}
+    {{- partial "api/parameters.html" $context -}}
+    {{- partial "api/request.html" $context -}}
+    {{- partial "api/responses.html" $context -}}
+</div>
+{{- end -}}

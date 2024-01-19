@@ -1,0 +1,56 @@
+<!-- layouts/partials/api/schemas.html -->
+{{- $responseSchemas := .responseSchemas -}}
+{{- $globalSchemas := .globalSchemas -}}
+{{- $refType := .refType -}}
+{{- $requestBody := .requestBody -}}
+{{- $schemaData := dict -}} <!-- Initialize a dictionary to store schema data -->
+
+<!-- Reference -->
+{{- if and (eq $refType "$ref") (ne $requestBody true) -}}
+  {{- $attributeName := strings.TrimPrefix "#/components/schemas/" $responseSchemas -}}
+  {{- $schema := index $globalSchemas $attributeName -}}
+  {{- $schemaData = merge $schemaData (dict "name" $attributeName "schema" $schema) -}}
+
+{{- else if and (eq $refType "$ref") (eq $requestBody true) -}}
+  {{- $attributeName := strings.TrimPrefix "#/components/requestBodies/" $responseSchemas -}}
+  {{- $schema := index $globalSchemas $attributeName -}}
+  {{- $schemaData = merge $schemaData (dict "name" $attributeName "schema" $schema) -}}
+
+<!-- allOf, oneOf, anyOf -->
+{{- else if or (eq $refType "allOf") (eq $refType "oneOf") (eq $refType "anyOf") -}}
+  {{- $combinedSchema := dict -}}
+  {{- range $index, $element := $responseSchemas -}}
+    {{- range $key, $properties := $element -}}
+    ?????
+    <pre><code>{{ debug.Dump $element }}</code></pre> 
+      {{- $combinedSchema = merge $combinedSchema (dict $key $properties) -}}
+    {{- end }}
+  {{- end }}
+  {{- $schemaData = merge $schemaData (dict "combined" $combinedSchema) -}}
+
+<!-- Properties -->
+{{- else if eq $refType "properties" -}}
+  {{- $propertiesData := dict -}}
+  {{- range $propertyName, $propertySchema := $responseSchemas -}}
+    {{- $propertiesData = merge $propertiesData (dict $propertyName $propertySchema) -}}
+  {{- end }}
+  {{- $schemaData = merge $schemaData (dict "properties" $propertiesData) -}}
+
+  <!-- Items -->
+{{- else if eq $refType "items" -}}
+  {{- $propertiesData := dict -}}
+  {{- range $propertyName, $propertySchema := $responseSchemas -}}
+    {{- $propertiesData = merge $propertiesData (dict $propertyName $propertySchema) -}}
+  {{- end }}
+  {{- $schemaData = merge $schemaData (dict "properties" $propertiesData) -}} 
+
+<!-- Top-level Schema Key:Value Pairs-->
+{{- else -}}
+  {{- /* For other refTypes like description, type, enum, etc. */ -}}
+  {{- $schemaData = merge $schemaData (dict $refType $responseSchemas) -}}
+{{- end -}}
+
+{{/*  <pre><code>{{ debug.Dump $schemaData }}</code></pre>   */}}
+
+<!-- Pass the accumulated schema data to the rendering partial -->
+{{- partial "api/render-schema.html" (dict "schemaData" $schemaData  "globalSchemas" $globalSchemas ) -}}

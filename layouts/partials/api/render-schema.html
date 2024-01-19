@@ -1,0 +1,23 @@
+<!-- layouts/partials/api/render-schema.html -->
+{{- $schemaData := .schemaData -}}
+{{- $globalSchemas := .globalSchemas -}} <!-- Ensure that globalSchemas is passed to this partial -->
+
+{{/*  <pre><code>{{ debug.Dump $schemaData }}</code></pre>    */}}
+
+{{ printf "%#v" $schemaData }}
+<!-- Name -->
+
+{{with $schemaData.name}}
+<div id="">{{.}}
+</div>
+{{end}}
+
+<!-- Schema -->
+{{ with $schemaData.schema }}
+    {{ if .discriminator }}
+        <!-- Handle discriminator here -->
+    {{ else if .type }}
+        <!-- Alternative content or handling for when discriminator is absent -->
+    {{ end }}
+{{ end }}
+

@@ -1,0 +1,24 @@
+{{- define "main" }}
+{{- $reference := .Page.Params.reference -}}
+{{- range $data, $spec := .Site.Data -}}
+{{- if eq $data $reference -}}
+{{- with $spec -}}
+
+<section id="apiContainer" class="w-full overflow-y-auto">
+    <div class="flex flex-col m-4">
+    <!-- API Information Card -->
+    <div class="p-4 border border-zinc-200 rounded mb-4">
+        <h2>{{ .info.title }}</h2>
+        <p>{{ $.Page.RenderString .info.description }}</p>
+        <p><strong>Version:</strong> {{ .info.version }}</p>
+    </div>
+    <!-- Endpoints List -->
+    {{- partial "api/endpoints.html" . -}}
+    <!-- Components -->
+    {{- partial "api/components.html" .components.schemas -}}  
+    </div>
+</section>
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,22 @@
+{{/* api/security.html expects a context with:
+     - .reference: Reference object containing shared data
+     - .path: The API path
+     - .method: The HTTP method
+     - .details: Details about the method, including security info
+*/}}
+{{- $reference := .reference -}}
+{{- $path := .path | anchorize -}}
+{{- $method := .method -}}
+{{- $details := .details -}}
+
+{{- with $details.responses}}
+<div id="{{$path}}-{{$method}}-responses" class="space-y-2">
+    <!-- Title -->
+    <h3>Responses</h3>
+    {{- range $statusCode, $response := . -}}
+        <!-- Successful & Failure Responses -->
+        {{- $context := dict "reference" $reference "path" $path "method" $method "statusCode" $statusCode "response" $response -}}
+        {{- partial "api/response.html" $context -}}
+    {{- end }}
+</div>
+{{- end }}

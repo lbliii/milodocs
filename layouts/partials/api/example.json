@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "addresses": {
+      "description": "A list of all addresses associated to the shopper's account.",
+      "items": {
+        "allOf": [
+          { "$ref": "#/components/schemas/address_view" },
+          {
+            "properties": {
+              "default": {
+                "description": "The default shipping address chosen by the shopper.",
+                "type": "boolean"
+              },
+              "metadata": {
+                "$ref": "#/components/schemas/profile/properties/metadata"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "The address object returned in the response."
+      },
+      "type": "array"
+    },
+    "has_bolt_account": {
+      "description": "Used to determine whether a Bolt Account exists with this shopper's account details.",
+      "type": "boolean"
+    },
+    "payment_methods": {
+      "description": "A list of all payment methods associated to the shopper's account.",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/saved_credit_card_view" },
+          { "$ref": "#/components/schemas/saved_paypal_account_view" }
+        ]
+      },
+      "type": "array"
+    },
+    "profile": { "$ref": "#/components/schemas/profile_view" }
+  },
+  "type": "object"
+} 

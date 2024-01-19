@@ -1,0 +1,65 @@
+{{$schema := .schema}}
+{{$schemas := .schemas}}
+{{$options := .options}}
+
+<!-- TODO: move this one level above to schemas.html so it doesn't repeat for AnyOf, OneOf -->
+{{- with $options}}<p class="text-xs p-1 bg-zinc-100">{{$options}}:</p>{{- end}}
+{{- with $schema }}
+<div>
+ <!-- type, properties -->
+<p class="font-bold">{{- with .type}}{{.}}{{end}}</p>
+    <ul class="space-y-2 list-none">
+        {{- range $key, $schema := .properties }}    
+        <div class="space-y-2 space-x-2">
+            <span class="font-bold">{{$key}}</span>
+            {{- $order := slice "type" "format" "description" "example" "enum" "items" -}}
+            {{range $key := $order}}
+                {{- $value := index $schema $key }}
+                {{- if eq $key "type"}}{{- with $value}}<code>{{$value}}</code>{{- end}}
+                {{- else if eq $key "format"}}{{- with $value}}({{$value}}){{- end}}
+                {{- else if eq $key "description"}}{{- with $value}}<p>{{$value}}</p>{{- end}}
+                {{- else if eq $key "example"}}{{- with $value}}<p><span class="font-bold">{{$key}}:</span> {{$value}}</p>{{- end}}
+                {{- else if eq $key "enum"}}{{- with $value}}<p><span class="font-bold">{{$key}}:</span> {{$value}}</p>{{- end}}
+                {{else if eq $key "items" }} 
+                <!-- Items are a combination of referenced and inline schemas -->
+                    {{- range $key, $item := $value }}
+                        {{- if eq $key "description"}}
+                        <!-- already displayed -->
+                        {{- else if eq $key "properties"}}
+                        properties:
+                      
+                        {{- range $key, $subitem := $item }}
+                        subitem
+                        {{.}}
+                        {{end}}     
+                        {{- else if eq $key "type"}}
+                        {{$key}}: {{.}}
+                        {{- else if eq $key "allOf" }}
+                            {{- range $key, $items := . }}
+                                {{- range $key, $item := $items}}
+                                {{partial "api/archive-schema-items-transformer.html" (dict "item" $item "schemas" $schemas "options" "allOf")}}
+                                {{end}}
+                            {{- end}}
+                        {{- else if eq $key "anyOf"}}
+                            {{- range $key, $items := . }}
+                                {{- range $key, $item := $items}}
+                                    {{partial "api/archive-schema-items-transformer.html" (dict "item" $item "schemas" $schemas "options" "anyOf")}}
+                                {{- end}}
+                            {{- end}}
+                        {{else if eq $key "oneOf"}}
+                            {{- range $key, $items := . }}
+                                {{- range $key, $item := $items}}
+                                    {{partial "api/archive-schema-items-transformer.html" (dict "item" $item "schemas" $schemas "options" "oneOf")}}
+                                {{end}}
+                            {{- end}}
+                        {{else if eq $key "$ref"}}
+                            {{partial "api/archive-schema-items-transformer.html" (dict "item" . "schemas" $schemas "options" "$ref")}}
+                        {{- end}}
+                        {{- end}}
+                    {{- end }}
+            {{end}}
+        </div>
+        {{- end }}
+    </ul>
+    </div>
+{{- end }}

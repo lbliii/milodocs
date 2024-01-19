@@ -1,0 +1,20 @@
+{{/*  Endpoints expects a context that includes:
+    - info: the info to the OpenAPI spec
+    - paths: the paths object from the OpenAPI spec
+    - components: the components object from the OpenAPI spec
+    - security: the security object from the OpenAPI spec
+    - servers: the servers object from the OpenAPI spec
+*/}}
+{{- $reference := . -}}
+
+{{/*  <pre><code>{{ debug.Dump $reference }}</code></pre>   */}}
+
+<div id="endpoints" class="">
+    {{- range $path, $methods := .paths -}}
+        <div id="{{$path | anchorize}}-endpoint" class="my-4">
+        <h1>{{$path}}</h1>
+        {{- $context := dict "reference" $reference "path" $path "methods" $methods -}}
+        {{- partial "api/methods.html" $context -}}
+        </div>
+    {{- end -}}
+</div>
