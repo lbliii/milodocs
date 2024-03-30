@@ -52,6 +52,11 @@
     @apply list-disc ml-6;
   }
 
+  /* Handles the anchor placement issue for TOC links */
+  #articleContent [id]:target {
+    scroll-margin-top: 50px;
+  }
+
   /* Nested Code, Tables, Notices in Ordered Lists*/
   #articleContent ol > li p:first-child {
     @apply inline;

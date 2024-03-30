@@ -1,10 +1,10 @@
 :root {
     --primary-gradient-color: #ffffff; 
-    --secondary-gradient-color: rgb(138, 193, 149, 0.500); 
-    
+    --secondary-gradient-color: rgba(138, 171, 193, 0.5); 
+
     /* HPE Brand Colors */
 
-    --color-brand:#8ac195; /*primary color*/
+    --color-brand:#8ab5c1; /*primary color*/
     --color-brand-1:rgba(131, 122, 117, 0.667); /*secondary color*/
     --color-brand-2:#acc18a; /*tertiary color*/
     --color-brand-3:#86a6cf; /*note color*/
@@ -15,6 +15,6 @@
 }
 
 .dark {
-    --primary-gradient-color: rgb(138, 193, 149, 0.300); /* Change this to your dark mode color */
+    --primary-gradient-color: rgba(138, 152, 193, 0.3); /* Change this to your dark mode color */
     --secondary-gradient-color: #202020; /* Change this to your dark mode color */
 }

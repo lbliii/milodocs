@@ -1,9 +1,12 @@
 
 {{- $cssResources := slice (resources.Get "css/main.css") }}
 {{- $cssResources = $cssResources | append (resources.Get "css/fonts.css") }}
+
+{{- if eq hugo.Environment "opensource" -}}
+{{- $cssResources = $cssResources | append (resources.Get "css/colors-opensource.css") }}
+{{- else -}}
 {{- $cssResources = $cssResources | append (resources.Get "css/colors.css") }}
-
-
+{{- end -}}
 
 {{- if eq hugo.Environment "development" }}
   {{- $cssBundle := $cssResources | resources.Concat "css/bundle.css" }}
