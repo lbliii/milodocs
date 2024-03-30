@@ -31,17 +31,27 @@ if [ $1 = "all" ] || [ $1 = "ALL" ]; then
     exit 0
 else if [ $1 ="offline"]; then
     echo "Starting Hugo server for offline Docs"
-    hugo server --config config/offline.yaml
+    hugo server --config config/offline.yaml --environment offline
     exit 0
 
 else if [ $1 ="enterprise"]; then
     echo "Starting Hugo server for enterprise Docs"
-    hugo server --config config/enterprise.yaml
+    hugo server --config config/enterprise.yaml --environment enterprise
     exit 0
 
 else if [ $1 ="opensource"]; then
     echo "Starting Hugo server for opensource Docs"
-    hugo server --config config/opensource.yaml
+    hugo server --config config/opensource.yaml --environment opensource
+    exit 0
+
+else if [ $1 ="production"]; then
+    echo "Starting Hugo server for production Docs"
+    hugo server  --environment production
+    exit 0
+
+else if [ $1 ="development"]; then
+    echo "Starting Hugo server for development Docs"
+    hugo server  --environment development
     exit 0
 
 else
