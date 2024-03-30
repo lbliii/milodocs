@@ -1,0 +1,10 @@
+{{- $productPath := print .Page.Params.productPath -}}
+{{- $major := print .Page.Params.major -}}
+{{- $minor := print .Page.Params.minor -}}
+{{- if .Page.Params.latest -}}
+{{- $version := print "products/" $productPath "/latest" -}}
+{{- $version -}}
+{{- else -}}
+{{- $version := print "products/" $productPath "/"  $major "." $minor ".x" -}}
+{{- $version -}}
+{{- end -}}

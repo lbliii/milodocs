@@ -1,0 +1,5 @@
+{{- $major := print .Page.Params.major -}}
+{{- $minor := print .Page.Params.minor -}}
+{{- $patch := print .Page.Params.patch -}}
+{{- $version := print $major "." $minor "." $patch -}}
+{{- $version -}}

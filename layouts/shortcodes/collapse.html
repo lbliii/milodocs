@@ -1,0 +1,20 @@
+{{$title := .Get "title"}}
+{{$description := .Get "description"}}
+
+{{- if ne hugo.Environment "pdf" -}} 
+<section class="collapse-container mb-4">
+    <div onclick="this.nextElementSibling.classList.toggle('hidden');" class="cursor-pointer px-4 py-2 rounded-md shadow-md bg-zinc-100 text-black">
+        {{- with $title -}}
+        <h4 class="font-bold">{{- . -}}</h4>
+        {{- end -}}
+        {{- with $description -}}
+        <p>{{- . -}}</p>
+        {{- end -}}
+    </div>
+    <div class="hidden px-4 py-2 border border-t-0 border-zinc-100">
+        {{ .Inner | markdownify }}
+    </div>
+</section>
+{{- else -}}
+{{ .Inner | markdownify }}
+{{- end -}}

@@ -1,0 +1,7 @@
+{{- $filename := .Get 0 -}}
+{{- $path := printf "/data/helm/%s" $filename -}}
+{{- $content := readFile $path | safeHTML -}}
+
+```yaml
+{{ $content }}
+```

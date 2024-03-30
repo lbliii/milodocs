@@ -1,7 +1,7 @@
 /* Rubik Variable Font */
 @font-face {
   font-family: 'Rubik';
-  src: url('/fonts/Rubik-VariableFont_wght.ttf') format('truetype');
+  src: url('../fonts/Rubik-VariableFont_wght.ttf') format('truetype');
   font-weight: 300 900; /* Range of weights available in the variable font */
   font-display: swap;
 }
@@ -9,7 +9,7 @@
 /* Rubik Italic Variable Font */
 @font-face {
   font-family: 'Rubik';
-  src: url('/fonts/Rubik-Italic-VariableFont_wght.ttf') format('truetype');
+  src: url('../fonts/Rubik-Italic-VariableFont_wght.ttf') format('truetype');
   font-style: italic;
   font-weight: 300 900; /* Range of weights available in the variable font */
   font-display: swap;

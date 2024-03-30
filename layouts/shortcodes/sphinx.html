@@ -1,0 +1,37 @@
+<!-- layouts/shortcodes/sphinx_link.html -->
+{{/*
+  Sphinx link shortcode expects the following context:
+  0: directory and filename (e.g. "training/api-core-reference.html")
+  1: type of link (e.g. "module", "submodule", "class", "function", "method")
+  2: target syntax with ~prefix (e.g. "~determined.pytorch" for module, "~determined.pytorch.PyTorchTrial.train_batch" for method)
+  3: optional link text (if not provided, the target syntax is used as link text)
+*/}}
+{{- $dir := index (.Params) 0 -}}
+{{- $type := index (.Params) 1 -}}
+{{- $targetWithPrefix := index (.Params) 2 -}}
+{{- $title := index (.Params) 3 -}}
+{{- $baseUrl := "https://docs.determined.ai/latest/reference/" -}}
+{{- $target := strings.TrimPrefix "~" $targetWithPrefix -}}
+{{- $pathParts := split $target "." -}}
+{{- $fullUrl := printf "%s%s/api-%s-reference.html" $baseUrl $dir (index $pathParts 1) -}}
+{{- $linkText := $title | default "" -}}
+{{- $anchor := "" -}}
+
+{{- if or (eq $type "class") (eq $type "function") (eq $type "method") -}}
+  {{- $anchor = printf "#%s" (delimit $pathParts ".") -}}
+{{- end -}}
+
+{{- if eq $linkText "" -}}
+  {{- if eq $type "module" -}}
+    {{- $linkText = index $pathParts 1 -}}
+  {{- else if eq $type "submodule" -}}
+    {{- $linkText = index $pathParts 2 -}}
+  {{- else -}}
+    {{- $linkText = delimit (after 1 $pathParts) "." -}}
+    {{- if or (eq $type "class") (eq $type "function") (eq $type "method") -}}
+      {{- $linkText = printf "%s()" $linkText -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<a href="{{- $fullUrl -}}{{- $anchor -}}" class="font-bold underline">{{- $linkText -}}</a>

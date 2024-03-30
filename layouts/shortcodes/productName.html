@@ -1,0 +1,13 @@
+{{- $org := getenv "HUGO_ORG" | default "hpeai" | lower -}} 
+
+{{- $currentPage := . -}} 
+
+{{- with $org -}}
+    {{- if or (eq $org "pachyderm") (eq $org "determined") -}}
+        {{- $currentPage.Page.Params.productNames.community -}}
+    {{- else -}}
+        {{- $currentPage.Page.Params.productNames.enterprise -}}
+    {{- end -}}
+{{- else -}}
+    {{- $currentPage.Page.Params.productNames.enterprise -}}
+{{- end -}}
