@@ -10,7 +10,7 @@
 
 <!-- Directory Template to render the nested structure recursively -->
 {{ define "directory" }}
-<ul class="space-y-2 {{if eq $.level 1}} pl-0 {{else}}pl-2{{end}} list-none">
+<ul class="space-y-2 {{if eq $.level 1}} pl-0 {{else}}pl-2{{end}} list-none" data-level="{{ $.level }}">
     {{ range .dir }}
     {{ if and (not .Params.hidden) }}
     <li class="flex flex-col mr-2">

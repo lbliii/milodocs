@@ -1,61 +1,51 @@
-document.addEventListener("DOMContentLoaded", function () {
-  var activeLink = document.querySelector('[data-current="true"]');
+document.addEventListener("DOMContentLoaded", function() {
+  const sidebar = document.getElementById('linkTree');
 
-  // Function to scroll to the link with a delay
-  function scrollToLink(link) {
-    if (link) {
-      setTimeout(function () {
-        link.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "start",
-        });
-      }, 300);
-    }
+  function setInitialVisibility() {
+      // Initially hide all ul elements of level 3 and higher
+      sidebar.querySelectorAll('ul[data-level]').forEach(function(ul) {
+          const level = parseInt(ul.getAttribute('data-level'));
+          if (level > 2) {
+              ul.style.display = 'none';
+          }
+      });
   }
 
-  scrollToLink(activeLink);
+  function highlightAndRevealPath() {
+    const activeLinks = sidebar.querySelectorAll('a[data-current="true"]');
+    activeLinks.forEach(link => {
+        // Highlight the active link
+        link.classList.add('text-brand');
 
-  var links = document.querySelectorAll("a[data-level]");
-  var currentUrl = window.location.href;
+        let element = link.parentElement;
+        while (element && element !== sidebar) {
+            if (element.tagName.toLowerCase() === 'ul') {
+                const level = parseInt(element.getAttribute('data-level'));
+                element.style.display = 'block'; // Make sure the list is visible
 
-  // Function to handle the visibility of nested lists
-  function handleVisibility() {
-    // Initially hide all levels greater than 2
-    links.forEach(function (link) {
-      var level = parseInt(link.getAttribute("data-level"));
-      if (level > 1) {
-        link.closest("li").classList.add("hidden");
-      }
-    });
-
-    links.forEach(function (link) {
-      if (link.href === currentUrl) {
-        link.classList.add("text-brand");
-
-        // Unhide all ancestor li elements
-        var ancestor = link.closest("li");
-        while (ancestor) {
-          if (ancestor.tagName.toLowerCase() === "li") {
-            ancestor.classList.remove("hidden");
-          }
-          ancestor = ancestor.parentElement;
+                // Dynamically determine the next level based on the current one and show it
+                const nextLevel = level + 1;
+                const parentLi = link.closest('li');
+                const nextLevelUl = parentLi.querySelector(`ul[data-level="${nextLevel}"]`);
+                if (nextLevelUl) {
+                    nextLevelUl.style.display = 'block';
+                }
+            }
+            element = element.parentElement;
         }
-
-        // Unhide direct siblings at the same level
-        var parentLi = link.closest("li");
-        var siblingLis = Array.from(parentLi.parentElement.children).filter(
-          function (child) {
-            return child !== parentLi;
-          }
-        );
-        siblingLis.forEach(function (siblingLi) {
-          siblingLi.classList.remove("hidden");
-        });
-      }
     });
+}
+
+  function scrollToActiveLink() {
+      const activeLink = sidebar.querySelector('a[data-current="true"]');
+      if (activeLink) {
+          // Calculate the position to scroll to in the sidebar
+          const topPos = activeLink.offsetTop;
+          sidebar.scrollTop = topPos - sidebar.offsetTop - 20; // Adjusted to improve viewability
+      }
   }
 
-  // Call the handleVisibility function
-  handleVisibility();
+  setInitialVisibility();
+  highlightAndRevealPath();
+  scrollToActiveLink();
 });

@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
   const chatTocToggle = document.getElementById("chatTocToggle");
   const chatContainer = document.getElementById("chatContainer");
   const tocContainer = document.getElementById("tocContainer");
+  const chatRobot = document.getElementById("chatRob");
+  const chatToc = document.getElementById("chatToc");
 
   // Check if chatTocSettings in user's local storage is set; if not set or value is 'chat', toggle hidden on chatContainer; if value is 'toc', toggle the tocContainer
   const chatTocSettings = localStorage.getItem("chatTocSettings");
@@ -36,8 +38,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
   // Function to update the button content based on the visibility of chatContainer
   function updateButtonContent() {
     const isChatVisible = !chatContainer.classList.contains("hidden");
-    chatTocToggle.innerHTML = isChatVisible
-      ? '<img src="/icons/toggle-right.svg" alt="toggle" class="mr-4">'
-      : '<img src="/icons/toggle-left.svg" alt="toggle" class="mr-4">';
+
+    if (isChatVisible) {
+      chatRobot.classList.remove("hidden");
+      chatToc.classList.add("hidden");
+    } else {
+      chatRobot.classList.add("hidden");
+      chatToc.classList.remove("hidden");
+    }
   }
 });
