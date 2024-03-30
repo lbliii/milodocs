@@ -1,0 +1,57 @@
+# Hugo Global Settings 
+## Site Details
+baseURL: '/'
+languageCode: 'en-us'
+title: 'MiloDocs'
+## Markdown
+markup:
+  goldmark:
+    renderer:
+      hardWraps: false
+      unsafe: true
+      xhtml: false
+  highlight:
+    noClasses: true
+## Min Version
+module:
+  hugoVersion:
+    extended: true
+    min: "0.116.0"
+## Misc
+enableGitInfo: true 
+enableEmoji: true 
+enableRobotsTXT: true 
+## Offline 
+### These two are REQUIRED for offline static docs; they should not be used for online docs
+uglyURLS: true 
+relativeURLs: true
+# Output Formats
+outputs: 
+  home: [ "HTML"]
+  page: [ "HTML"]
+  section: [ "HTML"]
+  list: [ "HTML"]
+  taxonomies: [ "HTML"]
+
+# Theme Feature Settings
+params: 
+  names:
+    organization: 'Emdash'
+    product: 'MiloDocs'
+  version: 
+    major: 0
+    minor: 0
+    patch: 3
+  article:
+    childArticles:
+      display: true
+      count: 7 
+      titleTrunc: 90
+      descTrunc: 90
+    nextPrev: 
+      display: true
+      trunc: 35
+    chat: 
+      display: true
+    toc: 
+      display: true

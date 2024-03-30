@@ -1,9 +1,10 @@
 #!/bin/bash
 
+OUTPUT_NAME="offline-docs"
+# USAGE="Usage: sh build-offline-site.sh [draft]"
+
 # This script is for building offline html file:// protocol supported documentation as a .tar.gz for customers that use air-gapped environments. 
 # It is not intended for live hosted sites.
-
-# if "draft" is passed in, add -D to the hugo command
 
 if [ $1 = "draft" ]; then
 
@@ -15,7 +16,7 @@ else
     hugo --environment development --config config/offline.yaml --minify
 fi
 
-tar -czvf ais-docs.tar.gz ./public
+tar -czvf $OUTPUT_NAME.tar.gz ./public
 # delete the public folder
 rm -rf ./public
 
