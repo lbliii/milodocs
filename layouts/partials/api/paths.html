@@ -1,0 +1,12 @@
+{{/*  Paths of the OpenAPI Spec are passed in as context as a map */}}
+
+{{- $paths := . -}}
+
+{{/*  Iterate over the paths and render the methods  */}}
+
+{{- range $path, $methods := $paths -}}
+    <div id="{{$path | anchorize}}-endpoint" class="my-4">
+        <h2>{{$path}}</h2>
+        {{- partial "api/methods.html" $methods -}}
+    </div>
+{{- end -}}

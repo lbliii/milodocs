@@ -1,22 +1,42 @@
-{{/* api/security.html expects a context with:
-     - .reference: Reference object containing shared data
-     - .path: The API path
-     - .method: The HTTP method
-     - .details: Details about the method, including security info
-*/}}
-{{- $reference := .reference -}}
-{{- $path := .path | anchorize -}}
-{{- $method := .method -}}
-{{- $details := .details -}}
+{{/* Iterate over the responses */}}
+{{- $responses := . -}}
 
-{{- with $details.responses}}
-<div id="{{$path}}-{{$method}}-responses" class="space-y-2">
-    <!-- Title -->
-    <h3>Responses</h3>
-    {{- range $statusCode, $response := . -}}
-        <!-- Successful & Failure Responses -->
-        {{- $context := dict "reference" $reference "path" $path "method" $method "statusCode" $statusCode "response" $response -}}
-        {{- partial "api/response.html" $context -}}
-    {{- end }}
-</div>
-{{- end }}
+{{ range $statusCode, $response := $responses }}
+    {{/* Determine the background color based on the status code */}}
+    {{ $bgColor := "bg-red-100" }} <!-- Default to red for error codes -->
+    {{ if and (ge (int $statusCode) 200) (lt (int $statusCode) 300) }}
+        {{ $bgColor = "bg-green-100" }} <!-- Change to green for success codes -->
+    {{ end }}
+
+    <section class="mt-2">
+        <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].classList.toggle('rotate-90')" class="flex items-center space-x-4 {{ $bgColor }} p-2 rounded-md cursor-pointer">
+            <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+            <h3 class="text-lg font-semibold">
+                {{ $statusCode }}
+            </h3>
+            <span class="flex-1 text-lg font-thin">
+                {{ $response.description }}
+            </span>
+        </div>
+        {{/* Check and iterate over 'content' object for media types */}}
+        {{ if $response.content }}
+            {{ range $contentType, $contentValue := $response.content }}
+                <div class="bg-zinc-100 p-2 mt-2 hidden">
+                    {{/* Render schema details for the content type */}}
+                    {{ with $contentValue.schema }}
+                        {{ if .properties }}
+                            {{ range $propName, $propValue := .properties }}
+                                {{- $details := dict "name" $propName "value" $propValue }}
+                                {{ partial "api/property-details.html" $details }}
+                            {{ end }}
+                        {{ else }}
+                            <p>No properties defined.</p>
+                        {{ end }}
+                    {{ end }}
+                </div>
+            {{ end }}
+        {{ end }}
+    </section>
+{{ end }}

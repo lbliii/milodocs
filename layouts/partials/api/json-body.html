@@ -1,0 +1,46 @@
+{{- $props := . -}}
+{{- if $props -}}
+    {{$context := dict "props" $props "level" 1 }}
+    {{- template "object" $context -}}
+{{- else -}}
+  "No properties found."
+{{- end -}}
+
+{{- define "object" -}}
+  {{- $props := .props -}}
+  {{- if $props -}}
+    {{- "{" -}}{{"\n"}}
+    {{- $total := len $props -}}
+    {{- $index := 0 -}}
+    {{- range $propName, $propValues := $props -}}
+      {{- $index = add $index 1 -}}
+      {{- template "property" dict "Name" $propName "Values" $propValues "Index" $index "Total" $total "Level" $.level -}}
+    {{- end -}}
+    {{- print "\n" -}}{{- if ne $.level 1 }}{{ strings.Repeat $.level "\t" }}{{end -}}{{ "}" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "property" -}}
+  {{- $indent := strings.Repeat .Level "\t" -}}
+  {{- print $indent "\"" .Name "\": " -}}
+  {{- with .Values -}}
+    {{- if .example -}}{{ .example | jsonify -}}
+    {{- else if .type -}} "{{ .type }}"
+    {{- else if .properties -}} {{ template "object" dict "props" .properties "level" (add $.Level 1) }}
+    {{- else if .allOf -}} {{- template "complex" dict "Values" .allOf "Level" $.Level -}}
+    {{- else if .oneOf -}} {{- template "complex" dict "Values" .oneOf "Level" $.Level -}}
+    {{- else if .anyOf -}} {{- template "complex" dict "Values" .anyOf "Level" $.Level -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if lt .Index .Total -}},{{- "\n" -}}{{- end -}}
+{{- end -}}
+
+{{- define "complex" -}}
+  {{- $depth := add .Level 1 -}}
+  {{- range $index, $element := .Values -}}
+    {{- if $element.properties -}}
+      {{- if gt $index 0 -}},{{- "\n" -}}{{- end -}}
+      {{- template "object" dict "props" $element.properties "level" $depth -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

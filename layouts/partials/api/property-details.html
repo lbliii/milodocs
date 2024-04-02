@@ -1,0 +1,83 @@
+<section class="ml-2">
+    <div class="p-2">
+        <div class="flex items-center space-x-2 cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].classList.toggle('rotate-90');">
+            <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+            <h5>{{ .name }}</h5>
+            {{- with .value.type -}}<span class="font-brand-thin">(<code>{{ . }}</code>)</span>{{- end -}}
+            <span class="font-brand-thin text-xs text-red-500">{{ if .required }}REQUIRED{{ end }}</span>
+        </div>
+        <div class="ml-8 font-brand-thin hidden">
+            {{- if .value.description -}}
+            <div>
+                {{- with .value.description -}}{{- . | markdownify -}}{{- end -}}
+            </div>
+            {{- end -}}
+            {{- with .value.example -}}
+            <div class="flex items-center space-x-2"><h6>Example:</h6> <code>{{ . | jsonify }}</code></div>
+            {{- end -}}
+            {{ if .value.enum }}
+            <div>
+                <h6>Enum:</h6>
+                <ul class="ml-4">
+                    {{- range .value.enum }}
+                    <li>{{ . }}</li>
+                    {{- end }}
+                </ul>
+            </div>
+            {{ end }}
+            {{ if .value.properties }}
+            <div>
+                {{/* Recursive call for nested properties */}}
+                {{- range $nestedPropName, $nestedPropValue := .value.properties }}
+                {{- $nestedDetails := dict "name" $nestedPropName "value" $nestedPropValue }}
+                {{ partial "api/property-details.html" $nestedDetails }}
+                {{- end }}
+            </div>
+            {{ end }}
+            {{ if .value.allOf -}}
+            <div>
+                {{- range .value.allOf }}
+                {{- $allOfDetails := dict "name" "All Of" "value" . }}
+                {{ partial "api/property-details.html" $allOfDetails }}
+                {{- end }}
+            </div>
+            {{- end -}}
+            {{- if .value.oneOf }}
+            <div>
+                <h6>One Of:</h6>
+                {{- range .value.oneOf }}
+                {{- $oneOfDetails := dict "name" "One Of" "value" . }}
+                {{ partial "api/property-details.html" $oneOfDetails }}
+                {{- end }}
+            </div>
+            {{- end -}}
+            {{- if .value.anyOf }}
+            <div>
+                <h6>Any Of:</h6>
+                {{- range .value.anyOf }}
+                {{- $anyOfDetails := dict "name" "Any Of" "value" . }}
+                {{ partial "api/property-details.html" $anyOfDetails }}
+                {{- end }}
+            </div>
+            {{- end -}}
+            {{- if eq .value.type "array" }}
+            {{- with .value.items }}
+            <div>
+                <h6>Array Items:</h6>
+                {{ if .properties }}
+                {{- range $itemName, $itemValue := .properties }}
+                {{- $itemDetails := dict "name" $itemName "value" $itemValue }}
+                {{ partial "api/property-details.html" $itemDetails }}
+                {{- end }}
+                {{ else }}
+                {{- $itemDetails := dict "name" "Item" "value" . }}
+                {{ partial "api/property-details.html" $itemDetails }}
+                {{ end }}
+            </div>
+            {{- end }}
+            {{- end }}
+        </div>
+    </div>
+</section>

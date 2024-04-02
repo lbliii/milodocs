@@ -1,0 +1,39 @@
+{{/* Iterate over the request or response body objects */}}
+{{- $objects := . -}}
+
+{{- range $key, $value := $objects -}}
+    {{- if eq $key "content" -}}
+        {{- range $contentType, $contentValue := $value -}}
+            {{- with $contentValue.schema -}}
+                {{- $schemaType := .type -}}
+                {{- $requiredProps := .required -}}
+                <h3>Request Body</h3>
+                <div class="flex items-center space-x-2 p-2">
+                    <h4>{{$objects.description}}</h4>
+                    <span>(<code>{{$schemaType}}</code>)</span>
+                    <span class="font-thin text-xs text-red-500">{{- if $objects.required -}}REQUIRED{{- end -}}</span>
+                </div> 
+                {{- if .properties -}}
+                    <div class="p-2">
+                        {{- range $propName, $propValue := .properties -}}
+                            {{- $details := dict "name" $propName "value" $propValue "required" (in $requiredProps $propName) -}}
+                            {{- partial "api/property-details.html" $details  -}}
+                        {{- end -}}
+                    </div>
+                {{- else -}}
+                    <p>No properties defined.</p>
+                {{- end -}}
+                <!-- create a json structure of the request body -->
+                {{- if eq $schemaType "object" -}}
+                    <div class="p-2">
+                        <h4>Example Request</h4>
+                        <pre><code>
+                            {{- partial "api/json-body.html" .properties -}}
+                        </code></pre>
+                    </div>
+                {{- end -}}
+            {{- end -}}
+    {{- end -}}
+    {{- else if or (eq $key "description") (eq $key "required") -}}
+    {{- end -}}
+{{- end -}}

@@ -1,44 +1,36 @@
-{{/*  Method expects a context with:
-    - .reference: a reference to the whole api spec
-    - .path: the path of the endpoint these methods belong to
-    - .method: the method that belongs to the path
-    - .details: the details of the method
-*/}}
+{{/* Define the ordered list of keys to display */}}
+{{$orderedKeys := slice "security" "description" "requestBody" "responses"}}
 
-{{- $reference := .reference -}}
-{{- $path := .path -}}
-{{- $method := .method -}}
-{{- $details := .details -}}
+{{- $methodDetails := . -}}
 
-{{- $bg := "" -}}
-{{- if eq .method "get" -}}
-    {{- $bg = "bg-green-400" -}}
-{{- else if eq .method "post" -}}
-    {{- $bg = "bg-blue-400" -}}
-{{- else if eq .method "put" -}}
-    {{- $bg = "bg-yellow-400" -}}
-{{- else if eq .method "delete" -}}
-    {{- $bg = "bg-red-400" -}}
-{{- end -}}
+{{/* Iterate over the ordered keys */}}
+{{range $index, $key := $orderedKeys}}
+    {{- with index $methodDetails $key -}}
+    <div class="my-4">
+        {{- if and (ne $key "security") (ne $key "description") (ne $key "requestBody") -}}
+        <h4>{{ $key | humanize | title }}</h4>
+        {{- end -}}
 
-{{if eq $method "parameters"}}
-    TODO: global endpoint parameters
-{{- else -}}
-<!-- One Method (GET/POST/PUT/UPDATE/DELETE)-->
-<div id="{{.path | anchorize}}-{{.method}}-method" class="my-4 space-y-2">
-    <div class="flex items-center space-x-2">
-        <!-- Name -->
-        <h2 class=" p-1 rounded {{$bg}}">{{ $method | upper }}</h2>
-        <!-- Summary -->
-        <span class="font-thin text-black">{{ $details.summary }}</span>
+        {{- if eq $key "requestBody" -}}
+            {{- partial "api/requestBody.html" . -}}
+        {{- else if eq $key "responses" -}}
+            {{- partial "api/responses.html" . -}}
+        {{- else if eq $key "security" -}}
+            {{/* Custom rendering for the security key */}}
+            <h4>{{$key | title }}</h4>
+            <div class="ml-8">
+                 <ul>
+                {{- range . -}}
+                    {{- range $schemeName, $schemeDetails := . -}}
+                        <li>{{ $schemeName }}: {{ if eq (len $schemeDetails) 0 }}[]{{ else }}{{ $schemeDetails | jsonify }}{{ end }}</li>
+                    {{- end -}}
+                {{- end -}}
+                </ul>
+            </div>
+           
+        {{- else -}}
+            <p>{{ . | markdownify }}</p>
+        {{- end -}}
     </div>
-    <!-- Description -->
-    <p class="text-sm text-black">{{$details.description | markdownify }}</p>
-    <!-- Security, Params, & Responses passed as context -->
-    {{- $context := dict "reference" $reference "path" $path "method" $method "details" $details -}}
-    {{- partial "api/security.html" $context -}}
-    {{- partial "api/parameters.html" $context -}}
-    {{- partial "api/request.html" $context -}}
-    {{- partial "api/responses.html" $context -}}
-</div>
+    {{- end -}}
 {{- end -}}

@@ -1,5 +1,5 @@
 ---
 title: Example API (TESTING)
 layout: api
-reference: "eg2"
+reference: "basicApi"
 ---
