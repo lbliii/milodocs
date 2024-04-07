@@ -1,6 +1,7 @@
 ---
 title: "build-offline-site.sh"
 description: Learn about how the build-offline-site.sh script works for this theme. 
+hidden: true
 ---
 
 The `build-offline-site.sh` script creates a compressed `.tar.gz` file of the site that can be used for offline viewing. This output is `file://` protocol compatible and can be shared with others for offline viewing.

@@ -1,0 +1,6 @@
+baseURL: '/'
+languageCode: 'en-us'
+title: 'Offline MiloDocs'
+
+uglyURLS: true 
+relativeURLs: true

@@ -1,0 +1,8 @@
+## Markdown 
+goldmark:
+  renderer:
+    hardWraps: false
+    unsafe: true
+    xhtml: false
+highlight:
+  noClasses: true

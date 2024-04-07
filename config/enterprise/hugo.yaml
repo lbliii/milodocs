@@ -1,0 +1,5 @@
+# Hugo Global Settings 
+## Site Details
+baseURL: '/'
+languageCode: 'en-us'
+title: 'Enterprise Product'

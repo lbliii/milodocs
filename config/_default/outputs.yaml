@@ -1,0 +1,5 @@
+home: [ "HTML", "JSON"]
+page: [ "HTML", "JSON"]
+section: [ "HTML", "JSON"]
+list: [ "HTML", "JSON"]
+taxonomies: [ "HTML", "JSON"]

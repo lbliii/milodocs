@@ -1,0 +1,11 @@
+# Hugo Global Settings 
+## Site Details
+baseURL: '/'
+languageCode: 'en-us'
+title: 'MiloDocs'
+
+## Misc
+enableGitInfo: true 
+enableEmoji: true 
+enableRobotsTXT: true 
+

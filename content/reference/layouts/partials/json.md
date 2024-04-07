@@ -1,5 +1,5 @@
 ---
-title: json.html
+title: json.json
 description: Learn about the json partial.
 weight: 800
 ---
