@@ -1,0 +1,36 @@
+{{$filename := .Get 0}}
+{{- $csv := printf "static/csv/%s" $filename -}}
+{{- $delimiter := .Get 1 -}}
+{{- $skipColumns := split (.Get 2 | default "") "," -}} <!-- Get column names to skip as a list -->
+{{- $data := getCSV $delimiter $csv -}}
+
+<div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-zinc-200">
+        <thead class="">
+            <tr>
+            {{range $j, $col := index $data 0}} <!-- Loop through the first row to get headers -->
+                {{if not (in $skipColumns $col)}} <!-- Check if column is not in skip list -->
+                    <th scope="col" class="text-left text-black uppercase tracking-wider">
+                        {{$col}}
+                    </th>
+                {{end}}
+            {{end}}
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-200">
+            {{range $i, $row := $data}}
+                {{if gt $i 0}} <!-- Skip the header row -->
+                    <tr>
+                    {{range $j, $col := $row}}
+                        {{if not (in $skipColumns (index (index $data 0) $j))}} <!-- Use header row to check column name against skip list -->
+                            <td class="whitespace-nowrap text-black">
+                                {{$col}}
+                            </td>
+                        {{end}}
+                    {{end}}
+                    </tr>
+                {{end}}
+            {{end}}
+        </tbody>
+    </table>
+</div>

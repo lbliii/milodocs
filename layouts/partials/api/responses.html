@@ -4,9 +4,16 @@
 {{ range $statusCode, $response := $responses }}
     {{/* Determine the background color based on the status code */}}
     {{ $bgColor := "bg-red-100" }} <!-- Default to red for error codes -->
-    {{ if and (ge (int $statusCode) 200) (lt (int $statusCode) 300) }}
-        {{ $bgColor = "bg-green-100" }} <!-- Change to green for success codes -->
-    {{ end }}
+    <!-- check if $statusCode can be converted to an integer -->
+    {{- if or (strings.Contains $statusCode "default") (strings.Contains $statusCode "x-") -}}
+    {{- $bgColor = "bg-blue-100" -}}
+    {{- else -}}
+    {{- with int $statusCode -}}
+        {{- if and (ge . 200) (lt . 300) -}}
+            {{- $bgColor = "bg-green-100" -}} <!-- Change to green for success codes -->
+        {{- end -}}
+    {{- end -}}
+    {{- end -}}
 
     <section class="mt-2">
         <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].classList.toggle('rotate-90')" class="flex items-center space-x-4 {{ $bgColor }} p-2 rounded-md cursor-pointer">
