@@ -1,6 +1,6 @@
 {{$filename := .Get 0}}
-{{- $csv := printf "static/csv/%s" $filename -}}
-{{- $delimiter := .Get 1 -}}
+{{- $csv := printf "static/csv/%s.csv" $filename -}}
+{{- $delimiter := .Get 1 | default "," -}}
 {{- $skipColumns := split (.Get 2 | default "") "," -}} <!-- Get column names to skip as a list -->
 {{- $data := getCSV $delimiter $csv -}}
 
@@ -10,7 +10,7 @@
             <tr>
             {{range $j, $col := index $data 0}} <!-- Loop through the first row to get headers -->
                 {{if not (in $skipColumns $col)}} <!-- Check if column is not in skip list -->
-                    <th scope="col" class="text-left text-black uppercase tracking-wider">
+                    <th scope="col" class="text-left uppercase tracking-wider">
                         {{$col}}
                     </th>
                 {{end}}

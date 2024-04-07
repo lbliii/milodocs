@@ -1,17 +1,25 @@
-{{$title := .Get "title"}}
+{{$title := .Get "title" | default "Expand"}}
 {{$description := .Get "description"}}
 
 {{- if ne hugo.Environment "pdf" -}} 
 <section class="collapse-container mb-4">
-    <div onclick="this.nextElementSibling.classList.toggle('hidden');" class="cursor-pointer px-4 py-2 rounded-md shadow-md bg-zinc-100 text-black">
-        {{- with $title -}}
-        <h4 class="font-bold">{{- . -}}</h4>
-        {{- end -}}
-        {{- with $description -}}
-        <p>{{- . -}}</p>
-        {{- end -}}
+    <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].children[0].classList.toggle('rotate-90')" class="cursor-pointer px-4 py-2 rounded-md shadow-md bg-zinc-100 text-black flex items-center">
+        <!-- SVG container with flex-none to prevent it from growing or shrinking -->
+        <div class="flex-none">
+            <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </div>
+        <div class="flex-grow ml-2">
+            {{- with $title -}}
+            <h4 class="font-bold">{{- . -}}</h4>
+            {{- end -}}
+            {{- with $description -}}
+            <p>{{- . -}}</p>
+            {{- end -}}
+        </div>
     </div>
-    <div class="hidden px-4 py-2 border border-t-0 border-zinc-100">
+    <div class="hidden px-4 py-2 border border-t-0 border-zinc-100 border-dotted">
         {{ .Inner | markdownify }}
     </div>
 </section>
