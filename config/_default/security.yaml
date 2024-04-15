@@ -1,9 +1,8 @@
-  security:
-    exec:
-      allow:
-        - '^dart-sass-embedded$'
-        - '^go$'
-        - '^npx$'
-        - '^postcss$'
-        - '^rst2html.py$'
-        - '^asciidoctor$'
+exec:
+  allow:
+    - '^dart-sass-embedded$'
+    - '^go$'
+    - '^npx$'
+    - '^postcss$'
+    - '^rst2html$'
+    - '^asciidoctor$'

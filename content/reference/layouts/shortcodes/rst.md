@@ -15,16 +15,6 @@ The `{{%/*rst*/%}}` shortcode a tool for rendering reStructuredText content in y
 
 ## How it Works 
 
-## Examples 
-
-`{{</*csv "shared/rst/admonitions"*/>}}`
-
-{{<rst "shared/rst/admonitions" >}}
-
-{{<notice note>}}
-For these to look good, you'll need to have some CSS ready.
-{{</notice>}}
-
 ### Table
 
 `{{</*csv "shared/rst/table"*/>}}`
