@@ -6,3 +6,4 @@ goldmark:
     xhtml: false
 highlight:
   noClasses: true
+

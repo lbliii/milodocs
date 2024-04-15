@@ -1,0 +1,7 @@
+  exec:
+    allow:
+      - '^dart-sass-embedded$'
+      - '^go$'
+      - '^npx$'
+      - '^postcss$'
+      - '^rst2html.py$'

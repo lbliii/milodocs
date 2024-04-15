@@ -164,6 +164,18 @@
     @apply text-black underline font-bold;
   }
 
+  .admonition {
+    @apply bg-zinc-100 p-4 my-4;
+  }
+
+  /* .note, .tip, .caution, .warning {
+    @apply bg-zinc-100 p-4 my-4;
+  } */
+
+  .admonition-title {
+    @apply font-bold;
+  }
+
   /* Dark Theme Overrides */
   .dark .bg-white {
     @apply bg-zinc-900;

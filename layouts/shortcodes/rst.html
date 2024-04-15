@@ -1,0 +1,5 @@
+{{- $path := .Get 0 -}} <!-- Get the path from the shortcode argument -->
+{{- $content := readFile (print "content/" $path ".rst") -}} <!-- Read the RST file content -->
+{{- $opts := dict "markup" "rst" -}}
+{{- $table := .Page.RenderString $opts  $content -}} <!-- Render the RST content as HTML -->
+{{- $table | safeHTML -}} <!-- Output the HTML content -->
