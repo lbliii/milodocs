@@ -1,0 +1,19 @@
+{{/*  Requires:
+    -  ascii doctor https://docs.asciidoctor.org/asciidoctor/latest/install/ 
+    - whitelist ascii doctor in /config/_default/security.yaml
+     */}}
+{{- $opts := dict "markup" "ad" -}}
+{{- .Inner | .Page.RenderString $opts -}}
+
+
+{{/*  Example: 
+{{<ascii>}}
+|===
+| Name    | Age | City      
+
+| John    | 25  | New York  
+| Lisa    | 28  | Los Angeles
+| Michael | 31  | Chicago   
+|===
+{{</ascii>}}
+*/}}
