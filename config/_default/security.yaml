@@ -4,5 +4,5 @@ exec:
     - '^go$'
     - '^npx$'
     - '^postcss$'
-    - '^rst2html$'
+    - '^rst2html.py$'
     - '^asciidoctor$'
