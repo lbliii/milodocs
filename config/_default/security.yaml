@@ -6,3 +6,5 @@ exec:
     - '^postcss$'
     - '^rst2html.py$'
     - '^asciidoctor$'
+  osenv:
+    - "(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|RUBYLIB)$"
