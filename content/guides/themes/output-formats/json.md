@@ -62,7 +62,7 @@ This template acts as the core of your JSON Schema definition. It will be used a
    }
    ```
    {{<notice tip >}}
-   You can conditionally include or exclude certain attributes and set sensible defaults for others. For example, you can exclude the `hidden` attribute if it is not set in the front matter.
+   You can conditionally include or exclude certain attributes. For example, you can exclude the `hidden` attribute if it is not set in the front matter.
 
    ```go
    {{- with .Page.Params.hidden -}}"hidden": {{- . -}},{{- end -}}
