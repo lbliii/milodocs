@@ -8,4 +8,4 @@ exec:
     - '^rst2html$'
     - '^asciidoctor$'
   osEnv: 
-    - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME)$
+    - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME|GEM_PATH)$
