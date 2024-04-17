@@ -8,31 +8,8 @@ The `{{</*ascii*/>}}` shortcode renders AsciiDoc markup content inside of markdo
 
 ## Before You Start 
 
-- Complete [How to Enable AsciiDoc Markup Support]()
-- 
+- Complete the steps to [Enable AsciiDoc Markup Support](/guides/markups/ascii)
 ---
-
-## Setup
-
-To utilize this shortcode, some extra configuration is required both on your local machine and in your deployment solution (Netlify, AWS Amplify, a container image)
-
-1. Install [Ruby](https://www.ruby-lang.org/en/downloads/).
-2. Install `asciidoctor`.
-   ```s
-   brew install asciidoctor
-   ```
-3. Create a Gemfile at the root of your Hugo project and add the following:
-   ```s
-   source 'https://rubygems.org'
-   gem 'asciidoctor'
-   ```
-4. Update your Hugo configuration values at `security.exec.osEnv`. We need to make the `GEM_PATH` discoverable/allowed.
-   ```yaml
-   osEnv: 
-       - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME|GEM_PATH)$
-   ```
-
-## How it Works 
 
 ## Examples
 
