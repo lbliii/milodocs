@@ -5,4 +5,7 @@ exec:
     - '^npx$'
     - '^postcss$'
     - '^rst2html.py$'
+    - '^rst2html$'
     - '^asciidoctor$'
+  osEnv: 
+    - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME)$
