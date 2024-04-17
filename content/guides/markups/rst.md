@@ -9,8 +9,8 @@ Once set up, you will be able to use full `.rst` pages, write inline RST using t
 
 ## Before You Start 
 
-- Read about Hugo's [security model](https://gohugo.io/about/security/). 
-- Read about Hugo's [AsciiDoc configuration options](https://gohugo.io/getting-started/configuration-markup/). 
+- Read about Hugo's [security model](https://gohugo.io/about/security/)
+- Read about Hugo's [AsciiDoc configuration options](https://gohugo.io/getting-started/configuration-markup/)
 
 ---
 

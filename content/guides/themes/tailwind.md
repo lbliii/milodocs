@@ -1,10 +1,20 @@
 ---
-title: How to Create a Hugo Theme with TailwindCSS
-description:
-hidden: true
+title: Add TailwindCSS
+description: learn how to add TailwindCSS to your Hugo Theme
 ---
 
-1. Run the following:
+You can utilize TailwindCSS to build your site layouts. This is advantageous because TailwindCSS is a mature CSS framework that is well supported and known by most developers, making onboarding other people to your project much easier.
+
+## Before You Start 
+
+- Read the [TailwindCSS official install guide](https://tailwindcss.com/docs/installation)
+- Read the [Hugo new theme CLI command reference](https://gohugo.io/commands/hugo_new_theme/)
+
+---
+
+## How to Add TailwindCSS to a Hugo Theme
+
+1. Open a terminal and run the following:
    ```bash
    hugo new site $siteName
    cd $siteName
@@ -14,7 +24,7 @@ hidden: true
    pnpm init
    pnpm install tailwindcss
    ```
-2. Connect `tailwind.config.js` to content & layouts:
+2. Open `tailwind.config.js` and update the `content:` attribute to include the `content/` & `layouts/` directories:
    ```s
    // tailwind.config.js
    /** @type {import('tailwindcss').Config} */
@@ -38,6 +48,6 @@ hidden: true
     "build-tw": "pnpm tailwindcss -i ./assets/css/src/input.css -o ./assets/css/main.css",
     "watch-tw": "pnpm tailwindcss -i ./assets/css/src/input.css -o ./assets/css/main.css -w --minify"
    ```
-6. Run `pnpm run watch-tw` from siteThemeName directory to enable watching for design changes.
+6. Run `pnpm run watch-tw` from `themes/siteThemeName` directory to enable watching for design changes.
 
 You are ready to start creating and editing your theme.
