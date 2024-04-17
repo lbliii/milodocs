@@ -176,6 +176,16 @@
     @apply font-bold;
   }
 
+  /* Table of Contents */
+
+  .toc > nav > ul > li > a {
+    @apply font-bold
+  }
+
+  #TableOfContents ul ul {
+    @apply ml-4;
+  }
+
   /* Dark Theme Overrides */
   .dark .bg-white {
     @apply bg-zinc-900;
