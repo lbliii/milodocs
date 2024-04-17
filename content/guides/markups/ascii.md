@@ -10,7 +10,7 @@ Once set up, you will be able to use the [ascii shortcode](/reference/layouts/sh
 ## Before You Start 
 
 - Read about Hugo's [security model](https://gohugo.io/about/security/)
-- Read about Hugo's [AsciiDoc configuration options](https://gohugo.io/getting-started/configuration-markup/)
+- Read about Hugo's [AsciiDoc configuration options](https://gohugo.io/getting-started/configuration-markup/#asciidoc)
 
 ---
 
@@ -33,7 +33,8 @@ The following steps have been tested with **Netlify**. By providing a Gemfile at
    source 'https://rubygems.org'
    gem 'asciidoctor'
    ```
-4. Update your Hugo configuration values at `security.exec` 
+4. Open your Hugo `security` configuration (e.g. `config/_default/security.yaml`).
+5. Update `security.exec`:
    - We need to whitelist the ascii processor tool, `asciidoctor`.
    - We need to whitelist the `GEM_PATH`.
    ```yaml
@@ -49,6 +50,27 @@ The following steps have been tested with **Netlify**. By providing a Gemfile at
      osEnv: 
        - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME|GEM_PATH)$
    ```
+
+## How to Configure AsciiDoc Attributes
+
+1. Open your Hugo `markup` configuration (e.g. `config/_default/markup.yaml`).
+2. Add the following [attributes](https://gohugo.io/getting-started/configuration-markup/#asciidoc-settings-explained):
+   ```yaml
+     asciidocExt:
+       attributes: {}
+       backend: html5
+       extensions: []
+       failureLevel: fatal
+       noHeaderOrFooter: true
+       preserveTOC: false
+       safeMode: unsafe
+       sectionNumbers: false
+       trace: false
+       verbose: false
+       workingFolderCurrent: true
+   ```
+3. Update the list of [extensions](https://gohugo.io/getting-started/configuration-markup/#extensions) you'd like to support.
+
 
 ## Troubleshooting
 
