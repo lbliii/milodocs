@@ -55,6 +55,8 @@ The following steps have been tested with **Netlify**. By providing a Gemfile at
 
 ### Configure
 
+You can use basic AsciiDoc markup without any additional configuration. However, you can customize and extend the support by adding extensions and updating the optional attributes.
+
 1. Open your Hugo `markup` configuration (e.g. `config/_default/markup.yaml`).
 2. Add the following [attributes](https://gohugo.io/getting-started/configuration-markup/#asciidoc-settings-explained):
    ```yaml
