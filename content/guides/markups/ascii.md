@@ -20,6 +20,8 @@ Once set up, you will be able to use the [ascii shortcode](/reference/layouts/sh
 The following steps have been tested with **Netlify**. By providing a Gemfile at the root level, Netlify knows to automatically install both Ruby and the required gems listed in the Gemfile. This may not be the case in your deployment solution.
 {{</notice>}}
 
+### Install
+
 1. Install [Ruby](https://www.ruby-lang.org/en/downloads/).
    ```s
    brew install rbenv ruby-build
@@ -51,7 +53,7 @@ The following steps have been tested with **Netlify**. By providing a Gemfile at
        - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME|GEM_PATH)$
    ```
 
-## How to Configure AsciiDoc Attributes
+### Configure
 
 1. Open your Hugo `markup` configuration (e.g. `config/_default/markup.yaml`).
 2. Add the following [attributes](https://gohugo.io/getting-started/configuration-markup/#asciidoc-settings-explained):
