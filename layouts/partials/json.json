@@ -1,5 +1,5 @@
 {
-    "id": {{- with .File }}{{- .UniqueID | jsonify }}{{- else}}""{{- end }},
+    "id": "{{- .File.UniqueID -}}",
     "title": "{{- if .Title}}{{- .Title }}{{else}}{{- humanize .File.TranslationBaseName -}}{{- end}}",
     "description":{{- with .Description}} {{. | jsonify}}{{- else }}"no description"{{- end}},
     "lastCommit": "{{ .GitInfo.AuthorDate }}",
