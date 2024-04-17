@@ -38,6 +38,7 @@ To utilize this shortcode, some extra configuration is required both on your loc
 
 ### Table
 
+
 {{<ascii>}}
 |===
 | Name    | Age | City      
@@ -47,6 +48,16 @@ To utilize this shortcode, some extra configuration is required both on your loc
 | Michael | 31  | Chicago   
 |===
 {{</ascii>}}
+
+```s
+|===
+| Name    | Age | City      
+
+| John    | 25  | New York  
+| Lisa    | 28  | Los Angeles
+| Michael | 31  | Chicago   
+|===
+```
 
 ## Source Code 
 

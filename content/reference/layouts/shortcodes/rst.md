@@ -24,6 +24,7 @@ The `{{%/*rst*/%}}` shortcode a tool for rendering reStructuredText content in y
 
 {{<rst "shared/rst/table" >}}
 
+{{%include "shared/rst/table.rst" "rst" %}}
 
 ## Source Code 
 
