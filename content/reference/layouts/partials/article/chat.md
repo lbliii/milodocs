@@ -3,6 +3,10 @@ title: chat.html
 description: Learn how to use the chat partial layout.
 ---
 
+{{<notice warning "Out of Date" >}}
+The steps in this article are out of date. An updated version is coming soon.
+{{</notice>}}
+
 Using an LLM to enhance the discoverability of your content is quickly becoming a baseline requirement for documentation. Thankfully, it's not too hard to do thanks to [Hugo's output to JSON](https://gohugo.io/methods/page/outputformats/).
 
  At a high level, you'll need to provide some server-side code in Python or JS that routes user questions to chatGPT after being passed some embeddings (created from your docs JSON) for context.
@@ -34,11 +38,11 @@ The `tiktoken` requirement runs into issues on Python 3.12; for now, I recommend
 
 ### Create & Store Embeddings
 
-{{%include "ask-docs/embeddings.py" "py" %}}
+{{%include "tools/ask-docs/embeddings.py" "py" %}}
 
 ### Deploy Cloud Function
 
-{{%include "ask-docs/cloud-function/main.py" "py" %}}
+{{%include "tools/ask-docs/cloud-function/main.py" "py" %}}
 
 ## Source Code 
 
