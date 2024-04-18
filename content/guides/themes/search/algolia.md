@@ -3,7 +3,7 @@ title: Enable Algolia Search
 description: learn how to add Algolia search to your Hugo site.
 ---
 
-This guide will show you a quick way to add Algolia search to your Hugo site. It uses the `algoliasearch-lite` script needed to perform search-only operations used to populate your search UI. We'll then rely on a cron task to index your site's content and push it to Algolia.
+This guide provides a quick method for integrating [Algolia](https://www.algolia.com) search into your Hugo website. It involves using a straightforward cron job to update your index and the `algoliasearch-lite` script version, which is capable of handling search-only operations.
 
 {{<notice snack>}}
 Algolia is a hosted search engine capable of delivering real-time results from the first keystroke. 
@@ -15,19 +15,57 @@ Algolia provides a [free tier](https://www.algolia.com/pricing) that includes 10
 - Set up [JSON output format templates](/guides/themes/output-formats/json).
 - Review the [Algolia API reference](https://www.algolia.com/doc/api-reference/widgets/js/) needed for building your search layout.
 
+{{<notice tip "Check Your Site Index" >}}
+You can perform a quick test by going to `localhost:1313/index.json`; it should look like [this](https://milodocs-theme.netlify.app/index.json).
+{{</notice>}}
+
 --- 
 
 ## How to Create an Algolia Index
 
-This section assumes that you have set up your Hugo site to output JSON files for your content. If you haven't done this yet, refer to the [JSON output format templates guide](/guides/themes/output-formats/json).
-
-{{<notice tip>}}
-You can perform a quick test by going to `localhost:1313/index.json`; it should look like [this](https://milodocs-theme.netlify.app/index.json).
-{{</notice>}}
-
 1. Create a new Algolia account or log in to your existing account.
-2. Create a new index in your Algolia dashboard.
+2. Navigate to **Data Sources** > **Connectors**.
+3. Find the **Json** tile and select **Connect**.
+4. Select **Get Started**.
 
+### Configure Data Source 
+
+1. Select **None** for authentication.
+2. Input the URL of your hosted `index.json` file. (e.g., `https://milodocs-theme.netlify.app/index.json`).
+3. Specify a unique property identifier for your Algolia records (e.g., `id` if you've added one to your json template.).
+4. Name the data source. 
+5. Select **Create Source**.
+
+### Configure Destination
+
+1. Input a name for your destination index. If it doesn't exist, it will get automatically created.
+2. Generate index credentials by selecting **Create one for me**.
+3. Name the destination.
+4. Select **Create Destination**.
+
+### Configure Task
+
+1. For frequency, select **Scheduled** and choose **Every day**.
+2. For behavior, select **Replace**.
+3. Select **Create Task**.
+4. Press the **Play** button on the task to trigger your first pull.
+5. Select **Run** to confirm.
+
+
+### Configure Index
+
+This may work once we set up the rest out of the box, but it's better to configure and rank your searchable attributes.
+
+1. Navigate to **Search** > **Index**.
+2. Select the **Configuration** tab.
+3. Select the **Searchable Attribute** section.
+4. Input all of the searchable attributes you'd like and rank them.
+   - `title`
+   - `description`
+   - `body`
+5. Select **Review and Save Settings**.
+
+You now have an Algolia index that is automatically refreshed once a day! No complicated cralwers or plugins needed.
 
 ## How to Enable Algolia Search
 
@@ -40,12 +78,13 @@ Let's add the Algolia Search Lite script to your Hugo project. This script is ne
    ```html
    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@latest/dist/algoliasearch-lite.umd.js" defer></script>
    ```
-   {{<notice tip>}}
-   You can also install Algolia InstantSearch.js in your project to add more advanced features, but it's not required for basic search functionality.  
-   ```js
-   pnpm install algoliasearch instantsearch.js
-   ```
-   {{</notice>}}
+   
+{{<notice tip>}}
+You can also install Algolia InstantSearch.js in your project to add more advanced features, but it's not required for basic search functionality.  
+```js
+pnpm install algoliasearch instantsearch.js
+```
+{{</notice>}}
 
 ### Define a Results Container
 
@@ -85,6 +124,8 @@ Let's create a search input element that will be used to trigger the search func
 ### Create a search.js File 
 
 Now that we have our search results container and search input elements set up, let's create a JavaScript file that will handle the search functionality.
+
+This particular script transforms your search results (`hits`) by grouping them by their `parent` value, which is a field in my JSON schema. You can group or transform the returned hits in a variety of ways --- feel free to make this your own.
 
 1. Create a new file named `search.js` in your theme's `assets/js` directory.
 2. Input the following code:
@@ -184,7 +225,7 @@ Now that we have our search results container and search input elements set up, 
   {{<notice warning>}}
   Never expose your Algolia `Admin API Key` in your front-end code. This key should only be used in your back-end code through an environment variable passed in during deployment. For this guide, we are only using the `Search Only API Key`, which is safe to expose in your front-end code.
   {{</notice>}}
-5. Replace the `default` value in the `searchIndex` variable with the name of your Algolia index. This is the index where your site's content will be stored and searched.
+1. Replace the `default` value in the `searchIndex` variable with the name of your Algolia index that we created earlier.
 
 ### Make the Search Script Available
 
@@ -216,3 +257,9 @@ Now that we have our search script set up, let's make it available in our Hugo p
      <script src="{{ $jsBundle.RelPermalink }}" integrity="{{ $jsBundle.Data.Integrity }}" crossorigin="anonymous"></script>
    {{- end }}
    ```
+
+  ## Test
+
+  1. Run `hugo server` locally.
+  2. Perform a search in your search bar.
+  3. Review the console for any errors.
