@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
   );
   const searchIndex = searchClient.initIndex("default"); // Replace 'default' with your Algolia index name
 
+  console.log("sclient", searchClient);
+  // console.log("s", search);
   // Function to group search results by parent
   function groupResultsByParent(hits) {
     const groupedResults = {};

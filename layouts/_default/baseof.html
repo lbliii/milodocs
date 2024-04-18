@@ -13,9 +13,7 @@
     <div id="pageContainer" class="w-full lg:w-3/5">
       {{- if .IsHome}}{{ block "home" . }}{{ end }}{{else}}{{ block "main" . }}{{ end }}{{- end}}
     </div>
-    <div id="searchResultsContainer" class="hidden w-full lg:w-3/5 p-4">
-      <!-- populated by JS -->
-    </div>
+    {{partial "searchResultsContainer.html" . }}
     {{partial "navigation/sidebar-right.html" . }}
   </main>
   <footer>
