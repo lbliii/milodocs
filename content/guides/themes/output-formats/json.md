@@ -75,7 +75,7 @@ This template acts as the core of your JSON Schema definition. It will be used a
 
 #### single.json
 
-This template will be used to render the JSON object for the `single` page kind.
+This template will be used to render the JSON object for the `page` page kind.
 
 1. Navigate to your theme's `layouts/_default` directory.
 2. Create a new file called `single.json`.
