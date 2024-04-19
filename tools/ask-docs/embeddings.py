@@ -56,7 +56,7 @@ def metadata_func(record: dict, metadata: dict) -> dict:
     return metadata
 
 loader = JSONLoader(
-    file_path="./docs.json",
+    file_path="../../public/index.json",
     jq_schema=".[]",
     metadata_func=metadata_func,
     content_key="body"
