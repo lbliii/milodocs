@@ -11,7 +11,7 @@ load_dotenv()
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-TEMPLATE = """Summarize this article and add any additional relevant insights related to Hugo static sites that may be helpful:
+TEMPLATE = """Summarize this article:
 {context}
 """
 PROMPT = ChatPromptTemplate.from_template(TEMPLATE)

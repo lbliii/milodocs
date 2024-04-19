@@ -42,7 +42,7 @@ async function fetchAnswer(question, productFilter) {
 function createChatBubble(text, sender) {
   const bubble = document.createElement("div");
   bubble.className = `chat-bubble ${sender} p-2 rounded-lg text-black ${
-    sender === "user" ? "font-bold" : "font-regular text-sm"
+    sender === "user" ? "font-bold text-md" : "font-regular text-sm"
   }`;
   bubble.innerText = text;
   return bubble;
