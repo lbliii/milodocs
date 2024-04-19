@@ -3,7 +3,7 @@ title: Enable Algolia Search
 description: learn how to add Algolia search to your Hugo site.
 ---
 
-This guide provides a quick method for integrating [Algolia](https://www.algolia.com) search into your Hugo website. It involves using a straightforward cron job to update your index and the `algoliasearch-lite` script version, which is capable of handling search-only operations.
+This guide provides a quick method for integrating [Algolia](https://www.algolia.com) search into your Hugo website. It involves setting up a cron task to update your index and installing the `algoliasearch-lite` script version, which is capable of handling search-only operations.
 
 {{<notice snack>}}
 Algolia is a hosted search engine capable of delivering real-time results from the first keystroke. 
@@ -54,7 +54,7 @@ You can perform a quick test by going to `localhost:1313/index.json`; it should 
 
 ### Configure Index
 
-This may work once we set up the rest out of the box, but it's better to configure and rank your searchable attributes.
+Searches will return results out of the box, but it's better to configure and rank your searchable attributes.
 
 1. Navigate to **Search** > **Index**.
 2. Select the **Configuration** tab.
@@ -86,7 +86,7 @@ pnpm install algoliasearch instantsearch.js
 ```
 {{</notice>}}
 
-### Define a Results Container
+### Define Results Container
 
 Let's create our search results container element. This element will be hidden by default and will be populated with search results when the user types in the search input.
 
@@ -110,7 +110,7 @@ Let's create our search results container element. This element will be hidden b
    ```
 4. Make sure your page container element has an `id` attribute so that it can be targeted by the JavaScript for toggling visibility.
 
-### Define a SearchBox Input
+### Define SearchBox Input
 
 Let's create a search input element that will be used to trigger the search functionality. Typically this is placed in the layout that defines your top navigation bar.
 
@@ -121,7 +121,7 @@ Let's create a search input element that will be used to trigger the search func
 </div>
 ```
 
-### Create a search.js File 
+### Create search.js File 
 
 Now that we have our search results container and search input elements set up, let's create a JavaScript file that will handle the search functionality.
 
@@ -227,7 +227,7 @@ This particular script transforms your search results (`hits`) by grouping them 
   {{</notice>}}
 1. Replace the `default` value in the `searchIndex` variable with the name of your Algolia index that we created earlier.
 
-### Make the Search Script Available
+### Make Search Script Available
 
 Now that we have our search script set up, let's make it available in our Hugo project.
 

@@ -3,9 +3,9 @@ title: JSON Objects
 description: Learn how to convert your articles into JSON objects.
 ---
 
-You can convert your articles into JSON objects by creating a series of JSON templates in your theme that include the front matter and content of your articles. These templates can adhere to any JSON schema you choose.
+You can convert your articles into JSON objects by creating a series of templates in your theme. These templates can adhere to any JSON schema you choose.
 
-The JSON output format is extremely advantageous for documentation site use cases because it can be used to build search indexes, chatbots, and other applications that require structured data.
+The JSON output format is advantageous for documentation sites because it can be used to build search indexes, chatbots, dashboards, and other applications that require structured data.
 
 ## Before You Start
 
@@ -41,7 +41,7 @@ This template acts as the core of your JSON Schema definition. It will be used a
      "relPermalink": ""
    }
    ```
-4. Add the golang template logic to each attribute. This will require you to use a series of page methods. If you'd like to use a custom front matter attribute, such as a [cascaded](https://gohugo.io/content-management/front-matter/#cascade) `version` number from a parent directory's `_index.md`, remember to use the `.Params` method to access it.
+4. Add golang template logic to each attribute. This requires you to use a series of page methods for pulling in data. If you'd like to use a custom front matter attribute, such as a [cascaded](https://gohugo.io/content-management/front-matter/#cascade) `version` number from a parent directory's `_index.md`, remember to use the `.Params` method to access it.
    ```go
    {
      "id": "{{ .File.UniqueID }}",
@@ -75,7 +75,7 @@ This template acts as the core of your JSON Schema definition. It will be used a
 
 #### single.json
 
-This template will be used to render the JSON object for the `single` page kind.
+This template will be used to render the JSON object for the `page` page kind.
 
 1. Navigate to your theme's `layouts/_default` directory.
 2. Create a new file called `single.json`.
@@ -87,7 +87,7 @@ This template will be used to render the JSON object for the `single` page kind.
 
 #### section.json 
 
-This template will be used to render the JSON object for the `section` page kind.
+This template will be used to render the JSON object for the `section` page kind. A section is a page that contains an array of page kinds (that can also include other sections!). Knowing this, we need to create a recursive template that will render the JSON object for the section and all of its descendants.
 
 1. Navigate to your theme's `layouts/_default` directory.
 2. Create a new file called `section.json`.
