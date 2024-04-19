@@ -86,7 +86,7 @@ pnpm install algoliasearch instantsearch.js
 ```
 {{</notice>}}
 
-### Define a Results Container
+### Define Results Container
 
 Let's create our search results container element. This element will be hidden by default and will be populated with search results when the user types in the search input.
 
@@ -110,7 +110,7 @@ Let's create our search results container element. This element will be hidden b
    ```
 4. Make sure your page container element has an `id` attribute so that it can be targeted by the JavaScript for toggling visibility.
 
-### Define a SearchBox Input
+### Define SearchBox Input
 
 Let's create a search input element that will be used to trigger the search functionality. Typically this is placed in the layout that defines your top navigation bar.
 
@@ -121,7 +121,7 @@ Let's create a search input element that will be used to trigger the search func
 </div>
 ```
 
-### Create a search.js File 
+### Create search.js File 
 
 Now that we have our search results container and search input elements set up, let's create a JavaScript file that will handle the search functionality.
 
@@ -227,7 +227,7 @@ This particular script transforms your search results (`hits`) by grouping them 
   {{</notice>}}
 1. Replace the `default` value in the `searchIndex` variable with the name of your Algolia index that we created earlier.
 
-### Make the Search Script Available
+### Make Search Script Available
 
 Now that we have our search script set up, let's make it available in our Hugo project.
 
