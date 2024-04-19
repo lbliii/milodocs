@@ -54,7 +54,7 @@ You can perform a quick test by going to `localhost:1313/index.json`; it should 
 
 ### Configure Index
 
-This may work once we set up the rest out of the box, but it's better to configure and rank your searchable attributes.
+Searches will return results out of the box, but it's better to configure and rank your searchable attributes.
 
 1. Navigate to **Search** > **Index**.
 2. Select the **Configuration** tab.
