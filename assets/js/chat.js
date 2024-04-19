@@ -31,7 +31,7 @@ async function fetchAnswer(question, productFilter) {
   const response = await fetch(
     `https://chat-2-lc4762co7a-uc.a.run.app//?query=${encodeURIComponent(
       question
-    )}&productFilter=${encodeURIComponent(productFilter)}`
+    )}`
   );
   const data = await response.json();
   const answer = data.answer || "Sorry, I could not fetch the answer.";
