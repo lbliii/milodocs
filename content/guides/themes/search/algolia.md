@@ -3,7 +3,7 @@ title: Enable Algolia Search
 description: learn how to add Algolia search to your Hugo site.
 ---
 
-This guide provides a quick method for integrating [Algolia](https://www.algolia.com) search into your Hugo website. It involves using a straightforward cron job to update your index and the `algoliasearch-lite` script version, which is capable of handling search-only operations.
+This guide provides a quick method for integrating [Algolia](https://www.algolia.com) search into your Hugo website. It involves setting up a cron task to update your index and installing the `algoliasearch-lite` script version, which is capable of handling search-only operations.
 
 {{<notice snack>}}
 Algolia is a hosted search engine capable of delivering real-time results from the first keystroke. 
