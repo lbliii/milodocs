@@ -5,7 +5,7 @@ description: Learn how to convert your articles into JSON objects.
 
 You can convert your articles into JSON objects by creating a series of templates in your theme. These templates can adhere to any JSON schema you choose.
 
-The JSON output format is advantageous for documentation sites because it can be used to build search indexes, chatbots, dashboards and other applications that require structured data.
+The JSON output format is advantageous for documentation sites because it can be used to build search indexes, chatbots, dashboards, and other applications that require structured data.
 
 ## Before You Start
 
