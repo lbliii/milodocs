@@ -87,7 +87,7 @@ This template will be used to render the JSON object for the `page` page kind.
 
 #### section.json 
 
-This template will be used to render the JSON object for the `section` page kind.
+This template will be used to render the JSON object for the `section` page kind. A section is a page that contains an array of page kinds (that can also include other sections!). Knowing this, we need to create a recursive template that will render the JSON object for the section and all of its descendants.
 
 1. Navigate to your theme's `layouts/_default` directory.
 2. Create a new file called `section.json`.
