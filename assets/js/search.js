@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <a href="${hit.relURI}">
                 <div class="mb-4 text-black hover:bg-brand hover:text-white rounded-lg p-4 my-2 bg-zinc-100 transition duration-300 shadow-md">
                   <h3 class="text-lg font-bold">${hit.title}</h3>
-                  <p class="text-sm text-zinc-200">${hit.description}</p>
+                  <p class="text-sm ">${hit.description}</p>
                 </div>
                 </a>
               `;
