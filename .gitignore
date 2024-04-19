@@ -1,4 +1,4 @@
-/themes/milo/ask-docs/.env
-/ask-docs/.env
+/**/*/.env
 public/
 node_modules/
+pinecone/

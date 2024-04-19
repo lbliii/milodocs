@@ -1,0 +1,4 @@
+langchain_core
+langchain_openai
+python-dotenv
+functions-framework==3.*

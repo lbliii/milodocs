@@ -1,6 +1,6 @@
-langchain
+langchain_core
+langchain_pinecone
+langchain_openai
 pinecone_client
 python-dotenv
-openai
-tiktoken
 functions-framework==3.*
