@@ -5,20 +5,20 @@
 </head>
 <body class="bg-white">
   <header>
-    {{ partial "header.html" . }}
+    {{- partial "header.html" . -}}
   </header>
-  {{partial "navigation/top.html"}}
+  {{- partial "navigation/top.html" . -}}
   <main class="max-w-screen-xl 2xl:max-w-screen-2xl mx-auto flex">
-    {{partial "navigation/sidebar-left.html" . }}
+    {{- partial "navigation/sidebar-left.html" . -}}
     <div id="pageContainer" class="w-full lg:w-3/5">
       {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}}
       {{- if .IsHome}}{{ block "home" . }}{{ end }}{{else}}{{ block "main" . }}{{ end }}{{- end}}
     </div>
-    {{partial "searchResultsContainer.html" . }}
-    {{partial "navigation/sidebar-right.html" . }}
+    {{- partial "searchResultsContainer.html" . -}}
+    {{- partial "navigation/sidebar-right.html" . -}}
   </main>
   <footer>
-    {{ partial "footer.html" . }}
+    {{- partial "footer.html" . -}}
   </footer>
 </body>
 </html>
