@@ -1,4 +1,4 @@
-home: ["JSON"]
+home: ["HTML", "JSON"]
 page: [ "HTML", "JSON"]
 section: [ "HTML", "JSON"]
 list: [ "HTML", "JSON"]
