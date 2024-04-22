@@ -8,3 +8,7 @@ title: 'MiloDocs'
 enableGitInfo: true 
 enableEmoji: true 
 enableRobotsTXT: true 
+
+# Log Settings
+ignoreLogs:
+  - error-remote-getcsv
