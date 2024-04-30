@@ -1,23 +1,9 @@
-{{- $jsResources := slice }}
-{{- $jsResources = $jsResources | append (resources.Get "js/main.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/chat.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/darkmode.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/search.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/chat.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/article-summarization.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/code-clipboard.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/tiles.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/tabs.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/glossary.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/toc.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/sidebar-left.js") }}
-{{- $jsResources = $jsResources | append (resources.Get "js/chatTocToggle.js") }}
+{{- $opts := dict "minify" true }}
 
 {{- if eq hugo.Environment "development" }}
-  {{- $jsBundle := $jsResources | resources.Concat "js/bundle.js" | js.Build }}
-  <script src="{{ $jsBundle.RelPermalink }}"></script>
+  {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build $opts | fingerprint -}}
+  <script src="{{ $baseJsResources.RelPermalink }}" integrity="{{ $baseJsResources.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- else }}
-  {{- $opts := dict "minify" true }}
-  {{- $jsBundle := $jsResources | resources.Concat "js/bundle.js" | js.Build $opts | fingerprint }}
-  <script src="{{ $jsBundle.RelPermalink }}" integrity="{{ $jsBundle.Data.Integrity }}" crossorigin="anonymous"></script>
+  {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build $opts | fingerprint  -}}
+  <script src="{{ $baseJsResources.RelPermalink }}" integrity="{{ $baseJsResources.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- end }}

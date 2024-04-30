@@ -1,5 +1,5 @@
 ---
-title: chatTocToggle.js
+title: article-chatTocToggle.js
 description: Learn about how the chatTocToggle.js file works for this theme. 
 ---
 
@@ -15,4 +15,4 @@ This script defaults to displaying the chatGPT UX experience initially. When a u
 
 ## Source Code 
 
-{{%include "assets/js/chatTocToggle.js" "js" %}}
+{{%include "assets/js/layout-chatTocToggle.js" "js" %}}

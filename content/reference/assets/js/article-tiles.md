@@ -1,5 +1,5 @@
 ---
-title: tiles.js
+title: article-tiles.js
 description: Learn about how the tiles.js file works for this theme. 
 ---
 
@@ -19,4 +19,4 @@ The color of the spotlight effect is determined by [`css/colors.css`](/reference
 
 ## Source Code 
 
-{{%include "assets/js/tiles.js" "js" %}}
+{{%include "assets/js/article-tiles.js" "js" %}}

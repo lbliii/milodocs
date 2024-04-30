@@ -1,5 +1,5 @@
 ---
-title: sidebar-left.js
+title: layout-sidebar-left.js
 description: Learn about how the sidebar-left.js file works for this theme. 
 ---
 
@@ -12,4 +12,4 @@ The `sidebar-left.js` file is used to manage the scroll-into-view link experienc
 
 ## Source Code 
 
-{{%include "assets/js/sidebar-left.js" "js" %}}
+{{%include "assets/js/layout-sidebar-left.js" "js" %}}

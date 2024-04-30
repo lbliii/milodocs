@@ -1,5 +1,5 @@
 ---
-title: glossary.js
+title: layout-glossary.js
 description: Learn about how the glossary.js file works for this theme. 
 ---
 
@@ -20,4 +20,4 @@ The color of the spotlight effect is determined by [`css/colors.css`](/reference
 
 ## Source Code 
 
-{{%include "assets/js/glossary.js" "js" %}}
+{{%include "assets/js/layout-glossary.js" "js" %}}

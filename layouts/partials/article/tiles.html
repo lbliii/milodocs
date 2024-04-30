@@ -13,7 +13,7 @@
                 {{with .Params.icon}}<img src="/icons/light/{{.}}" alt="" class="w-5 h-5 icon">{{end}}
                 <div class="text-xl text-black font-brand font-semibold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title | truncate $titleTrunc}}{{end}}</div>
                 {{ with .Description | truncate $descTrunc}}
-                <p class="text-zinc-900 text-sm font-brand font-thin">{{ . }}</p>
+                <p class="text-zinc-900 text-sm font-thin">{{ . }}</p>
                 {{ end }}
             </a>
             {{if eq .BundleType "branch"}}
@@ -24,7 +24,7 @@
                         {{/* Do not show the hidden child page or its descendants */}}
                     {{else}}
                             <li class="my-2 mr-2">
-                                <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="text-xs p-2 text-black font-brand font-thin hover:text-white bg-white hover:bg-brand hover:transition hover:duration-300 rounded">
+                                <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="text-xs p-2 text-black font-thin hover:text-white bg-white hover:bg-brand hover:transition hover:duration-300 rounded">
                                     {{if eq .Parent.Title "Run Commands"}}{{ with replace .Title "pachctl " "" }}{{ . }}{{ end }}{{else}}{{if .Params.linkTitle}}{{.Params.linkTitle}}{{else}}{{ .Title | truncate 22 }}{{end}}{{end}}
                                 </a>
                             </li>

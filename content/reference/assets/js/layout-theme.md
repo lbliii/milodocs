@@ -1,5 +1,5 @@
 ---
-title: darkmode.js
+title: layout-theme.js
 description: Learn about how the darkmode.js file works for this theme. 
 ---
 
@@ -21,4 +21,4 @@ You can find the `.dark` class styling overrides in the `assets/css/src/input.cs
 
 ## Source Code 
 
-{{%include "assets/js/darkmode.js" "js" %}}
+{{%include "assets/js/layout-theme.js" "js" %}}

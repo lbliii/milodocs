@@ -1,5 +1,5 @@
 ---
-title: toc.js
+title: article-toc.js
 description: Learn about how the toc.js file works for this theme. 
 ---
 
@@ -15,4 +15,4 @@ If the page has an element with the ID `#TableOfContents`, this script collects 
 
 ## Source Code 
 
-{{%include "assets/js/toc.js" "js" %}}
+{{%include "assets/js/article-toc.js" "js" %}}

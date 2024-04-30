@@ -1,5 +1,5 @@
 ---
-title: search.js
+title: layout-search.js
 description: Learn about how the search.js file works for this theme.
 ---
 
@@ -34,4 +34,4 @@ If you like the default implementation but wish to style the search hits differe
 
 ## Source Code 
 
-{{%include "assets/js/search.js" "js" %}}
+{{%include "assets/js/layout-search.js" "js" %}}
