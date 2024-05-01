@@ -1,0 +1,26 @@
+{{- define "main" -}}
+<section class="max-w-7xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-8">Release Notes Highlights</h1>
+    <div class="space-y-12">
+      {{- template "_internal/pagination.html" . -}}
+      <!-- Loop over each child (release note) in Hugo -->
+      {{ range (.Paginate .RegularPagesRecursive).Pages }} 
+      <div class="relative">
+        <div class="border-l-4 border-brand pl-8 pb-8">
+          <div class="absolute -left-2 top-2 bg-brand w-5 h-5 rounded-full"></div>
+          <a href="{{.RelPermalink}}"><h2 class="text-xl font-semibold">{{ .Title }}</h2></a>
+          <p class="text-gray-500">{{ .Date.Format "January 2, 2006" }}</p>
+          <article class="mt-4 pl-4 text-gray-700">{{ .Content }}</article>
+          <aside class="flex flex-row space-x-2 mt-4">
+            <a href="https://github.com/pachyderm/pachyderm/releases/tag/v{{ .Title }}" class="text-xs text-black font-brand-thin bg-zinc-100 p-1 rounded hover:text-white bg-white hover:bg-brand hover:transition hover:duration-300">Read more on GitHub</a>
+            {{- if .Params.blog -}}
+            <a href="{{.Params.blog}}" class="text-xs text-black font-brand-thin bg-white p-1 rounded hover:text-white bg-zinc-100 hover:bg-brand hover:transition hover:duration-300">Read the {{.Title}} blog post</a>
+            {{- end -}}
+          </aside>
+        </div>
+      </div>
+      {{- end -}}
+      {{- template "_internal/pagination.html" . -}}
+    </div>
+  </section>
+{{- end -}}
