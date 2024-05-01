@@ -1,0 +1,28 @@
+{{- define "main" -}}
+{{$stepCount := 0}}
+<section id="articleContent" class="relative md:h-[calc(100vh-4rem)] bg-gradient-to-tl from-brand to-transparent m-2">
+    <div class="flex flex-col lg:flex-row w-full max-w-6xl p-8">
+        <!-- Hero Section -->
+        <section id="hero" class="flex flex-col items-center lg:items-start text-center lg:text-left mb-8 lg:mb-0 lg:mr-8 w-full lg:w-1/3">
+            <!-- Title -->
+            <h1 class="text-5xl text-black mb-4">{{-  .Title -}}</h1>
+            <!-- Subtitle -->
+            <p class="text-xl text-black">{{- .Description -}}</p>
+        </section>
+
+        <!-- Tiles Section -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full lg:w-2/3">
+            {{- range .Pages -}}
+            <a href="{{.RelPermalink}}" class="tile rounded-lg transition duration-300">
+                <div class="p-6" {{ with .Params.stephGraphic }} style="background-image: url('{{.}}');" {{end}}>
+                    <h2 class="text-black"><strong>{{- $stepCount = add $stepCount 1 -}}{{$stepCount}}. </strong>{{with .Params.stepTitle}}{{.}}{{else}}{{.Title}}{{end}}</h2>
+                    <!-- Step Description -->
+                    <p class="mb-4 text-black">{{- with .Params.stepDescription -}}{{- . -}}{{- else -}}{{- .Description -}}{{- end -}}</p>
+                </div>
+            </a>
+            {{- end -}}
+        </section>
+    </div>
+    {{ .Content }}
+</section>
+{{- end -}}

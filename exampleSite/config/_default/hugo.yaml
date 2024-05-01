@@ -3,6 +3,7 @@
 baseURL: '/'
 languageCode: 'en-us'
 title: 'MiloDocs'
+theme: milodocs
 
 ## Misc
 enableGitInfo: true 
