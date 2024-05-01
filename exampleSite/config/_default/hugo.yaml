@@ -11,5 +11,5 @@ enableEmoji: true
 enableRobotsTXT: true 
 
 # Log Settings
-ignoreLogs:
-  - error-remote-getcsv
+# ignoreLogs:
+#   - error-remote-getcsv

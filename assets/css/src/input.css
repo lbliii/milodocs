@@ -119,10 +119,10 @@
   }
 
   /* Link Styles */
-  #articleContent a {
-    @apply text-brand underline;
+  #articleContent a:not(#quick-install a) {
+    @apply  underline;
   }
-  #articleContent a:hover {
+  #articleContent a:hover:not(#quick-install a) {
     @apply text-brand-1 transition duration-300;
   }
 
