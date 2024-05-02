@@ -9,21 +9,33 @@
 
 ### Quickstart (MacOS)
 
-Copy and paste this into your terminal.
-
-```s
-brew install hugo
-site_name="milodocs_$(date +%s%N | md5sum | head -c 8)"
-hugo new site "$site_name"
-cd "$site_name"
-git clone https://github.com/lbliii/milodocs themes/milodocs
-echo 'theme = "milodocs"' >> hugo.toml
-git init
-git add .
-git commit -m "Initial commit"
-hugo server -D -p 1313
-```
-Open [localhost:1313](localhost:1313)
+1. Copy and paste this into your terminal to install the theme as a git submodule and copy the default configs.
+   ```s
+   brew install hugo 
+   site_name="milodocs_$(date +%s%N | md5sum | head -c 8)"
+   hugo new site "$site_name"
+   cd "$site_name"
+   git init
+   git submodule add https://github.com/lbliii/milodocs themes/milodocs
+   mkdir config/
+   cp -r themes/milodocs/exampleSite/config/* config/
+   rm config/_default/security.yaml
+   rm hugo.toml
+   git add .
+   git commit -m "Initial commit"
+   hugo server -D -p 1313
+   ```
+2. 
+3. Create your first markdown directory under `content/` (e.g., `content/get-started`).
+4. Add an `_index.md` file with the following frontmatter:
+   ```yaml
+   ---
+   title:
+   description:
+   weight:
+   ---
+   ```
+5. Check your site to see it displayed.
 
 Getting from 0 to 1 takes ~5 minutes. 
 
