@@ -1,6 +1,11 @@
 {{ define "home" }}
+
     <div id="articleContent" class="text-black p-4">
-      {{ .Content }}
+      {{if lt (len .Site.Sections) 1}}
+        {{- partial "welcome.html" -}}
+      {{- else -}}
+      {{ .Content }} 
+      {{- end -}}
     </div>
     <div class="p-4">
       {{- partial "article/tiles.html" . -}}
