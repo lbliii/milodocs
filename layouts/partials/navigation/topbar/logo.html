@@ -1,0 +1,13 @@
+{{- $logo := .Site.Params.logo -}}
+<a href="/" class="flex items-center">
+    <span class="w-5 h-5">
+        {{- if $logo -}}
+            <!-- Display a smaller version of the logo or similar -->
+            <img src="{{ $logo }}" alt="Logo Small" class="w-5">
+        {{- else -}}
+            <!-- Fallback to a generic home icon -->
+            <img id="lightModeHome" src="/icons/light/home.svg" alt="Home" class="hidden">
+             <img id="darkModeHome" src="/icons/dark/home.svg" alt="Home" class="hidden">
+        {{- end -}}
+    </span>
+</a>

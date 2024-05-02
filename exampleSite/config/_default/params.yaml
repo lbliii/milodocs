@@ -1,4 +1,23 @@
-logo:
+logo: '/images/milo.png'
+topNav:
+  globalLinks:
+    display: true
+    links:
+    - title: 'Home'
+      url: '/'
+    - title: 'Get Started'
+      url: '/get-started/'
+  dropdown:
+    display: true
+    name: "Dropdown"
+    url: "/"             
+    links:              
+      - name: "About Us"
+        url: "/about"
+      - name: "Services"
+        url: "/services"
+      - name: "Contact"
+        url: "/contact"
 names:
   organization: 'Emdash'
   product: 'MiloDocs'
