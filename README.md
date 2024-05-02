@@ -25,7 +25,7 @@
    git commit -m "Initial commit"
    hugo server -D -p 1313
    ```
-2. 
+2. Open [localhost:1313](localhost:1313)
 3. Create your first markdown directory under `content/` (e.g., `content/get-started`).
 4. Add an `_index.md` file with the following frontmatter:
    ```yaml
