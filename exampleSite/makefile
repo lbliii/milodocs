@@ -1,7 +1,7 @@
 # Makefile to start the Hugo server with specific product versions
 
 %: 
-	@echo "Starting Hugo server for HPE $@ Docs"
+	@echo "Starting Hugo server for $@ Docs"
 	hugo server --environment $@
 
 # Default action if no product is specified
