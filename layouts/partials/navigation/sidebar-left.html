@@ -10,21 +10,40 @@
 
 <!-- Directory Template to render the nested structure recursively -->
 {{ define "directory" }}
-<ul class="space-y-1 {{if eq $.level 1}} pl-0 {{else}}pl-2{{end}} list-none" data-level="{{ $.level }}">
+<ul class="space-y-1 {{ if eq $.level 1 }}pl-0{{ else }}pl-2{{ end }} list-none" data-level="{{ $.level }}">
     {{ range .dir }}
     {{ if and (not .Params.hidden) }}
     <li class="flex flex-col mr-2">
-        <a class="flex flex-row items-center {{if eq $.level 1}}text-lg font-brand font-bold border border-dotted mb-1 {{else if eq $.level 2}} font-regular text-md {{else if eq $.level 3}} font-light text-sm {{else if eq $.level 4}} text-sm{{else}} text-xs{{end}} p-1 hover:bg-zinc-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand font-semibold{{ else }} pl-{{ mul $.level 2 }} {{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{else}}{{end}} transition duration-300"
-            href="{{ .RelPermalink }}" data-level="{{ $.level }}" data-current="{{ if eq .RelPermalink $.current.RelPermalink }}true{{else}}false{{end}}" data-parent="{{.Parent.RelPermalink}}">
-            {{with .Params.icon}}<img src="/icons/light/{{.}}" alt="" class="icon w-5 h-5 mr-2">{{end}} {{if .Title}}{{.Title}}{{else}}{{ path.BaseName . | humanize }}{{end}}
-        </a>
-        <!-- Recursive call for nested pages
-        if page has children, add only 1 level; otherwise, add 2 -->
-        {{if eq .Type "section"}}
-        {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
-        {{else}}
-        {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
-        {{end}}
+        <div class="flex items-center py-1 px-2">
+            <a class="flex flex-row items-center flex-grow {{ if eq $.level 1 }}text-lg font-brand font-bold mb-1{{ else if eq $.level 2 }}font-regular text-md{{ else if eq $.level 3 }}font-light text-sm{{ else if eq $.level 4 }}text-sm{{ else }}text-xs{{ end }} p-1 hover:bg-zinc-100 hover:text-brand rounded {{ if eq $.level 1 }}text-lg font-brand font-semibold{{ else }}pl-{{ mul $.level 2 }}{{ end }} {{ if eq .RelPermalink $.current.RelPermalink }}text-brand{{ end }}" 
+                href="{{ .RelPermalink }}" 
+                data-level="{{ $.level }}" 
+                data-current="{{ if eq .RelPermalink $.current.RelPermalink }}true{{ else }}false{{ end }}" 
+                data-parent="{{ .Parent.RelPermalink }}" 
+                data-section="{{ .IsSection }}">
+                {{ with .Params.icon }}
+                    <img src="/icons/light/{{ . }}" alt="" class="icon w-5 h-5 mr-2">
+                {{ end }}
+                {{ if .Title }}
+                    {{ .Title }}
+                {{ else }}
+                    {{ path.BaseName . | humanize }}
+                {{ end }}
+            </a>
+            {{ if .IsSection }}
+                <button class="expand-toggle ml-auto focus:outline-none" aria-expanded="false">
+                    <svg class="w-4 h-4 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            {{ end }}
+        </div>
+        <!-- Wrapper for nested content -->
+        {{ if .Pages }}
+            <div class="nested-content transition-all duration-300 ease-in-out transform">
+                {{ template "directory" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
+            </div>
+        {{ end }}
     </li>
     {{ end }}
     {{ end }}
