@@ -1,11 +1,15 @@
-{{ define "main" }}
+{{- define "breadcrumbs" -}}
   <div class="my-4">
-    {{partial "navigation/breadcrumbs.html" . }}
+      {{partial "navigation/breadcrumbs.html" . }}
   </div>
+{{- end -}}
+{{ define "content" }}
   <h1 class="text-black p-4">{{ .Title }}</h1>
   <div id="articleContent" class="p-4">
     {{ .Content }}
   </div>
+{{ end }}
+{{ define "footer" }}
   <div class="p-4">
     {{partial "article/next-prev.html" . }}
   </div>

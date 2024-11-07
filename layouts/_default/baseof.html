@@ -11,8 +11,14 @@
   <main class="2xl:max-w-screen-2xl p-2 mx-auto flex">
     {{- partial "navigation/sidebar-left.html" . -}}
     <div id="pageContainer" class="p-4 w-3/5">
-      {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}}
-      {{- if .IsHome}}{{ block "home" . }}{{ end }}{{else}}{{ block "main" . }}{{ end }}{{- end}}
+      {{/*  {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}}  */}}
+      {{/*  {{- if .IsHome}}{{ block "home" . }}{{ end }}{{- end}}  */}}
+
+      {{ block "breadcrumbs" . }}{{- end -}}
+      {{ block "content" . }}{{- end -}}
+      {{ block "footer" . }}{{- end -}}
+
+      
     </div>
     {{- partial "searchResultsContainer.html" . -}}
     {{- partial "navigation/sidebar-right.html" . -}}

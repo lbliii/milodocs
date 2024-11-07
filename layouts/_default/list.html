@@ -1,4 +1,10 @@
-{{ define "main" }}
+{{- define "breadcrumbs" -}}
+  <div class="my-4">
+      {{partial "navigation/breadcrumbs.html" . }}
+  </div>
+{{- end -}}
+
+{{- define "content" -}}
   <h1 class="">{{ .Title }}</h1>
   {{ .Content }}
   {{ range .Pages }}
