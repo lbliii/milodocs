@@ -4,4 +4,4 @@
 
 [build.environment]
   HUGO_VERSION = "0.138.0" 
-  HUGO_THEME = "milodocs"
+  HUGO_THEME = "miloDocs"
