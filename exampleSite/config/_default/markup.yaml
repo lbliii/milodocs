@@ -5,5 +5,5 @@ goldmark:
     unsafe: true
     xhtml: false
 highlight:
-  noClasses: true
+  noClasses: false
 
