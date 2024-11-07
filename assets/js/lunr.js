@@ -207,12 +207,12 @@ function renderResults(groupedResults, container) {
   Object.keys(groupedResults).forEach((category) => { // Renamed from product
     const categoryDiv = document.createElement("div"); // Renamed from productDiv
     categoryDiv.classList.add("mb-4", "pb-4", "rounded-lg");
-    categoryDiv.innerHTML = `<h2 class="text-xl font-bold py-4">Search results for ${category}</h2>`; // Renamed from product
+    categoryDiv.innerHTML = `<h2 class="text-xl text-black font-bold py-4">Search results for ${category}</h2>`; // Renamed from product
 
     Object.keys(groupedResults[category]).forEach((parent) => { // Renamed from product
       const parentDiv = document.createElement("div");
       parentDiv.classList.add("mb-4", "p-4", "bg-zinc-100", "rounded-lg");
-      parentDiv.innerHTML = `<h3 class="text-xl font-semibold py-4">${parent}</h3>`;
+      parentDiv.innerHTML = `<h3 class="text-xl text-black font-semibold py-4">${parent}</h3>`;
       
       groupedResults[category][parent].forEach((result) => { // Renamed from product
         const resultDiv = document.createElement("div");
@@ -229,8 +229,8 @@ function renderResults(groupedResults, container) {
         );
         resultDiv.innerHTML = `
               <a href="${result.relURI}" class="block p-2 rounded-lg">
-                <h4 class="text-md font-medium">${result.title}</h4>
-                <p class="text-sm">${result.description}</p>
+                <h4 class="text-md text-black font-medium">${result.title}</h4>
+                <p class="text-sm text-black">${result.description}</p>
               </a>
             `;
         parentDiv.appendChild(resultDiv);
