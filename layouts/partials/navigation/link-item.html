@@ -1,0 +1,37 @@
+<!-- LinkItem Partial -->
+<div class="flex items-center py-1 px-2">
+    <a class="flex flex-row items-center flex-grow 
+        {{ if eq .level 1 }}text-lg font-brand font-bold mb-1
+        {{ else if eq .level 2 }}font-regular text-md
+        {{ else if eq .level 3 }}font-light text-sm
+        {{ else if eq .level 4 }}text-sm
+        {{ else }}text-xs{{ end }} p-1 hover:bg-zinc-100 hover:text-brand rounded 
+        {{ if eq .level 1 }}text-lg font-brand font-semibold
+        {{ else }}pl-{{ mul .level 2 }}
+        {{ end }} 
+        {{ if eq .page.RelPermalink .current.RelPermalink }}text-brand{{ end }}" 
+        href="{{ .page.RelPermalink }}" 
+        data-level="{{ .level }}" 
+        data-current="{{ if eq .page.RelPermalink .current.RelPermalink }}true{{ else }}false{{ end }}" 
+        data-parent="{{ .page.Parent.RelPermalink }}" 
+        data-section="{{ .page.IsSection }}">
+        
+        {{ with .page.Params.icon }}
+            <img src="/icons/light/{{ . }}" alt="" class="icon w-5 h-5 mr-2">
+        {{ end }}
+        
+        {{ if .page.Title }}
+            {{ .page.Title }}
+        {{ else }}
+            {{ path.Base .page | humanize }}
+        {{ end }}
+    </a>
+    
+    {{ if .page.IsSection }}
+        <button class="expand-toggle ml-auto focus:outline-none" aria-expanded="false">
+            <svg class="w-4 h-4 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    {{ end }}
+</div>
