@@ -1,3 +1,11 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  {{- partial "navigation/sidebar-left.html" . -}}
+{{- end -}}
+
 {{- define "breadcrumbs" -}}
   <div class="my-4">
       {{partial "navigation/breadcrumbs.html" . }}
@@ -12,3 +20,7 @@
     {{ .Summary }}
   {{ end }}
 {{ end }}
+
+{{- define "sidebar-right" -}}
+  {{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}}

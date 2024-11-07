@@ -1,0 +1,21 @@
+{{- $stepTotal := len .Parent.Pages -}}
+{{- $stepCount := 0 -}}
+{{- $currentPage := .RelPermalink -}}
+{{- range $i, $step := .Parent.Pages -}}
+{{- if eq $step.RelPermalink $currentPage -}}
+    {{- $stepCount = $i -}}
+{{- end -}}
+{{- end -}}
+
+<a class="flex flex-col justify-center items-center  text-3xl text-black font-brand-black bg-gradient-to-tl from-brand to-transparent px-2 py-4 " href="{{.Parent.RelPermalink}}">
+    {{- .Parent.Title }}: <br> {{with .Page.Params.stepTitle}}{{.}}{{else}}{{.Title}}{{end}}
+</a>
+{{/*  create a progress bar using flex; color the boxes that are =< stepcount  */}}
+<div id="tutorialProgress"class="flex justify-between mb-4 font-brand-regular">
+    {{- range $i, $step := .Parent.Pages -}}
+    <a href="{{$step.RelPermalink}}" class="flex flex-grow transition-all duration-300 ease-in-out text-black {{if le $i $stepCount}}bg-zinc-200{{else}}bg-zinc-100{{end}} p-2 hover:bg-zinc-100 hover:transition hover:duration-300"
+        {{if eq $i $stepCount}}aria-current="step"{{end}}>
+        <span class="flex flex-row space-x-2 {{if eq $i $stepCount}}font-brand-bold{{end}}">{{if lt $i $stepCount}}<img src="/icons/circle-ok.svg" class="w-5">{{else if eq $i $stepCount}}<img src="/icons/current-step.svg" class="w-5">{{else}}{{end}} <span>Step {{add $i 1}}</span></span>
+    </a>
+    {{- end -}}
+</div>

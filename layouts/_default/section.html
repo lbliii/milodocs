@@ -1,3 +1,11 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  {{- partial "navigation/sidebar-left.html" . -}}
+{{- end -}}
+
 {{- define "breadcrumbs" -}}
   <div class="my-4">
       {{partial "navigation/breadcrumbs.html" . }}
@@ -13,9 +21,13 @@
   {{end}}
 {{- end -}}
 
-{{- define "footer" -}}
+{{- define "innerFooter" -}}
   <div class="p-4">
     {{ partial "article/tiles.html" . }}
     {{partial "article/next-prev.html" . }}
   </div>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+  {{- partial "navigation/sidebar-right.html" . -}}
 {{- end -}}

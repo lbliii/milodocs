@@ -1,3 +1,17 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  {{- partial "navigation/sidebar-left.html" . -}}
+{{- end -}}
+
+{{- define "breadcrumbs" -}}
+  <div class="my-4">
+      {{partial "navigation/breadcrumbs.html" . }}
+  </div>
+{{- end -}}
+
 {{- define "content" -}}
 <div class="flex">
 {{- partial "navigation/glossary.html" . -}}
@@ -5,4 +19,11 @@
     {{- partial "glossary/entries.html" . -}}
   </article>
 </div>
+{{- end -}}
+
+{{- define "innerFooter" -}}
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+  {{- partial "navigation/sidebar-right.html" . -}}
 {{- end -}}

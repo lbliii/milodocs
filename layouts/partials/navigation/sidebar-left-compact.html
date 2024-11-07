@@ -1,0 +1,9 @@
+<!-- SidebarLeft Partial -->
+<aside id="sidebar-left" class="hidden md:flex md:translate-x-0 md:w-1/5 text-black" data-state="compact">
+    <div id="linkTree" class="sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto w-full">
+        {{ $currentpg := . }}
+        <!-- Include the Directory partial -->
+        {{ partial "navigation/directory.html" (dict "dir" .Site.Sections "current" $currentpg "level" 1) }}
+    </div>
+</aside>
+

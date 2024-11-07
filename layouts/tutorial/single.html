@@ -1,3 +1,27 @@
-{{- define "main" -}}
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
 
+{{- define "sidebar-left" -}}
+    {{- partial "navigation/sidebar-left-compact.html" . -}}
+{{- end -}}
+
+{{- define "breadcrumbs" -}}
+    <div class="my-4">
+      {{partial "navigation/breadcrumbs.html" . }}
+    </div>
+    {{- partial "tutorial/step-header.html" . -}}
+{{- end -}}
+
+{{- define "content" -}}
+    <div id="articleContent" class="p-4">
+    {{ .Content }}
+    </div>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+{{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}}
+
+{{- define "innerFooter" -}}
 {{- end -}}
