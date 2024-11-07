@@ -6,7 +6,13 @@ function initializeLunr() {
   // Define the Lunr configuration
   const lunrConfig = {
     ref: "id",
-    fields: ["title", "description", "body", "parent", "product"]
+    fields: ["title", "description", "body", "section", "category"]
+  };
+
+  // Define filter configuration
+  const filterConfig = {
+    field: "section", // Default filter field (can be changed as needed)
+    displayName: "Sections" // Display name for the filter field
   };
 
   // Initialize Lunr index processing as a Promise
@@ -15,26 +21,41 @@ function initializeLunr() {
     .then(data => {
       const documents = data;
 
-      // Safely handle product filter
-      const productFilter = document.getElementById("filterSelect");
-      if (productFilter) {
-        const products = [...new Set(documents.map(doc => doc.product).filter(product => product !== null))].sort();
+      // Safely handle configurable filter
+      const filterSelect = document.getElementById("filterSelect");
+      if (filterSelect) {
+        // Create a mapping of actual values to display text
+        const filterValues = [...new Set(documents.map(doc => doc[filterConfig.field]).filter(value => value !== null))].sort();
+        
+        // Helper function to convert to display text
+        const toDisplayText = (value) => {
+          return value
+            .split(/[-_]/)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+        };
 
-        // Populate product filter options
-        products.forEach((product) => {
+        // Populate filter options with display text
+        filterValues.forEach((value) => {
           const option = document.createElement("option");
-          option.value = product;
-          option.textContent = product;
-          productFilter.appendChild(option);
+          option.value = value;  // Keep original value
+          option.textContent = toDisplayText(value);  // Convert to display text
+          filterSelect.appendChild(option);
         });
 
-        // Set default product filter if available
+        // Set default filter if available
         const filterContainer = document.getElementById("filterContainer");
         if (filterContainer) {
-          const defaultProduct = filterContainer.getAttribute("data-product");
-          if (defaultProduct) {
-            productFilter.value = defaultProduct;
+          const defaultFilter = filterContainer.getAttribute("data-category"); // Renamed data attribute
+          if (defaultFilter) {
+            filterSelect.value = defaultFilter;
           }
+        }
+
+        // Update filter label or related UI elements with display name
+        const filterLabel = document.querySelector("label[for='filterSelect']");
+        if (filterLabel) {
+          filterLabel.textContent = filterConfig.displayName.charAt(0).toUpperCase() + filterConfig.displayName.slice(1);
         }
       }
 
@@ -61,6 +82,8 @@ function initializeLunr() {
       console.error("Error fetching index.json:", error);
       return { idx: null, documents: [] }; // Fallback in case of error
     });
+
+    console.log(lunrIndexPromise);
 }
 
 // Immediately start fetching and processing Lunr index
@@ -69,36 +92,45 @@ initializeLunr();
 // Function to handle search and filter
 function handleSearchAndFilter(idx, documents) {
   const searchInput = document.getElementById("searchInput");
-  const productFilter = document.getElementById("filterSelect");
+  const categoryFilter = document.getElementById("filterSelect");
   const pageContainer = document.getElementById("pageContainer");
   const searchResultsContainer = document.getElementById("searchResultsContainer");
   const searchHitsContainer = document.getElementById("searchHitsContainer");
 
   const inputValue = searchInput ? searchInput.value.trim() : "";
-  const selectedProduct = productFilter ? productFilter.value : "";
+  const selectedCategory = categoryFilter ? categoryFilter.value : "";
 
-  // Only show results if the search input is not empty
-  if (inputValue !== "") {
+  // Only proceed if we have a search input OR a category filter
+  if (inputValue !== "" || selectedCategory !== "") {
     // Show search results container and hide page container
     if (searchResultsContainer && pageContainer) {
       searchResultsContainer.classList.remove("hidden");
       pageContainer.classList.add("hidden");
     }
 
-    // Trigger lunr search with the input value
-    const results = idx.search(inputValue);
-    let detailedResults = transformResults(results, documents);
+    let detailedResults;
+    if (inputValue !== "") {
+      // Perform Lunr search if there's a search term
+      const results = idx.search(inputValue);
+      detailedResults = transformResults(results, documents);
+    } else {
+      // If no search term but has filter, show all documents
+      detailedResults = transformResults(
+        documents.map(doc => ({ ref: doc.id })),
+        documents
+      );
+    }
 
-    // Filter results by selected product if productFilter exists and a product is selected
-    if (selectedProduct !== "") {
-      detailedResults = filterResultsByProduct(detailedResults, selectedProduct);
+    // Apply category filter if selected
+    if (selectedCategory !== "") {
+      detailedResults = filterResultsBySection(detailedResults, selectedCategory);
     }
 
     if (searchHitsContainer) {
       renderResults(detailedResults, searchHitsContainer);
     }
   } else {
-    // Hide search results container and show page container
+    // Hide search results if no search or filter
     if (searchResultsContainer && pageContainer) {
       searchResultsContainer.classList.add("hidden");
       pageContainer.classList.remove("hidden");
@@ -116,15 +148,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const searchInput = document.getElementById("searchInput");
-    const productFilter = document.getElementById("filterSelect");
+    const categoryFilter = document.getElementById("filterSelect");
 
-    // Add event listeners for search input and product filter if they exist
+    // Add event listeners for search input and category filter if they exist
     if (searchInput) {
       searchInput.addEventListener("input", () => handleSearchAndFilter(idx, documents));
     }
 
-    if (productFilter) {
-      productFilter.addEventListener("change", () => handleSearchAndFilter(idx, documents));
+    if (categoryFilter) {
+      categoryFilter.addEventListener("change", () => handleSearchAndFilter(idx, documents));
     }
   });
 });
@@ -140,44 +172,49 @@ function transformResults(results, documents) {
     });
 
     if (doc) {
-      const productKey = doc.product || 'No Product';
-      if (!groupedResults[productKey]) {
-        groupedResults[productKey] = {};
+      const sectionKey = doc.section || 'No Section';
+      if (!groupedResults[sectionKey]) {
+        groupedResults[sectionKey] = {};
       }
 
-      if (!groupedResults[productKey][doc.parent]) {
-        groupedResults[productKey][doc.parent] = [];
+      const parentKey = doc.parent || 'No Parent';
+      if (!groupedResults[sectionKey][parentKey]) {
+        groupedResults[sectionKey][parentKey] = [];
       }
 
-      groupedResults[productKey][doc.parent].push(doc);
+      groupedResults[sectionKey][parentKey].push(doc);
     }
   });
 
   return groupedResults;
 }
 
-function filterResultsByProduct(results, product) {
-  const filteredResults = {};
-  if (results[product]) {
-    filteredResults[product] = results[product];
+function filterResultsBySection(results, section) {
+  // If there are no results for the selected section, return empty object
+  if (!results[section]) {
+    return {};
   }
-  return filteredResults;
+  
+  // Return only the results for the selected section
+  return {
+    [section]: results[section]
+  };
 }
 
 function renderResults(groupedResults, container) {
   container.innerHTML = "";
 
-  Object.keys(groupedResults).forEach((product) => {
-    const productDiv = document.createElement("div");
-    productDiv.classList.add("mb-4", "pb-4", "rounded-lg");
-    productDiv.innerHTML = `<h2 class="text-xl font-bold py-4">Search results for ${product}</h2>`;
+  Object.keys(groupedResults).forEach((category) => { // Renamed from product
+    const categoryDiv = document.createElement("div"); // Renamed from productDiv
+    categoryDiv.classList.add("mb-4", "pb-4", "rounded-lg");
+    categoryDiv.innerHTML = `<h2 class="text-xl font-bold py-4">Search results for ${category}</h2>`; // Renamed from product
 
-    Object.keys(groupedResults[product]).forEach((parent) => {
+    Object.keys(groupedResults[category]).forEach((parent) => { // Renamed from product
       const parentDiv = document.createElement("div");
       parentDiv.classList.add("mb-4", "p-4", "bg-zinc-100", "rounded-lg");
       parentDiv.innerHTML = `<h3 class="text-xl font-semibold py-4">${parent}</h3>`;
-
-      groupedResults[product][parent].forEach((result) => {
+      
+      groupedResults[category][parent].forEach((result) => { // Renamed from product
         const resultDiv = document.createElement("div");
         resultDiv.classList.add(
           "mb-2",
@@ -199,9 +236,9 @@ function renderResults(groupedResults, container) {
         parentDiv.appendChild(resultDiv);
       });
 
-      productDiv.appendChild(parentDiv);
+      categoryDiv.appendChild(parentDiv);
     });
 
-    container.appendChild(productDiv);
+    container.appendChild(categoryDiv);
   });
 }
