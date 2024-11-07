@@ -1,36 +1,43 @@
 {{$filename := .Get 0}}
-{{- $csv := printf "static/csv/%s.csv" $filename -}}
 {{- $delimiter := .Get 1 | default "," -}}
-{{- $skipColumns := split (.Get 2 | default "") "," -}} <!-- Get column names to skip as a list -->
-{{- $data := getCSV $delimiter $csv -}}
+{{- $skipColumns := split (.Get 2 | default "") "," -}}
+{{- $csvResource := resources.Get (printf "csv/%s" $filename) -}}
 
-<div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-zinc-200">
-        <thead class="">
-            <tr>
-            {{range $j, $col := index $data 0}} <!-- Loop through the first row to get headers -->
-                {{if not (in $skipColumns $col)}} <!-- Check if column is not in skip list -->
-                    <th scope="col" class="text-left uppercase tracking-wider">
-                        {{$col}}
-                    </th>
-                {{end}}
-            {{end}}
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-zinc-200">
-            {{range $i, $row := $data}}
-                {{if gt $i 0}} <!-- Skip the header row -->
+{{- if not $csvResource -}}
+    <div class="error">Error: CSV file "{{ $filename }}" not found in the csv directory.</div>
+{{- else -}}
+    {{- $csvData := $csvResource | transform.Unmarshal (dict "delimiter" $delimiter) -}}
+    
+    {{- if not $csvData -}}
+        <div class="error">Error: Failed to parse CSV data from "{{ $filename }}". The file may be empty or incorrectly formatted.</div>
+    {{- else -}}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-zinc-200">
+                <thead>
                     <tr>
-                    {{range $j, $col := $row}}
-                        {{if not (in $skipColumns (index (index $data 0) $j))}} <!-- Use header row to check column name against skip list -->
-                            <td class="whitespace-nowrap text-black">
-                                {{$col}}
-                            </td>
-                        {{end}}
-                    {{end}}
+                    {{- range $index, $col := index $csvData 0 -}}
+                        {{- if not (in $skipColumns $col) -}}
+                            <th scope="col" class="px-3 py-2 text-left text-sm font-semibold text-black uppercase tracking-wider">
+                                {{- $col -}}
+                            </th>
+                        {{- end -}}
+                    {{- end -}}
                     </tr>
-                {{end}}
-            {{end}}
-        </tbody>
-    </table>
-</div>
+                </thead>
+                <tbody class="divide-y divide-zinc-200">
+                    {{- range $rowIndex, $row := after 1 $csvData -}}
+                        <tr class="{{ cond (modBool $rowIndex 2) "bg-zinc-50" "bg-white" }}">
+                        {{- range $colIndex, $col := $row -}}
+                            {{- if not (in $skipColumns (index (index $csvData 0) $colIndex)) -}}
+                                <td class="px-3 py-2 whitespace-nowrap text-sm text-black">
+                                    {{- $col | markdownify -}}
+                                </td>
+                            {{- end -}}
+                        {{- end -}}
+                        </tr>
+                    {{- end -}}
+                </tbody>
+            </table>
+        </div>
+    {{- end -}}
+{{- end -}}
