@@ -1,0 +1,18 @@
+{
+  "name": "example-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "hugo server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-tw": "pnpm tailwindcss -i ./themes/milodocs/assets/css/src/input.css -o ./themes/milodocs/assets/css/main.css",
+    "watch-tw": "pnpm tailwindcss -i ./themes/milodocs/assets/css/src/input.css -o ./themes/milodocs/assets/css/main.css -w --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.3.5"
+  }
+}
