@@ -1,0 +1,12 @@
+Sitemap: /sitemap.xml
+
+# Default crawling rules
+User-agent: *
+Allow: /
+
+# Disallow crawling of specific pages
+{{ range .Site.Pages -}}
+{{ if or (.Params.hidden) (.Params.hiddenSiteMap) (eq .Params.latest false)}}
+Disallow: {{ .RelPermalink }}
+{{- end -}}
+{{- end -}}
