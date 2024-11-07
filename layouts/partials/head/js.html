@@ -1,7 +1,9 @@
+<script src="https://unpkg.com/lunr/lunr.js" crossorigin="anonymous"></script>
+
 {{- $opts := dict "minify" true }}
 
 {{- if eq hugo.Environment "development" }}
-  {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build $opts | fingerprint -}}
+  {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build | fingerprint -}}
   <script src="{{ $baseJsResources.RelPermalink }}" integrity="{{ $baseJsResources.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- else }}
   {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build $opts | fingerprint  -}}
