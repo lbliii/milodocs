@@ -3,5 +3,4 @@
   command = "ls && cd exampleSite && hugo --themesDir ../.."
 
 [build.environment]
-  HUGO_VERSION = "0.138.0" 
-  HUGO_THEME = "milodocs"
+  HUGO_VERSION = "0.138.0"
