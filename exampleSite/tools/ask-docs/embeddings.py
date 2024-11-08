@@ -14,8 +14,6 @@ api_key = os.environ.get('PINECONE_API_KEY')
 openai_key = os.environ.get('OPENAI_API_KEY')
 pinecone_region = os.environ.get('PINECONE_REGION')
 pinecone_cloud = os.environ.get('PINECONE_CLOUD')
-pinecone_index = os.environ.get('PINECONE_INDEX')
-
 
 pc = Pinecone(api_key=api_key)
 use_serverless = True
@@ -26,7 +24,7 @@ else:
     spec = PodSpec()
 
 # check for and delete index if already exists
-index_name = pinecone_index
+index_name = 'hpeai-all'
 if index_name in pc.list_indexes().names():
     pc.delete_index(index_name)
 
@@ -53,10 +51,11 @@ def metadata_func(record: dict, metadata: dict) -> dict:
     metadata["title"] = record.get("title")
     metadata["relURI"] = record.get("relURI")
     metadata["description"] = record.get("description")
+    metadata["productPath"] = record.get("productPath")
     return metadata
 
 loader = JSONLoader(
-    file_path="../../public/index.json",
+    file_path="../../../public/index.json",
     jq_schema=".[]",
     metadata_func=metadata_func,
     content_key="body"
@@ -65,7 +64,7 @@ loader = JSONLoader(
 data = loader.load()
 pprint(data)
 texts = text_splitter.split_documents(data) 
-doc_search = PC_Pinecone.from_documents(texts, embeddings, index_name=index_name, namespace="milodocs")
+doc_search = PC_Pinecone.from_documents(texts, embeddings, index_name=index_name, namespace="hpeai-all")
 
 pprint(doc_search)
 

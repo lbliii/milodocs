@@ -42,7 +42,7 @@ The `tiktoken` requirement runs into issues on Python 3.12; for now, I recommend
 
 ### Deploy Cloud Function
 
-{{%include "tools/ask-docs/cloud-function/main.py" "py" %}}
+{{%include "tools/ask-docs/serverless-chat/main.py" "py" %}}
 
 ## Source Code 
 
