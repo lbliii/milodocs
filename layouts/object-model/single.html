@@ -1,0 +1,158 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  {{- partial "navigation/sidebar-left.html" . -}}
+{{- end -}}
+
+{{- define "content" -}}
+<article id="articleContent" class="container mx-auto px-4 py-8">
+    {{- $schemaPath := .Params.schema -}}
+    {{- $schema := index .Site.Data (replace $schemaPath ".yaml" "") -}}
+    {{- $objectModel := $schema.ObjectModel -}}
+    {{$id := .Page.Title | anchorize }}
+
+    <section class="space-y-4">
+        <h1 class="text-3xl font-bold">Object Model Reference Schema</h1>
+        <p>{{$objectModel.Description | markdownify }}</p>
+    </section>
+
+    {{ range $modelName, $model := $objectModel.Objects }}
+        <section class="py-4">
+            <div class="py-4 space-y-4">
+                <h2 id="{{ $modelName | urlize}}" class="text-2xl font-semibold mb-4">
+                    <span class="bg-zinc-100 p-2 rounded-lg">{{ $modelName }}</span>
+                </h2>
+                <p>{{$model.Description | markdownify}}</p>
+            </div>
+            <div class="ml-4">
+                <h3 id="{{ $modelName | urlize }}-input-attributes" class="text-xl font-semibold mb-2">Input Attributes</h3>
+                <ul class="list-none p-2 border rounded">
+                    {{ range $input := $model.Inputs }}
+                        <li class="mb-2 list-none">
+                            <div class="toggle-collapse space-x-2 {{ with $input.options }}cursor-pointer{{end}}">
+                                {{ with $input.options }}
+                                    <svg class="chevron transition-transform transform inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                {{else}}
+                                    {{/*  a straight line like an em dash  */}}
+                                    <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                                    </svg>
+                                {{- end -}}
+                                <strong>{{ $input.name }}</strong>:
+                                <span>{{ $input.description | markdownify }}</span>
+                            </div>
+                            
+                            {{ with $input.options }}
+                                <ul class="list-none ml-4 mt-1 hidden">
+                                    {{ range $mapNumber, $mapValue := . }}
+                                    {{ range $key, $value := . }}
+                                        <li>
+                                            <strong><code>{{ $key }}</code></strong>: {{ $value | markdownify}} 
+                                        </li>
+                                    {{ end }}
+                                    {{ end }}
+                                </ul>
+                            {{ end }}
+                        </li>
+                    {{ end }}
+                </ul>
+            </div>
+
+            {{ with $model.AioliManaged }}
+                <div class="mt-4 ml-4">
+                    <h3 id="{{ $modelName | urlize }}-managed-attributes" class="text-xl font-semibold mb-2">Managed Attributes</h3>
+                    <ul class="list-none p-2 border rounded">
+                        {{ range $managed := . }}
+                            <li class="mb-2 list-none">
+                                <div class="toggle-collapse space-x-2 {{ with $managed.options }}cursor-pointer{{end}}">
+                                    {{ with $managed.options }}
+                                        <svg class="chevron transition-transform transform inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    {{else}}
+                                        {{/*  a straight line like an em dash  */}}
+                                        <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                                        </svg>
+                                    {{- end -}}
+                                    <strong>{{ $managed.name }}</strong>:
+                                    <span>{{ $managed.description | markdownify }}</span>
+                                </div>
+                                
+                                {{ with $managed.options }}
+                                    <ul class="list-none ml-4 mt-1 hidden">
+                                        {{ range $mapNumber, $mapValue := . }}
+                                        {{ range $key, $value := . }}
+                                            <li>
+                                                <strong><code>{{ $key }}</code></strong>: {{ $value | markdownify}} 
+                                            </li>
+                                        {{ end }}
+                                        {{ end }}
+                                    </ul>
+                                {{ end }}
+                            </li>
+                        {{ end }}
+                    </ul>
+                </div>
+            {{ end }}
+        </section>
+    {{ end }}
+
+    <hr>
+    {{ range $componentName, $component := $objectModel.Components }}
+    <section class="py-4">
+        <div class="py-4 space-y-4">
+            <h2 id="{{ $componentName | urlize}}" class="text-2xl font-semibold mb-4">
+                <span class="bg-zinc-100 p-2 rounded-lg">{{ $componentName }}</span>
+            </h2>
+            <p>{{$component.Description | markdownify}}</p>
+        </div>
+        <div class="ml-4">
+            <h3 id="{{ $componentName | urlize }}-attributes" class="text-xl font-semibold mb-2">Attributes</h3>
+            <ul class="list-none p-2 border rounded">
+                {{ range $attribute := $component.Attributes }}
+                    <li class="mb-2 list-none">
+                        <div class="toggle-collapse space-x-2 {{ with $attribute.options }}cursor-pointer{{end}}">
+                            {{ with $attribute.options }}
+                                <svg class="chevron transition-transform transform inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                </svg>
+                            {{else}}
+                                {{/*  a straight line like an em dash  */}}
+                                <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                                </svg>
+                            {{- end -}}
+                            <strong>{{ $attribute.name }}</strong>:
+                            <span>{{ $attribute.description | markdownify }}</span>
+                        </div>
+                        
+                        {{ with $attribute.options }}
+                            <ul class="list-none ml-4 mt-1 hidden">
+                                {{ range $mapNumber, $mapValue := . }}
+                                {{ range $key, $value := . }}
+                                    <li>
+                                        <strong><code>{{ $key }}</code></strong>: {{ $value | markdownify}} 
+                                    </li>
+                                {{ end }}
+                                {{ end }}
+                            </ul>
+                        {{ end }}
+                    </li>
+                {{ end }}
+            </ul>
+        </div>
+    </section>
+    {{end}}
+
+    {{/*  page end  */}}
+</article>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+{{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}}
