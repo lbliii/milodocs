@@ -3,7 +3,7 @@
 ## Features
 
 - **native chatGPT UI**
-- **native algolia UI**
+- **native Algolia UI**
 
 ## Installation
 
