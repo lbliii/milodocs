@@ -10,7 +10,7 @@
   {{- block "top-bar" . -}}{{- end -}}
   <main class="2xl:max-w-screen-2xl p-2 mx-auto flex">
     {{- block "sidebar-left" . -}}{{- end -}}
-    <div id="pageContainer" class="p-4 w-3/5 mx-auto">
+    <div id="pageContainer" class="p-4 w-full md:w-3/5 mx-auto">
       {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}} 
       {{- if .IsHome}}{{ block "home" . }}{{ end }}{{- end}} 
       {{ block "breadcrumbs" . }}{{- end -}}
