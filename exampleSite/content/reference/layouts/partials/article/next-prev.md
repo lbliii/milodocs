@@ -5,7 +5,7 @@ description: Learn how to use the next-prev partial layout.
 
 The `next-prev.html` [**partial**](/reference/layouts/partials) layout defines the article progression experience and is located at the end of an article.
 
-## How it Works
+## How it works
 
 - **Single pages**: 
    - The next article in the section is displayed on the left (next points up).
@@ -18,6 +18,6 @@ The `next-prev.html` [**partial**](/reference/layouts/partials) layout defines t
 This experience can be disabled from the `themes/milo/hugo.yaml` config by setting `Params.articles.nextPrev.display` to `false`.
 {{</notice>}}
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/partials/article/next-prev.html" "go" %}}

@@ -10,7 +10,7 @@ Algolia is a hosted search engine capable of delivering real-time results from t
 Algolia provides a [free tier](https://www.algolia.com/pricing) that includes 10,000 records and 50,000 operations per month. For most projects, startups, and small businesses, this should be more than enough to get started.
 {{</notice>}}
 
-## Before You Start 
+## Before you start 
 
 - Set up [JSON output format templates](/guides/themes/output-formats/json).
 - Review the [Algolia API reference](https://www.algolia.com/doc/api-reference/widgets/js/) needed for building your search layout.
@@ -21,14 +21,14 @@ You can perform a quick test by going to `localhost:1313/index.json`; it should 
 
 --- 
 
-## How to Create an Algolia Index
+## How to create an Algolia index
 
 1. Create a new Algolia account or log in to your existing account.
 2. Navigate to **Data Sources** > **Connectors**.
 3. Find the **Json** tile and select **Connect**.
 4. Select **Get Started**.
 
-### Configure Data Source 
+### Configure data source 
 
 1. Select **None** for authentication.
 2. Input the URL of your hosted `index.json` file. (e.g., `https://milodocs-theme.netlify.app/index.json`).
@@ -36,14 +36,14 @@ You can perform a quick test by going to `localhost:1313/index.json`; it should 
 4. Name the data source. 
 5. Select **Create Source**.
 
-### Configure Destination
+### Configure destination
 
 1. Input a name for your destination index. If it doesn't exist, it will get automatically created.
 2. Generate index credentials by selecting **Create one for me**.
 3. Name the destination.
 4. Select **Create Destination**.
 
-### Configure Task
+### Configure task
 
 1. For frequency, select **Scheduled** and choose **Every day**.
 2. For behavior, select **Replace**.
@@ -52,7 +52,7 @@ You can perform a quick test by going to `localhost:1313/index.json`; it should 
 5. Select **Run** to confirm.
 
 
-### Configure Index
+### Configure index
 
 Searches will return results out of the box, but it's better to configure and rank your searchable attributes.
 
@@ -67,9 +67,9 @@ Searches will return results out of the box, but it's better to configure and ra
 
 You now have an Algolia index that is automatically refreshed once a day! No complicated cralwers or plugins needed.
 
-## How to Enable Algolia Search
+## How to enable Algolia search
 
-### Add Algolia Search Lite Script
+### Add Algolia Search Lite script
 
 Let's add the Algolia Search Lite script to your Hugo project. This script is needed to perform search-only operations and populate your search UI.
 
@@ -86,7 +86,7 @@ pnpm install algoliasearch instantsearch.js
 ```
 {{</notice>}}
 
-### Define Results Container
+### Define results container
 
 Let's create our search results container element. This element will be hidden by default and will be populated with search results when the user types in the search input.
 
@@ -110,7 +110,7 @@ Let's create our search results container element. This element will be hidden b
    ```
 4. Make sure your page container element has an `id` attribute so that it can be targeted by the JavaScript for toggling visibility.
 
-### Define SearchBox Input
+### Define searchbox input
 
 Let's create a search input element that will be used to trigger the search functionality. Typically this is placed in the layout that defines your top navigation bar.
 
@@ -121,7 +121,7 @@ Let's create a search input element that will be used to trigger the search func
 </div>
 ```
 
-### Create search.js File 
+### Create search.js file 
 
 Now that we have our search results container and search input elements set up, let's create a JavaScript file that will handle the search functionality.
 
@@ -227,7 +227,7 @@ This particular script transforms your search results (`hits`) by grouping them 
   {{</notice>}}
 1. Replace the `default` value in the `searchIndex` variable with the name of your Algolia index that we created earlier.
 
-### Make Search Script Available
+### Make search script available
 
 Now that we have our search script set up, let's make it available in our Hugo project.
 

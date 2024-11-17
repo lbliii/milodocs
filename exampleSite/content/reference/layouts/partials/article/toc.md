@@ -3,8 +3,8 @@ title: toc.html
 description:  Learn how to use the toc partial layout.
 ---
 
-## How it Works 
+## How it works 
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/partials/article/toc.html" "go" %}}

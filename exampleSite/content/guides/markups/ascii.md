@@ -7,14 +7,14 @@ To utilize AsciiDoc markup in a Hugo site, some extra configuration is required 
 
 Once set up, you will be able to use the [ascii shortcode](/reference/layouts/shortcodes/ascii) and/or create your own.
 
-## Before You Start 
+## Before you start 
 
 - Read about Hugo's [security model](https://gohugo.io/about/security/)
 - Read about Hugo's [AsciiDoc configuration options](https://gohugo.io/getting-started/configuration-markup/#asciidoc)
 
 ---
 
-## How to Enable AsciiDoc Markup
+## How to enable AsciiDoc markup
 
 {{<notice info >}}
 The following steps have been tested with **Netlify**. By providing a Gemfile at the root level, Netlify knows to automatically install both Ruby and the required gems listed in the Gemfile. This may not be the case in your deployment solution.

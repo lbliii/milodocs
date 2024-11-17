@@ -7,7 +7,7 @@
 
 ## Installation
 
-### Quickstart (MacOS)
+### Quickstart (macOS)
 
 1. Copy and paste this into your terminal to install the theme as a git submodule and copy the default configs.
    ```s
@@ -39,7 +39,7 @@
 
 Getting from 0 to 1 takes ~5 minutes. 
 
-### 1. Install Hugo 
+### 1.Install Hugo
 
 ```bash
 brew install hugo
@@ -49,13 +49,13 @@ See Hugo Docs for more options:
 - [Linux](https://gohugo.io/installation/linux/)
 - [Windows](https://gohugo.io/installation/windows/)
 
-### 2. Create a New Site 
+### 2. Create a new site 
 
 ```s
 hugo new site <siteName>
 ```
 
-### 3. Install This Project
+### 3.Install this project
 
 1. Open your `<siteName>` project directory.
 2. Navigate to the `themes/` directory. 
@@ -65,7 +65,7 @@ hugo new site <siteName>
    gh repo clone lbliii/milodocs
    ```
 
-### 4. Add Theme to Config
+### 4. Add theme to config
 
 ```s
 baseURL = 'https://example.org/'
@@ -74,7 +74,7 @@ title = 'My New Hugo Site'
 theme = 'milodocs'
 ```
 
-### 5. Init Repo
+### 5. Init repo
 
 Time to start saving your progress! 
 1. Run the following:

@@ -17,7 +17,7 @@ To better support integrating that collection to your larger docs site, I've bui
 If you are integrating pdoc documentation for a package that has submodules, use the default `pdoc` shortcode. For simple packages without submodules, use `pdoc-2`.
 {{</notice>}}
 
-## How it Works 
+## How it works 
 
 The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, and `linktitle` (optional). If `linktitle` is not set, it automatically configures the link text as show in the following sections.
 
@@ -52,7 +52,7 @@ The `{{</*pdoc*/>}}` shortcode accepts 3 **positional** args: `type`, `target`, 
 - {{</* pdoc-2 "method" "~demo-package.DemoClass.demo_method" */>}}
 ```
 
-## Source Code 
+## Source code 
 
 {{<notice tip "Want to change the main directory?">}}
 You can change the default directory where this shortcode looks for  pdoc collections by updating the value of `$baseurl`. Alternatively, you could make this shortcode more advanced and remove that static baseurl piece altogether. 

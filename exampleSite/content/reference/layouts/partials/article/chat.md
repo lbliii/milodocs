@@ -11,7 +11,7 @@ Using an LLM to enhance the discoverability of your content is quickly becoming 
 
  At a high level, you'll need to provide some server-side code in Python or JS that routes user questions to chatGPT after being passed some embeddings (created from your docs JSON) for context.
 
-## How it Works 
+## How it works 
 
 This partial sends an API request to a GCP cloud function you'll need to set up that uses [Flask](https://flask.palletsprojects.com/en/3.0.x/) (built in) to:
 
@@ -24,7 +24,7 @@ This partial sends an API request to a GCP cloud function you'll need to set up 
 There are several ways to implement a RAG LLM UX --- this is just the way that currently works for me. It seems like in the future people may shift from LangChain to the official [Assistant API](https://platform.openai.com/docs/assistants/overview). Hopefully sharing this implementation helps you achieve yours!
 {{</notice>}}
 
-## Set Up 
+## Set up 
 
 To use this feature, you're going to need to:
 
@@ -36,15 +36,15 @@ To use this feature, you're going to need to:
 The `tiktoken` requirement runs into issues on Python 3.12; for now, I recommend using 3.10 if deploying with a GCP function.
 {{</notice>}}
 
-### Create & Store Embeddings
+### Create & store embeddings
 
 {{%include "tools/ask-docs/embeddings.py" "py" %}}
 
-### Deploy Cloud Function
+### Deploy cloud function
 
 {{%include "tools/ask-docs/serverless-chat/main.py" "py" %}}
 
-## Source Code 
+## Source code 
 
 {{<notice snack "Help Wanted">}}
 If you know how to successfully separate this JS into its own file in `assets/js`, please submit a PR. It doesn't work for me!

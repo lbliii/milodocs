@@ -16,11 +16,11 @@ This partial is used in the following [**default**](/reference/layouts/defaults)
 Each of these outputs can be found by adding `/index.json` to the path of the home, section, or single page. 
 {{</notice>}}
 
-## How it Works
+## How it works
 
 By itself, this partial doesn't do anything. When piped reference from a few of our default layouts, it acts as a standardized blueprint for how each article  should look like in json. Updating this file will cascade to all outputs where this is referenced.
 
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/partials/json.json" "golang" %}}

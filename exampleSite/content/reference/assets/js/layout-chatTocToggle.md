@@ -9,10 +9,10 @@ The `chatTocToggle.js` file is used to manage the user's discovery preference gl
 - [`article/chat.html`](/reference/layouts/partials/article/chat)
 - [`article/toc.html`](/reference/layouts/partials/article/toc)
 
-## How it Works
+## How it works
 
 This script defaults to displaying the chatGPT UX experience initially. When a user selects the toggle, the ToC UX is activated and will persist site-wide. 
 
-## Source Code 
+## Source code 
 
 {{%include "assets/js/layout-chatTocToggle.js" "js" %}}

@@ -9,7 +9,7 @@ To enable clean separation of theme logic while stile providing real-world examp
 
 Users will be able to unpack that `exampleSite` directory to tinker with as a demo site, or use it as a starting point for their own site using your theme.
 
-## How to Locally Test Your Theme
+## How to locally test your theme
 
 You don't want to reference your own theme as a dependency when testing it, so you can build the site using the top-level theme directory as the source.
 
@@ -19,7 +19,7 @@ You don't want to reference your own theme as a dependency when testing it, so y
 
 
 
-## How to Deploy a Demo Site
+## How to deploy a demo site
 
 ### Netlify
 

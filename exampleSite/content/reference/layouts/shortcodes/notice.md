@@ -5,7 +5,7 @@ description: learn how to use the notice shortcode
 
 Occasionally you might need to make **admonitions**, **callouts**, or **notices** in your documentation. Use the `{{</*notice*/>}}` shortcode to display these. 
 
-## How it Works 
+## How it works 
 
 The `{{</*notice*/>}}` shortcode accepts 2 **positional** args: `type` and `title`. Both are optional. If no type is set, the notice defaults to `info`.
 
@@ -79,6 +79,6 @@ This is a **danger** notice.
 
 ```
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/notice.html" "go" "" "noend"%}}

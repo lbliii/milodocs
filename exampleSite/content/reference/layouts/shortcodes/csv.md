@@ -7,7 +7,7 @@ The `{{</*csv*/>}}` shortcode is a simple way to embed CSV files in your documen
 
 Using this shortcode also enables you to more easily update your CSV files programmatically, without having to update the markdown files that reference them.
 
-## How it Works
+## How it works
 
 The `{{</*csv*/>}}` shortcode accepts 3 **positional** args: `filename`, `delimiter`, and `excludedColumns`.
 
@@ -20,18 +20,18 @@ The `{{</*csv*/>}}` shortcode accepts 3 **positional** args: `filename`, `delimi
 
 The table in the following examples is pulled from `/static/csv/food.csv`.
 
-#### Full Table with Default Delimiter
+#### Full table with default delimiter
 
 `{{</*csv food*/>}}`
 
 {{<csv food >}}
 
-#### Full Table with Excluded Column
+#### Full table with excluded column
 
 `{{</*csv food "," "Origin"*/>}}`
 
 {{<csv food "," "Origin" >}}
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/csv.html" "go" %}}

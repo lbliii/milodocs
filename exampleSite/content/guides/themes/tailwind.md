@@ -5,14 +5,14 @@ description: learn how to add TailwindCSS to your Hugo Theme
 
 You can utilize TailwindCSS to build your site layouts. This is advantageous because TailwindCSS is a mature CSS framework that is well supported and known by most developers, making onboarding other people to your project much easier.
 
-## Before You Start 
+## Before you start 
 
 - Read the [TailwindCSS official install guide](https://tailwindcss.com/docs/installation)
 - Read the [Hugo new theme CLI command reference](https://gohugo.io/commands/hugo_new_theme/)
 
 ---
 
-## How to Add TailwindCSS to a Hugo Theme
+## How to add TailwindCSS to a Hugo theme
 
 1. Open a terminal and run the following:
    ```bash

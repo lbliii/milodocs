@@ -9,7 +9,7 @@ Inline code samples are great --- but code samples that are pulled from source f
 This document is going to be a bit meta. 
 {{</notice>}}
 
-## How it Works
+## How it works
 
 The `{{%/*include*/%}}` shortcode accepts 3 **positional** args: `lang`, `start`, and `stop`. All are optional.
 
@@ -19,14 +19,14 @@ This shortcode relies on Hugo's markdown rendering to automatically handle code 
 
 ### Examples 
 
-### This File
+### This file
 
 {{%include "reference/layouts/shortcodes/include.md" "md" %}}
 
-### Python File With Comments
+### Python file with comments
 
 {{%include "static/demo-package.py" "python" "# Start 1" "# End 1" %}}
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/include.html" "go" %}}

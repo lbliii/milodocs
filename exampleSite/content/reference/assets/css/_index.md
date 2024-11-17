@@ -7,7 +7,7 @@ icon: "swatches.svg"
 
 The CSS used in the {{<prod>}} theme is powered by [TailwindCSS](https://tailwindcss.com/docs/installation).
 
-## Before You Start
+## Before you start
 
 Before making any changes, let's deploy locally and activate style monitoring.
 
@@ -15,7 +15,7 @@ Before making any changes, let's deploy locally and activate style monitoring.
 2. Navigate into `/themes/milo`.
 3. Run `pnpm watch-tw`. This enables monitoring for CSS changes.
 
-## Modify Templates
+## Modify templates
 
 You can change the TailwindCSS classes assigned within the Hugo templates by doing the following:
 
@@ -28,7 +28,7 @@ You can change the TailwindCSS classes assigned within the Hugo templates by doi
 4. Verify changes were successful.
 5. Save.
 
-## Modify Global Theme Extensions
+## Modify global theme extensions
 
 You can modify the default extensions the Milo Docs theme has set for TailwindCSS. This is useful when you'd like to change the branded **fonts** or change Tailwind's default **font sizes**. 
 
@@ -42,7 +42,7 @@ If you are updating the fonts, make sure that you:
 2. Open the `tailwind.config.js` file.
 3. Update the `theme.extends` entries.
 
-## Modify Stylesheets 
+## Modify stylesheets 
 
 Hugo can reference CSS from multiple locations (e.g., `static` and `assets`). The {{<prod>}} theme keeps all CSS in the `assets` folder since we want to process the files in a variety of ways --- such as concatenating many modular CSS files together into a bundled output that we can minify for production deployments. 
 

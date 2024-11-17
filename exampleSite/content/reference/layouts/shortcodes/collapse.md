@@ -5,7 +5,7 @@ description: learn how to use the collapse shortcode
 
 The `{{</*collapse*/>}}` shortcode is a simple way to create collapsible sections in your documentation. This is great for hiding large amounts of content that you don't want to overwhelm your readers with.
 
-## How it Works
+## How it works
 
 The `{{</*collapse*/>}}` shortcode accepts 2 **named** args: `title` and `description`.
 
@@ -31,6 +31,6 @@ this is the hidden content.
 
 {{</collapse>}}
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/collapse.html" "go" %}}

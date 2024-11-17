@@ -7,16 +7,16 @@ You can convert your articles into JSON objects by creating a series of template
 
 The JSON output format is advantageous for documentation sites because it can be used to build search indexes, chatbots, dashboards, and other applications that require structured data.
 
-## Before You Start
+## Before you start
 
 - Review the [Page Kinds Hugo Documentation](https://gohugo.io/templates/section-templates/#page-kinds)
 - Review the [Front Matter Hugo Documentation](https://gohugo.io/content-management/front-matter/)
 - Review the [Page Methods Hugo Documentation](https://gohugo.io/quick-reference/methods/#page)
 ---
 
-## How to Create JSON Output
+## How to create JSON output
 
-### Create json.json Partial 
+### Create json.json partial 
 
 This template acts as the core of your JSON Schema definition. It will be used across all of the other page kind layouts we'll build (`single.json`, `section.json`, `list.json`, `home.json`).
 
@@ -71,7 +71,7 @@ This template acts as the core of your JSON Schema definition. It will be used a
 
 5. Save the file.
 
-### Create Default Layouts
+### Create default layouts
 
 #### single.json
 
@@ -166,7 +166,7 @@ This template will be used to render the JSON object for the `home` page kind.
    ```
 5. Save the file.
 
-### Update Hugo Configuration
+### Update Hugo configuration
 
 1. Open your Hugo `outputs` configuration (e.g., `config/_default/outputs.yaml`).
 2. Update each page kind to include JSON in the supported array.

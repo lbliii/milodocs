@@ -7,7 +7,7 @@ The `darkmode.js` file is used to manage the user's theme preference and is asso
 
 {{%include "layouts/partials/navigation/top.html" "html" "<!-- Dark Mode -->" "" %}}
 
-## How it Works 
+## How it works 
 
 1. This script checks to if the user has darkmode saved in their local storage.
 2. If not, when toggled it:
@@ -19,6 +19,6 @@ The `darkmode.js` file is used to manage the user's theme preference and is asso
 You can find the `.dark` class styling overrides in the `assets/css/src/input.css` file.
 {{</notice>}}
 
-## Source Code 
+## Source code 
 
 {{%include "assets/js/layout-theme.js" "js" %}}

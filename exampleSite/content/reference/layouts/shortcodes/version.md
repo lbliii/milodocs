@@ -5,7 +5,7 @@ description: learn how to use the version shortcode
 
 If the project you are documenting must be installed, it is likely that your documentation needs to be versioned. In this scenario, it's especially useful to have a shortcode that can also version your **download links**, **github links**, **announcements**, and **similar assets** without having to manually update them across all of your articles. 
 
-## How it Works
+## How it works
 
 1. Set up a `content/latest` directory to begin versioning your documentation.
 2. Add the following frontmatter to `content/latest/_index.md`, updating the version numbers:
@@ -25,7 +25,7 @@ If the project you are documenting must be installed, it is likely that your doc
 {{<prod>}} Theme does not _actually_ have versioned documentation; this is just for demonstration purposes. 
 {{</notice>}}
 
-#### Local Version 
+#### Local version 
 
 The default functionality for this shortcode uses the version numbers cascading from the root of the versioned directory (e.g., `content/latest`, `content/1.0.2`). 
 
@@ -37,7 +37,7 @@ The default functionality for this shortcode uses the version numbers cascading 
 - [{{</*version*/>}} Download](https://github.com/org/project/releases/tag/v{{</*version*/>}})
 ```
 
-#### Global Version 
+#### Global version 
 
 In cases where you want to mention or link to the latest version in older versions of your content, you can add `{{</*version "global"*/>}}`. This uses the site-wide parameter to determine what version number to use.
 

@@ -1,0 +1,9 @@
+repo
+config
+configs
+Algolia
+myshortcode
+shortcodes
+makefiles
+frontmatter
+Netlify

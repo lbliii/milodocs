@@ -5,7 +5,7 @@ description: Learn about how the search.js file works for this theme.
 
 The `search.js` file is used to manage the [Algolia](https://www.algolia.com/) search integration and experience.
 
-## How it Works
+## How it works
 
 This script automatically toggles the view of a regular page versus the search page when a user inputs a search string. With every added letter, a new search is performed against the index.
 
@@ -15,7 +15,7 @@ Results returned are grouped by parent article and then provided as a stacked se
 Algolia typically allows 10,000 free monthly searches --- though this is subject to change.
 {{</notice>}}
 
-## Set Up 
+## Set up 
 
 1. Create an **Algolia** account.
 2. Provide your **App ID** and **Search Only API Key** to the `searchClient` (these are safe to reveal; the **Admin API Key** is not.).
@@ -32,6 +32,6 @@ If you like the default implementation but wish to style the search hits differe
 {{</notice>}}
 
 
-## Source Code 
+## Source code 
 
 {{%include "assets/js/layout-search.js" "js" %}}

@@ -5,7 +5,7 @@ description: learn how to use the prod shortcode
 
 Occasionally it is useful to use a variable that represents your product name --- especially when documenting a project or startup product that is likely to undergo rebranding.
 
-## How it Works 
+## How it works 
 
 The `{{</*prod*/>}}` shortcode prints out a string for your main product name defined in your site configuration. 
 
@@ -33,6 +33,6 @@ This is the {{<prod>}} theme.
 This is the {{</*prod*/>}} theme.
 ```
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/prod.html" "golang" %}}

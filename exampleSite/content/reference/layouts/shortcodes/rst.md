@@ -6,7 +6,7 @@ description: learn how to use the rst rendering shortcode
 The `{{%/*rst*/%}}` shortcode a tool for rendering reStructuredText content in your Hugo site. This is useful for maintaining complex information such as tables, code blocks, and other elements that are difficult to maintain in Markdown.
 
 
-## Before You Start
+## Before you start
 
 - Create a `requirements.txt` file at the root of your Hugo project and add `rst2html`; 
 - 
@@ -16,7 +16,7 @@ The `{{%/*rst*/%}}` shortcode a tool for rendering reStructuredText content in y
 
 ---
 
-## How it Works 
+## How it works 
 
 ### Table
 
@@ -26,6 +26,6 @@ The `{{%/*rst*/%}}` shortcode a tool for rendering reStructuredText content in y
 
 {{%include "shared/rst/table.rst" "rst" %}}
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/rst.html" "golang" %}}

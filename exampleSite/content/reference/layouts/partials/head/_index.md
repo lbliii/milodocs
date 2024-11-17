@@ -10,7 +10,7 @@ The `head.html` [**partial**](/references/layouts/partial) layout houses:
 - a link to the bundled & minified CSS (@[head/css.html](/reference/layouts/partials/head/css))
 - a link to the bundled & minified JS (@[head/js.html](/reference/layouts/partials/head/js))
 
-## How it Works
+## How it works
 
 1. This partial is fed into the `baseof.html` **default** layout.
 2. Each individual page is passed through this template as  context `{{ partial "head.html" . }}`
@@ -18,6 +18,6 @@ The `head.html` [**partial**](/references/layouts/partial) layout houses:
 4. All assets are applied.
 
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/partials/head.html" "go" %}}

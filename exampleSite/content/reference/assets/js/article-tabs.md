@@ -34,12 +34,12 @@ The `tabs.js` file is used to manage the [tabbed experience](/reference/layouts/
 {{</tabs/container>}}
 
 
-## How it Works 
+## How it works 
 
 1. If a page has elements with `[data-component="tabs"]`, the script collects them all into an array.
 2. For each collection of tabs, it then collects the button options (`[data-tab-id]`)and corresponding tabbed markdown content (`[data-tabcontent]`).
 3. Event listeners are setup for each button; when selected, the corresponding content is revealed and the button highlighted; other options are hidden/muted. 
 
-## Source Code 
+## Source code 
 
 {{%include "assets/js/article-tabs.js" "js" %}}

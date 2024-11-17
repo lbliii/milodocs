@@ -6,7 +6,7 @@ description: learn how to use the asciidocs rendering shortcode
 The `{{</*ascii*/>}}` shortcode renders AsciiDoc markup content inside of markdown files. 
 
 
-## Before You Start 
+## Before you start 
 
 - Complete the steps to [Enable AsciiDoc Markup Support](/guides/markups/ascii)
 ---
@@ -36,6 +36,6 @@ The `{{</*ascii*/>}}` shortcode renders AsciiDoc markup content inside of markdo
 |===
 ```
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/shortcodes/ascii.html" "golang" %}}

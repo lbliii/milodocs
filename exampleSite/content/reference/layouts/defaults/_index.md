@@ -7,7 +7,7 @@ weight: 300
 
 Layouts in the `_default` folder define the major content types and outputs of your Hugo site. 
 
-## Default Layouts
+## Default layouts
 
 The following layouts are typically found in all Hugo sites and likely come with a fresh Hugo theme (`hugo theme new themeName`).
 
@@ -20,7 +20,7 @@ The following layouts are typically found in all Hugo sites and likely come with
 |**home.html**| renders the `/` page of your site; overrides `content/index.md` if present.|`leaf`||
 |**single.html**| renders single pages (e.g., articles).|`leaf`||
 
-## Added Layouts
+## Added layouts
 
 The following layouts are added by the Milo Docs theme.
 

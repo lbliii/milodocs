@@ -7,7 +7,7 @@ To utilize reStructuredText (RST) markup in a Hugo site, some extra configuratio
 
 Once set up, you will be able to use full `.rst` pages, write inline RST using the [rst shortcode](/reference/layouts/shortcodes/rst), and/or create your own markup shortcodes.
 
-## Before You Start 
+## Before you start 
 
 - Read about Hugo's [security model](https://gohugo.io/about/security/)
 - Read about Hugo's [AsciiDoc configuration options](https://gohugo.io/getting-started/configuration-markup/)
@@ -15,7 +15,7 @@ Once set up, you will be able to use full `.rst` pages, write inline RST using t
 ---
 
 
-## How to Enable RST Markup
+## How to enable RST markup
 
 {{<notice info >}}
 The following steps have been tested with **Netlify**. By providing a `requirements.txt` file at the root level, Netlify knows to automatically install `python`, `pip`, and the listed dependencies (`rst2html`). This may not be the case in your deployment solution.

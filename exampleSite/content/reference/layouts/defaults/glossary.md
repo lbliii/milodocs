@@ -9,9 +9,9 @@ It's common to want to build out a glossary of terms that are either unique to y
 Creating a glossary is an essential part of your  strategy for bolstering organic inbound traffic through authoritative SEO content.
 {{</notice>}}
 
-## How it Works
+## How it works
 
-## Source Code 
+## Source code 
 
 {{%include "layouts/_default/glossary.html" "golang" %}}
 

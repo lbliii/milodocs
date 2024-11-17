@@ -7,11 +7,11 @@ cascade:
         major: 0
         minor: 0 
         patch: 2
-    author: lawrence lane
+    author: Lawrence Lane
     themeContent: true
 ---
 
-# Welcome to {{%prod%}} Theme
+# Welcome to {{%prod%}} theme
 
  {{%prod%}} is a [Hugo](https://gohugo.io/) theme made for **documentation engineers** and **technical writers**, by one.
 

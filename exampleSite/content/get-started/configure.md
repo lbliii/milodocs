@@ -7,7 +7,7 @@ weight: 300
 After you have locally installed Hugo and deployed a copy of this theme, you can start configuring your site. This guide will walk you through the basics of configuring your site, including setting the site URL and metadata.
 
 
-## How to Configure Your Site
+## How to configure your site
 
 ### 1. Update Site Details
 
