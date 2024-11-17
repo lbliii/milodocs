@@ -1,6 +1,6 @@
 ---
 title: csv.html
-description: learn how to use the csv shortcode
+description: learn how to use the CSV shortcode
 ---
 
 The `{{</*csv*/>}}` shortcode is a simple way to embed CSV files in your documentation from a global `static/csv` directory. This is great for large and/or complex tables that you want to keep separate from your markdown files.

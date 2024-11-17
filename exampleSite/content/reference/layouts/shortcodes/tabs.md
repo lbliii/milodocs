@@ -13,9 +13,9 @@ There are 5 shortcodes that make up the tabs UX.
 |---|---|--|
 |`{{</*tabs/container*/>}}`|This is the container for the entire tabs UX.|n/a|
 |`{{</*tabs/tabButtons*/>}}`|This is the container for the tab buttons.| `id` **string**|
-|`{{</*tabs/tab*/>}}`|This is the button that will be clicked to show the tab content.|`option` **string**; `state` **string**|
+|`{{</*tabs/tab*/>}}`|This is the button that you click to show the tab content.|`option` **string**; `state` **string**|
 |`{{</*tabs/tabContentsContainer*/>}}`|This is the container for the tab content.|n/a|
-|`{{</*tabs/tabContent*/>}}`|This is the content that will be shown when the tab button is clicked.|markdown|
+|`{{</*tabs/tabContent*/>}}`|This is the content displayed when the tab button is clicked.|markdown|
 
 {{<notice info "Set Tab as Default">}}
 When an option has the default state of `active`, it will be the first tab shown.
@@ -60,9 +60,6 @@ When an option has the default state of `active`, it will be the first tab shown
 {{</*/tabs/tabContentsContainer*/>}}
 {{</*/tabs/container*/>}}
 ```
-
-
-
 
 ## Source code 
 

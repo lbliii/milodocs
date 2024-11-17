@@ -4,7 +4,7 @@ description: Learn about how the build-offline-site.sh script works for this the
 hidden: true
 ---
 
-The `build-offline-site.sh` script creates a compressed `.tar.gz` file of the site that can be used for offline viewing. This output is `file://` protocol compatible and can be shared with others for offline viewing.
+The `build-offline-site.sh` script creates a compressed `.tar.gz` file of the site used for offline viewing. This output uses the `file://` protocol, meaning that it works directly in a browser without any setup.
 
 ## Before you start 
 
@@ -29,7 +29,7 @@ hugo server --config config/offline.yaml --environment offline
 
 ### Default environments
 
-You can set the environments by updating the the `ENVIRONMENTS` array in the script. 
+You can set the environments by updating the `ENVIRONMENTS` array in the script. 
 
 - `development`
 - `production`

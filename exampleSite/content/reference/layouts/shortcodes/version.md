@@ -3,7 +3,7 @@ title: version.html
 description: learn how to use the version shortcode
 ---
 
-If the project you are documenting must be installed, it is likely that your documentation needs to be versioned. In this scenario, it's especially useful to have a shortcode that can also version your **download links**, **github links**, **announcements**, and **similar assets** without having to manually update them across all of your articles. 
+If the project you are documenting must be installed, it is likely that your documentation needs to be versioned. In this scenario, it's especially useful to have a shortcode that can also version your **download links**, **GitHub links**, **announcements**, and **similar assets** without having to manually update them across all of your articles. 
 
 ## How it works
 

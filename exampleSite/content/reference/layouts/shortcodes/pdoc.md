@@ -3,7 +3,7 @@ title: pdoc.html
 description: learn how to use the pdoc shortcode
 ---
 
-It's common for developers to build packages in Python that need auto-generated code documentation based off of Python strings.
+It's common for developers to build packages in Python that need automatically generated code documentation based off of Python strings.
 
 To better support integrating that collection to your larger docs site, I've built out a `{{</*pdoc*/>}}` shortcode that enables you to automatically target links for:
 

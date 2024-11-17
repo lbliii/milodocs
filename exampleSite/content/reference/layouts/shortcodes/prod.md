@@ -3,7 +3,7 @@ title: prod.html
 description: learn how to use the prod shortcode
 ---
 
-Occasionally it is useful to use a variable that represents your product name --- especially when documenting a project or startup product that is likely to undergo rebranding.
+Occasionally you need to use a variable that represents your product name --- especially when documenting a project or startup product likely to undergo re-branding.
 
 ## How it works 
 

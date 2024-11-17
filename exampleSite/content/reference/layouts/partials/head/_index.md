@@ -4,20 +4,19 @@ description: Learn about the head partial.
 weight: 100
 ---
 
-The `head.html` [**partial**](/references/layouts/partial) layout houses: 
+The `head.html` [**partial**](/references/layouts/partial) layout includes:
 
-- all of the metadata that needs to be generated for every article
-- a link to the bundled & minified CSS (@[head/css.html](/reference/layouts/partials/head/css))
-- a link to the bundled & minified JS (@[head/js.html](/reference/layouts/partials/head/js))
+- All metadata for every page
+- A link to the bundled & minified CSS (@[head/css.html](/reference/layouts/partials/head/css))
+- A link to the bundled & minified JS (@[head/js.html](/reference/layouts/partials/head/js))
 
 ## How it works
 
-1. This partial is fed into the `baseof.html` **default** layout.
-2. Each individual page is passed through this template as  context `{{ partial "head.html" . }}`
-3. All metadata is populated from page frontmatter.
-4. All assets are applied.
-
+1. The `baseof.html` **default** layout includes this partial using `{{ partial "head.html" . }}`.
+2. Each individual page's layout inherits from `baseof.html`, ensuring it includes the head partial.
+3. Page front matter populates all metadata, used by the head partial.
+4. All asset links (CSS & JS) inject into the head section.
 
 ## Source code 
 
-{{%include "layouts/partials/head.html" "go" %}}
+{{% include "layouts/partials/head.html" %}}
