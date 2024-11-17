@@ -3,22 +3,21 @@ title: csv.html
 description: learn how to use the CSV shortcode
 ---
 
-The `{{</*csv*/>}}` shortcode is a simple way to embed CSV files in your documentation from a global `static/csv` directory. This is great for large and/or complex tables that you want to keep separate from your markdown files.
+The `{{</*csv*/>}}` shortcode provides a simple way to embed CSV files in your documentation from a global `static/csv` directory. This approach works well for large and/or complex tables that you want to keep separate from your markdown files.
 
-Using this shortcode also enables you to more easily update your CSV files programmatically, without having to update the markdown files that reference them.
+Using this shortcode also enables you to update your CSV files programmatically without needing to update the markdown files that reference them.
 
 ## How it works
 
-The `{{</*csv*/>}}` shortcode accepts 3 **positional** args: `filename`, `delimiter`, and `excludedColumns`.
+The `{{</*csv*/>}}` shortcode accepts 3 **positional** arguments: `filename`, `delimiter`, and `excludedColumns`.
 
-- `filename` is the name of the CSV file you want to embed. This file should be located in the `static/csv` directory. It does not need to include the `.csv` extension.
-- `delimiter` is the character that separates the columns in the CSV file. The default is `,`.
-- `excludedColumns` is a comma-separated list of column numbers that you want to exclude from the table. The default is an empty string. This field is case-sensitive.
-
+- `filename` specifies the CSV file to embed. The file resides in the `static/csv` directory. You don't need to include the `.csv` extension.
+- `delimiter` defines the character that separates columns in the CSV file. Default: `,`.
+- `excludedColumns` accepts a comma-separated list of column numbers to exclude from the table. This parameter has case-sensitivity and defaults to an empty string.
 
 ### Examples 
 
-The table in the following examples is pulled from `/static/csv/food.csv`.
+The table in the following examples comes from `/static/csv/food.csv`.
 
 #### Full table with default delimiter
 

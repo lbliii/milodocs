@@ -35,5 +35,4 @@ else
     export HUGO_TITLE="$1 Docs"
 
     echo "Starting Hugo server for $HUGO_PRODUCT Docs"
-    hugo server
-fi
+    hugo ser

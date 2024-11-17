@@ -4,7 +4,7 @@ description: Learn about how the env.sh works for this theme.
 hidden: true
 ---
 
-The `env.sh` script makes it easy to build your site based on a specific environment (`--environment`) passed with the `hugo` build command as an argument. This script also adds some guardrails to ensure you're using the correct configuration file for that environment.
+The `env.sh` script simplifies the process of building your site based on a specific environment (`--environment`) passed with the `hugo` build command as an argument. This script also includes some guardrails to ensure the correct configuration file for that environment.
 
 {{<notice tip "Hugo environments">}}
 You can use the `hugo.Environment` variable to access the current environment in your templates. This is useful for conditionally loading assets or content based on the environment. See the [Hugo documentation](https://gohugo.io/functions/hugo/environment/) for more information.
@@ -34,7 +34,7 @@ hugo server --config config/offline.yaml --environment offline
 
 ### Default environments
 
-You can set the environments by updating the the `ENVIRONMENTS` array in the script. 
+You can set the environments by updating the `ENVIRONMENTS` array in the script. 
 
 - `development`
 - `production`

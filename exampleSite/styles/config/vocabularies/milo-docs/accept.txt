@@ -3,6 +3,7 @@
 [Cc]onfigs
 myshortcode
 [Ss]hortcodes
+[Ss]hortcode
 [Mm]akefiles
 [Mm]akefile
 [Ff]rontmatter
@@ -16,4 +17,5 @@ AWS
 GCP
 JSON
 HTML
-golang
+html
+(?i)golang

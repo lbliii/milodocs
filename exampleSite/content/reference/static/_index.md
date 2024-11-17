@@ -5,6 +5,6 @@ weight: 400
 icon: "code_inspect.svg"
 ---
 
-The static folder holds all of your assets that do not need to be processed by Hugo. This includes icons, fonts, CSV data, and more. The contents of this folder are copied as-is to the final site.
+The static folder contains assets that don't need processing by Hugo. This includes icons, fonts, CSV data, and more. The contents of this folder directly transfer to the final site.
 
-If you would like to turn data into an object that Hugo can manipulate, consider using the `data/` folder instead.
+If you need to manipulate data, consider using the `data/` folder instead.

@@ -3,21 +3,21 @@ title: tabs.html
 description: learn how to use the tabs shortcode
 ---
 
-Tabs are a great way to organize content that is contextually relevant but divergent in format or procedure (without necessarily needing its own page). This combination of shortcodes allows you to create a tabbed interface. I first encountered this implementation strategy while reading the [MiniKube docs](https://minikube.sigs.k8s.io/docs/start/).
+Tabs provide an effective way to organize content that varies in format or procedure, eliminating the need for separate pages. This combination of shortcodes enables you to create a tabbed interface. I first discovered this implementation strategy while reviewing the [MiniKube documentation](https://minikube.sigs.k8s.io/docs/start/).
 
 ## How it works
 
-There are 5 shortcodes that make up the tabs UX.
+5 shortcodes make up the tabs UX.
 
-|shortcode|description|input|
-|---|---|--|
-|`{{</*tabs/container*/>}}`|This is the container for the entire tabs UX.|n/a|
-|`{{</*tabs/tabButtons*/>}}`|This is the container for the tab buttons.| `id` **string**|
-|`{{</*tabs/tab*/>}}`|This is the button that you click to show the tab content.|`option` **string**; `state` **string**|
-|`{{</*tabs/tabContentsContainer*/>}}`|This is the container for the tab content.|n/a|
-|`{{</*tabs/tabContent*/>}}`|This is the content displayed when the tab button is clicked.|markdown|
+| Shortcode | Description | Input |
+|---|---|---|
+| `{{</*tabs/container*/>}}` | Container for the entire tabs UX. | n/a |
+| `{{</*tabs/tabButtons*/>}}` | Container for the tab buttons. | `id` **string** |
+| `{{</*tabs/tab*/>}}` | Button to display the tab content. | `option` **string**; `state` **string** |
+| `{{</*tabs/tabContentsContainer*/>}}` | Container for the tab content. | n/a |
+| `{{</*tabs/tabContent*/>}}` | The content displayed on an active tab. | markdown |
 
-{{<notice info "Set Tab as Default">}}
+{{<notice info "Set tab as default">}}
 When an option has the default state of `active`, it will be the first tab shown.
 {{</notice>}}
 

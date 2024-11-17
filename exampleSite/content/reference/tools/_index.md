@@ -5,4 +5,4 @@ weight: 500
 icon: "code_inspect.svg"
 ---
 
-The `tools` directory contains a series of helper scripts that may prove useful for advanced configuration or development of a Hugo site for technical documentation using the MiloDocs theme.
+The `tools` directory includes a series of helper scripts useful for advanced configuration or development of a Hugo site for technical documentation using the MiloDocs theme.
