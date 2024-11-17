@@ -168,7 +168,7 @@ This template will be used to render the JSON object for the `home` page kind.
 
 ### Update Hugo configuration
 
-1. Open your Hugo `outputs` configuration (e.g., `config/_default/outputs.yaml`).
+1. Open your Hugo `outputs` configuration (for example, `config/_default/outputs.yaml`).
 2. Update each page kind to include JSON in the supported array.
    ```yaml
    home: [ "HTML", "JSON"]

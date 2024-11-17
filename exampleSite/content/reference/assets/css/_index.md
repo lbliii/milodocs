@@ -44,7 +44,7 @@ If you are updating the fonts, make sure that you:
 
 ## Modify stylesheets 
 
-Hugo can reference CSS from multiple locations (e.g., `static` and `assets`). The {{<prod>}} theme keeps all CSS in the `assets` folder since we want to process the files in a variety of ways --- such as concatenating many modular CSS files together into a bundled output that we can minify for production deployments. 
+Hugo can reference CSS from multiple locations (for example, `static` and `assets`). The {{<prod>}} theme keeps all CSS in the `assets` folder since we want to process the files in a variety of ways --- such as concatenating many modular CSS files together into a bundled output that we can minify for production deployments. 
 
 ### fonts.css
 

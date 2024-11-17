@@ -31,8 +31,8 @@ You can perform a quick test by going to `localhost:1313/index.json`; it should 
 ### Configure data source 
 
 1. Select **None** for authentication.
-2. Input the URL of your hosted `index.json` file. (e.g., `https://milodocs-theme.netlify.app/index.json`).
-3. Specify a unique property identifier for your Algolia records (e.g., `id` if you've added one to your json template.).
+2. Input the URL of your hosted `index.json` file. (for example, `https://milodocs-theme.netlify.app/index.json`).
+3. Specify a unique property identifier for your Algolia records (for example, `id` if you've added one to your json template.).
 4. Name the data source. 
 5. Select **Create Source**.
 

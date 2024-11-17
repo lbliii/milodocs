@@ -3,7 +3,7 @@ title: layout-theme.js
 description: Learn about how the darkmode.js file works for this theme. 
 ---
 
-The `darkmode.js` file is used to manage the user's theme preference and is associated with the [`navigation/top.html`](/reference/layouts/partials/navigation/top.html) [**partial**](/reference/layouts/partials) layout. 
+The `darkmode.js` file manages the user's theme preference and associates with the [`navigation/top.html`](/reference/layouts/partials/navigation/top.html) [**partial**](/reference/layouts/partials) layout. 
 
 {{%include "layouts/partials/navigation/top.html" "html" "<!-- Dark Mode -->" "" %}}
 

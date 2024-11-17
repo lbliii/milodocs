@@ -16,13 +16,13 @@ See Hugo Docs for more options:
 - [Linux](https://gohugo.io/installation/linux/)
 - [Windows](https://gohugo.io/installation/windows/)
 
-## 2. Create a New Site 
+## 2. Create a new site 
 
 ```s
 hugo new site <siteName>
 ```
 
-## 3. Install This Project
+## 3. Install this project
 
 1. Open your `<siteName>` project directory.
 2. Navigate to the `themes/` directory. 
@@ -32,11 +32,7 @@ hugo new site <siteName>
    gh repo clone lbliii/milodocs
    ```
 
-{{<notice note "submodule sandbox">}}
-You can install this theme as a submodule, however the default content files will not be removable. I may separate these in the future depending on what people would like.
-{{</notice>}}
-
-## 4. Add Theme to Config
+## 4. Add theme to config
 
 ```s
 baseURL = 'https://example.org/'
@@ -45,7 +41,7 @@ title = 'My New Hugo Site'
 theme = 'milodocs'
 ```
 
-## 5. Init Repo
+## 5. Init repo
 
 Time to start saving your progress! 
 1. Run the following:

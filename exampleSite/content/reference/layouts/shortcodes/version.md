@@ -27,7 +27,7 @@ If the project you are documenting must be installed, it is likely that your doc
 
 #### Local version 
 
-The default functionality for this shortcode uses the version numbers cascading from the root of the versioned directory (e.g., `content/latest`, `content/1.0.2`). 
+The default functionality for this shortcode uses the version numbers cascading from the root of the versioned directory (for example, `content/latest`, `content/1.0.2`). 
 
 - **{{<version>}} is now live!**
 - [{{<version>}} Download](https://github.com/org/project/releases/tag/v{{<version>}})

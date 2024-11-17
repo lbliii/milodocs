@@ -3,7 +3,7 @@ title: Add TailwindCSS
 description: learn how to add TailwindCSS to your Hugo Theme
 ---
 
-You can utilize TailwindCSS to build your site layouts. This is advantageous because TailwindCSS is a mature CSS framework that is well supported and known by most developers, making onboarding other people to your project much easier.
+You can use TailwindCSS to build your site layouts. TailwindCSS is a mature CSS framework known by most developers, making onboarding other people to your project much easier.
 
 ## Before you start 
 
@@ -50,7 +50,5 @@ You can utilize TailwindCSS to build your site layouts. This is advantageous bec
    ```
 6. Run `pnpm run watch-tw` from `themes/siteThemeName` directory to enable watching for design changes.
 
-You are ready to start creating and editing your theme.
-
-Testing 13456. 
+You can now begin creating and editing your theme.
 

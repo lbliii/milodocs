@@ -5,4 +5,4 @@ weight: 200
 icon: "slider.svg"
 ---
 
-The following articles are demonstrations of the features of the theme.
+The following articles showcase the features of the theme.

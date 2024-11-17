@@ -7,7 +7,7 @@ PRODUCT_VERSIONS="prod1, prod2, prod3, all" # Add or remove product versions as 
 USAGE="Usage: sh product.sh [${PRODUCT_VERSIONS}]"
 
 ## Pass in one of the specified product versions to this script to start the Hugo server with that version.
-## e.g., sh product.sh prod1
+## for example, sh product.sh prod1
 
 # Check if an argument is provided
 if [ $# -eq 0 ]; then

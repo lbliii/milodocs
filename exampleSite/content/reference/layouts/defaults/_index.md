@@ -14,15 +14,15 @@ The following layouts are typically found in all Hugo sites and likely come with
 |template|description|[BundleType](https://gohugo.io/methods/page/bundletype/)|
 |-|-|-|-|
 |**baseof.html**| provides a global "shell" all other templates inherit from. |`branch`||
-|**list.html**| renders taxonomy lists (e.g., articles with tags).|`branch`||
-|**terms.html**| renders taxonomy terms (e.g., tags).|`branch`||
+|**list.html**| renders taxonomy lists (for example, articles with tags).|`branch`||
+|**terms.html**| renders taxonomy terms (for example, tags).|`branch`||
 |**section.html**| renders markdown files in a directory (`dir/_index.md`).|`branch`||
 |**home.html**| renders the `/` page of your site; overrides `content/index.md` if present.|`leaf`||
-|**single.html**| renders single pages (e.g., articles).|`leaf`||
+|**single.html**| renders single pages (for example, articles).|`leaf`||
 
 ## Added layouts
 
-The following layouts are added by the Milo Docs theme.
+The Milo Docs theme adds the following layouts.
 
 |template|description|[BundleType](https://gohugo.io/methods/page/bundletype/)|frontmatter|
 |-|-|-|-|-|
