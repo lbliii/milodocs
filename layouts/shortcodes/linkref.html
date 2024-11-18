@@ -1,0 +1,45 @@
+{{- $filename := .Get 0 -}}
+{{- $parent := .Get 1 -}}
+
+{{- $latestRelease := .Page.Params.latest -}}
+{{- $product := .Page.Params.productPath -}}
+{{- $version := "" -}}
+
+{{- if $latestRelease -}}
+    {{- $version = printf "/products/%s/latest" $product -}}
+{{- else if and .Page.Params.major .Page.Params.minor -}}
+    {{- $version = printf "/products/%s/%d.%d.x" $product .Page.Params.major .Page.Params.minor -}}
+{{- else -}}
+    {{- $version = printf "/products/%s/latest" $product -}}
+{{- end -}}
+
+{{- $currentDirectory := .Site.GetPage $version -}}
+{{- if $currentDirectory -}}
+    {{- $directoryPages := where (where .Site.AllPages "Params.minor" .Page.Params.minor) "Params.major" .Page.Params.major -}}
+    {{- $directoryPages = where $directoryPages "File" "!=" nil -}}
+    {{- $potentialPages := where $directoryPages "File.ContentBaseName" $filename -}}
+    {{- $potentialPageCount := len $potentialPages -}}
+
+    {{- if eq $potentialPageCount 1 -}}
+        {{- (index $potentialPages 0).RelPermalink -}}
+    {{- else if gt $potentialPageCount 1 -}}
+        {{- with $parent -}}
+            {{- range $potentialPages -}}
+                {{- if eq (.Parent.Title | lower) $parent -}}
+                    {{- .RelPermalink -}}
+                {{- end -}}
+            {{- end -}}
+        {{- else -}}
+            {{- errorf "<Linkref> shortcode detected multiple filenames '%s'; add a second positional argument with parent name to clarify." $filename -}}
+        {{- end -}}
+    {{- else -}}
+        {{- errorf "<Linkref> shortcode could not find a page filename %s in %s version %d.%d" $filename $product .Page.Params.major .Page.Params.minor -}} 
+    {{- end -}}
+{{- else -}}
+    {{- errorf "<Linkref> shortcode could not find page: %s. Note: This shortcode currently cannot be used in _shared directories." $filename -}}
+{{- end -}}
+
+{{/*  
+    [link a]({{%linkref "oss" %}})
+    [link b]({{%linkref "add" "registries" %}})
+  */}}

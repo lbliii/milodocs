@@ -15,7 +15,12 @@ Algolia
 Vercel
 AWS
 GCP
-JSON
-HTML
-html
+Pinecone
+(?i)json
+(?i)html
 (?i)golang
+(?i)baseof
+(?i)js
+(?i)yaml
+(?i)toml 
+(?i)css
