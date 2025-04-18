@@ -1,0 +1,8 @@
+{
+    "notebook": {
+        "cells": {{ .Params.notebook.cells | jsonify }},
+        "metadata": {{ .Params.notebook.metadata | jsonify }},
+        "nbformat": {{ .Params.notebook.nbformat | jsonify }},
+        "nbformat_minor": {{ .Params.notebook.nbformat_minor | jsonify }}
+    }
+} 

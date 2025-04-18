@@ -1,0 +1,119 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  {{- partial "navigation/sidebar-left.html" . -}}
+{{- end -}}
+
+{{- define "content" -}}
+<article id="articleContent" class="container mx-auto px-4 py-8">
+    {{- $notebookPath := .Params.notebook_path -}}
+    {{- with resources.Get $notebookPath -}}
+        {{- $resource := . -}}
+        {{- $content := $resource.Content | safeHTML -}}
+        {{- with $content | transform.Unmarshal -}}
+            {{- $decodedNotebook := . -}}
+            
+            <section class="space-y-4">
+                <h1 class="text-3xl font-bold">{{ $.Title }}</h1>
+                {{ with $.Description }}
+                    <p class="text-lg text-gray-600">{{ . }}</p>
+                {{ end }}
+            </section>
+
+            <div class="notebook-cells space-y-6">
+                {{ range $cell := $decodedNotebook.cells }}
+                    <div class="notebook-cell {{ if eq $cell.cell_type "markdown" }}markdown-cell bg-gray-50{{ else }}code-cell border{{ end }} p-4 rounded-lg hover:shadow-sm transition-shadow duration-200"
+                         {{ with $cell.id }}id="{{ . }}"{{ end }}>
+                        {{ if eq $cell.cell_type "markdown" }}
+                            <div class="markdown-content prose max-w-none">
+                                {{ $source := "" }}
+                                {{ range $cell.source }}
+                                    {{ $source = printf "%s%s" $source . }}
+                                {{ end }}
+                                {{ $source | markdownify }}
+                                {{ with $cell.attachments }}
+                                    <div class="cell-attachments">
+                                        {{ range $filename, $data := . }}
+                                            {{ with index $data "image/png" }}
+                                                <img src="data:image/png;base64,{{ . }}" alt="{{ $filename }}" class="max-w-full">
+                                            {{ end }}
+                                        {{ end }}
+                                    </div>
+                                {{ end }}
+                            </div>
+                        {{ else if eq $cell.cell_type "code" }}
+                            <div class="code-content space-y-4">
+                                <div class="codeblock relative bg-zinc-800 rounded text-sm p-4">
+                                    {{ with $cell.execution_count }}
+                                        <div class="execution-count text-sm text-gray-400 font-mono mb-2">In [{{ . }}]:</div>
+                                    {{ end }}
+                                    {{- $source := "" -}}
+                                    {{- range $cell.source -}}
+                                        {{- $source = printf "%s%s" $source . -}}
+                                    {{- end -}}
+                                    {{- transform.Highlight $source "python" -}}
+                                    <button class="copy-btn absolute top-2 right-2 bg-zinc-600 hover:bg-zinc-900 transition duration-300 text-white rounded px-2 py-1 text-xs focus:outline-none" onclick="copyCodeToClipboard(this)">Copy</button>
+                                </div>
+                                {{ if $cell.outputs }}
+                                    <div class="code-outputs space-y-2">
+                                        {{ range $output := $cell.outputs }}
+                                            {{ if eq $output.output_type "stream" }}
+                                                <div class="stream-output bg-zinc-800 p-4 rounded text-white font-mono text-sm">
+                                                    <pre class="whitespace-pre-wrap">{{ $output.text }}</pre>
+                                                </div>
+                                            {{ else if eq $output.output_type "execute_result" }}
+                                                <div class="execute-result bg-zinc-800 p-4 rounded text-white">
+                                                    {{ with index $output.data "text/html" }}
+                                                        <div class="html-output">{{ . | safeHTML }}</div>
+                                                    {{ end }}
+                                                    {{ with index $output.data "text/plain" }}
+                                                        <pre class="text-output whitespace-pre-wrap font-mono text-sm">{{ . }}</pre>
+                                                    {{ end }}
+                                                </div>
+                                            {{ else if eq $output.output_type "display_data" }}
+                                                <div class="display-data bg-zinc-800 p-4 rounded text-white">
+                                                    {{ with index $output.data "image/png" }}
+                                                        <img src="data:image/png;base64,{{ . }}" alt="Notebook output image" class="max-w-full">
+                                                    {{ end }}
+                                                    {{ with index $output.data "text/html" }}
+                                                        <div class="html-output">{{ . | safeHTML }}</div>
+                                                    {{ end }}
+                                                </div>
+                                            {{ else if eq $output.output_type "error" }}
+                                                <div class="error-output bg-red-900 p-4 rounded text-white border border-red-700">
+                                                    <div class="error-name font-bold mb-1">{{ $output.ename }}</div>
+                                                    <div class="error-value mb-2">{{ $output.evalue }}</div>
+                                                    <div class="error-traceback font-mono text-sm">
+                                                        {{ range $output.traceback }}
+                                                            <div class="traceback-line">{{ . }}</div>
+                                                        {{ end }}
+                                                    </div>
+                                                </div>
+                                            {{ end }}
+                                        {{ end }}
+                                    </div>
+                                {{ end }}
+                            </div>
+                        {{ else if eq $cell.cell_type "raw" }}
+                            <div class="raw-cell-content">
+                                {{ $cell.source }}
+                            </div>
+                        {{ end }}
+                    </div>
+                {{ end }}
+            </div>
+        {{- else -}}
+            {{- errorf "Failed to unmarshal notebook: %s" $notebookPath -}}
+        {{- end -}}
+    {{- else -}}
+        {{- errorf "Failed to get notebook resource: %s" $notebookPath -}}
+        {{- errorf "Current working directory: %s" (os.Getwd) -}}
+    {{- end -}}
+</article>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+{{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}} 

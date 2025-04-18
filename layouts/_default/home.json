@@ -2,12 +2,12 @@
     {{- range $index, $page := .Pages }}
     {{- if ne $page.Type "json" }}
     {{- if and $index (gt $index 0) }},{{- end }}
-    {{- partial "json.json" . }}
+    {{- with partial "json.json" . }}{{ . }}{{ end }}
     {{- end }}
     {{- if eq .Kind "section" }}
         {{- template "section" . }}
     {{- end }}
-    {{-  end }}
+    {{- end }}
 ]
 {{- define "section" }}
 {{- range .Pages }}
