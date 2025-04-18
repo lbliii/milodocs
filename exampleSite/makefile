@@ -9,6 +9,11 @@ docs all:
 	@echo "Starting Hugo server for all docs"
 	@hugo server
 
+# Development target that points to root directory and includes theme
+dev:
+	@echo "Starting Hugo server referencing root directory and theme"
+	@hugo server --themesDir ../..
+
 # Target for generating the OpenAPI spec for the API reference
 
 api-gen:
