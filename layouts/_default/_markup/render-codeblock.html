@@ -1,8 +1,8 @@
-<div class="codeblock relative bg-zinc-800 rounded text-sm p-4">
+<div class="codeblock-wrapper relative rounded overflow-hidden">
     <!-- Code content -->
     {{- transform.Highlight .Inner .Type -}}
 
     <!-- Copy code button -->
-    <button class="copy-btn absolute top-2 right-2 bg-zinc-600 hover:bg-zinc-900 transition duration-300 text-white rounded px-2 py-1 text-xs focus:outline-none" onclick="copyCodeToClipboard(this)">Copy</button>
+    <button class="copy-btn absolute top-2 right-2 bg-zinc-600 hover:bg-zinc-900 transition duration-300 text-white rounded px-2 py-1 text-xs focus:outline-none z-10" onclick="copyCodeToClipboard(this)">Copy</button>
 </div>
 

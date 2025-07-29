@@ -5,5 +5,7 @@ goldmark:
     unsafe: true
     xhtml: false
 highlight:
-  noClasses: false
+  noClasses: true
+  style: tokyonight-night
+  lineNos: false
 

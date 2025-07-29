@@ -2,29 +2,34 @@
 
 @layer base {
 
-  /* Global Header Sizes & Thickness */
+  /* Global Header Sizes & Thickness - NVIDIA Style */
   h1 {
     @apply text-3xl font-black;
+    word-wrap: break-word;
   }
   h2 {
     @apply text-2xl font-bold;
+    word-wrap: break-word;
   }
   h3 {
     @apply text-xl font-bold;
+    word-wrap: break-word;
   }
   h4 {
     @apply text-lg font-bold;
+    word-wrap: break-word;
   }
   h5 {
     @apply text-base font-bold;
+    word-wrap: break-word;
   }
   h6 {
     @apply text-sm font-bold;
+    word-wrap: break-word;
   }
 
-  /* Global Font Family */
-  main {
-    @apply font-brand;
+  /* Global Font Family - Uses brand font with fallbacks */
+  main { @apply font-brand;
   }
 
   /*  Article Content Styles */ 
@@ -99,34 +104,60 @@
     margin-right: 0.5em;
     @apply bg-zinc-200;
   }
-  /* Single Line Code */
-  #articleContent code {
+  /* Single Line Code - NVIDIA Style (not syntax highlighted blocks) */
+  #articleContent code:not(pre code) {
     @apply bg-zinc-100 p-1 rounded text-xs font-light;
+    font-family: var(--font-family-mono, RobotoMono, monospace);
+    color: var(--color-brand-1);
   }
 
-  /* Syntax Highlighted Code */
+  /* Syntax Highlighted Code - Let Hugo handle colors */
   #articleContent pre {
     @apply overflow-x-auto overflow-y-visible;
+    /* Remove color: unset to allow Hugo's syntax colors */
   }
   #articleContent .highlight pre {
     @apply p-2;
   }
   #articleContent .highlight pre code {
     @apply p-0 bg-transparent !important;
+    /* Don't override Hugo's syntax highlighting colors */
+    color: inherit !important;
   }
   #articleContent pre code {
     @apply p-0 m-0;
+    font-family: var(--font-family-mono, RobotoMono, monospace);
+    /* Don't set color here - let Hugo's highlighting work */
   }
 
-  /* Link Styles */
+  /* Code block wrapper styling */
+  .codeblock-wrapper {
+    @apply relative;
+  }
+  .codeblock-wrapper .highlight {
+    @apply m-0;
+  }
+  .codeblock-wrapper .highlight pre {
+    @apply m-0 p-4 rounded;
+  }
+  /* Copy button positioning */
+  .codeblock-wrapper .copy-btn {
+    z-index: 10;
+  }
+
+  /* Link Styles - NVIDIA Style */
   #articleContent a:not(#quick-install a) {
-    @apply  underline;
+    @apply underline;
+    text-decoration-color: var(--color-brand);
   }
   #articleContent a:hover:not(#quick-install a) {
     @apply text-brand-1 transition duration-300;
   }
+  #articleContent a.headerlink {
+    color: var(--color-brand-1);
+  }
 
-  /* Global Table Styles */
+  /* Global Table Styles - Enhanced for NVIDIA */
   table {
     @apply w-full border-collapse text-sm;
   }
@@ -138,7 +169,7 @@
     @apply bg-black text-white font-semibold;
   }
   table tr:hover {
-    @apply bg-zinc-100;
+    background-color: var(--color-brand);
   }
 
   /* Responsive Tables */
@@ -160,8 +191,23 @@
     }
   }
 
+  /* NVIDIA-specific enhancements */
+  .nvidia-accent {
+    color: var(--color-brand);
+  }
+  
+  .nvidia-bg-accent {
+    background-color: var(--color-brand);
+  }
+  
+  .nvidia-border-accent {
+    border-color: var(--color-brand);
+  }
+
+  /* Enhanced notice styles */
   #articleContent .notice a {
     @apply text-black underline font-bold;
+    text-decoration-color: var(--color-brand);
   }
 
   .admonition {

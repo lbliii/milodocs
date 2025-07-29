@@ -1,0 +1,23 @@
+:root {
+    --primary-gradient-color: #ffffff; 
+    --secondary-gradient-color: rgba(118, 185, 0, 0.1); 
+    
+    /* NVIDIA Brand Colors */
+    --color-brand: #76b900;            /* primary color - NVIDIA green */
+    --color-brand-1: #004831;          /* secondary color - NVIDIA dark green */
+    --color-brand-2: #5a9600;          /* tertiary color - darker NVIDIA green */
+    --color-brand-3: #86a6cf;          /* note color */
+    --color-brand-4: #ADD9F4;          /* tip color */
+    --color-brand-5: #76b900;          /* security color - NVIDIA green */
+    --color-brand-6: #d4ac84;          /* warning color */
+    --color-brand-7: #F3B3A6;          /* danger color */
+
+    /* NVIDIA Font Families */
+    --font-family-brand: NVIDIA, Arial, Helvetica, sans-serif;
+    --font-family-mono: RobotoMono, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+}
+
+.dark {
+    --primary-gradient-color: rgba(118, 185, 0, 0.3);
+    --secondary-gradient-color: #111;
+}

@@ -14,6 +14,16 @@ dev:
 	@echo "Starting Hugo server referencing root directory and theme"
 	@hugo server --themesDir ../..
 
+# NVIDIA Development target that points to root directory with NVIDIA theme
+dev-nvidia:
+	@echo "Starting Hugo server for NVIDIA docs (development mode)"
+	@hugo server --environment nvidia --config config/nvidia,config/_default --themesDir ../..
+
+# NVIDIA target using the environment configs
+nvidia:
+	@echo "Starting Hugo server for NVIDIA docs"
+	@hugo server --environment nvidia --config config/nvidia,config/_default
+
 # Target for generating the OpenAPI spec for the API reference
 
 api-gen:

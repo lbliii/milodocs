@@ -1,11 +1,26 @@
 
 {{- $cssResources := slice (resources.Get "css/main.css") }}
+
+{{- if eq hugo.Environment "nvidia" -}}
+<!-- Preload critical NVIDIA fonts -->
+<link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/var/NVIDIASansVF_W_Wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/NVIDIASans_W_Rg.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- DEBUG: Loading NVIDIA fonts -->
+{{- $cssResources = $cssResources | append (resources.Get "css/fonts-nvidia.css") }}
+{{- else -}}
+<!-- DEBUG: Loading default fonts -->
 {{- $cssResources = $cssResources | append (resources.Get "css/fonts.css") }}
-{{- $cssResources = $cssResources | append (resources.Get "css/syntax.css") }}
+{{- end -}}
 
 {{- if eq hugo.Environment "opensource" -}}
+<!-- DEBUG: Loading opensource colors -->
 {{- $cssResources = $cssResources | append (resources.Get "css/colors-opensource.css") }}
+{{- else if eq hugo.Environment "nvidia" -}}
+<!-- DEBUG: Loading NVIDIA colors -->
+{{- $cssResources = $cssResources | append (resources.Get "css/colors-nvidia.css") }}
 {{- else -}}
+<!-- DEBUG: Loading default colors -->
 {{- $cssResources = $cssResources | append (resources.Get "css/colors.css") }}
 {{- end -}}
 

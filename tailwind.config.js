@@ -14,8 +14,10 @@ module.exports = {
         "brand-7": "var(--color-brand-7)",
       },
       fontFamily: {
-        "brand": ["Rubik", "sans-serif"],
-        "brand-italic": ["Rubik", "sans-serif", "italic"],
+        "brand": ["NVIDIA", "Arial", "Helvetica", "sans-serif"],
+        "brand-italic": ["NVIDIA", "Arial", "Helvetica", "sans-serif"],
+        "nvidia": ["NVIDIA", "Arial", "Helvetica", "sans-serif"],
+        "nvidia-mono": ["RobotoMono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
       },
     },
   },

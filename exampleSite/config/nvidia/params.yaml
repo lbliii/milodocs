@@ -1,0 +1,21 @@
+logo: '/images/nvidia.png'
+names:
+  organization: 'NVIDIA'
+  product: 'NVIDIA Developer Docs'
+version: 
+  major: 0
+  minor: 0
+  patch: 3
+article:
+  childArticles:
+    display: true
+    count: 7 
+    titleTrunc: 90
+    descTrunc: 90
+  nextPrev: 
+    display: true
+    trunc: 35
+  chat: 
+    display: true
+  toc: 
+    display: true
