@@ -1,3 +1,21 @@
-<div id="tocContainer" class="hidden toc sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto text-sm text-black transition duration-300"> 
-    {{ .TableOfContents }}
-</div>
+{{- if .Params.notebook_path -}}
+    {{- $notebookPath := .Params.notebook_path -}}
+    {{- with resources.Get $notebookPath -}}
+        {{- $resource := . -}}
+        {{- $content := $resource.Content | safeHTML -}}
+        {{- with $content | transform.Unmarshal -}}
+            {{- $decodedNotebook := . -}}
+            <div id="tocContainer" class="hidden toc sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto text-sm text-black transition duration-300">
+                <nav id="TableOfContents">
+                    <ul>
+                        {{- template "toc-items" (dict "level" 1 "items" $decodedNotebook.cells) -}}
+                    </ul>
+                </nav>
+            </div>
+        {{- end -}}
+    {{- end -}}
+{{- else -}}
+    <div id="tocContainer" class="hidden toc sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto text-sm text-black transition duration-300"> 
+        {{ .TableOfContents }}
+    </div>
+{{- end -}}

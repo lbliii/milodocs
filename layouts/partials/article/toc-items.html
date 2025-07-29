@@ -1,0 +1,45 @@
+{{- define "toc-items" -}}
+    {{- $items := .items -}}
+    {{- $currentLevel := 0 -}}
+    {{- $currentItem := "" -}}
+    {{- $inH2Section := false -}}
+
+    {{- range $item := $items -}}
+        {{- if eq $item.cell_type "markdown" -}}
+            {{- $source := "" -}}
+            {{- range $item.source -}}
+                {{- $source = printf "%s%s" $source . -}}
+            {{- end -}}
+            {{- $lines := split $source "\n" -}}
+            {{- range $line := $lines -}}
+                {{- if findRE "^#{1,3} " $line -}}
+                    {{- $level := len (findRE "^#+" $line) -}}
+                    {{- $title := replaceRE "^#+ (.*)" "$1" $line -}}
+                    
+                    {{- if eq $level 1 -}}
+                        {{- if $inH2Section -}}
+                            </ul></li>
+                            {{- $inH2Section = false -}}
+                        {{- end -}}
+                        <li><a href="#{{ $title | anchorize }}">{{ $title }}</a></li>
+                    {{- else if eq $level 2 -}}
+                        {{- if $inH2Section -}}
+                            </ul></li>
+                        {{- end -}}
+                        <li>
+                            <a href="#{{ $title | anchorize }}" class="text-brand">{{ $title }}</a>
+                            <ul>
+                        {{- $inH2Section = true -}}
+                    {{- else if eq $level 3 -}}
+                        {{- if $inH2Section -}}
+                            <li><a href="#{{ $title | anchorize }}">{{ $title }}</a></li>
+                        {{- end -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    {{- if $inH2Section -}}
+        </ul></li>
+    {{- end -}}
+{{- end -}} 
