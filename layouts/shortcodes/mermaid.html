@@ -3,30 +3,46 @@
     {{ .Inner | safeHTML }}
 </div>
 <script>
-if (typeof mermaid !== 'undefined') {
-    mermaid.initialize({ 
-        theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'neutral',
-        startOnLoad: false,
-        securityLevel: 'strict'
-    });
-    mermaid.run({ querySelector: '#{{ $id }}' }).then(() => {
-        document.getElementById('{{ $id }}').style.opacity = '1';
-    });
-} else {
-    // Fallback: load mermaid if not already loaded
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
-    script.onload = () => {
+function initializeMermaidDiagram() {
+    // Check current theme state from manual toggle, not system preference
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    const theme = isDarkMode ? 'dark' : 'neutral';
+    
+    if (typeof mermaid !== 'undefined') {
         mermaid.initialize({ 
-            theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'neutral',
+            theme: theme,
             startOnLoad: false,
             securityLevel: 'strict'
         });
         mermaid.run({ querySelector: '#{{ $id }}' }).then(() => {
             document.getElementById('{{ $id }}').style.opacity = '1';
         });
-    };
-    document.head.appendChild(script);
+    } else {
+        // Fallback: load mermaid if not already loaded
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+        script.onload = () => {
+            mermaid.initialize({ 
+                theme: theme,
+                startOnLoad: false,
+                securityLevel: 'strict'
+            });
+            mermaid.run({ querySelector: '#{{ $id }}' }).then(() => {
+                document.getElementById('{{ $id }}').style.opacity = '1';
+            });
+        };
+        document.head.appendChild(script);
+    }
 }
+
+// Initialize on load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMermaidDiagram);
+} else {
+    initializeMermaidDiagram();
+}
+
+// Re-render when theme changes
+document.addEventListener('themeChanged', initializeMermaidDiagram);
 </script>
   

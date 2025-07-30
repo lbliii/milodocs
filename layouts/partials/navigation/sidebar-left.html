@@ -9,11 +9,11 @@
 <!-- Mobile navigation overlay -->
 <div id="mobileNavOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" data-component="navigation-mobile-overlay"></div>
 
-<aside id="sidebar-left" class="fixed md:relative left-0 top-0 z-40 h-full w-80 md:w-1/5 bg-white md:bg-transparent shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out md:flex text-black" data-component="navigation-sidebar-left">
+<aside id="sidebar-left" class="sidebar-container fixed md:relative left-0 top-0 z-40 h-full w-80 md:w-1/5 md:max-w-80 shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:flex" data-component="navigation-sidebar-left">
     <!-- Mobile header -->
-    <div class="flex md:hidden items-center justify-between p-4 border-b">
+    <div class="sidebar-header flex md:hidden items-center justify-between p-4">
         <h2 class="text-lg font-semibold">Navigation</h2>
-        <button id="closeMobileNav" class="p-2" aria-label="Close navigation menu">
+        <button id="closeMobileNav" class="sidebar-close-btn p-2 rounded-lg" aria-label="Close navigation menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>

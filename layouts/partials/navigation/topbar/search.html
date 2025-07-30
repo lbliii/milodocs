@@ -1,3 +1,11 @@
-<div id="topNavSearch" class="flex items-center space-x-4 text-xs" data-component="navigation-topbar-search">
-    <input type="search" id="searchInput" class="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand md:w-96 bg-zinc-100 text-black" placeholder="Search..." aria-label="Search" />
+<div id="topNavSearch" class="flex items-center space-x-4" data-component="navigation-topbar-search">
+    <div class="relative search-container-wrapper">
+        <div class="relative search-container">
+        <input type="search" id="searchInput" 
+               class="search-input w-64 md:w-96" 
+               placeholder="Search documentation..." 
+               aria-label="Search" />
+        <div class="search-pulse absolute inset-0 rounded-xl pointer-events-none opacity-0 transition-opacity duration-300"></div>
+        </div>
+    </div>
 </div>

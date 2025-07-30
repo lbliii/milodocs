@@ -1,17 +1,17 @@
 
-<div id="topNavLinks" class="flex items-center mx-2 space-x-4 text-black transition duration-300 justify-start w-1/3 font-brand font-light text-sm" data-component="navigation-topbar-links">
+<div id="topNavLinks" class="nav-links" data-component="navigation-topbar-links">
         {{if .Site.Params.topNav.globalLinks.display}}
         {{- range .Site.Params.topNav.globalLinks.links -}}
-            <a href="{{.url}}" aria-label="{{.title}}" class="hidden md:block">{{.title}}</a>
+            <a href="{{.url}}" aria-label="{{.title}}" class="nav-link">{{.title}}</a>
         {{- end -}}
         {{- end -}}
     <!-- Dropdown -->
     {{if .Site.Params.topNav.dropdown.display}}
     <div id="topNavPrimaryDropdown" class="hidden md:block relative group z-50">
-        <a href="{{.Site.Params.topNav.dropdown.url}}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="">{{.Site.Params.topNav.dropdown.name}}</a>
-        <div class="absolute left-0 mt-0 w-48 bg-white border border-gray-200 rounded-md overflow-hidden shadow-lg group-hover:block hidden p-1">
+        <a href="{{.Site.Params.topNav.dropdown.url}}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="nav-link">{{.Site.Params.topNav.dropdown.name}}</a>
+        <div class="dropdown">
             {{- range .Site.Params.topNav.dropdown.links -}}
-            <a href="{{.url}}" aria-label="{{.name}}" class="flex px-4 py-1 text-sm text-black hover:bg-zinc-100 transition duration-100">{{.name}}</a>
+            <a href="{{.url}}" aria-label="{{.name}}" class="dropdown-link">{{.name}}</a>
             {{- end -}}
         </div>
     </div>

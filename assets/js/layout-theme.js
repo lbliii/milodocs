@@ -54,6 +54,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const isDarkMode = document.documentElement.classList.toggle("dark");
     safeSetItem("theme-mode", isDarkMode ? "dark" : "light");
     updateButtonText();
+    updateIconSources();
+    
+    // Dispatch theme change event for other components (like Mermaid diagrams)
+    document.dispatchEvent(new CustomEvent('themeChanged', { 
+      detail: { isDarkMode } 
+    }));
   });
 
   function updateButtonText() {
@@ -70,4 +76,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
       if (darkModeHome) darkModeHome.classList.remove("hidden");
     }
   }
+
+  function updateIconSources() {
+    const isDarkMode = document.documentElement.classList.contains("dark");
+    const iconPath = isDarkMode ? "/icons/dark/" : "/icons/light/";
+    
+    // Update all icons with the .icon class
+    document.querySelectorAll('.icon').forEach(icon => {
+      const currentSrc = icon.getAttribute('src');
+      if (currentSrc && currentSrc.includes('/icons/')) {
+        const iconName = currentSrc.split('/').pop();
+        icon.setAttribute('src', iconPath + iconName);
+      }
+    });
+  }
+
+  // Initialize icon sources on page load
+  updateIconSources();
 });

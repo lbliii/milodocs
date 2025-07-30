@@ -3,34 +3,57 @@
 {{$descTrunc := .Site.Params.article.childArticles.descTrunc }}
 {{$count := .Site.Params.article.childArticles.count }}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {{ range .Pages }}
         {{ if  .Params.hidden }}
             {{/* Do not show the hidden child page or its descendants */}}
         {{else}}
-        <div class="rounded-lg shadow-md p-4 tile transition duration-300 space-y-2">
-            <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-2">
-                {{with .Params.icon}}<img src="/icons/light/{{.}}" alt="" class="w-5 h-5 icon">{{end}}
-                <div class="text-xl text-black font-brand font-semibold">{{if .Params.linkTitle}} {{.Params.linkTitle}} {{else}}{{ .Title | truncate $titleTrunc}}{{end}}</div>
+        <div class="tile enhanced-tile rounded-lg shadow-md p-6 transition duration-300 space-y-3">
+            <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-3 block">
+                <div class="flex items-start space-x-3">
+                    {{with .Params.icon}}
+                        <img src="/icons/light/{{.}}" alt="" class="w-6 h-6 icon flex-shrink-0 mt-1">
+                    {{end}}
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-brand font-semibold leading-tight" style="color: var(--color-text-primary);">
+                            {{if .Params.linkTitle}} 
+                                {{.Params.linkTitle}} 
+                            {{else}}
+                                {{ .Title | truncate $titleTrunc}}
+                            {{end}}
+                        </h3>
+                    </div>
+                </div>
+                
                 {{ with .Description | truncate $descTrunc}}
-                <p class="text-zinc-900 text-sm font-thin">{{ . }}</p>
+                    <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ . }}</p>
                 {{ end }}
             </a>
+            
             {{if eq .BundleType "branch"}}
-
-            <ul class="flex flex-wrap list-none p-0">
-                {{ range first $count .Pages }}
-                    {{ if  .Params.hidden }}
-                        {{/* Do not show the hidden child page or its descendants */}}
-                    {{else}}
-                            <li class="my-2 mr-2">
-                                <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="text-xs p-2 text-black font-thin hover:text-white bg-white hover:bg-brand hover:transition hover:duration-300 rounded">
-                                    {{if eq .Parent.Title "Run Commands"}}{{ with replace .Title "pachctl " "" }}{{ . }}{{ end }}{{else}}{{if .Params.linkTitle}}{{.Params.linkTitle}}{{else}}{{ .Title | truncate 22 }}{{end}}{{end}}
+                <ul class="flex flex-wrap list-none p-0 gap-2 mt-4">
+                    {{ range first $count .Pages }}
+                        {{ if not .Params.hidden }}
+                            <li>
+                                <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" 
+                                   class="inline-block text-xs px-3 py-1 rounded-full transition-all duration-200 border"
+                                   style="color: var(--color-text-secondary); background-color: var(--color-bg-secondary); border-color: var(--color-border-primary);"
+                                   onmouseover="this.style.color='var(--color-brand)'; this.style.borderColor='var(--color-brand)'; this.style.backgroundColor='var(--color-hover)';"
+                                   onmouseout="this.style.color='var(--color-text-secondary)'; this.style.borderColor='var(--color-border-primary)'; this.style.backgroundColor='var(--color-bg-secondary)';">
+                                    {{if eq .Parent.Title "Run Commands"}}
+                                        {{ with replace .Title "pachctl " "" }}{{ . }}{{ end }}
+                                    {{else}}
+                                        {{if .Params.linkTitle}}
+                                            {{.Params.linkTitle}}
+                                        {{else}}
+                                            {{ .Title | truncate 22 }}
+                                        {{end}}
+                                    {{end}}
                                 </a>
                             </li>
-                    {{end}}
-                {{ end }}
-            </ul>
+                        {{end}}
+                    {{ end }}
+                </ul>
             {{end}}
         </div>
         {{end}}

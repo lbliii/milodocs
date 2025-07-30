@@ -1,5 +1,5 @@
-<nav id="topNav" class="sticky top-0 z-50 p-2 bg-white" data-component="navigation-topbar">
-    <div class="2xl:max-w-screen-2xl mx-auto">
+<nav id="topNav" class="topbar" data-component="navigation-topbar">
+    <div class="p-2 mx-auto">
         <div id="topNavItemsContainer" class="flex">
             <!-- Logo -->
             {{- partial "navigation/topbar/logo.html" . -}}
@@ -14,10 +14,16 @@
                     {{- partial "navigation/language-switcher.html" . -}}
                     
                     <!-- Chat/TOC Toggle -->
-                    <button id="chatTocToggle" aria-label="Toggle Chat" class="hidden md:block"><span class="w-5 h-5"><img id="chatRob" src="/icons/robot.svg" alt="toggle" class="hidden" title="Chat Panel"><img id="chatToc" src="/icons/toc.svg" alt="toggle" class="hidden" title="TOC Panel"></span></button>
+                    <button id="chatTocToggle" aria-label="Toggle Chat" class="toggle-btn hidden md:block">
+                        <img id="chatRob" src="/icons/robot.svg" alt="toggle" class="hidden" title="Chat Panel">
+                        <img id="chatToc" src="/icons/toc.svg" alt="toggle" class="hidden" title="TOC Panel">
+                    </button>
                     
                     <!-- Dark Mode Toggle -->
-                    <button id="darkModeToggle" aria-label="Toggle Darkmode"><span class="w-5 h-5"><img id="moon" src="/icons/dark.svg" alt="moon" class="hidden" title="Dark Mode"><img id="sun" src="/icons/light.svg" alt="sun" class="hidden" title="Light Mode"></span></button>
+                    <button id="darkModeToggle" aria-label="Toggle Darkmode" class="toggle-btn">
+                        <img id="moon" src="/icons/dark.svg" alt="moon" class="hidden" title="Dark Mode">
+                        <img id="sun" src="/icons/light.svg" alt="sun" class="hidden" title="Light Mode">
+                    </button>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@
     
     /* NVIDIA Brand Colors */
     --color-brand: #76b900;            /* primary color - NVIDIA green */
+    --color-brand-rgb: 118, 185, 0;    /* RGB values for alpha transparency */
     --color-brand-1: #004831;          /* secondary color - NVIDIA dark green */
     --color-brand-2: #5a9600;          /* tertiary color - darker NVIDIA green */
     --color-brand-3: #86a6cf;          /* note color */
@@ -15,9 +16,57 @@
     /* NVIDIA Font Families */
     --font-family-brand: NVIDIA, Arial, Helvetica, sans-serif;
     --font-family-mono: RobotoMono, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+
+    /* Semantic Color System for Light Mode */
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-tertiary: #9ca3af;
+    --color-text-inverse: #ffffff;
+    
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f9fafb;
+    --color-bg-tertiary: #f3f4f6;
+    --color-bg-inverse: #111827;
+    
+    --color-border-primary: #e5e7eb;
+    --color-border-secondary: #d1d5db;
+    --color-border-focus: var(--color-brand);
+    
+    --color-surface: #ffffff;
+    --color-surface-hover: #f9fafb;
+    --color-surface-active: #f3f4f6;
+    
+    /* Interactive states */
+    --color-hover: rgba(var(--color-brand-rgb), 0.1);
+    --color-active: rgba(var(--color-brand-rgb), 0.2);
+    --color-focus: rgba(var(--color-brand-rgb), 0.3);
 }
 
 .dark {
     --primary-gradient-color: rgba(118, 185, 0, 0.3);
-    --secondary-gradient-color: #111;
+    --secondary-gradient-color: #0f0f0f;
+    
+    /* Semantic Color System for Dark Mode - NVIDIA Theme */
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-tertiary: #9ca3af;
+    --color-text-inverse: #111827;
+    
+    --color-bg-primary: #0f0f0f;
+    --color-bg-secondary: #1a1a1a;
+    --color-bg-tertiary: #262626;
+    --color-bg-inverse: #ffffff;
+    
+    --color-border-primary: #333333;
+    --color-border-secondary: #404040;
+    --color-border-focus: var(--color-brand);
+    
+    --color-surface: #1a1a1a;
+    --color-surface-hover: #262626;
+    --color-surface-active: #333333;
+    
+    /* Interactive states for dark mode */
+    --color-hover: rgba(var(--color-brand-rgb), 0.2);
+    --color-active: rgba(var(--color-brand-rgb), 0.3);
+    --color-focus: rgba(var(--color-brand-rgb), 0.4);
 }

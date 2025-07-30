@@ -86,8 +86,19 @@ function initializeLunr() {
     console.log(lunrIndexPromise);
 }
 
-// Immediately start fetching and processing Lunr index
-initializeLunr();
+// Wait for Lunr.js to be available, then start fetching and processing index
+function waitForLunr() {
+  if (typeof lunr !== 'undefined') {
+    initializeLunr();
+    setupSearchEventListeners();
+  } else {
+    // Wait 100ms and try again
+    setTimeout(waitForLunr, 100);
+  }
+}
+
+// Start when DOM is ready
+document.addEventListener('DOMContentLoaded', waitForLunr);
 
 // Function to handle search and filter
 function handleSearchAndFilter(idx, documents) {
@@ -138,8 +149,8 @@ function handleSearchAndFilter(idx, documents) {
   }
 }
 
-// DOMContentLoaded event listener
-document.addEventListener("DOMContentLoaded", function () {
+// Setup event listeners once Lunr index is ready
+function setupSearchEventListeners() {
   // Wait for the Lunr index to be ready
   lunrIndexPromise.then(({ idx, documents }) => {
     if (!idx) {
@@ -159,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
       categoryFilter.addEventListener("change", () => handleSearchAndFilter(idx, documents));
     }
   });
-});
+}
 
 // Utility Functions
 
@@ -204,35 +215,61 @@ function filterResultsBySection(results, section) {
 function renderResults(groupedResults, container) {
   container.innerHTML = "";
 
-  Object.keys(groupedResults).forEach((category) => { // Renamed from product
-    const categoryDiv = document.createElement("div"); // Renamed from productDiv
-    categoryDiv.classList.add("mb-4", "pb-4", "rounded-lg");
-    categoryDiv.innerHTML = `<h2 class="text-xl text-black font-bold py-4">Search results for ${category}</h2>`; // Renamed from product
+  // Handle empty results
+  if (Object.keys(groupedResults).length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-12">
+        <div class="text-6xl mb-4">🔍</div>
+        <p class="text-lg font-medium" style="color: var(--color-text-secondary);">
+          No results found
+        </p>
+        <p class="text-sm" style="color: var(--color-text-tertiary);">
+          Try a different search query or explore our documentation.
+        </p>
+      </div>
+    `;
+    return;
+  }
 
-    Object.keys(groupedResults[category]).forEach((parent) => { // Renamed from product
+  Object.keys(groupedResults).forEach((category) => {
+    const categoryDiv = document.createElement("div");
+    categoryDiv.classList.add("mb-8");
+    
+    // Enhanced category header with NVIDIA styling
+    categoryDiv.innerHTML = `
+      <div class="flex items-center mb-6">
+        <div class="w-6 h-6 rounded-full mr-3 flex items-center justify-center text-xs font-bold" 
+             style="background-color: var(--color-brand); color: white;">
+          ${Object.keys(groupedResults[category]).length}
+        </div>
+        <h2 class="text-2xl font-bold" style="color: var(--color-text-primary); font-family: var(--font-family-brand);">
+          ${category}
+        </h2>
+      </div>
+    `;
+
+    Object.keys(groupedResults[category]).forEach((parent) => {
       const parentDiv = document.createElement("div");
-      parentDiv.classList.add("mb-4", "p-4", "bg-zinc-100", "rounded-lg");
-      parentDiv.innerHTML = `<h3 class="text-xl text-black font-semibold py-4">${parent}</h3>`;
+      parentDiv.classList.add("mb-6");
       
-      groupedResults[category][parent].forEach((result) => { // Renamed from product
+      // Enhanced parent section header
+      parentDiv.innerHTML = `
+        <h3 class="text-lg font-semibold mb-4" style="color: var(--color-text-secondary); font-family: var(--font-family-brand);">
+          ${parent}
+        </h3>
+      `;
+      
+      groupedResults[category][parent].forEach((result) => {
         const resultDiv = document.createElement("div");
-        resultDiv.classList.add(
-          "mb-2",
-          "p-2",
-          "bg-white",
-          "rounded-lg",
-          "shadow-md",
-          "transition",
-          "duration-300",
-          "hover:bg-brand",
-          "hover:text-white"
-        );
+        resultDiv.className = "search-hit";
+        resultDiv.onclick = () => window.location.href = result.relURI;
+        
         resultDiv.innerHTML = `
-              <a href="${result.relURI}" class="block p-2 rounded-lg">
-                <h4 class="text-md text-black font-medium">${result.title}</h4>
-                <p class="text-sm text-black">${result.description}</p>
-              </a>
-            `;
+          <div class="search-hit-section">${category}</div>
+          <h4 class="search-hit-title">${result.title}</h4>
+          <p class="search-hit-description">${result.description || 'No description available.'}</p>
+        `;
+        
         parentDiv.appendChild(resultDiv);
       });
 
