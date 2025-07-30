@@ -1,5 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize immediately when script loads (before DOMContentLoaded for faster init)
+function initSidebarWhenReady() {
     const sidebar = document.getElementById('linkTree');
+    if (!sidebar) {
+        // If sidebar not ready yet, wait a bit and try again
+        requestAnimationFrame(initSidebarWhenReady);
+        return;
+    }
+    
     const toggles = sidebar.querySelectorAll('.expand-toggle');
     const currentPath = window.location.pathname;
 
@@ -11,16 +18,33 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleContent(toggle, expand) {
         const listItem = toggle.closest('li');
         const nestedContent = listItem.querySelector('.nested-content');
+        const svg = toggle.querySelector('svg');
 
         if (nestedContent) {
             if (expand) {
-                nestedContent.classList.remove('hidden');
+                // Show content immediately for initialization, with animation if sidebar is initialized
+                if (sidebar.classList.contains('initialized')) {
+                    nestedContent.classList.add('expanding');
+                    setTimeout(() => {
+                        nestedContent.classList.remove('expanding');
+                        nestedContent.classList.add('expanded');
+                    }, 300);
+                } else {
+                    nestedContent.classList.add('expanded');
+                }
                 toggle.setAttribute('aria-expanded', 'true');
-                toggle.querySelector('svg').style.transform = 'rotate(90deg)';
+                svg.classList.add('rotate-90');
             } else {
-                nestedContent.classList.add('hidden');
+                if (sidebar.classList.contains('initialized')) {
+                    nestedContent.classList.add('collapsing');
+                    setTimeout(() => {
+                        nestedContent.classList.remove('collapsing', 'expanded');
+                    }, 300);
+                } else {
+                    nestedContent.classList.remove('expanded');
+                }
                 toggle.setAttribute('aria-expanded', 'false');
-                toggle.querySelector('svg').style.transform = 'rotate(0deg)';
+                svg.classList.remove('rotate-90');
             }
         }
     }
@@ -55,20 +79,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Initialize the sidebar by collapsing all directories and then expanding necessary ones.
+     * Initialize the sidebar by expanding necessary active paths only.
      */
     function initializeSidebar() {
-        // Collapse all directories initially
-        toggles.forEach(toggle => {
-            toggleContent(toggle, false);
-        });
-
-        // Find the current active link
+        // Find the current active link first
         const currentLink = sidebar.querySelector(`a[data-current="true"]`);
         if (currentLink) {
             currentLink.classList.add('text-brand');
 
-            // Expand all parent directories
+            // Expand all parent directories (no animation during init)
             expandParents(currentLink);
 
             // If any parent sections are active, expand their immediate children
@@ -79,11 +98,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     toggleContent(toggle, true);
                 }
             });
+        }
 
-            // Smooth scroll to the active link
+        // Mark sidebar as initialized to enable animations
+        sidebar.classList.add('initialized');
+
+        // Smooth scroll to the active link after initialization
+        if (currentLink) {
             setTimeout(() => {
                 currentLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300);
+            }, 100);
         }
     }
 
@@ -104,4 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the sidebar and setup listeners
     initializeSidebar();
     setupToggleListeners();
-});
+}
+
+// Start initialization as soon as script loads
+initSidebarWhenReady();

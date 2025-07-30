@@ -1,4 +1,32 @@
-<div class="mermaid">
+{{- $id := printf "mermaid-%d" (now.UnixMilli) -}}
+<div id="{{ $id }}" class="mermaid" data-theme="neutral" style="opacity: 0; transition: opacity 0.3s ease;">
     {{ .Inner | safeHTML }}
 </div>
+<script>
+if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({ 
+        theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'neutral',
+        startOnLoad: false,
+        securityLevel: 'strict'
+    });
+    mermaid.run({ querySelector: '#{{ $id }}' }).then(() => {
+        document.getElementById('{{ $id }}').style.opacity = '1';
+    });
+} else {
+    // Fallback: load mermaid if not already loaded
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+    script.onload = () => {
+        mermaid.initialize({ 
+            theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'neutral',
+            startOnLoad: false,
+            securityLevel: 'strict'
+        });
+        mermaid.run({ querySelector: '#{{ $id }}' }).then(() => {
+            document.getElementById('{{ $id }}').style.opacity = '1';
+        });
+    };
+    document.head.appendChild(script);
+}
+</script>
   

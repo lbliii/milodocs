@@ -260,4 +260,234 @@
 }
 
 @tailwind components;
+
+@layer components {
+  /* Enhanced Navigation Animations */
+  /* Hide nested content by default to prevent flash */
+  .nested-content {
+    display: none;
+  }
+  
+  /* Prevent layout shift during initialization */
+  #linkTree:not(.initialized) {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  #linkTree.initialized {
+    opacity: 1;
+  }
+  
+  /* Show nested content when sidebar is initialized and expanded */
+  #linkTree.initialized .nested-content.expanded {
+    display: block;
+  }
+  
+  /* Only animate after initialization to prevent flash */
+  #linkTree.initialized .nested-content.expanding {
+    display: block;
+    animation: slideDown 0.3s ease-out;
+    overflow: hidden;
+  }
+
+  #linkTree.initialized .nested-content.collapsing {
+    animation: slideUp 0.3s ease-out;
+    overflow: hidden;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      max-height: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      max-height: 1000px;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      max-height: 1000px;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      max-height: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Enhanced hover states */
+  .nested-content a:hover {
+    transform: translateX(4px);
+    @apply transition-transform duration-200;
+  }
+
+  /* Loading skeleton for content */
+  .content-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Smooth page transitions */
+  body {
+    @apply transition-opacity duration-300;
+  }
+
+  .page-transition-enter {
+    @apply opacity-0;
+    transform: translateY(20px);
+  }
+
+  .page-transition-enter-active {
+    @apply opacity-100;
+    transform: translateY(0);
+    @apply transition-all duration-300;
+  }
+
+  /* Ripple effect for buttons */
+  button {
+    @apply relative overflow-hidden;
+  }
+
+  .ripple {
+    @apply absolute rounded-full pointer-events-none;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple-animation 0.6s ease-out;
+  }
+
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  /* Enhanced micro-interactions */
+  .tile, .card {
+    @apply transition-all duration-200;
+  }
+
+  .tile:hover, .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  /* Fade-in animation classes */
+  .fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    @apply transition-all duration-700;
+  }
+
+  .fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Enhanced focus states for accessibility */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    @apply rounded;
+  }
+
+  /* Notification styles */
+  .notification {
+    @apply fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300;
+  }
+
+  /* Loading states */
+  .loading-spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--color-brand);
+    @apply rounded-full w-5 h-5;
+    animation: spin 1s linear infinite;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-brand);
+    @apply rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-1);
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-gray-700;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600;
+  }
+
+  /* Mobile-specific enhancements */
+  @media (max-width: 768px) {
+    /* Larger touch targets */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Better spacing for mobile */
+    .tile, .card {
+      @apply mb-4;
+    }
+    
+    /* Reduced motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  }
+
+  /* Dark mode enhancements */
+  .dark .content-skeleton {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  }
+
+  .dark .ripple {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
 @tailwind utilities;
+
+@layer utilities {
+  /* CSS custom properties for dynamic viewport height on mobile */
+  :root {
+    --vh: 1vh;
+  }
+
+  .h-screen-dynamic {
+    height: calc(var(--vh, 1vh) * 100);
+  }
+}

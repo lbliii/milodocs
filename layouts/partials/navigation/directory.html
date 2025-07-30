@@ -7,7 +7,7 @@
         
         <!-- Check for nested pages and recursively include the Directory partial -->
         {{ if .Pages }}
-            <div class="nested-content transition-all duration-300 ease-in-out transform">
+            <div class="nested-content">
                 {{ partial "navigation/directory.html" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
             </div>
         {{ end }}

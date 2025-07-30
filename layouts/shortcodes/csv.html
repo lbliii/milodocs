@@ -1,38 +1,84 @@
-{{$filename := .Get 0}}
+{{- $filename := .Get 0 -}}
 {{- $delimiter := .Get 1 | default "," -}}
 {{- $skipColumns := split (.Get 2 | default "") "," -}}
-{{- $csvResource := resources.Get (printf "csv/%s" $filename) -}}
+{{- $cssClass := .Get 3 | default "min-w-full divide-y divide-zinc-200" -}}
+{{- $lazyQuotes := .Get 4 | default false -}}
 
-{{- if not $csvResource -}}
-    <div class="error">Error: CSV file "{{ $filename }}" not found in the csv directory.</div>
+{{- $csvResource := resources.Get (printf "csv/%s.csv" $filename) -}}
+{{- $csvContent := "" -}}
+
+{{- if $csvResource -}}
+    {{- $csvContent = $csvResource.Content -}}
 {{- else -}}
-    {{- $csvData := $csvResource | transform.Unmarshal (dict "delimiter" $delimiter) -}}
+    {{/* Fallback: try reading from static directory */}}
+    {{- $staticPath := printf "static/csv/%s.csv" $filename -}}
+    {{- $csvContent = readFile $staticPath -}}
+    {{- if not $csvContent -}}
+        {{- errorf "CSV shortcode: File not found in assets/csv/%s.csv or static/csv/%s.csv on page %s" $filename $filename .Page.RelPermalink -}}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <strong>CSV Error:</strong> File "{{ $filename }}.csv" not found in assets/csv/ or static/csv/ directories.
+        </div>
+    {{- end -}}
+{{- end -}}
+
+{{- if $csvContent -}}
+    {{- $unmarshalOptions := dict "delimiter" $delimiter -}}
+    {{- if $lazyQuotes -}}
+        {{- $unmarshalOptions = merge $unmarshalOptions (dict "lazyQuotes" true) -}}
+    {{- end -}}
+    
+    {{- $csvData := "" -}}
+    {{- if $csvResource -}}
+        {{- $csvData = $csvResource | transform.Unmarshal $unmarshalOptions -}}
+    {{- else -}}
+        {{- $csvData = $csvContent | transform.Unmarshal $unmarshalOptions -}}
+    {{- end -}}
     
     {{- if not $csvData -}}
-        <div class="error">Error: Failed to parse CSV data from "{{ $filename }}". The file may be empty or incorrectly formatted.</div>
+        {{- errorf "CSV shortcode: Failed to parse CSV data from '%s' on page %s" $filename .Page.RelPermalink -}}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <strong>CSV Error:</strong> Failed to parse CSV data from "{{ $filename }}". The file may be empty or incorrectly formatted.
+        </div>
+    {{- else if eq (len $csvData) 0 -}}
+        {{- errorf "CSV shortcode: Empty CSV data from '%s' on page %s" $filename .Page.RelPermalink -}}
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+            <strong>CSV Warning:</strong> No data found in "{{ $filename }}".
+        </div>
     {{- else -}}
+        {{- $headers := index $csvData 0 -}}
+        {{- $filteredHeaders := slice -}}
+        {{- $filteredIndices := slice -}}
+        
+        {{- range $index, $col := $headers -}}
+            {{- if not (in $skipColumns $col) -}}
+                {{- $filteredHeaders = $filteredHeaders | append $col -}}
+                {{- $filteredIndices = $filteredIndices | append $index -}}
+            {{- end -}}
+        {{- end -}}
+        
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-zinc-200">
+            <table class="{{ $cssClass }}" role="table">
+                <caption class="sr-only">Data from {{ $filename }}</caption>
                 <thead>
                     <tr>
-                    {{- range $index, $col := index $csvData 0 -}}
-                        {{- if not (in $skipColumns $col) -}}
-                            <th scope="col" class="px-3 py-2 text-left text-sm font-semibold text-black uppercase tracking-wider">
-                                {{- $col -}}
-                            </th>
-                        {{- end -}}
+                    {{- range $filteredHeaders -}}
+                        <th scope="col" class="px-3 py-2 text-left text-sm font-semibold text-black uppercase tracking-wider">
+                            {{- . | markdownify -}}
+                        </th>
                     {{- end -}}
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-200">
                     {{- range $rowIndex, $row := after 1 $csvData -}}
                         <tr class="{{ cond (modBool $rowIndex 2) "bg-zinc-50" "bg-white" }}">
-                        {{- range $colIndex, $col := $row -}}
-                            {{- if not (in $skipColumns (index (index $csvData 0) $colIndex)) -}}
-                                <td class="px-3 py-2 whitespace-nowrap text-sm text-black">
-                                    {{- $col | markdownify -}}
-                                </td>
-                            {{- end -}}
+                        {{- range $filteredIndices -}}
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-black">
+                                {{- if lt . (len $row) -}}
+                                    {{- index $row . | markdownify -}}
+                                {{- else -}}
+                                    <span class="text-gray-400">—</span>
+                                {{- end -}}
+                            </td>
                         {{- end -}}
                         </tr>
                     {{- end -}}

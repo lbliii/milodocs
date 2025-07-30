@@ -1,6 +1,11 @@
-{{$file := .Get "file"}}
-{{$content := $file | readFile}}
-
-{{ $.Page.RenderString $content | replaceRE "^## .+\n" "" }}
+{{- $file := .Get "file" -}}
+{{- $resource := resources.Get $file -}}
+{{- if not $resource -}}
+    {{- errorf "Readfile shortcode: File not found '%s' on page %s" $file .Page.RelPermalink -}}
+{{- else -}}
+    {{- $content := $resource.Content -}}
+    {{- $rendered := $.Page.RenderString $content -}}
+    {{- $rendered | replaceRE "^## .+\n" "" -}}
+{{- end -}}
 
   

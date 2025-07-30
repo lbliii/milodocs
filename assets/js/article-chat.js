@@ -28,23 +28,129 @@ function submitQuestion(event) {
 }
 
 async function fetchAnswer(question, productFilter) {
-  const response = await fetch(
-    `https://chat-2-lc4762co7a-uc.a.run.app//?query=${encodeURIComponent(
-      question
-    )}`
-  );
-  const data = await response.json();
-  const answer = data.answer || "Sorry, I could not fetch the answer.";
-  const botBubble = createChatBubble(answer, "bot");
-  addChatBubble(botBubble, "bot");
+  // Create loading bubble
+  const loadingBubble = createLoadingBubble();
+  addChatBubble(loadingBubble, "bot");
+  
+  try {
+    const response = await fetch(
+      `https://chat-2-lc4762co7a-uc.a.run.app//?query=${encodeURIComponent(
+        question
+      )}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Add timeout
+        signal: AbortSignal.timeout(30000)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const answer = data.answer || "Sorry, I could not fetch the answer.";
+    
+    // Remove loading bubble
+    loadingBubble.remove();
+    
+    // Add actual response with typing animation
+    const botBubble = createChatBubble(answer, "bot");
+    addChatBubble(botBubble, "bot");
+    animateTyping(botBubble);
+    
+    // Announce to screen readers
+    if (window.announceToScreenReader) {
+      window.announceToScreenReader(`AI response: ${answer.substring(0, 100)}...`);
+    }
+    
+  } catch (error) {
+    console.error('Chat error:', error);
+    loadingBubble.remove();
+    
+    let errorMessage = "Sorry, I'm having trouble connecting. Please try again later.";
+    if (error.name === 'TimeoutError') {
+      errorMessage = "Request timed out. Please try again with a shorter question.";
+    } else if (!navigator.onLine) {
+      errorMessage = "You appear to be offline. Please check your connection.";
+    }
+    
+    const errorBubble = createChatBubble(errorMessage, "bot", "error");
+    addChatBubble(errorBubble, "bot");
+    
+    // Show retry button
+    addRetryButton(question, productFilter);
+  }
 }
 
-function createChatBubble(text, sender) {
+function createLoadingBubble() {
   const bubble = document.createElement("div");
-  bubble.className = `chat-bubble ${sender} p-2 rounded-lg text-black ${
+  bubble.className = "chat-bubble bot p-2 rounded-lg text-black font-regular text-sm";
+  bubble.innerHTML = `
+    <div class="flex items-center space-x-2">
+      <div class="animate-spin h-4 w-4 border-2 border-brand border-t-transparent rounded-full"></div>
+      <span>Thinking...</span>
+    </div>
+  `;
+  return bubble;
+}
+
+function animateTyping(bubble) {
+  const text = bubble.innerText;
+  bubble.innerText = '';
+  let i = 0;
+  
+  const typeInterval = setInterval(() => {
+    bubble.innerText += text.charAt(i);
+    i++;
+    if (i >= text.length) {
+      clearInterval(typeInterval);
+    }
+  }, 20);
+}
+
+function addRetryButton(question, productFilter) {
+  const chatMessages = document.getElementById("chat-messages");
+  const retryContainer = document.createElement("div");
+  retryContainer.className = "flex justify-center my-2";
+  
+  const retryButton = document.createElement("button");
+  retryButton.className = "px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-1 transition duration-300";
+  retryButton.innerText = "Retry";
+  retryButton.addEventListener("click", () => {
+    retryContainer.remove();
+    fetchAnswer(question, productFilter);
+  });
+  
+  retryContainer.appendChild(retryButton);
+  chatMessages.appendChild(retryContainer);
+}
+
+function createChatBubble(text, sender, type = "normal") {
+  const bubble = document.createElement("div");
+  let baseClasses = `chat-bubble ${sender} p-2 rounded-lg ${
     sender === "user" ? "font-bold text-md" : "font-regular text-sm"
   }`;
+  
+  // Add appropriate styling based on type and sender
+  if (type === "error") {
+    baseClasses += " bg-red-100 border border-red-300 text-red-700";
+  } else if (sender === "user") {
+    baseClasses += " bg-brand text-white ml-auto max-w-xs md:max-w-md";
+  } else {
+    baseClasses += " bg-zinc-100 text-black mr-auto max-w-xs md:max-w-md";
+  }
+  
+  bubble.className = baseClasses;
   bubble.innerText = text;
+  
+  // Add accessibility attributes
+  bubble.setAttribute('role', sender === 'bot' ? 'log' : 'status');
+  bubble.setAttribute('aria-live', 'polite');
+  
   return bubble;
 }
 
