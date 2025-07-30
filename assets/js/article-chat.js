@@ -129,6 +129,18 @@ function addRetryButton(question, productFilter) {
   chatMessages.appendChild(retryContainer);
 }
 
+function formatChatText(text, sender) {
+  if (sender === "bot") {
+    // Add spaces after periods and commas if followed by an uppercase letter
+    let formatted = text.replace(/\.([A-Z])/g, '. $1');
+    formatted = formatted.replace(/,([A-Z])/g, ', $1');
+    // Replace multiple newlines with paragraph tags
+    formatted = formatted.split('\n\n').map(p => `<p>${p}</p>`).join('');
+    return formatted;
+  }
+  return text; // User text doesn't need special formatting
+}
+
 function createChatBubble(text, sender, type = "normal") {
   const bubble = document.createElement("div");
   let baseClasses = `chat-bubble ${sender}`;

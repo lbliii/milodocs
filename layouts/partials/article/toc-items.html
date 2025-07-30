@@ -21,18 +21,18 @@
                             </ul></li>
                             {{- $inH2Section = false -}}
                         {{- end -}}
-                        <li><a href="#{{ $title | anchorize }}">{{ $title }}</a></li>
+                        <li><a href="#{{ $title | anchorize }}" class="toc-link toc-link--h1">{{ $title }}</a></li>
                     {{- else if eq $level 2 -}}
                         {{- if $inH2Section -}}
                             </ul></li>
                         {{- end -}}
                         <li>
-                            <a href="#{{ $title | anchorize }}" class="text-brand">{{ $title }}</a>
+                            <a href="#{{ $title | anchorize }}" class="toc-link toc-link--h2">{{ $title }}</a>
                             <ul>
                         {{- $inH2Section = true -}}
                     {{- else if eq $level 3 -}}
                         {{- if $inH2Section -}}
-                            <li><a href="#{{ $title | anchorize }}">{{ $title }}</a></li>
+                            <li><a href="#{{ $title | anchorize }}" class="toc-link toc-link--h3">{{ $title }}</a></li>
                         {{- end -}}
                     {{- end -}}
                 {{- end -}}

@@ -8,12 +8,12 @@
 
 {{- define "breadcrumbs" -}}
   <div class="my-4">
-      {{partial "navigation/breadcrumbs.html" . }}
+      {{partial "article/header.html" . }}
   </div>
 {{- end -}}
 
 {{ define "content" }}
-  <article class="prose max-w-none">
+  <article class="prose max-w-5xl">
     {{/* Content status warnings */}}
     {{- if site.Params.article.statusWarnings.display -}}
       {{- partial "article/status-warnings.html" . -}}
@@ -21,11 +21,6 @@
 
     <header class="mb-8 not-prose">
       <h1 class="text-3xl font-bold text-black mb-4">{{ .Title }}</h1>
-      
-      {{/* Enhanced metadata section */}}
-      {{- if site.Params.article.metadata.display -}}
-        {{- partial "article/metadata.html" . -}}
-      {{- end -}}
       
       {{- with .Description -}}
         <p class="text-lg text-gray-700 leading-relaxed">{{ . }}</p>

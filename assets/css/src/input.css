@@ -44,8 +44,7 @@
   /*  Article Content Styles */ 
 
   /* Margins */
-  #articleContent > *,
-  #articleContent .notice p {
+  #articleContent > * {
     @apply my-3;
   }
 
@@ -82,38 +81,94 @@
     @apply block ml-6 my-4;
   }
 
-  /* Circled Numbers in Ordered Lists */
+  /* Enhanced Numbered Lists */
   #articleContent ol {
     list-style: none;
     counter-reset: item;
   }
   #articleContent ol > li {
-    @apply py-2;
+    @apply py-3;
     counter-increment: item;
+    position: relative;
+    transition: all 0.2s ease;
   }
+  
+  /* Enhanced List Item Hover Effect */
+  #articleContent ol > li:hover {
+    transform: translateX(2px);
+  }
+  
+  /* Enhanced Primary Level Numbers (Rounded Squares) */
   #articleContent ol > li::before {
     content: counter(item);
-    border-radius: 50%;
-    width: 1.5em;
-    height: 1.5em;
-    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    line-height: 1.5em;
-    margin-right: 0.5em;
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-primary);
+    margin-right: 0.75rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    background: linear-gradient(
+      135deg,
+      var(--color-brand) 0%,
+      rgba(var(--color-brand-rgb), 0.8) 100%
+    );
+    color: var(--color-text-inverse);
+    box-shadow: 
+      0 2px 8px rgba(var(--color-brand-rgb), 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+    position: relative;
+    top: -1px;
   }
+  
+  /* Enhanced Primary Level Hover */
+  #articleContent ol > li:hover::before {
+    transform: scale(1.1);
+    box-shadow: 
+      0 4px 16px rgba(var(--color-brand-rgb), 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Enhanced Nested Level Numbers (Circles) */
   #articleContent li > ol > li::before {
     content: counter(item);
     border-radius: 50%;
-    width: 1.5em;
-    height: 1.5em;
-    display: inline-block;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    line-height: 1.5em;
-    margin-right: 0.5em;
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-primary);
+    margin-right: 0.75rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+    background: linear-gradient(
+      135deg,
+      var(--color-surface) 0%,
+      var(--color-bg-secondary) 100%
+    );
+    color: var(--color-brand);
+    border: 2px solid var(--color-brand);
+    box-shadow: 
+      0 2px 6px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+    position: relative;
+    top: -1px;
+  }
+  
+  /* Enhanced Nested Level Hover */
+  #articleContent li > ol > li:hover::before {
+    background: var(--color-brand);
+    color: var(--color-text-inverse);
+    transform: scale(1.1);
+    box-shadow: 
+      0 4px 12px rgba(var(--color-brand-rgb), 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   /* Single Line Code - NVIDIA Style (not syntax highlighted blocks) */
   #articleContent code:not(pre code) {
@@ -221,12 +276,7 @@
     border-color: var(--color-brand);
   }
 
-  /* Enhanced notice styles */
-  #articleContent .notice a {
-    color: var(--color-text-primary);
-    @apply underline font-bold;
-    text-decoration-color: var(--color-brand);
-  }
+  /* Legacy notice styles - removed in favor of enhanced notices */
 
   .admonition {
     background-color: var(--color-bg-secondary);
@@ -274,13 +324,13 @@
   .dark .text-zinc-900 {
     color: var(--color-text-secondary);
   }
-  .dark .notice {
-    background-color: var(--color-bg-secondary);
-    border-left: 4px solid var(--color-brand);
-  }
+  /* Legacy dark notice styles - removed in favor of enhanced notices */
 }
 
 @tailwind components;
+
+/* Import Component Files */
+@import "components/notice.css";
 
 @layer components {
   
@@ -984,116 +1034,7 @@
     filter: brightness(1) invert(1);
   }
   
-  /* Enhanced Breadcrumb Navigation */
-  .breadcrumb {
-    @apply relative;
-    background-color: var(--color-surface);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--color-border-primary);
-    backdrop-filter: blur(10px);
-    box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  
-  .breadcrumb-link {
-    @apply relative inline-flex items-center px-3 py-2 rounded-lg 
-           transition-all duration-200 focus:outline-none focus:ring-2;
-    background-color: transparent;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    --tw-ring-color: var(--color-brand);
-    overflow: hidden;
-  }
-  
-  .breadcrumb-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(var(--color-brand-rgb), 0.08) 0%,
-      transparent 50%,
-      rgba(var(--color-brand-rgb), 0.03) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    pointer-events: none;
-  }
-  
-  .breadcrumb-link:hover {
-    color: var(--color-brand);
-    background-color: var(--color-surface-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .breadcrumb-link:hover::before {
-    opacity: 1;
-  }
-  
-  .breadcrumb-link:focus {
-    color: var(--color-brand);
-    background-color: var(--color-surface-hover);
-  }
-  
-  .breadcrumb-current {
-    @apply inline-flex items-center px-3 py-2 rounded-lg font-semibold;
-    background-color: var(--color-brand);
-    color: var(--color-text-inverse);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .breadcrumb-current::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.1) 100%
-    );
-    pointer-events: none;
-  }
-  
-  .breadcrumb-separator {
-    @apply mx-3 text-lg;
-    color: var(--color-text-tertiary);
-    transition: color 0.2s ease, transform 0.2s ease;
-    font-weight: 300;
-  }
-  
-  .breadcrumb:hover .breadcrumb-separator {
-    color: var(--color-brand);
-    transform: scale(1.1);
-  }
-  
-  /* Enhanced breadcrumb animations */
-  .breadcrumb-link,
-  .breadcrumb-current {
-    animation: breadcrumb-enter 0.3s ease-out;
-  }
-  
-  @keyframes breadcrumb-enter {
-    from {
-      opacity: 0;
-      transform: translateX(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+
   
   /* Enhanced Article Components */
   
@@ -1296,35 +1237,7 @@
     opacity: 1;
   }
   
-  /* Enhanced Article Metadata */
-  .enhanced-metadata {
-    @apply rounded-xl p-6 mb-6;
-    background: linear-gradient(
-      135deg,
-      var(--color-surface) 0%,
-      var(--color-bg-secondary) 100%
-    );
-    border: 1px solid var(--color-border-primary);
-    backdrop-filter: blur(10px);
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  
-  .metadata-item {
-    @apply flex items-center space-x-3 p-3 rounded-lg transition-all duration-200;
-    color: var(--color-text-secondary);
-  }
-  
-  .metadata-item:hover {
-    background-color: var(--color-surface-hover);
-    transform: translateX(4px);
-  }
-  
-  .metadata-icon {
-    @apply w-5 h-5;
-    color: var(--color-brand);
-  }
+
   
   /* Enhanced Navigation Links */
   .enhanced-nav-link {
@@ -1446,6 +1359,172 @@
     background-color: var(--color-surface-hover);
     color: var(--color-brand);
     transform: translateX(4px);
+  }
+  
+  /* Enhanced Right Sidebar TOC */
+  .enhanced-toc-sidebar {
+    @apply p-6 text-sm;
+    background: linear-gradient(
+      135deg,
+      var(--color-surface) 0%,
+      var(--color-bg-secondary) 100%
+    );
+    border-radius: 0.75rem;
+    backdrop-filter: blur(10px);
+    color: var(--color-text-primary);
+  }
+  
+  .enhanced-toc-sidebar nav {
+    position: relative;
+  }
+  
+  .enhanced-toc-sidebar nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      var(--color-brand) 0%,
+      rgba(var(--color-brand-rgb), 0.3) 50%,
+      transparent 100%
+    );
+    border-radius: 2px;
+  }
+  
+  .enhanced-toc-sidebar ul {
+    @apply list-none pl-4 space-y-1;
+    margin: 0;
+  }
+  
+  .enhanced-toc-sidebar ul ul {
+    @apply pl-4 mt-2 border-l border-opacity-20;
+    border-color: var(--color-border-primary);
+  }
+  
+  /* TOC Link Styling */
+  .toc-link {
+    @apply block py-2 px-3 rounded-lg transition-all duration-200 
+           relative overflow-hidden;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+  
+  .toc-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(var(--color-brand-rgb), 0.08) 0%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  
+  .toc-link:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-brand);
+    transform: translateX(4px);
+    padding-left: calc(0.75rem + 2px);
+    border-left: 2px solid var(--color-brand);
+  }
+  
+  .toc-link:hover::before {
+    opacity: 1;
+  }
+  
+  .toc-link:focus {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    color: var(--color-brand);
+  }
+  
+  /* Heading Level Variations */
+  .toc-link--h1 {
+    font-weight: 600;
+    font-size: 0.95em;
+    color: var(--color-text-primary);
+  }
+  
+  .toc-link--h2 {
+    font-weight: 500;
+    color: var(--color-brand);
+    opacity: 0.9;
+  }
+  
+  .toc-link--h3 {
+    font-size: 0.85em;
+    color: var(--color-text-tertiary);
+    font-weight: 400;
+  }
+  
+  /* Active state styling */
+  .toc-link.active {
+    background-color: var(--color-brand);
+    color: var(--color-text-inverse);
+    font-weight: 500;
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+  }
+  
+  .toc-link.active::before {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 100%
+    );
+    opacity: 1;
+  }
+  
+  /* Smooth scrolling indicator */
+  .toc-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 0%;
+    background-color: var(--color-brand);
+    transition: height 0.3s ease;
+    border-radius: 1px;
+  }
+  
+  /* Enhanced animations */
+  .enhanced-toc-sidebar {
+    animation: toc-enter 0.4s ease-out;
+  }
+  
+  /* Enhanced Notice Components - moved to components/notice.css */
+  
+  @keyframes toc-enter {
+    from {
+      opacity: 0;
+      transform: translateX(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .enhanced-toc-sidebar {
+      @apply p-4 text-xs;
+    }
+    
+    .toc-link {
+      @apply py-1.5 px-2;
+    }
   }
   /* Enhanced Navigation Animations */
   /* Hide nested content by default to prevent flash */

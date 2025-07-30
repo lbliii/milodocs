@@ -1,19 +1,11 @@
 {{ $type := .Get 0 | default "info" }}
 {{ $title := .Get 1 }}
-<div class="notice p-4 mt-2 mb-2 rounded-md shadow-md 
-    {{- with $type }}
-        {{if eq . "danger" }} bg-brand-7
-        {{else if eq . "warning" }} bg-brand-6
-        {{else if eq . "security" }} bg-brand-5
-        {{else if eq . "tip" }} bg-brand-4
-        {{else if eq . "note" }} bg-brand-3 
-        {{else if eq . "info" }} bg-brand-2 
-        {{else if eq . "snack" }} bg-brand-1 
-        {{ end }}
-    {{- end }}
-">
-    <div class="flex">
-        <div class="flex-shrink-0">
+<div class="enhanced-notice enhanced-notice--{{ $type }} group" 
+     data-notice-type="{{ $type }}"
+     role="alert"
+     aria-live="polite">
+    <div class="enhanced-notice__container">
+        <div class="enhanced-notice__icon-wrapper">
            <img src="/icons/notice/
             {{- with $type}}
                 {{- if eq . "danger" -}} danger
@@ -25,15 +17,15 @@
                 {{- else if eq . "snack" -}} snack 
                 {{- end -}}
             {{- end -}}
-           .svg" class="icon w-5 h-5">
+           .svg" class="enhanced-notice__icon" alt="{{ $type | title }} notice">
         </div>
-        <div class="ml-3 w-full text-black text-sm">
+        <div class="enhanced-notice__content">
             {{- if $title -}}
-            <div class="font-brand font-bold mb-2">{{ $title }}</div>
+            <div class="enhanced-notice__title">{{ $title }}</div>
             {{- end -}}
-   
+            <div class="enhanced-notice__text">
                 {{ $.Page.RenderString .Inner }}
-
+            </div>
         </div>
     </div>
 </div>

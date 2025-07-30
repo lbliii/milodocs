@@ -1,0 +1,35 @@
+{{/* Article Header - Parent component managing breadcrumbs and metadata */}}
+{{- $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
+
+<div class="article-header" data-component="article-header">
+  <div class="article-header__navigation">
+    {{/* Pure breadcrumbs navigation */}}
+    {{- partial "navigation/breadcrumbs.html" . -}}
+    
+    {{/* Metadata toggle button - Only show if there's metadata */}}
+    {{- if $hasMetadata -}}
+    <button 
+      class="article-header__metadata-toggle" 
+      type="button"
+      aria-expanded="false"
+      aria-controls="article-metadata-panel"
+      data-metadata-toggle>
+      <span class="article-header__toggle-text">Article Info</span>
+      <svg class="article-header__toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </button>
+    {{- end -}}
+  </div>
+
+  {{/* Collapsible metadata panel */}}
+  {{- if $hasMetadata -}}
+  <div 
+    id="article-metadata-panel" 
+    class="article-header__metadata-panel"
+    aria-hidden="true"
+    data-metadata-panel>
+    {{- partial "article/metadata.html" . -}}
+  </div>
+  {{- end -}}
+</div>

@@ -75,6 +75,32 @@
   {{- warnf "Component CSS: debug.css not found" -}}
 {{- end -}}
 
+{{/* Add notice component styles */}}
+{{- $noticeCSS := resources.Get "css/components/notice.css" -}}
+{{- if $noticeCSS -}}
+  {{- $cssResources = $cssResources | append $noticeCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: notice.css not found" -}}
+{{- end -}}
+
+{{/* Add article header component styles */}}
+{{- $articleHeaderCSS := resources.Get "css/components/article-header.css" -}}
+{{- if $articleHeaderCSS -}}
+  {{- $cssResources = $cssResources | append $articleHeaderCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: article-header.css not found" -}}
+{{- end -}}
+
+{{/* Add breadcrumbs component styles */}}
+{{- $breadcrumbsCSS := resources.Get "css/components/breadcrumbs.css" -}}
+{{- if $breadcrumbsCSS -}}
+  {{- $cssResources = $cssResources | append $breadcrumbsCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: breadcrumbs.css not found" -}}
+{{- end -}}
+
+{{/* Metadata styles are now included in article-header.css */}}
+
 {{/* Advanced CSS bundling with environment-specific optimization */}}
 {{- if $cssResources -}}
   {{- $bundleName := printf "css/bundle-%s.css" hugo.Environment -}}
