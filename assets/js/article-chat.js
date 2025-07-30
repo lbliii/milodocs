@@ -131,21 +131,22 @@ function addRetryButton(question, productFilter) {
 
 function createChatBubble(text, sender, type = "normal") {
   const bubble = document.createElement("div");
-  let baseClasses = `chat-bubble ${sender} p-2 rounded-lg ${
-    sender === "user" ? "font-bold text-md" : "font-regular text-sm"
-  }`;
+  let baseClasses = `chat-bubble ${sender}`;
   
   // Add appropriate styling based on type and sender
   if (type === "error") {
-    baseClasses += " bg-red-100 border border-red-300 text-red-700";
+    baseClasses += " chat-bubble--error";
   } else if (sender === "user") {
-    baseClasses += " bg-brand text-white ml-auto max-w-xs md:max-w-md";
+    baseClasses += " chat-bubble--user";
   } else {
-    baseClasses += " bg-zinc-100 text-black mr-auto max-w-xs md:max-w-md";
+    baseClasses += " chat-bubble--bot";
   }
   
   bubble.className = baseClasses;
-  bubble.innerText = text;
+  
+  // Format the text properly for AI responses
+  const formattedText = formatChatText(text, sender);
+  bubble.innerHTML = formattedText;
   
   // Add accessibility attributes
   bubble.setAttribute('role', sender === 'bot' ? 'log' : 'status');
@@ -159,7 +160,7 @@ function addChatBubble(bubble, sender) {
   let pair = chatMessages.lastElementChild;
   if (!pair || !pair.classList.contains("chat-pair") || sender === "user") {
     pair = document.createElement("div");
-    pair.className = "chat-pair bg-zinc-100 flex flex-col my-2 p-2 rounded-lg";
+    pair.className = "chat-pair group relative";
     chatMessages.appendChild(pair);
   }
   pair.appendChild(bubble);
@@ -179,20 +180,23 @@ function handleAnimationsAndCleanup(bubble, sender, pair, chatMessages) {
 }
 
 function appendDeleteButton(pair, chatMessages) {
-  const deleteButtonWrapper = document.createElement("div");
-  deleteButtonWrapper.className = "w-full flex justify-end";
-
   const deleteButton = document.createElement("button");
-  deleteButton.className =
-    "w-fit p-2 rounded bg-zinc-200 text-xs lowercase hover:bg-red-600 hover:text-white transition duration-300 text-black";
-  deleteButton.innerText = "Delete";
+  deleteButton.className = "chat-delete";
+  deleteButton.innerHTML = "×";
+  deleteButton.title = "Delete this conversation";
   deleteButton.addEventListener("click", () => {
-    chatMessages.removeChild(pair);
-    saveChatHistory();
+    // Add a fade-out animation before removing
+    pair.style.opacity = '0';
+    pair.style.transform = 'translateX(20px)';
+    setTimeout(() => {
+      if (pair.parentNode === chatMessages) {
+        chatMessages.removeChild(pair);
+        saveChatHistory();
+      }
+    }, 200);
   });
 
-  deleteButtonWrapper.appendChild(deleteButton);
-  pair.appendChild(deleteButtonWrapper);
+  pair.appendChild(deleteButton);
 }
 
 function clearConversation() {

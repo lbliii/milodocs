@@ -1,28 +1,28 @@
 {{/* Only show breadcrumbs if we have ancestors */}}
 {{- $ancestors := .Ancestors.Reverse -}}
 {{- if gt (len $ancestors) 1 -}}
-<nav aria-label="Breadcrumb" class="breadcrumb flex flex-wrap text-xs px-2 items-center md:px-4" role="navigation" data-component="navigation-breadcrumbs">
-  <ol class="flex space-x-2 md:space-x-4 lg:space-x-6" itemscope itemtype="https://schema.org/BreadcrumbList">
+<nav aria-label="Breadcrumb" class="breadcrumb" role="navigation" data-component="navigation-breadcrumbs">
+  <ol class="flex flex-wrap items-center text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
     {{- range $index, $ancestor := after 1 $ancestors -}}
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="flex items-center">
         <a href="{{ .Permalink }}" 
-           class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile transition duration-300 hover:shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+           class="breadcrumb-link" 
            itemprop="item"
            aria-label="Navigate to {{ .Title }}">
-          <span itemprop="name">{{ .Title | truncate 15 "…" }}</span>
+          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
         </a>
         <meta itemprop="position" content="{{ add $index 1 }}" />
         {{/* Add visual separator */}}
-        <span class="mx-2 text-gray-400" aria-hidden="true">›</span>
+        <span class="breadcrumb-separator" aria-hidden="true">›</span>
       </li>
     {{- end -}}
     
     {{/* Current page */}}
     <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-      <span class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile bg-gray-100 font-medium" 
+      <span class="breadcrumb-current" 
             aria-current="page"
             itemprop="item">
-        <span itemprop="name">{{ .Title | truncate 15 "…" }}</span>
+        <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
       </span>
       <meta itemprop="position" content="{{ len $ancestors }}" />
     </li>

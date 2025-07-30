@@ -1,19 +1,70 @@
 {{- if .Site.Params.article.nextPrev.display -}}
 {{$trunc := .Site.Params.article.nextPrev.trunc}}
-<div class="mt-8 flex justify-between items-center" data-component="article-next-prev">
-    {{with .NextInSection }}
-        <a href="{{.RelPermalink}}" class="tile text-black py-2 px-4 rounded-r-md transition duration-300"> {{.Title | truncate $trunc}} </a>
+<nav class="mt-8 flex justify-between items-center gap-4" data-component="article-next-prev">
+    {{with .PrevInSection }}
+        <a href="{{.RelPermalink}}" class="enhanced-nav-link flex-1 text-left" aria-label="Previous: {{.Title}}">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                    <div class="text-xs opacity-70 mb-1">Previous</div>
+                    <div class="font-medium">{{.Title | truncate $trunc}}</div>
+                </div>
+            </div>
+        </a>
     {{else}}
-    <span class="py-2 px-4"> <!-- Placeholder for alignment -->
-    </span>
+        <div class="enhanced-nav-link enhanced-nav-link--disabled flex-1 text-left">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                    <div class="text-xs opacity-70 mb-1">Previous</div>
+                    <div class="font-medium">No previous page</div>
+                </div>
+            </div>
+        </div>
     {{ end }}
 
-    {{with .PrevInSection }}
-        <a href="{{.RelPermalink}}" class="tile text-black py-2 px-4 rounded-l-md transition duration-300"> {{.Title | truncate $trunc}} </a>
+    {{with .NextInSection }}
+        <a href="{{.RelPermalink}}" class="enhanced-nav-link flex-1 text-right" aria-label="Next: {{.Title}}">
+            <div class="flex items-center justify-end">
+                <div>
+                    <div class="text-xs opacity-70 mb-1">Next</div>
+                    <div class="font-medium">{{.Title | truncate $trunc}}</div>
+                </div>
+                <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+        </a>
     {{else}}
         {{- range first 1 .Pages}}
-        <a href="{{.RelPermalink}}" class="tile text-black py-2 px-4 rounded-l-md transition duration-300"> {{.Title | truncate $trunc}} </a>
+        <a href="{{.RelPermalink}}" class="enhanced-nav-link flex-1 text-right" aria-label="Next: {{.Title}}">
+            <div class="flex items-center justify-end">
+                <div>
+                    <div class="text-xs opacity-70 mb-1">Next</div>
+                    <div class="font-medium">{{.Title | truncate $trunc}}</div>
+                </div>
+                <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+        </a>
+        {{- else}}
+        <div class="enhanced-nav-link enhanced-nav-link--disabled flex-1 text-right">
+            <div class="flex items-center justify-end">
+                <div>
+                    <div class="text-xs opacity-70 mb-1">Next</div>
+                    <div class="font-medium">No next page</div>
+                </div>
+                <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+        </div>
         {{- end}}
     {{ end }}
-</div>
+</nav>
 {{- end -}}

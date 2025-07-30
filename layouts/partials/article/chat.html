@@ -1,15 +1,15 @@
-<div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col flex justify-end" data-component="article-chat">
-    <div id="chat-messages" class="flex flex-col overflow-y-auto text-base">
+<div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col justify-end" data-component="article-chat">
+    <div id="chat-messages">
     </div>
-    <div id="chat-controls" class="flex flex-row text-xs mt-2">
-        <form id="chat-form" class="flex flex-row">
-            <input id="question" type="text" aria-label="Question Input" placeholder="Ask the docs" class="chat-input flex-grow mr-2" />
-            <button id="sendButton" aria-label="Send" class="btn btn--primary">
+    <div id="chat-controls" class="enhanced-chat-controls">
+        <form id="chat-form" class="chat-form">
+            <input id="question" type="text" aria-label="Question Input" placeholder="Ask the docs..." class="chat-input" />
+            <button id="sendButton" aria-label="Send" class="btn btn--primary btn--sm">
                 <img src="/icons/send.svg" alt="Send" class="btn__icon">
                 Send
             </button>
         </form>
-        <button id="clearAll" aria-label="Delete All" class="btn btn--danger">
+        <button id="clearAll" aria-label="Delete All" class="btn btn--secondary btn--sm">
             <img src="/icons/delete.svg" alt="Delete" class="btn__icon">
             Clear
         </button>
