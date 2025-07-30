@@ -13,10 +13,56 @@
 {{- end -}}
 
 {{ define "content" }}
-  <h1 class="text-black p-4">{{ .Title }}</h1>
-  <div id="articleContent" class="p-4">
-    {{ .Content }}
-  </div>
+  <article class="prose max-w-none">
+    {{/* Content status warnings */}}
+    {{- if site.Params.article.statusWarnings.display -}}
+      {{- partial "article/status-warnings.html" . -}}
+    {{- end -}}
+
+    <header class="mb-8 not-prose">
+      <h1 class="text-3xl font-bold text-black mb-4">{{ .Title }}</h1>
+      
+      {{/* Enhanced metadata section */}}
+      {{- if site.Params.article.metadata.display -}}
+        {{- partial "article/metadata.html" . -}}
+      {{- end -}}
+      
+      {{- with .Description -}}
+        <p class="text-lg text-gray-700 leading-relaxed">{{ . }}</p>
+      {{- end -}}
+    </header>
+
+    {{/* Inline Table of Contents */}}
+    {{- if site.Params.article.inlineToc.display -}}
+      {{- partial "article/table-of-contents.html" . -}}
+    {{- end -}}
+
+    <div id="articleContent" class="article-content">
+      {{ .Content }}
+    </div>
+    
+    {{- with .Params.tags -}}
+      <footer class="mt-8 pt-6 border-t not-prose">
+        <div class="flex flex-wrap gap-2">
+          {{- range . -}}
+            <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+              {{ . }}
+            </span>
+          {{- end -}}
+        </div>
+      </footer>
+    {{- end -}}
+    
+    {{/* Page Resources */}}
+    {{- if site.Params.article.pageResources.display -}}
+      {{- partial "article/page-resources.html" . -}}
+    {{- end -}}
+    
+    {{/* Related Content Section */}}
+    {{- if site.Params.article.relatedContent.display -}}
+      {{- partial "article/related-content.html" . -}}
+    {{- end -}}
+  </article>
 {{ end }}
 
 {{ define "innerFooter" }}

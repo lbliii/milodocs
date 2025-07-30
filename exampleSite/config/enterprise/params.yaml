@@ -1,11 +1,34 @@
-logo: '/images/nvidia.png'
+logo: '/images/logo.png'
 names:
-  organization: 'NVIDIA'
-  product: 'NVIDIA Developer Docs'
+  organization: 'Enterprise Corp'
+  product: 'Enterprise Documentation Platform'
 version: 
   major: 0
   minor: 0
   patch: 3
+
+search:
+  enabled: true
+
+# AI Chat and Summarization Features
+openai:
+  enabled: false  # Set to true and configure API key for AI features
+  api_key: ""     # Your OpenAI API key (use environment variable)
+  model: "gpt-4"  # Model to use for chat/summarization
+
+# Footer settings
+footer:
+  visible: true
+  show: 
+    logo: true
+    links: true
+    copyright: true
+    social: false
+
+# Help and Support
+help:
+  display: true
+
 article:
   childArticles:
     display: true
@@ -22,8 +45,8 @@ article:
     display: true
   # Inline components (within article content)
   inlineToc:
-    display: false
-    showProgress: false
+    display: true
+    showProgress: true
   pageResources:
     display: true
   # Content status warnings (draft and expiry alerts)
@@ -37,4 +60,4 @@ article:
     display: true
 
 # Development & Debug Settings
-debug: true  # Enable debugging to see what parameters are loaded
+debug: false  # Set to true to enable enhanced debugging

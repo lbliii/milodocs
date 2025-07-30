@@ -92,19 +92,10 @@ function showContentSkeleton(container) {
 }
 
 function setupPageTransitions() {
-    // Add page transition classes on navigation
-    const links = document.querySelectorAll('a[href^="/"], a[href^="#"]');
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (link.href.includes('#')) return; // Skip hash links
-            
-            document.body.classList.add('page-transition-enter');
-            setTimeout(() => {
-                document.body.classList.remove('page-transition-enter');
-                document.body.classList.add('page-transition-enter-active');
-            }, 50);
-        });
-    });
+    // Page transitions disabled for static site navigation
+    // The previous implementation caused visual flicker during navigation
+    // since Hugo uses full page reloads rather than SPA-style transitions
+    console.log('Page transitions: Using native browser navigation for optimal performance');
 }
 
 // Performance monitoring

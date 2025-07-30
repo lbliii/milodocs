@@ -34,6 +34,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Initialize reading progress functionality if enabled
+  initializeReadingProgress();
+
   // Attach the scroll event listener to the window
   window.addEventListener("scroll", highlightInView);
 });
+
+// Reading progress functionality
+function initializeReadingProgress() {
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+  
+  if (progressBar && progressText) {
+    function updateProgress() {
+      const article = document.querySelector('#articleContent');
+      if (!article) return;
+      
+      const articleTop = article.offsetTop;
+      const articleHeight = article.offsetHeight;
+      const scrollTop = window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      
+      const progress = Math.min(100, Math.max(0, 
+        ((scrollTop + windowHeight - articleTop) / articleHeight) * 100
+      ));
+      
+      progressBar.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }
+    
+    window.addEventListener('scroll', updateProgress);
+    updateProgress(); // Initial call
+  }
+}

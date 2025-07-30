@@ -1,11 +1,152 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
-<meta name="title" content="{{with .Parent}}{{.Title}}{{end}}: {{ .Title }}" />
-<meta name="description" content="{{with .Description}}{{.}}{{else}}{{.Summary}}{{end}}" />
-<meta name="keywords" content="{{ .Keywords }}" />
-<meta name="author" content="{{ .Params.author }}" />
-{{ if .IsHome }}{{ hugo.Generator }}{{ end }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="{{ site.Params.themeColor | default "#ffffff" }}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{ site.Params.themeColorDark | default "#1a1a1a" }}" media="(prefers-color-scheme: dark)">
 
+{{/* SEO Meta Tags */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
+<meta name="title" content="{{with .Parent}}{{.Title}} - {{end}}{{ .Title }}" />
+{{- $description := "" -}}
+{{- if .Description -}}
+  {{- $description = .Description -}}
+{{- else if .Summary -}}
+  {{- $description = .Summary | plainify | truncate 160 -}}
+{{- else -}}
+  {{- $description = site.Params.description -}}
+{{- end -}}
+<meta name="description" content="{{ $description }}" />
+
+{{/* Enhanced Keywords - combining page keywords with automatic extraction */}}
+{{- $keywords := slice -}}
+{{- with .Keywords -}}
+  {{- $keywords = . -}}
+{{- else -}}
+  {{- with .Params.tags -}}
+    {{- $keywords = . -}}
+  {{- end -}}
+  {{- with .Section -}}
+    {{- $keywords = $keywords | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- if $keywords -}}
+  <meta name="keywords" content="{{ delimit $keywords ", " }}" />
+{{- end -}}
+
+{{/* Author and publication info */}}
+{{ with .Params.author }}<meta name="author" content="{{ . }}" />{{ end }}
+{{- with .Date -}}
+  <meta name="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />
+{{- end -}}
+{{- with .Lastmod -}}
+  <meta name="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />
+{{- end -}}
+
+{{/* Robots and Sitemap directives */}}
+{{- $robots := "index,follow" -}}
+{{- with .Sitemap -}}
+  {{- if .Priority -}}
+    {{- $robots = printf "%s,max-snippet:-1,max-image-preview:large" $robots -}}
+  {{- end -}}
+{{- end -}}
+{{- if .Draft -}}
+  {{- $robots = "noindex,nofollow" -}}
+{{- end -}}
+{{- with .ExpiryDate -}}{{- if .Before now -}}
+  {{- $robots = "noindex,follow" -}}
+{{- end -}}{{- end -}}
+<meta name="robots" content="{{ $robots }}" />
+
+{{/* Language and Translation Links */}}
+{{- if .IsTranslated -}}
+  {{- range .AllTranslations -}}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+  {{- end -}}
+{{- end -}}
+
+{{/* Open Graph */}}
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
+<meta property="og:title" content="{{ .Title }}" />
+<meta property="og:description" content="{{ $description }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+<meta property="og:site_name" content="{{ site.Title }}" />
+<meta property="og:locale" content="{{ .Language.Lang | default "en" }}" />
+{{ with .Params.image }}<meta property="og:image" content="{{ . | absURL }}" />{{ end }}
+{{- if .IsPage -}}
+  {{- with .Date -}}
+    <meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />
+  {{- end -}}
+  {{- with .Lastmod -}}
+    <meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />
+  {{- end -}}
+  {{- with .Params.author -}}
+    <meta property="article:author" content="{{ . }}" />
+  {{- end -}}
+  {{- with .Section -}}
+    <meta property="article:section" content="{{ . }}" />
+  {{- end -}}
+  {{- with .Params.tags -}}
+    {{- range . -}}
+      <meta property="article:tag" content="{{ . }}" />
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Twitter Card */}}
+<meta name="twitter:card" content="summary{{ with .Params.image }}_large_image{{ end }}" />
+<meta name="twitter:title" content="{{ .Title }}" />
+<meta name="twitter:description" content="{{ $description }}" />
+{{ with .Params.image }}<meta name="twitter:image" content="{{ . | absURL }}" />{{ end }}
+{{ with site.Params.social.twitter }}<meta name="twitter:site" content="@{{ . }}" />{{ end }}
+
+{{/* Canonical URL */}}
+<link rel="canonical" href="{{ .Permalink }}" />
+
+{{/* JSON-LD Structured Data */}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": {{ if .IsPage }}"Article"{{ else if .IsHome }}"Organization"{{ else }}"WebPage"{{ end }},
+  "headline": "{{ .Title | jsonify }}",
+  "description": {{ $description | jsonify }},
+  "url": "{{ .Permalink }}",
+  {{- if .IsPage -}}
+    {{- with .Date -}}
+      "datePublished": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",
+    {{- end -}}
+    {{- with .Lastmod -}}
+      "dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",
+    {{- end -}}
+    {{- with .Params.author -}}
+      "author": {
+        "@type": "Person",
+        "name": "{{ . }}"
+      },
+    {{- end -}}
+    {{- with .WordCount -}}
+      "wordCount": {{ . }},
+    {{- end -}}
+  {{- end -}}
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ site.Title }}",
+    "url": "{{ site.BaseURL }}"
+    {{- with site.Params.logo -}}
+      ,"logo": {
+        "@type": "ImageObject",
+        "url": "{{ . | absURL }}"
+      }
+    {{- end -}}
+  }
+}
+</script>
+
+{{/* Generator */}}
+{{ hugo.Generator }}
+
+{{/* Resource hints for performance */}}
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="dns-prefetch" href="//unpkg.com">
+
 {{ partialCached "head/css.html" . }}
 {{ partialCached "head/js.html" . }}

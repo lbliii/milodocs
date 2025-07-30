@@ -1,5 +1,5 @@
 
-<div id="topNavLinks" class="flex items-center mx-2 space-x-4 text-black transition duration-300 justify-start w-1/3 font-brand font-light text-sm">
+<div id="topNavLinks" class="flex items-center mx-2 space-x-4 text-black transition duration-300 justify-start w-1/3 font-brand font-light text-sm" data-component="navigation-topbar-links">
         {{if .Site.Params.topNav.globalLinks.display}}
         {{- range .Site.Params.topNav.globalLinks.links -}}
             <a href="{{.url}}" aria-label="{{.title}}" class="hidden md:block">{{.title}}</a>

@@ -1,12 +1,12 @@
 {{/*  site sections  */}}
-<section id="searchResultsContainer" class="hidden p-4 w-3/5 z-40">
-<div id="filterContainer" class="mb-8" data-product="default">
+<section id="searchResultsContainer" class="hidden p-4 w-3/5 z-40" data-component="search-results-container">
+<div id="filterContainer" class="mb-8" data-product="default" data-component="search-filter">
     <label for="filterSelect" class="block text-xl font-brand-bold text-black">Filter by Product</label>
     <select id="filterSelect" name="filterSelect" class="mt-1 text-black block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
     <option value="">All Products</option>
     <!-- Add options dynamically using JavaScript -->
     </select>
 </div>   
-<div id="searchHitsContainer"></div>
+<div id="searchHitsContainer" data-component="search-hits"></div>
 <!-- populated by JS -->
 </section>  

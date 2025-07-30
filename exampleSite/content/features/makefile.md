@@ -1,47 +1,263 @@
 ---
-title: Makefile
-description: learn how to use the Makefile commands for this Hugo theme.
+title: Makefile Reference
+description: Complete reference for all Makefile commands available in this Hugo theme.
+weight: 150
 ---
 
-Makefiles are a great way to automate repetitive tasks. This theme comes with a Makefile that has a few commands to help you build documentation or reference assets for different scenarios. This approach helps you keep your project organized by centralizing the commands needed to run to build your project --- especially if you begin to rely on scripts to generate parts of your documentation.
+The theme includes a comprehensive Makefile that automates development workflows, testing, and deployment processes. This guide covers all available commands and their use cases.
 
-## How it works
+## Quick Reference
 
-To execute a make command, you need to open a terminal and navigate to the root of your project. From there, you can run the following commands:
+Get help on all available commands:
+```bash
+make help
+```
 
-`make <command>`
+## Development Commands
 
-## Use cases
+### Starting Development Servers
 
-### Generate REST API docs
+Start a development server with different theme variants:
 
-If you support a project that has a REST API documented using an **OpenAPI 3.0** specification, you can use the Makefile to generate documentation native to this theme. 
+```bash
+# Default variant (theme development)
+make dev
 
-To generate the REST API documentation, you can run the following commands:
+# With debug mode enabled  
+make dev-debug
 
-- `make api-gen <INPUT.YAML> <OUTPUT.JSON>`: This command generates the REST API documentation
+# Specific theme variants (theme development)
+make dev-nvidia       # NVIDIA branding
+make dev-opensource   # Open source styling
+make dev-enterprise   # Enterprise styling
 
-This command runs your OpenAPI 3.0 specification through the `tools/spec-preprocessor.py` script to generate a JSON file that resolves component references in your specification. You can then reference this JSON file in a page to render a REST API documentation page.
+# External theme testing
+make dev-external     # Test as external theme dependency
+```
 
+**What happens:**
+- Starts Hugo development server on `http://localhost:1313`
+- Enables live reload for instant preview of changes
+- Uses development environment (unminified assets)
+- Debug variants enable template debugging panel
+
+**Important:** Development commands (`make dev-*`) include `--themesDir ../..` because the exampleSite is nested within the theme repository. Use `make dev-external` when the theme is installed as an external dependency.
+
+### Theme Variant Testing
+
+Test specific theme configurations:
+
+```bash
+make dev-nvidia       # Test NVIDIA variant
+make dev-opensource   # Test Open Source variant  
+make dev-enterprise   # Test Enterprise variant
+```
+
+Each variant loads:
+- Variant-specific configuration from `config/{variant}/`
+- Brand-specific fonts, colors, and styling
+- Customized logos and organization details
+
+## Production Commands
+
+### Building for Production
+
+Create optimized production builds:
+
+```bash
+# Build specific variants
+make build-default      # Default variant
+make build-nvidia       # NVIDIA variant
+make build-opensource   # Open Source variant
+make build-enterprise   # Enterprise variant
+```
+
+**Production optimizations:**
+- Asset minification and compression
+- CSS/JS bundling and fingerprinting
+- Image optimization
+- SEO enhancements
+
+### Offline Documentation
+
+Build standalone documentation packages:
+
+```bash
+make offline          # Production offline build
+make offline-drafts   # Include draft content
+```
+
+**Output:**
+- Creates `offline-docs.tar.gz` containing complete site
+- Compatible with `file://` protocol for air-gapped environments
+- Includes all assets and dependencies
+
+## Testing & Quality Assurance
+
+### Comprehensive Testing
+
+Test all theme variants:
+
+```bash
+make test-all-variants
+```
+
+**What it tests:**
+- Build success for all variants
+- Configuration validity
+- Template compilation
+- Asset pipeline
+
+### Debug Information
+
+Get system information:
+
+```bash
+make debug-info
+```
+
+**Provides:**
+- Hugo version and build information
+- Module dependency graph
+- Configuration validation
+
+## API Documentation
+
+### OpenAPI Integration
+
+Generate REST API documentation from OpenAPI specifications:
+
+```bash
+# Custom specification
+make api-gen INPUT=your-spec.yaml OUTPUT=processed.json
+
+# Test with example
+make api-gen-test
+```
+
+**Process:**
+1. Runs `tools/spec-preprocessor.py` script
+2. Resolves component references
+3. Generates theme-compatible JSON
+4. Ready for use with `layout: api`
+
+**Usage in content:**
 ```yaml
 ---
-title: Example API (TESTING)
+title: "API Reference"
 layout: api
-reference: "<NAME_OF_FILE>" # /data
+reference: "processed"  # References /data/processed.json
 ---
 ```
 
+## Version Management
 
-### Build offline docs
+### Release Management
 
-If you support a project that customers may need to access offline in an air-gapped environment, you can build your documentation into a `file://` protocol-compatible format that's tarred and zipped for easy distribution. 
+Update version information across documentation:
 
-Your developer colleagues can add this make target to their build process to ensure that they deliver the documentation with the product.
+```bash
+make v-bump P=product_name VDIR=version_dir V=version_number
+```
 
-To build the offline documentation, you can run the following commands:
+**Updates:**
+- Product release frontmatter
+- Supported release tables
+- Version-specific configurations
 
-- `make offline`: This command builds the offline documentation as a `.tar.gz` file
-- `make offline-drafts`: This command builds the offline documentation with drafts as a `.tar.gz` file
+## Configuration Examples
+
+### Environment-Specific Builds
+
+The Makefile properly separates Hugo environments from theme variants:
+
+```bash
+# Development with NVIDIA branding
+make dev-nvidia
+
+# Production build with NVIDIA branding  
+make build-nvidia
+
+# Debug mode with any variant
+make dev-debug
+```
+
+### Custom Configurations
+
+Override default behavior:
+
+```bash
+# Custom config combination
+hugo server --config config/_default,config/nvidia,config/custom
+
+# Environment override
+HUGO_ENVIRONMENT=production make dev-nvidia
+```
+
+### Development Setup Scenarios
+
+**Scenario 1: Theme Development (Nested exampleSite)**
+```bash
+# You're working inside the theme repository
+cd path/to/milodocs/exampleSite
+make dev-nvidia  # Uses --themesDir ../..
+```
+
+**Scenario 2: External Theme Usage**
+```bash
+# You're using the theme as a dependency
+cd your-hugo-site
+make dev-external  # No --themesDir needed
+```
+
+**Scenario 3: Custom Hugo Commands**
+```bash
+# Manual commands for theme development
+hugo server --config config/_default,config/nvidia --themesDir ../..
+
+# Manual commands for external usage
+hugo server --config config/_default,config/nvidia
+```
+
+## Workflow Integration
+
+### Recommended Development Flow
+
+1. **Start with debug mode:**
+   ```bash
+   make dev-debug
+   ```
+
+2. **Test specific variants:**
+   ```bash
+   make dev-nvidia
+   make dev-opensource  
+   ```
+
+3. **Validate before deployment:**
+   ```bash
+   make test-all-variants
+   ```
+
+4. **Build for production:**
+   ```bash
+   make build-nvidia  # or your target variant
+   ```
+
+### CI/CD Integration
+
+Example GitHub Actions workflow:
+
+```yaml
+- name: Test all variants
+  run: make test-all-variants
+  
+- name: Build production
+  run: make build-enterprise
+  
+- name: Create offline package  
+  run: make offline
+```
 
 ## Source code 
 

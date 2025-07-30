@@ -1,18 +1,65 @@
 {
     "id": "{{- with .File }}{{ .UniqueID }}{{ end -}}",
     "title": "{{- if .Title }}{{ .Title }}{{ else }}{{ humanize .File.TranslationBaseName }}{{ end -}}",
+    "linkTitle": "{{- .LinkTitle -}}",
     "description": {{- with .Description }}{{ . | jsonify }}{{ else }}"no description"{{ end -}},
-    "lastCommit": "{{ .GitInfo.AuthorDate }}",
+    "summary": {{- with .Summary }}{{ . | plainify | jsonify }}{{ else }}"no summary"{{ end -}},
+    "lastCommit": "{{- with .GitInfo }}{{ .AuthorDate }}{{ else }}{{ .Date }}{{ end -}}",
     "version": "{{- if .Page.Params.version.isLatest }}latest{{ else }}{{ .Page.Params.version.major }}.{{ .Page.Params.version.minor }}.{{ .Page.Params.version.patch }}{{ end -}}",
     "section": {{- with .Section }}{{ . | jsonify }}{{ else }}"no section"{{ end -}},
     "parent": "{{- with .Parent }}{{ .Title }}{{ else }}no parent{{ end -}}",
+    "currentSection": "{{- with .CurrentSection }}{{ .Title }}{{ else }}no current section{{ end -}}",
+    "firstSection": "{{- with .FirstSection }}{{ .Title }}{{ else }}no first section{{ end -}}",
     "isPage": {{ .IsPage | jsonify }},
     "isSection": {{ .IsSection | jsonify }},
+    "isHome": {{ .IsHome | jsonify }},
     "pageKind": {{- .Kind  | jsonify }},
+    "type": {{- .Type | jsonify }},
+    "layout": {{- with .Layout }}{{ . | jsonify }}{{ else }}"default"{{ end }},
     "bundleType": {{- .BundleType | jsonify }},
     "uri": "{{- .Permalink }}",
     "relURI": "{{- .RelPermalink }}",
     "body": {{ .Plain | jsonify }},
-    {{- if .Page.Params.hidden}}"hidden": "{{- .Params.hidden}}",{{- end}}
-    "tags": [{{- range $tindex, $tag := .Params.tags }}{{- if $tindex }}, {{- end }}"{{- $tag| htmlEscape -}}"{{- end }}]
+    "contentWithoutSummary": {{ .ContentWithoutSummary | plainify | jsonify }},
+    "wordCount": {{ .WordCount }},
+    "fuzzyWordCount": {{ .FuzzyWordCount }},
+    "readingTime": {{ .ReadingTime }},
+    "truncated": {{ .Truncated }},
+    {{- with .Date }}"date": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+    {{- with .PublishDate }}"publishDate": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+    {{- with .Lastmod }}"lastmod": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+    {{- with .ExpiryDate }}"expiryDate": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+    "draft": {{ .Draft }},
+    {{- with .Params.author }}"author": {{ . | jsonify }},{{ end }}
+    {{- with .Keywords }}"keywords": [{{- range $kindex, $keyword := . }}{{- if $kindex }}, {{- end }}{{ $keyword | jsonify }}{{- end }}],{{ end }}
+    {{- with .Weight }}"weight": {{ . }},{{ end }}
+    {{- if .IsTranslated }}"isTranslated": true,
+    "translations": [
+        {{- range $tindex, $translation := .Translations }}
+        {{- if $tindex }}, {{ end }}{
+            "lang": "{{ $translation.Language.Lang }}",
+            "title": "{{ $translation.Title }}",
+            "permalink": "{{ $translation.Permalink }}"
+        }
+        {{- end }}
+    ],{{ end }}
+    {{- with .Resources }}
+    "resources": {
+        "total": {{ len . }},
+        "images": {{ len (.ByType "image") }},
+        "videos": {{ len (.ByType "video") }},
+        "documents": {{ len (.ByType "application") }}
+    },{{ end }}
+    {{- if .TableOfContents }}"hasTableOfContents": true,{{ else }}"hasTableOfContents": false,{{ end }}
+    {{- with .File }}
+    "file": {
+        "path": "{{ .Path }}",
+        "logicalName": "{{ .LogicalName }}",
+        "translationBaseName": "{{ .TranslationBaseName }}",
+        "contentBaseName": "{{ .ContentBaseName }}",
+        "ext": "{{ .Ext }}",
+        "lang": "{{ $.Language.Lang }}"
+    },{{ end }}
+    {{- if .Page.Params.hidden}}"hidden": {{ .Params.hidden }},{{- end}}
+    "tags": [{{- range $tindex, $tag := .Params.tags }}{{- if $tindex }}, {{- end }}{{ $tag | jsonify }}{{- end }}]
 }

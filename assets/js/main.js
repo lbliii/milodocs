@@ -1,8 +1,25 @@
 console.log('🚀 MiloDocs theme loaded - optimized for stellar UX');
 
-// Enhanced initialization system
+// Environment-aware initialization system
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📱 Initializing MiloDocs UX enhancements...');
+    // Get Hugo environment data
+    const env = window.HugoEnvironment || {};
+    const environment = env.environment || 'development';
+    const isProduction = env.isProduction || false;
+    const debug = env.debug || false;
+    
+    // Environment-specific console output
+    if (debug) {
+        console.group(`🚀 MiloDocs ${env.version || 'unknown'} - ${environment.toUpperCase()}`);
+        console.log('🌍 Environment:', environment);
+        console.log('⚡ Production Mode:', isProduction);
+        console.log('🐛 Debug Mode:', debug);
+        console.log('📍 Base URL:', env.baseURL);
+        console.log('⏰ Build Time:', new Date(parseInt(env.buildTime)));
+        console.groupEnd();
+    } else if (!isProduction) {
+        console.log(`📱 Initializing MiloDocs UX enhancements (${environment})...`);
+    }
     
     // Initialize performance optimizations
     if (typeof initPerformanceOptimizations === 'function') {
@@ -18,9 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips and micro-interactions
     initializeMicroInteractions();
     
+    // Environment-specific features
+    initializeEnvironmentFeatures(environment, debug);
+    
     // Copy code functionality is handled by article-clipboard.js
     
-    console.log('✅ MiloDocs UX enhancements ready');
+    if (!isProduction) {
+        console.log('✅ MiloDocs UX enhancements ready');
+    }
 });
 
 function initializeSVGIcons() {
@@ -146,4 +168,110 @@ function createRippleEffect(e) {
 
 // Copy code functionality is handled by article-clipboard.js
 // This avoids duplicate copy buttons and conflicting event handlers
+
+// Environment-specific feature initialization
+function initializeEnvironmentFeatures(environment, debug) {
+    // Add environment-specific CSS class
+    document.body.classList.add(`env-${environment}`);
+    
+    // Environment-specific optimizations
+    switch(environment) {
+        case 'nvidia':
+            initializeNvidiaFeatures();
+            break;
+        case 'open-source':
+            initializeOpenSourceFeatures();
+            break;
+        case 'enterprise':
+            initializeEnterpriseFeatures();
+            break;
+        default:
+            initializeDefaultFeatures();
+    }
+    
+    // Debug-specific features
+    if (debug) {
+        initializeDebugFeatures();
+    }
+}
+
+// NVIDIA-specific features
+function initializeNvidiaFeatures() {
+    document.documentElement.style.setProperty('--brand-primary', '#76b900');
+    
+    if (window.HugoEnvironment?.isProduction) {
+        console.log('🎯 NVIDIA features initialized');
+    }
+}
+
+// Open Source-specific features  
+function initializeOpenSourceFeatures() {
+    document.documentElement.style.setProperty('--brand-primary', '#ff6b6b');
+    initializeCommunityFeatures();
+}
+
+// Enterprise-specific features
+function initializeEnterpriseFeatures() {
+    document.documentElement.style.setProperty('--brand-primary', '#6366f1');
+    initializeComplianceFeatures();
+}
+
+// Default features
+function initializeDefaultFeatures() {
+    document.documentElement.style.setProperty('--brand-primary', '#3b82f6');
+}
+
+// Debug-specific features
+function initializeDebugFeatures() {
+    window.hugoDebug = {
+        environment: window.HugoEnvironment,
+        performance: {
+            getMetrics: () => performance.getEntriesByType('navigation')[0],
+            getResources: () => performance.getEntriesByType('resource')
+        },
+        theme: {
+            version: window.HugoEnvironment?.version,
+            features: ['debug-panel', 'template-inspector', 'performance-monitor']
+        }
+    };
+    
+    // Debug keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey) {
+            switch(e.key) {
+                case 'P': // Performance metrics
+                    console.table(window.hugoDebug.performance.getMetrics());
+                    break;
+                case 'R': // Resource timing
+                    console.table(window.hugoDebug.performance.getResources());
+                    break;
+                case 'E': // Environment info
+                    console.table(window.HugoEnvironment);
+                    break;
+            }
+        }
+    });
+}
+
+// Community features for open source
+function initializeCommunityFeatures() {
+    if (typeof window !== 'undefined') {
+        window.communityFeatures = {
+            githubIntegration: true,
+            contributionGuide: true,
+            issueTracking: true
+        };
+    }
+}
+
+// Enterprise compliance features
+function initializeComplianceFeatures() {
+    if (typeof window !== 'undefined') {
+        window.enterpriseFeatures = {
+            complianceTracking: true,
+            auditLogging: window.HugoEnvironment?.isProduction,
+            securityHeaders: true
+        };
+    }
+}
 

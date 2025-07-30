@@ -6,7 +6,7 @@
 {{/* Iterate over the ordered keys */}}
 {{range $index, $key := $orderedKeys}}
     {{- with index $methodDetails $key -}}
-    <div class="my-4">
+    <div class="my-4" data-component="api-method-detail" data-method-key="{{ $key }}">
         {{- if and (ne $key "security") (ne $key "description") (ne $key "requestBody") -}}
         <h4>{{ $key | humanize | title }}</h4>
         {{- end -}}

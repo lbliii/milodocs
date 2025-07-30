@@ -339,21 +339,7 @@
     100% { background-position: -200% 0; }
   }
 
-  /* Smooth page transitions */
-  body {
-    @apply transition-opacity duration-300;
-  }
-
-  .page-transition-enter {
-    @apply opacity-0;
-    transform: translateY(20px);
-  }
-
-  .page-transition-enter-active {
-    @apply opacity-100;
-    transform: translateY(0);
-    @apply transition-all duration-300;
-  }
+  /* Page transitions removed - caused flicker with static site navigation */
 
   /* Ripple effect for buttons */
   button {

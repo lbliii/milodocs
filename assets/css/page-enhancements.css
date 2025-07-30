@@ -1,0 +1,153 @@
+/* Page Enhancement Styles - Additional styling for new Hugo page method features */
+
+/* Table of Contents enhancements */
+.toc ol {
+  @apply list-decimal list-inside space-y-1 ml-4;
+}
+
+.toc ul {
+  @apply list-disc list-inside space-y-1 ml-4;
+}
+
+.toc li {
+  @apply text-blue-800 hover:text-blue-600;
+}
+
+.toc a {
+  @apply text-blue-800 hover:text-blue-600 text-sm leading-relaxed;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  @apply underline;
+}
+
+/* Reading progress bar animation */
+#progress-bar {
+  transition: width 0.3s ease-out;
+}
+
+/* Language switcher dropdown animation */
+.language-switcher .hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.language-switcher .block {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced metadata grid responsive improvements */
+@media (max-width: 768px) {
+  .metadata-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Page resources hover effects */
+.page-resources img {
+  transition: transform 0.2s ease-in-out;
+}
+
+.page-resources .group:hover img {
+  transform: scale(1.05);
+}
+
+/* Related content cards */
+.related-content-card {
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.related-content-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Content status indicators */
+.content-warning {
+  border-left-width: 4px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.content-warning.draft {
+  @apply border-yellow-400 bg-yellow-50;
+}
+
+.content-warning.expired {
+  @apply border-red-400 bg-red-50;
+}
+
+/* Enhanced pagination */
+.pagination a:focus,
+.pagination span:focus {
+  @apply ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Improved list metadata badges */
+.metadata-badge {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.metadata-badge.draft {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.metadata-badge.has-resources {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Responsive improvements for mobile */
+@media (max-width: 640px) {
+  .toc {
+    @apply text-xs;
+  }
+  
+  .language-switcher {
+    @apply relative;
+  }
+  
+  .page-resources .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .related-content .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print styles for better documentation printing */
+@media print {
+  .toc {
+    @apply border-0 bg-transparent;
+  }
+  
+  .language-switcher,
+  .page-resources,
+  .related-content {
+    display: none;
+  }
+  
+  .content-warning {
+    @apply border-gray-400 bg-gray-100;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .page-resources img,
+  .related-content-card,
+  #progress-bar,
+  .language-switcher .hidden,
+  .language-switcher .block {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Focus improvements for keyboard navigation */
+.toc a:focus,
+.related-content a:focus,
+.page-resources a:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2 rounded;
+}
