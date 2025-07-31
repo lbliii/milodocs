@@ -7,6 +7,126 @@
 {{- end -}}
 
 {{- define "content" -}}
+{{/*
+  REFACTORED NOTEBOOK LAYOUT
+  Modern, accessible, and modular approach using dedicated partials and components
+  Features: Collapsible cells, modern copy functionality, proper theming, accessibility
+*/}}
+
+      <article id="articleContent" 
+               class="notebook-container" 
+               data-component="notebook-progressive-reveal">
+  
+  {{- $notebookPath := .Params.notebook_path -}}
+  {{- with resources.Get $notebookPath -}}
+    {{- $resource := . -}}
+    {{- $content := $resource.Content | safeHTML -}}
+    {{- with $content | transform.Unmarshal -}}
+      {{- $decodedNotebook := . -}}
+      
+      <div class="notebook" 
+           data-notebook-id="{{ .Permalink | base64Encode }}"
+           data-cell-count="{{ len $decodedNotebook.cells }}">
+        
+        {{/* Notebook header with title, description, and metadata */}}
+        {{ partial "notebook/header.html" . }}
+        
+        {{/* Performance notice for large notebooks */}}
+        {{ if gt (len $decodedNotebook.cells) 10 }}
+          <div class="notebook__performance-notice">
+            <div class="notice notice--info">
+              <div class="notice__content">
+                <strong>📓 Large Notebook Detected</strong><br>
+                This notebook has {{ len $decodedNotebook.cells }} cells. For better performance, cells will load progressively as you scroll.
+              </div>
+            </div>
+          </div>
+        {{ end }}
+        
+        {{/* Remove the heavy JSON data - pagination handles this now */}}
+        
+        {{/* All cells rendered by Hugo, hidden by default */}}
+        <div class="notebook__cells">
+          {{ range $index, $cell := $decodedNotebook.cells }}
+            {{/* Add hidden class to all cells except first few */}}
+            {{ $isInitiallyVisible := lt $index 5 }}
+            <div class="notebook-cell-wrapper{{ if not $isInitiallyVisible }} notebook-cell--hidden{{ end }}" 
+                 data-cell-index="{{ $index }}">
+              {{ if eq $cell.cell_type "markdown" }}
+                {{ partial "notebook/cell-markdown.html" (dict "cell" $cell "index" $index) }}
+              {{ else if eq $cell.cell_type "code" }}
+                {{ partial "notebook/cell-code.html" (dict "cell" $cell "index" $index) }}
+              {{ else if eq $cell.cell_type "raw" }}
+                {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
+              {{ else }}
+                {{/* Unknown cell type - render as raw */}}
+                {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+        
+        {{/* Simple metadata for JavaScript */}}
+        <script type="application/json" id="notebook-metadata">
+        {
+          "totalCells": {{ len $decodedNotebook.cells }},
+          "initiallyVisible": 5,
+          "batchSize": 20
+        }
+        </script>
+        
+        {{/* No templates needed - Hugo renders everything server-side */}}
+      </div>
+      
+    {{- else -}}
+      {{- errorf "Failed to unmarshal notebook: %s" $notebookPath -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf "Failed to get notebook resource: %s" $notebookPath -}}
+    {{- errorf "Current working directory: %s" (os.Getwd) -}}
+  {{- end -}}
+</article>
+
+{{/* Include the toggleCollapse function for notebook cells */}}
+<script>
+// Only define the function once
+if (typeof window.toggleCollapse === 'undefined') {
+    window.toggleCollapse = function(id) {
+        const collapse = document.getElementById(id);
+        if (!collapse) return;
+        
+        const header = collapse.querySelector('.collapse__header');
+        const isExpanded = collapse.classList.contains('expanded');
+        
+        if (isExpanded) {
+            collapse.classList.remove('expanded');
+            header.setAttribute('aria-expanded', 'false');
+        } else {
+            collapse.classList.add('expanded');
+            header.setAttribute('aria-expanded', 'true');
+        }
+    };
+}
+</script>
+
+{{/*
+  LEGACY IMPLEMENTATION - COMMENTED OUT FOR REMOVAL
+  
+  The old implementation below has been replaced with the modern approach above.
+  This can be safely removed after testing confirms the new implementation works correctly.
+  
+  Issues with the old implementation:
+  - Inline JavaScript (onclick="copyCodeToClipboard(this)")
+  - Hardcoded Tailwind classes mixed in templates
+  - No accessibility features
+  - No collapsible cells
+  - No proper component structure
+  - Repetitive source concatenation logic
+  - No proper error handling for outputs
+  - No theming support
+*/}}
+
+{{/*
 <div id="articleContent" class="p-4">
     {{- $notebookPath := .Params.notebook_path -}}
     {{- with resources.Get $notebookPath -}}
@@ -98,6 +218,7 @@
         {{- errorf "Current working directory: %s" (os.Getwd) -}}
     {{- end -}}
 </div>
+*/}}
 {{- end -}}
 
 {{- define "sidebar-right" -}}

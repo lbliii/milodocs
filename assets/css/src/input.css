@@ -15,17 +15,25 @@
 @import "../components/next-prev.css";
 @import "../components/tutorial.css";
 @import "../components/toast.css";
+@import "../components/notebook.css";
 
 @tailwind base;
 
 @layer base {
 
-  /* Smooth theme transitions - only when not loading */
+  /* Optimized theme transitions - selective rather than global */
   html:not(.no-transitions) {
     transition: color-scheme 0.3s ease;
   }
   
-  html:not(.no-transitions) * {
+  /* Apply transitions only to specific elements that need them */
+  html:not(.no-transitions) .btn,
+  html:not(.no-transitions) .nav-link,
+  html:not(.no-transitions) .card,
+  html:not(.no-transitions) .collapse__header,
+  html:not(.no-transitions) .search-container,
+  html:not(.no-transitions) .toast-notification,
+  html:not(.no-transitions) .theme-transition {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
   

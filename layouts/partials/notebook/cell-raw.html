@@ -1,0 +1,70 @@
+{{/*
+  Notebook Raw Cell Partial
+  Renders a raw cell with unprocessed content
+  
+  Context: dict with "cell" (cell data) and "index" (cell index)
+  Usage: {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
+*/}}
+
+{{ $cell := .cell }}
+{{ $index := .index }}
+{{ $cellId := printf "cell-raw-%d" $index }}
+
+<section class="collapse expanded notebook-cell notebook-cell--raw" 
+         id="{{ $cellId }}"
+         data-cell-type="raw" 
+         data-cell-index="{{ $index }}"
+         style="--cell-index: {{ $index }}">
+  
+  <div class="collapse__header notebook-cell__header" 
+       onclick="toggleCollapse('{{ $cellId }}')"
+       role="button"
+       tabindex="0"
+       aria-expanded="true"
+       aria-controls="{{ $cellId }}-body"
+       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse('{{ $cellId }}');}">
+    
+    <div class="collapse__icon-wrapper">
+      <svg class="collapse__icon" 
+           xmlns="http://www.w3.org/2000/svg" 
+           fill="none" 
+           viewBox="0 0 24 24" 
+           stroke-width="2.5" 
+           stroke="currentColor"
+           aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </div>
+    
+    <div class="collapse__content-wrapper">
+      <div class="notebook-cell__type">
+        <span class="notebook-cell__type-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM7 4.25A.75.75 0 018.75 4h.5a.75.75 0 01.75.75v2.5a.75.75 0 01-.75.75h-.5A.75.75 0 017 7.25v-3zm1 7.25a1 1 0 100-2 1 1 0 000 2z"/>
+          </svg>
+        </span>
+        <h3 class="notebook-cell__type-text">Raw Cell</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="collapse__body" 
+       id="{{ $cellId }}-body"
+       role="region"
+       aria-labelledby="{{ $cellId }}-header">
+    <div class="collapse__body-content">
+      {{/*
+        Process raw cell source
+        Concatenate source lines and display as raw text
+      */}}
+      {{ $source := "" }}
+      {{ range $cell.source }}
+        {{ $source = printf "%s%s" $source . }}
+      {{ end }}
+      
+      <div class="notebook-cell__raw-content">
+        <pre><code>{{ $source }}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>

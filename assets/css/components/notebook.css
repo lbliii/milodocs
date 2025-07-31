@@ -1,0 +1,744 @@
+/**
+ * Notebook Component Styles
+ * Modern, accessible styling for Jupyter notebook rendering
+ * Supports theming, responsive design, and interactive features
+ */
+
+/* ========================================
+   Core Notebook Container
+   ======================================== */
+
+.notebook {
+  /* Inherit existing theme variables */
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  background: var(--color-bg-primary);
+  border-radius: theme('borderRadius.lg');
+  overflow: hidden;
+  
+  /* Performance optimizations */
+  contain: layout style;
+  will-change: background-color;
+}
+
+/* ========================================
+   Progressive Cell Visibility
+   ======================================== */
+
+.notebook-cell-wrapper {
+  /* CSS containment for performance isolation */
+  contain: layout style paint;
+  /* No transitions on wrapper to avoid layout issues */
+}
+
+.notebook-cell--hidden {
+  display: none !important;
+}
+
+.notebook-cell--revealing {
+  display: block !important;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: revealCell 300ms ease-out forwards;
+}
+
+@keyframes revealCell {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   Notebook Header
+   ======================================== */
+
+.notebook__header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--notebook-border);
+  background: var(--notebook-bg);
+}
+
+.notebook__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.notebook__description {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.notebook__metadata {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.notebook__metadata-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--toggle-bg);
+  color: var(--toggle-text);
+  border-radius: theme('borderRadius.md');
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ========================================
+   Notebook Cells Container
+   ======================================== */
+
+.notebook__cells {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ========================================
+   Individual Cell Styling (extends existing collapse)
+   ======================================== */
+
+.notebook-cell.collapse {
+  /* Notebook-specific styling for cells */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+}
+
+/* ========================================
+   Cell Headers (extends existing collapse headers)
+   ======================================== */
+
+.notebook-cell__header.collapse__header {
+  /* Notebook-specific header styling */
+  padding: 1rem 1.5rem;
+}
+
+.notebook-cell__type {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.notebook-cell__type-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.8;
+  color: var(--color-brand);
+}
+
+.notebook-cell__type-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.notebook-cell__execution-indicator {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  font-family: theme('fontFamily.mono');
+  margin-left: 0.5rem;
+}
+
+/* ========================================
+   Cell Content (extends existing collapse body)
+   ======================================== */
+
+.notebook-cell .collapse__body-content {
+  padding: 1.5rem;
+}
+
+/* ========================================
+   Markdown Cells
+   ======================================== */
+
+.notebook-cell--markdown .notebook-cell__type-icon {
+  color: theme('colors.green.600');
+}
+
+.notebook-cell__markdown-content {
+  line-height: 1.7;
+}
+
+.notebook-cell__markdown-content h1,
+.notebook-cell__markdown-content h2,
+.notebook-cell__markdown-content h3,
+.notebook-cell__markdown-content h4,
+.notebook-cell__markdown-content h5,
+.notebook-cell__markdown-content h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+
+.notebook-cell__markdown-content p {
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+
+.notebook-cell__markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+.notebook-cell__markdown-content ul,
+.notebook-cell__markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.notebook-cell__markdown-content code {
+  background: var(--color-bg-secondary);
+  color: var(--color-brand);
+  padding: 0.125rem 0.375rem;
+  border-radius: theme('borderRadius.sm');
+  font-size: 0.875em;
+  font-family: theme('fontFamily.mono');
+}
+
+/* ========================================
+   Code Cells
+   ======================================== */
+
+.notebook-cell--code .notebook-cell__type-icon {
+  color: theme('colors.blue.600');
+}
+
+.notebook-cell__code-container {
+  position: relative;
+  background: var(--color-bg-secondary);
+  border-radius: theme('borderRadius.lg');
+  overflow: hidden;
+  border: 1px solid var(--color-border-primary);
+}
+
+.notebook-cell__code-content {
+  position: relative;
+  background: var(--color-bg-secondary);
+  overflow-x: auto;
+}
+
+.notebook-cell__code-content pre {
+  margin: 0;
+  padding: 1rem;
+  background: transparent;
+  font-family: theme('fontFamily.mono');
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.notebook-cell__code-content code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* ========================================
+   Copy Button (uses existing button styles)
+   ======================================== */
+
+.notebook-cell__code-content .copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.notebook-cell__code-container:hover .copy-code,
+.copy-code:focus {
+  opacity: 1;
+}
+
+/* ========================================
+   Cell Outputs
+   ======================================== */
+
+.notebook-cell__outputs {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.notebook-cell__output {
+  border-radius: theme('borderRadius.lg');
+  overflow: hidden;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface);
+}
+
+/* Stream Output */
+.notebook-cell__output--stream {
+  background: var(--color-bg-secondary);
+  color: theme('colors.green.400');
+  padding: 1rem;
+  font-family: theme('fontFamily.mono');
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.notebook-cell__output--stream pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Execute Result Output */
+.notebook-cell__output--execute-result {
+  padding: 1rem;
+}
+
+.notebook-cell__output--execute-result .html-output {
+  margin-bottom: 1rem;
+}
+
+.notebook-cell__output--execute-result .html-output:last-child {
+  margin-bottom: 0;
+}
+
+.notebook-cell__output--execute-result .text-output {
+  font-family: theme('fontFamily.mono');
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Display Data Output */
+.notebook-cell__output--display-data {
+  padding: 1rem;
+}
+
+.notebook-cell__output--display-data img {
+  max-width: 100%;
+  height: auto;
+  border-radius: theme('borderRadius.md');
+  box-shadow: theme('boxShadow.sm');
+}
+
+/* Error Output */
+.notebook-cell__output--error {
+  background: theme('colors.red.900');
+  color: theme('colors.red.100');
+  border-color: theme('colors.red.700');
+  padding: 1rem;
+}
+
+.notebook-cell__error-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: theme('colors.red.300');
+}
+
+.notebook-cell__error-value {
+  margin-bottom: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.notebook-cell__error-traceback {
+  font-family: theme('fontFamily.mono');
+  font-size: 0.875rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.notebook-cell__traceback-line {
+  padding: 0.125rem 0;
+  border-left: 2px solid theme('colors.red.500');
+  padding-left: 0.75rem;
+  margin: 0.25rem 0;
+}
+
+/* ========================================
+   Raw Cells
+   ======================================== */
+
+.notebook-cell--raw .notebook-cell__type-icon {
+  color: theme('colors.purple.600');
+}
+
+.notebook-cell__raw-content {
+  background: var(--color-bg-secondary);
+  border-radius: theme('borderRadius.md');
+  padding: 1rem;
+  border: 1px solid var(--color-border-primary);
+}
+
+.notebook-cell__raw-content pre {
+  margin: 0;
+  font-family: theme('fontFamily.mono');
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.notebook-cell__raw-content code {
+  background: transparent;
+  padding: 0;
+  color: var(--color-text-primary);
+}
+
+/* ========================================
+   Loading States and Performance Indicators
+   ======================================== */
+
+.notebook__performance-notice {
+  margin-bottom: 1.5rem;
+}
+
+.notebook-cell-wrapper {
+  /* Wrapper for lazy-loaded cells */
+  margin-bottom: 1.5rem;
+}
+
+.notebook-cell--lazy {
+  /* Hidden cells waiting to be loaded */
+  display: none;
+}
+
+.notebook-load-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 2rem;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notebook-completion-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 2rem;
+  background: var(--color-surface);
+  border-radius: theme('borderRadius.lg');
+}
+
+/* ========================================
+   Light Mode Enhancements
+   ======================================== */
+
+.notebook {
+  /* Light mode is the default - already uses CSS variables */
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.notebook-cell.collapse {
+  /* Light mode cell styling */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  /* Add theme transition only to cells that need it */
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.notebook-cell.collapse:hover {
+  /* Enhanced light mode hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.notebook-cell__code-container {
+  /* Light mode code styling */
+  background: theme('colors.gray.50');
+  border: 1px solid theme('colors.gray.200');
+  
+  /* Optimize for theme transitions */
+  contain: layout style paint;
+}
+
+.notebook-cell__code-content {
+  background: theme('colors.gray.50');
+}
+
+.notebook-cell__output--stream {
+  /* Light mode stream output */
+  background: theme('colors.gray.900');
+  color: theme('colors.green.400');
+}
+
+.notebook-cell__output--error {
+  /* Light mode error output */
+  background: theme('colors.red.50');
+  color: theme('colors.red.900');
+  border-color: theme('colors.red.200');
+}
+
+.notebook-cell__output--error .notebook-cell__error-name {
+  color: theme('colors.red.700');
+}
+
+.notebook-cell__traceback-line {
+  border-left-color: theme('colors.red.400');
+}
+
+/* ========================================
+   Dark Theme Support
+   ======================================== */
+
+.dark .notebook {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dark .notebook-cell.collapse {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.dark .notebook-cell.collapse:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.dark .notebook-cell__code-container {
+  background: theme('colors.gray.900');
+  border-color: theme('colors.gray.700');
+}
+
+.dark .notebook-cell__code-content {
+  background: theme('colors.gray.900');
+}
+
+.dark .notebook-cell__output--error {
+  background: theme('colors.red.900');
+  color: theme('colors.red.100');
+  border-color: theme('colors.red.700');
+}
+
+.dark .notebook-cell__output--error .notebook-cell__error-name {
+  color: theme('colors.red.300');
+}
+
+.dark .notebook-cell__traceback-line {
+  border-left-color: theme('colors.red.500');
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  .notebook {
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+  }
+  
+  .notebook__header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .notebook__title {
+    font-size: 1.5rem;
+  }
+  
+  .notebook__description {
+    font-size: 1rem;
+  }
+  
+  .notebook__cells {
+    gap: 1rem;
+  }
+  
+  .notebook-cell .collapse__body-content {
+    padding: 1rem;
+  }
+  
+  .notebook-cell__code-content pre {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .notebook-cell__code-content .copy-code {
+    position: static;
+    margin-top: 0.5rem;
+    opacity: 1;
+    align-self: flex-start;
+  }
+  
+  .notebook__performance-notice {
+    margin: 0 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .notebook__metadata {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .notebook-cell__header.collapse__header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .notebook-cell .collapse__body-content {
+    padding: 0.75rem;
+  }
+  
+  .notebook-cell__code-content pre {
+    padding: 0.5rem;
+  }
+  
+  .notebook-cell__type-text {
+    font-size: 0.875rem;
+  }
+  
+  .notebook__performance-notice {
+    margin: 0 0.75rem 1rem;
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .notebook {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+    margin: 0;
+  }
+  
+  .notebook-cell .copy-code,
+  .collapse__icon-wrapper,
+  .notebook__performance-notice,
+  .notebook-load-trigger,
+  .notebook-completion-indicator {
+    display: none !important;
+  }
+  
+  .notebook-cell.collapse:not(.expanded) .collapse__body {
+    display: block !important;
+  }
+  
+  .notebook-cell {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+  }
+  
+  .notebook-cell__outputs {
+    break-inside: avoid;
+  }
+  
+  .notebook-cell__code-content {
+    background: #f8f9fa !important;
+    color: #333 !important;
+  }
+  
+  .notebook-cell__output--stream {
+    background: #f0f0f0 !important;
+    color: #333 !important;
+  }
+}
+
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .notebook-cell,
+  .notebook-cell__toggle,
+  .notebook-cell__copy-btn,
+  .notebook-cell__toggle-icon {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .notebook {
+    --notebook-border: theme('colors.gray.900');
+    --cell-border: theme('colors.gray.800');
+    --cell-hover-border: theme('colors.blue.700');
+    --cell-active-border: theme('colors.blue.600');
+  }
+  
+  .dark .notebook {
+    --notebook-border: theme('colors.gray.100');
+    --cell-border: theme('colors.gray.300');
+    --cell-hover-border: theme('colors.blue.300');
+    --cell-active-border: theme('colors.blue.400');
+  }
+}
+
+/* ========================================
+   Animation Keyframes
+   ======================================== */
+
+@keyframes notebook-cell-enter {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes copy-success {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes copy-error {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-0.25rem); }
+  75% { transform: translateX(0.25rem); }
+}
+
+/* ========================================
+   Entry Animations
+   ======================================== */
+
+.notebook-cell {
+  animation: notebook-cell-enter 0.4s ease-out;
+  animation-delay: calc(var(--cell-index, 0) * 0.1s);
+  animation-fill-mode: both;
+}
+
+.notebook-cell__copy-btn--success {
+  animation: copy-success 0.3s ease-out;
+}
+
+.notebook-cell__copy-btn--error {
+  animation: copy-error 0.3s ease-out;
+}

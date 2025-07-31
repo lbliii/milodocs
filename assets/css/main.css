@@ -3699,6 +3699,10 @@ table tr:hover {
   opacity: 1;
 }
 /* Resource Card Styles */
+
+  html:not(.no-transitions) .resource-card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
 .resource-card {
   position: relative;
   background: linear-gradient(
@@ -3874,6 +3878,10 @@ table tr:hover {
   white-space: nowrap;
 }
 /* Article Card Styles */
+
+  html:not(.no-transitions) .article-card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
 .article-card {
   position: relative;
   background: linear-gradient(
@@ -6302,6 +6310,648 @@ h1[id]::before {
 .toast-notification:nth-child(2) { z-index: 9998; top: 5.5rem; }
 .toast-notification:nth-child(3) { z-index: 9997; top: 9.5rem; }
 .toast-notification:nth-child(4) { z-index: 9996; top: 13.5rem; }
+/**
+ * Notebook Component Styles
+ * Modern, accessible styling for Jupyter notebook rendering
+ * Supports theming, responsive design, and interactive features
+ */
+/* ========================================
+   Core Notebook Container
+   ======================================== */
+.notebook {
+  /* Inherit existing theme variables */
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  background: var(--color-bg-primary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  
+  /* Performance optimizations */
+  contain: layout style;
+  will-change: background-color;
+}
+/* ========================================
+   Progressive Cell Visibility
+   ======================================== */
+.notebook-cell-wrapper {
+  /* CSS containment for performance isolation */
+  contain: layout style paint;
+  /* No transitions on wrapper to avoid layout issues */
+}
+.notebook-cell--hidden {
+  display: none !important;
+}
+.notebook-cell--revealing {
+  display: block !important;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: revealCell 300ms ease-out forwards;
+}
+@keyframes revealCell {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ========================================
+   Notebook Header
+   ======================================== */
+.notebook__header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--notebook-border);
+  background: var(--notebook-bg);
+}
+.notebook__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+.notebook__description {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  margin: 0;
+  line-height: 1.5;
+}
+.notebook__metadata {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.notebook__metadata-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--toggle-bg);
+  color: var(--toggle-text);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+/* ========================================
+   Notebook Cells Container
+   ======================================== */
+.notebook__cells {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+/* ========================================
+   Individual Cell Styling (extends existing collapse)
+   ======================================== */
+.notebook-cell.collapse {
+  /* Notebook-specific styling for cells */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+}
+/* ========================================
+   Cell Headers (extends existing collapse headers)
+   ======================================== */
+.notebook-cell__header.collapse__header {
+  /* Notebook-specific header styling */
+  padding: 1rem 1.5rem;
+}
+.notebook-cell__type {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.notebook-cell__type-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.8;
+  color: var(--color-brand);
+}
+.notebook-cell__type-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.notebook-cell__execution-indicator {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  margin-left: 0.5rem;
+}
+/* ========================================
+   Cell Content (extends existing collapse body)
+   ======================================== */
+.notebook-cell .collapse__body-content {
+  padding: 1.5rem;
+}
+/* ========================================
+   Markdown Cells
+   ======================================== */
+.notebook-cell--markdown .notebook-cell__type-icon {
+  color: #16a34a;
+}
+.notebook-cell__markdown-content {
+  line-height: 1.7;
+}
+.notebook-cell__markdown-content h1,
+.notebook-cell__markdown-content h2,
+.notebook-cell__markdown-content h3,
+.notebook-cell__markdown-content h4,
+.notebook-cell__markdown-content h5,
+.notebook-cell__markdown-content h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+.notebook-cell__markdown-content p {
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+.notebook-cell__markdown-content p:last-child {
+  margin-bottom: 0;
+}
+.notebook-cell__markdown-content ul,
+.notebook-cell__markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+.notebook-cell__markdown-content code {
+  background: var(--color-bg-secondary);
+  color: var(--color-brand);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.125rem;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+/* ========================================
+   Code Cells
+   ======================================== */
+.notebook-cell--code .notebook-cell__type-icon {
+  color: #2563eb;
+}
+.notebook-cell__code-container {
+  position: relative;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-border-primary);
+}
+.notebook-cell__code-content {
+  position: relative;
+  background: var(--color-bg-secondary);
+  overflow-x: auto;
+}
+.notebook-cell__code-content pre {
+  margin: 0;
+  padding: 1rem;
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.notebook-cell__code-content code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+/* ========================================
+   Copy Button (uses existing button styles)
+   ======================================== */
+.notebook-cell__code-content .copy-code {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.notebook-cell__code-container:hover .copy-code,
+.copy-code:focus {
+  opacity: 1;
+}
+/* ========================================
+   Cell Outputs
+   ======================================== */
+.notebook-cell__outputs {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.notebook-cell__output {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface);
+}
+/* Stream Output */
+.notebook-cell__output--stream {
+  background: var(--color-bg-secondary);
+  color: #4ade80;
+  padding: 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.notebook-cell__output--stream pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+/* Execute Result Output */
+.notebook-cell__output--execute-result {
+  padding: 1rem;
+}
+.notebook-cell__output--execute-result .html-output {
+  margin-bottom: 1rem;
+}
+.notebook-cell__output--execute-result .html-output:last-child {
+  margin-bottom: 0;
+}
+.notebook-cell__output--execute-result .text-output {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+/* Display Data Output */
+.notebook-cell__output--display-data {
+  padding: 1rem;
+}
+.notebook-cell__output--display-data img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+/* Error Output */
+.notebook-cell__output--error {
+  background: #7f1d1d;
+  color: #fee2e2;
+  border-color: #b91c1c;
+  padding: 1rem;
+}
+.notebook-cell__error-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #fca5a5;
+}
+.notebook-cell__error-value {
+  margin-bottom: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.notebook-cell__error-traceback {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+.notebook-cell__traceback-line {
+  padding: 0.125rem 0;
+  border-left: 2px solid #ef4444;
+  padding-left: 0.75rem;
+  margin: 0.25rem 0;
+}
+/* ========================================
+   Raw Cells
+   ======================================== */
+.notebook-cell--raw .notebook-cell__type-icon {
+  color: #9333ea;
+}
+.notebook-cell__raw-content {
+  background: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border-primary);
+}
+.notebook-cell__raw-content pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.notebook-cell__raw-content code {
+  background: transparent;
+  padding: 0;
+  color: var(--color-text-primary);
+}
+/* ========================================
+   Loading States and Performance Indicators
+   ======================================== */
+.notebook__performance-notice {
+  margin-bottom: 1.5rem;
+}
+.notebook-cell-wrapper {
+  /* Wrapper for lazy-loaded cells */
+  margin-bottom: 1.5rem;
+}
+.notebook-cell--lazy {
+  /* Hidden cells waiting to be loaded */
+  display: none;
+}
+.notebook-load-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 2rem;
+}
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.notebook-completion-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 2rem;
+  background: var(--color-surface);
+  border-radius: 0.5rem;
+}
+/* ========================================
+   Light Mode Enhancements
+   ======================================== */
+.notebook {
+  /* Light mode is the default - already uses CSS variables */
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.02);
+}
+.notebook-cell.collapse {
+  /* Light mode cell styling */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  /* Add theme transition only to cells that need it */
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.notebook-cell.collapse:hover {
+  /* Enhanced light mode hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+.notebook-cell__code-container {
+  /* Light mode code styling */
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  
+  /* Optimize for theme transitions */
+  contain: layout style paint;
+}
+.notebook-cell__code-content {
+  background: #f9fafb;
+}
+.notebook-cell__output--stream {
+  /* Light mode stream output */
+  background: #111827;
+  color: #4ade80;
+}
+.notebook-cell__output--error {
+  /* Light mode error output */
+  background: #fef2f2;
+  color: #7f1d1d;
+  border-color: #fecaca;
+}
+.notebook-cell__output--error .notebook-cell__error-name {
+  color: #b91c1c;
+}
+.notebook-cell__traceback-line {
+  border-left-color: #f87171;
+}
+/* ========================================
+   Dark Theme Support
+   ======================================== */
+.dark .notebook {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.dark .notebook-cell.collapse {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.dark .notebook-cell.collapse:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+.dark .notebook-cell__code-container {
+  background: #111827;
+  border-color: #374151;
+}
+.dark .notebook-cell__code-content {
+  background: #111827;
+}
+.dark .notebook-cell__output--error {
+  background: #7f1d1d;
+  color: #fee2e2;
+  border-color: #b91c1c;
+}
+.dark .notebook-cell__output--error .notebook-cell__error-name {
+  color: #fca5a5;
+}
+.dark .notebook-cell__traceback-line {
+  border-left-color: #ef4444;
+}
+/* ========================================
+   Responsive Design
+   ======================================== */
+@media (max-width: 768px) {
+  .notebook {
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+  }
+  
+  .notebook__header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .notebook__title {
+    font-size: 1.5rem;
+  }
+  
+  .notebook__description {
+    font-size: 1rem;
+  }
+  
+  .notebook__cells {
+    gap: 1rem;
+  }
+  
+  .notebook-cell .collapse__body-content {
+    padding: 1rem;
+  }
+  
+  .notebook-cell__code-content pre {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .notebook-cell__code-content .copy-code {
+    position: static;
+    margin-top: 0.5rem;
+    opacity: 1;
+    align-self: flex-start;
+  }
+  
+  .notebook__performance-notice {
+    margin: 0 1rem 1.5rem;
+  }
+}
+@media (max-width: 480px) {
+  .notebook__metadata {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .notebook-cell__header.collapse__header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .notebook-cell .collapse__body-content {
+    padding: 0.75rem;
+  }
+  
+  .notebook-cell__code-content pre {
+    padding: 0.5rem;
+  }
+  
+  .notebook-cell__type-text {
+    font-size: 0.875rem;
+  }
+  
+  .notebook__performance-notice {
+    margin: 0 0.75rem 1rem;
+  }
+}
+/* ========================================
+   Print Styles
+   ======================================== */
+@media print {
+  .notebook {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    -moz-column-break-inside: avoid;
+         break-inside: avoid;
+    margin: 0;
+  }
+  
+  .notebook-cell .copy-code,
+  .collapse__icon-wrapper,
+  .notebook__performance-notice,
+  .notebook-load-trigger,
+  .notebook-completion-indicator {
+    display: none !important;
+  }
+  
+  .notebook-cell.collapse:not(.expanded) .collapse__body {
+    display: block !important;
+  }
+  
+  .notebook-cell {
+    -moz-column-break-inside: avoid;
+         break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+  }
+  
+  .notebook-cell__outputs {
+    -moz-column-break-inside: avoid;
+         break-inside: avoid;
+  }
+  
+  .notebook-cell__code-content {
+    background: #f8f9fa !important;
+    color: #333 !important;
+  }
+  
+  .notebook-cell__output--stream {
+    background: #f0f0f0 !important;
+    color: #333 !important;
+  }
+}
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  .notebook-cell,
+  .notebook-cell__toggle,
+  .notebook-cell__copy-btn,
+  .notebook-cell__toggle-icon {
+    transition: none;
+  }
+}
+@media (prefers-contrast: high) {
+  .notebook {
+    --notebook-border: #111827;
+    --cell-border: #1f2937;
+    --cell-hover-border: #1d4ed8;
+    --cell-active-border: #2563eb;
+  }
+  
+  .dark .notebook {
+    --notebook-border: #f3f4f6;
+    --cell-border: #d1d5db;
+    --cell-hover-border: #93c5fd;
+    --cell-active-border: #60a5fa;
+  }
+}
+/* ========================================
+   Animation Keyframes
+   ======================================== */
+@keyframes notebook-cell-enter {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes copy-success {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+@keyframes copy-error {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-0.25rem); }
+  75% { transform: translateX(0.25rem); }
+}
+/* ========================================
+   Entry Animations
+   ======================================== */
+.notebook-cell {
+  animation: notebook-cell-enter 0.4s ease-out;
+  animation-delay: calc(var(--cell-index, 0) * 0.1s);
+  animation-fill-mode: both;
+}
+.notebook-cell__copy-btn--success {
+  animation: copy-success 0.3s ease-out;
+}
+.notebook-cell__copy-btn--error {
+  animation: copy-error 0.3s ease-out;
+}
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -6735,11 +7385,18 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
-/* Smooth theme transitions - only when not loading */
+/* Optimized theme transitions - selective rather than global */
 html:not(.no-transitions) {
     transition: color-scheme 0.3s ease;
   }
-html:not(.no-transitions) * {
+/* Apply transitions only to specific elements that need them */
+html:not(.no-transitions) .btn,
+  html:not(.no-transitions) .nav-link,
+  html:not(.no-transitions) .card,
+  html:not(.no-transitions) .collapse__header,
+  html:not(.no-transitions) .search-container,
+  html:not(.no-transitions) .toast-notification,
+  html:not(.no-transitions) .theme-transition {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 /* Disable transitions during page load to prevent flash */
@@ -7119,6 +7776,14 @@ button:focus-visible,
   transition-duration: 300ms;
 }
 /* Loading states */
+.loading-spinner {
+    border: 2px solid var(--color-border-primary);
+    border-top: 2px solid var(--color-brand);
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 9999px;
+    animation: spin 1s linear infinite;
+  }
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;

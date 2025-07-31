@@ -15,6 +15,8 @@ export const componentRegistry = {
   'article-toc': () => import('./article/TOC.js'),
   'article-tiles': () => import('./article/Tiles.js'),
   'article-summarization': () => import('./article/Summarization.js'),
+  'notebook-progressive-reveal': () => import('./article/NotebookProgressiveReveal.js'),
+
   
   // Layout components
   'theme': () => import('./layout/Theme.js'),
@@ -102,6 +104,8 @@ export function registerAllComponents() {
     'article-tiles',
     'article-header',
     'article-summarization',
+    'notebook-progressive-reveal', // Progressive reveal for notebook cells
+
     'glossary',
     'chat-toc-toggle',
     'tutorial-manager',

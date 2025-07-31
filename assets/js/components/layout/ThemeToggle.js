@@ -23,6 +23,11 @@ export class ThemeToggle extends Component {
       lightModeHome: null,
       darkModeHome: null
     };
+    
+    // Performance optimizations
+    this.isToggling = false;
+    this.debounceTimeout = null;
+    this.pendingTheme = null;
   }
 
   async onInit() {
@@ -90,25 +95,47 @@ export class ThemeToggle extends Component {
   /**
    * Toggle between light and dark themes
    */
-  toggleTheme() {
+    toggleTheme() {
+    // Prevent rapid toggles that can cause performance issues
+    if (this.isToggling) {
+      return;
+    }
+    
+    this.isToggling = true;
+    
+    // Temporarily disable transitions for immediate feedback
+    document.documentElement.classList.add('no-transitions');
+    
     const isDarkMode = document.documentElement.classList.toggle('dark');
     
     // Save preference
-          localStorage.set(this.themeKey, isDarkMode ? 'dark' : 'light');
+    if (this.storage) {
+      this.storage.set(this.themeKey, isDarkMode ? 'dark' : 'light');
+    }
     
-    // Update UI
+    // Update UI immediately for responsiveness
     this.updateUI();
-    this.updateIconSources();
     
-    // Emit events for other components
-    this.emit('theme:changed', { isDarkMode, theme: isDarkMode ? 'dark' : 'light' });
-    
-    // Dispatch global custom event for backward compatibility
-    document.dispatchEvent(new CustomEvent('themeChanged', { 
-      detail: { isDarkMode } 
-    }));
-    
-    console.log(`Theme switched to: ${isDarkMode ? 'dark' : 'light'}`);
+    // Use requestAnimationFrame for smooth updates
+    requestAnimationFrame(() => {
+      this.updateIconSources();
+      
+      // Re-enable transitions after a short delay
+      setTimeout(() => {
+        document.documentElement.classList.remove('no-transitions');
+        this.isToggling = false;
+      }, 50);
+      
+      // Emit events for other components
+      this.emit('theme:changed', { isDarkMode, theme: isDarkMode ? 'dark' : 'light' });
+      
+      // Dispatch global custom event for backward compatibility
+      document.dispatchEvent(new CustomEvent('themeChanged', { 
+        detail: { isDarkMode } 
+      }));
+      
+      console.log(`🎨 Theme switched to: ${isDarkMode ? 'dark' : 'light'} (optimized)`);
+    });
   }
 
   /**

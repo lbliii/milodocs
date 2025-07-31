@@ -1,0 +1,57 @@
+{{/*
+  Notebook Header Partial
+  Renders the notebook title, description, and metadata
+  
+  Context: Page context with notebook data
+  Usage: {{ partial "notebook/header.html" . }}
+*/}}
+
+<header class="notebook__header">
+  <div class="notebook__title-section">
+    <h1 class="notebook__title">{{ .Title }}</h1>
+    {{ with .Description }}
+      <p class="notebook__description">{{ . }}</p>
+    {{ end }}
+  </div>
+  
+  {{ if .Params.notebook_metadata | or .Date | or .Params.jupyter_version }}
+    <div class="notebook__metadata">
+      {{ with .Date }}
+        <div class="notebook__metadata-item">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM7 4.25A.75.75 0 018.75 4h.5a.75.75 0 01.75.75v2.5a.75.75 0 01-.75.75h-.5A.75.75 0 017 7.25v-3zm1 7.25a1 1 0 100-2 1 1 0 000 2z"/>
+          </svg>
+          <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "January 2, 2006" }}</time>
+        </div>
+      {{ end }}
+      
+      {{ with .Params.jupyter_version }}
+        <div class="notebook__metadata-item">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM9 6H7V4h2v2zm0 6H7V8h2v4z"/>
+          </svg>
+          <span>Jupyter {{ . }}</span>
+        </div>
+      {{ end }}
+      
+      {{ with .Params.kernel }}
+        <div class="notebook__metadata-item">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M4.72 9.47L1.25 6l3.47-3.47a.75.75 0 00-1.06-1.06L.19 4.94a1.25 1.25 0 000 1.76l3.47 3.47a.75.75 0 101.06-1.06zm6.56 0L14.75 6l-3.47-3.47a.75.75 0 111.06-1.06l3.47 3.47a1.25 1.25 0 010 1.76l-3.47 3.47a.75.75 0 01-1.06-1.06z"/>
+          </svg>
+          <span>{{ . }}</span>
+        </div>
+      {{ end }}
+      
+      {{ $notebookPath := .Params.notebook_path }}
+      {{ with resources.Get $notebookPath }}
+        <div class="notebook__metadata-item">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M2 2a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V2zm8.5 0h-5A1.5 1.5 0 004 3.5V14a1 1 0 001 1h6a1 1 0 001-1V3.5A1.5 1.5 0 0010.5 2z"/>
+          </svg>
+          <span>{{ math.Round (div .Content | len 1024) }}KB</span>
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+</header>
