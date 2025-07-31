@@ -5,6 +5,20 @@
 
 set -e
 
+echo "Installing dependencies for markup renderers..."
+
+# Install Python dependencies (for RST support)
+if [ -f "requirements.txt" ]; then
+    echo "Installing Python dependencies..."
+    pip install -r requirements.txt
+fi
+
+# Install Ruby dependencies (for AsciiDoc support)
+if [ -f "Gemfile" ]; then
+    echo "Installing Ruby dependencies..."
+    bundle install
+fi
+
 echo "Setting up theme for cloud deployment..."
 
 # Create themes directory if it doesn't exist
