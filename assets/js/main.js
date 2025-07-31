@@ -25,6 +25,10 @@ async function initializeMiloDocs() {
     await setupGlobalUtilities();
     
     console.log('🎉 MiloDocs fully initialized');
+    console.log('💡 Debug utilities:');
+    console.log('  - window.resetNavigation() - Reset sidebar state');
+    console.log('  - window.debugSidebar() - Debug sidebar info + auto-fix');
+    console.log('  - window.debugComponents() - Show all registered components');
     
   } catch (error) {
     console.error('❌ MiloDocs initialization failed:', error);
@@ -47,6 +51,82 @@ function initializeLegacySupport() {
   window.createRippleEffect = async (element, event) => {
     const { createRipple } = await import('./utils/dom.js');
     createRipple(element, event);
+  };
+  
+  // Navigation debug utilities
+  window.resetNavigation = () => {
+    const { ComponentManager } = milo.core;
+    const sidebar = ComponentManager.getInstances('navigation-sidebar-left')[0];
+    if (sidebar && sidebar.reset) {
+      sidebar.reset();
+      console.log('🔧 Navigation reset successfully');
+    } else {
+      console.warn('⚠️ Sidebar component not found or reset method not available');
+    }
+  };
+  
+  // Enhanced debug utilities
+  window.debugSidebar = () => {
+    const { ComponentManager } = milo.core;
+    const sidebar = ComponentManager.getInstances('navigation-sidebar-left')[0];
+    const sidebarElement = document.getElementById('sidebar-left');
+    const overlay = document.getElementById('mobileNavOverlay');
+    const header = document.querySelector('.sidebar-header');
+    
+    console.group('🔍 Sidebar Debug Info');
+    console.log('Window width:', window.innerWidth);
+    console.log('Is mobile:', window.innerWidth < 768);
+    console.log('Sidebar component:', sidebar);
+    console.log('Sidebar isOpen:', sidebar?.isOpen);
+    console.log('Sidebar element:', sidebarElement);
+    console.log('Sidebar classes:', sidebarElement?.className);
+    console.log('Header element:', header);
+    console.log('Header display:', header ? getComputedStyle(header).display : 'not found');
+    console.log('Overlay element:', overlay);
+    console.log('Overlay classes:', overlay?.className);
+    console.log('Body overflow:', document.body.style.overflow);
+    console.groupEnd();
+    
+    // Auto-fix if needed
+    if (sidebar && sidebar.checkAndSetProperState) {
+      console.log('🔧 Auto-fixing sidebar state...');
+      sidebar.checkAndSetProperState();
+    }
+  };
+  
+  // Component registration debug utility
+  window.debugComponents = () => {
+    const { ComponentManager } = milo.core;
+    
+    console.group('📦 Component Registration Status');
+    console.log('Registered components:', Array.from(ComponentManager.components.keys()));
+    console.log('Active instances:', Array.from(ComponentManager.instances.keys()).map(id => {
+      const instance = ComponentManager.instances.get(id);
+      return {
+        id,
+        name: instance.name,
+        initialized: instance.isInitialized,
+        element: instance.element?.tagName || 'none'
+      };
+    }));
+    
+    // Check for unregistered components in DOM
+    const elementsWithComponents = document.querySelectorAll('[data-component]');
+    const unregistered = [];
+    elementsWithComponents.forEach(el => {
+      const componentName = el.getAttribute('data-component');
+      if (!ComponentManager.components.has(componentName)) {
+        unregistered.push(componentName);
+      }
+    });
+    
+    if (unregistered.length > 0) {
+      console.warn('⚠️ Unregistered components found:', [...new Set(unregistered)]);
+    } else {
+      console.log('✅ All DOM components are registered');
+    }
+    
+    console.groupEnd();
   };
   
   // Legacy notification system

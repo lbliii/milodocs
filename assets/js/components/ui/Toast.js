@@ -3,7 +3,7 @@
  * Dedicated, clean toast notification system
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
 
 export class Toast extends Component {
   constructor(config = {}) {
@@ -173,5 +173,4 @@ export class Toast extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('toast', Toast);

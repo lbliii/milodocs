@@ -3,7 +3,7 @@
  * Handles sidebar navigation with expand/collapse functionality
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
 
 export class Sidebar extends Component {
   constructor(config = {}) {
@@ -17,6 +17,8 @@ export class Sidebar extends Component {
     this.currentPath = window.location.pathname;
     this.isInitialized = false;
     this.linkTreeElement = null;
+    this.isOpen = false; // Track mobile sidebar state
+    this.resizeTimeout = null; // For debouncing resize events
   }
 
   async onInit() {
@@ -43,6 +45,12 @@ export class Sidebar extends Component {
     this.setupEventListeners();
     this.expandCurrentPath();
     this.setupAccessibility();
+    
+    // Initialize mobile sidebar state based on current CSS classes
+    this.initializeMobileState();
+    
+    // Ensure sidebar is closed on desktop view and properly positioned
+    this.ensureProperState();
     
     // Mark as initialized for animations
     this.element.classList.add('initialized');
@@ -202,6 +210,141 @@ export class Sidebar extends Component {
   }
 
   /**
+   * Initialize mobile sidebar state
+   */
+  initializeMobileState() {
+    // Check if sidebar is currently open based on CSS classes
+    this.isOpen = this.element.classList.contains('translate-x-0') && 
+                  !this.element.classList.contains('-translate-x-full');
+    
+    console.log('Sidebar: Initial mobile state -', this.isOpen ? 'open' : 'closed');
+    console.log('Sidebar: Current classes -', this.element.className);
+  }
+
+  /**
+   * Ensure proper sidebar state based on screen size
+   */
+  ensureProperState() {
+    // Force proper state based on screen size
+    this.checkAndSetProperState();
+    
+    // Listen for window resize to handle responsive behavior
+    window.addEventListener('resize', () => {
+      // Debounce resize events
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
+        this.checkAndSetProperState();
+      }, 150);
+    });
+  }
+
+  /**
+   * Check screen size and set appropriate state
+   */
+  checkAndSetProperState() {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // On mobile: ensure sidebar starts closed
+      this.forceClose();
+      console.log('Sidebar: Forced mobile state (closed)');
+    } else {
+      // On desktop: ensure sidebar is visible but close mobile controls
+      this.ensureDesktopVisible();
+      console.log('Sidebar: Ensured desktop state (visible)');
+    }
+  }
+
+  /**
+   * Ensure sidebar is properly visible on desktop
+   */
+  ensureDesktopVisible() {
+    // Remove mobile transform classes
+    this.element.classList.remove('-translate-x-full', 'translate-x-0');
+    // Set open state to false (no mobile overlay needed)
+    this.isOpen = false;
+    
+    // Hide overlay if it exists
+    const overlay = document.getElementById('mobileNavOverlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+    
+    // Reset body overflow
+    document.body.style.overflow = '';
+  }
+
+  /**
+   * Open mobile sidebar
+   */
+  open() {
+    if (this.isOpen) return;
+    
+    this.element.classList.remove('-translate-x-full');
+    this.element.classList.add('translate-x-0');
+    this.isOpen = true;
+    
+    this.emit('sidebar:opened');
+    console.log('Sidebar: Mobile sidebar opened');
+  }
+
+  /**
+   * Close mobile sidebar
+   */
+  close() {
+    if (!this.isOpen) return;
+    
+    this.element.classList.add('-translate-x-full');
+    this.element.classList.remove('translate-x-0');
+    this.isOpen = false;
+    
+    this.emit('sidebar:closed');
+    console.log('Sidebar: Mobile sidebar closed');
+  }
+
+  /**
+   * Force close sidebar (useful for cleanup)
+   */
+  forceClose() {
+    this.element.classList.add('-translate-x-full');
+    this.element.classList.remove('translate-x-0');
+    this.isOpen = false;
+    
+    this.emit('sidebar:closed');
+    console.log('Sidebar: Mobile sidebar force closed');
+  }
+
+  /**
+   * Toggle mobile sidebar
+   */
+  toggle() {
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
+  /**
+   * Reset sidebar to initial state (useful for debugging)
+   */
+  reset() {
+    this.forceClose();
+    
+    // Also hide overlay if it exists
+    const overlay = document.getElementById('mobileNavOverlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+    
+    // Reset body overflow
+    document.body.style.overflow = '';
+    
+    console.log('Sidebar: Reset to initial state');
+    this.emit('sidebar:reset');
+  }
+
+  /**
    * Component cleanup
    */
   onDestroy() {
@@ -210,5 +353,4 @@ export class Sidebar extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('navigation-sidebar-left', Sidebar);

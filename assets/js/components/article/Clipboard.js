@@ -4,7 +4,7 @@
  * Migrated from article-clipboard.js with improvements
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
 import { copyToClipboard, $$ } from '../../utils/index.js';
 
 export class ArticleClipboard extends Component {
@@ -292,5 +292,4 @@ export class ArticleClipboard extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('article-clipboard', ArticleClipboard);

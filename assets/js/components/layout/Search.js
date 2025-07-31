@@ -3,7 +3,8 @@
  * Extensible search foundation with support for multiple search backends
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { SearchFilter } from '../ui/SearchFilter.js';
 import { debounce } from '../../utils/dom.js';
 
 export class Search extends Component {
@@ -34,6 +35,9 @@ export class Search extends Component {
     this.debouncedSearch = null;
     this.currentQuery = '';
     this.isSearching = false;
+    
+    // Initialize SearchFilter component
+    this.searchFilter = null;
   }
 
   async onInit() {
@@ -99,6 +103,11 @@ export class Search extends Component {
    * Handle input events
    */
   handleInput(e) {
+    if (!e || !e.target || typeof e.target.value !== 'string') {
+      console.warn('Search: Invalid input event', e);
+      return;
+    }
+    
     const query = e.target.value.trim();
     this.currentQuery = query;
 
@@ -210,8 +219,8 @@ export class Search extends Component {
       // Initialize Lunr index
       this.lunrIndexPromise = this.fetchAndBuildIndex();
       
-      // Setup filter dropdown if available
-      this.setupFilterDropdown();
+      // Initialize SearchFilter component
+      this.initializeSearchFilter();
 
       console.log('Search: Lunr backend ready');
       this.emit('search:backendReady', { backend: 'lunr' });
@@ -295,9 +304,12 @@ export class Search extends Component {
 
       // Perform Lunr search
       const results = idx.search(query);
+      console.log(`Lunr search found ${results.length} results for "${query}"`);
       
       // Transform results to our format
-      return this.transformLunrResults(results, documents);
+      const transformedResults = this.transformLunrResults(results, documents);
+      console.log('Transformed results:', transformedResults);
+      return transformedResults;
       
     } catch (error) {
       console.error('Search: Lunr search failed:', error);
@@ -327,10 +339,11 @@ export class Search extends Component {
         return { idx: null, documents: [] };
       }
 
-      // Build Lunr index
+      // Build Lunr index - fix binding issue
+      const lunrConfig = this.lunrConfig;
       const idx = lunr(function () {
-        this.ref(this.lunrConfig?.ref || 'id');
-        const fields = this.lunrConfig?.fields || ['title', 'description', 'body', 'section', 'category'];
+        this.ref(lunrConfig?.ref || 'id');
+        const fields = lunrConfig?.fields || ['title', 'description', 'body', 'section', 'category'];
         fields.forEach(field => {
           this.field(field);
         });
@@ -338,7 +351,7 @@ export class Search extends Component {
         documents.forEach(function (doc) {
           this.add(doc);
         }, this);
-      }.bind({ lunrConfig: this.lunrConfig }));
+      });
 
       console.log(`Search: Lunr index built with ${documents.length} documents`);
       return { idx, documents };
@@ -350,199 +363,406 @@ export class Search extends Component {
   }
 
   /**
-   * Setup filter dropdown with categories
+   * Initialize SearchFilter component
    */
-  setupFilterDropdown() {
+  initializeSearchFilter() {
     if (!this.lunrIndexPromise) return;
 
+    // Create SearchFilter instance
+    this.searchFilter = new SearchFilter({
+      filterField: this.filterConfig.field,
+      displayName: this.filterConfig.displayName,
+      onFilterChange: (filterValue) => this.handleFilterChange(filterValue),
+      onFilterReady: (filterValues) => {
+        this.emit('search:filterReady', { filterValues, totalDocuments: this.documents?.length || 0 });
+      }
+    });
+
+    // Initialize filter when documents are ready
     this.lunrIndexPromise.then(({ documents }) => {
-      const filterSelect = document.getElementById('filterSelect');
-      if (!filterSelect) return;
-
-      // Get unique filter values
-      const filterValues = [...new Set(
-        documents.map(doc => doc[this.filterConfig.field])
-          .filter(value => value !== null && value !== undefined)
-      )].sort();
-
-      // Helper function to convert to display text
-      const toDisplayText = (value) => {
-        return value
-          .split(/[-_]/)
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' ');
-      };
-
-      // Clear existing options (except first one which might be "All")
-      const firstOption = filterSelect.firstElementChild;
-      filterSelect.innerHTML = '';
-      if (firstOption) {
-        filterSelect.appendChild(firstOption);
+      this.documents = documents;
+      if (this.searchFilter) {
+        this.searchFilter.initializeWithDocuments(documents);
       }
-
-      // Add filter options
-      filterValues.forEach(value => {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = toDisplayText(value);
-        filterSelect.appendChild(option);
-      });
-
-      // Set default filter if available
-      const filterContainer = document.getElementById('filterContainer');
-      if (filterContainer) {
-        const defaultFilter = filterContainer.getAttribute('data-category');
-        if (defaultFilter && filterValues.includes(defaultFilter)) {
-          filterSelect.value = defaultFilter;
-        }
-      }
-
-      // Update filter label
-      const filterLabel = document.querySelector('label[for="filterSelect"]');
-      if (filterLabel) {
-        filterLabel.textContent = this.filterConfig.displayName;
-      }
-
-      // Add filter change listener
-      filterSelect.addEventListener('change', () => {
-        this.handleFilterChange();
-      });
-
-      this.emit('search:filterReady', { filterValues });
     });
   }
 
   /**
    * Handle filter dropdown changes
    */
-  handleFilterChange() {
-    if (this.currentQuery) {
+  handleFilterChange(filterValue = null) {
+    // Get filter value from parameter or SearchFilter component
+    const currentFilter = filterValue || this.searchFilter?.getCurrentFilter()?.value || '';
+    
+    // Re-run search with current query and new filter
+    if (this.currentQuery && this.currentQuery.length >= this.minQueryLength) {
       this.debouncedSearch(this.currentQuery);
+    } else if (currentFilter) {
+      // If no query but filter is set, show filtered results
+      this.showFilteredResults(currentFilter);
+    } else {
+      // Clear results if no query and no filter
+      this.hideSearchMode();
+    }
+    
+    this.emit('search:filterChanged', {
+      filter: currentFilter,
+      filterInfo: this.searchFilter?.getCurrentFilter() || null
+    });
+  }
+
+  /**
+   * Show filtered results without search query
+   */
+  async showFilteredResults(filterValue) {
+    if (!this.lunrIndexPromise) return;
+    
+    try {
+      const { documents } = await this.lunrIndexPromise;
+      
+      // Use SearchFilter component to filter documents
+      const filteredDocs = this.searchFilter ? 
+        this.searchFilter.filterDocuments(documents) :
+        documents.filter(doc => doc[this.filterConfig.field] === filterValue);
+      
+      if (filteredDocs.length === 0) {
+        this.displayNoResults(`No documents in ${this.formatDisplayText(filterValue)}`);
+        return;
+      }
+      
+      // Create pseudo-results for all documents in the filtered section
+      const pseudoResults = filteredDocs.map(doc => ({ ref: doc.id, score: 1 }));
+      
+      // Transform and display
+      const groupedResults = this.transformLunrResults(pseudoResults, documents);
+      const filterInfo = this.searchFilter?.getCurrentFilter() || { displayText: this.formatDisplayText(filterValue) };
+      
+      this.displayResults(groupedResults, `${this.filterConfig.displayName}: ${filterInfo.displayText}`);
+      this.showSearchMode();
+      
+      this.emit('search:filterResults', {
+        filter: filterValue,
+        count: filteredDocs.length,
+        filterInfo
+      });
+    } catch (error) {
+      console.error('Filter results failed:', error);
+      this.displayError('Failed to filter results. Please try again.');
     }
   }
 
   /**
-   * Transform Lunr results to standard format
+   * Transform Lunr results to sophisticated grouped format
    */
   transformLunrResults(results, documents) {
-    const transformedResults = [];
-    
+    const groupedResults = {};
+
     results.forEach(result => {
       const doc = documents.find(d => d.id === result.ref);
       if (doc) {
-        transformedResults.push({
-          title: doc.title,
-          description: doc.description,
-          url: doc.relURI || doc.url,
-          parent: doc.section || doc.parent || 'Other',
-          section: doc.section,
-          category: doc.category,
-          score: result.score
+        const sectionKey = doc.section || 'Other';
+        if (!groupedResults[sectionKey]) {
+          groupedResults[sectionKey] = {};
+        }
+
+        const parentKey = doc.parent || doc.currentSection || 'No Parent';
+        if (!groupedResults[sectionKey][parentKey]) {
+          groupedResults[sectionKey][parentKey] = [];
+        }
+
+        // Rich document object with all Hugo data
+        groupedResults[sectionKey][parentKey].push({
+          ...doc,
+          score: result.score,
+          searchResult: true
         });
       }
     });
 
-    // Apply current filter if set
-    const filterSelect = document.getElementById('filterSelect');
-    if (filterSelect && filterSelect.value) {
-      const selectedFilter = filterSelect.value;
-      return transformedResults.filter(result => 
-        result[this.filterConfig.field] === selectedFilter
-      );
+    // Apply current filter if set via SearchFilter component
+    if (this.searchFilter) {
+      const currentFilter = this.searchFilter.getCurrentFilter();
+      if (currentFilter.value) {
+        return this.filterResultsBySection(groupedResults, currentFilter.value);
+      }
     }
 
-    return transformedResults;
+    return groupedResults;
   }
 
   /**
    * Get placeholder results for demo/fallback
    */
   getPlaceholderResults(query) {
-    return [
-      {
-        title: `Search results for "${query}"`,
-        description: 'Search functionality is not yet configured. This is a placeholder result.',
-        url: '#',
-        parent: 'System'
+    // Return grouped format to match displayResults expectations
+    return {
+      'System': {
+        'Search': [
+          {
+            title: `Search results for "${query}"`,
+            description: 'Search functionality is not yet configured. This is a placeholder result.',
+            relURI: '#',
+            url: '#',
+            parent: 'Search',
+            section: 'System',
+            score: 1
+          }
+        ]
       }
-    ];
+    };
   }
 
   /**
-   * Display search results
+   * Display search results with sophisticated grouping
    */
-  displayResults(results, query) {
+  displayResults(groupedResults, query) {
     if (!this.searchResultsContainer) return;
 
-    if (results.length === 0) {
+    // Debug logging
+    console.log('displayResults called with:', { groupedResults, query });
+
+    // Handle empty results
+    if (!groupedResults || Object.keys(groupedResults).length === 0) {
       this.displayNoResults(query);
       return;
     }
 
-    const groupedResults = this.groupResultsByParent(results);
-    const resultsHTML = Object.keys(groupedResults).map(parent => {
-      const parentResults = groupedResults[parent];
-      const parentHTML = parentResults.map(result => `
-        <a href="${result.url || '#'}" class="block">
-          <div class="mb-4 text-black hover:bg-brand hover:text-white rounded-lg p-4 my-2 bg-zinc-100 transition duration-300 shadow-md">
-            <h3 class="text-lg font-bold">${result.title}</h3>
-            <p class="text-sm">${result.description || ''}</p>
-          </div>
-        </a>
-      `).join('');
+    // Calculate total results for display
+    const totalResults = Object.values(groupedResults).reduce((total, sections) => {
+      return total + Object.values(sections).reduce((sectionTotal, items) => {
+        return sectionTotal + items.length;
+      }, 0);
+    }, 0);
 
-      return `
-        <div class="mb-8">
-          <h2 class="text-xl font-bold text-black">${parent}</h2>
-          ${parentHTML}
+    // Create sophisticated results HTML matching design system
+    const resultsHTML = Object.keys(groupedResults).map(section => {
+      const sectionData = groupedResults[section];
+      const sectionResultCount = Object.values(sectionData).reduce((count, items) => count + items.length, 0);
+      
+      const categoryHTML = `
+        <div class="search-section animate-fadeIn">
+          <div class="search-section-header">
+            <div class="search-section-badge">
+              ${sectionResultCount}
+            </div>
+            <h2 class="search-section-title">
+              ${this.formatDisplayText(section)}
+            </h2>
+          </div>
+          ${this.renderSectionGroups(sectionData)}
         </div>
       `;
-    });
+      
+      return categoryHTML;
+    }).join('');
 
-    this.searchResultsContainer.innerHTML = resultsHTML.join('');
+    // Add sophisticated results header with count and animation
+    const headerHTML = `
+      <div class="search-results-header">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1>Found ${totalResults} result${totalResults !== 1 ? 's' : ''}</h1>
+            <p>Search results for "<span class="font-medium">${query}</span>"</p>
+          </div>
+          <div class="search-stats">
+            <div>${Object.keys(groupedResults).length} section${Object.keys(groupedResults).length !== 1 ? 's' : ''}</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.searchResultsContainer.innerHTML = headerHTML + resultsHTML;
+    
+    // Add click tracking and micro interactions
+    this.addResultInteractions();
+    
+    this.emit('search:resultsDisplayed', { 
+      query, 
+      totalResults, 
+      sections: Object.keys(groupedResults).length 
+    });
   }
 
   /**
-   * Display no results message
+   * Display no results message with sophisticated styling
    */
   displayNoResults(query) {
     if (!this.searchResultsContainer) return;
     
     this.searchResultsContainer.innerHTML = `
-      <div class="text-center py-8">
-        <h2 class="text-xl font-bold text-gray-600 mb-2">No results found</h2>
-        <p class="text-gray-500">No results found for "${query}". Try different keywords.</p>
+      <div class="search-no-results">
+        <span class="emoji">🔍</span>
+        <h2>No results found</h2>
+        <p>No results found for "<span class="font-medium">${query}</span>"</p>
+        <div>Try different keywords or explore our documentation sections.</div>
       </div>
     `;
   }
 
   /**
-   * Display error message
+   * Display error message with sophisticated styling
    */
   displayError(message) {
     if (!this.searchResultsContainer) return;
     
     this.searchResultsContainer.innerHTML = `
-      <div class="text-center py-8">
-        <h2 class="text-xl font-bold text-red-600 mb-2">Search Error</h2>
-        <p class="text-red-500">${message}</p>
+      <div class="search-error">
+        <span class="emoji">⚠️</span>
+        <h2>Search Error</h2>
+        <p>${message}</p>
+        <button onclick="window.location.reload()">
+          Try Again
+        </button>
       </div>
     `;
   }
 
   /**
-   * Group results by parent category
+   * Filter grouped results by section
    */
-  groupResultsByParent(results) {
-    const grouped = {};
-    results.forEach(result => {
-      const parent = result.parent || 'Other';
-      if (!grouped[parent]) {
-        grouped[parent] = [];
+  filterResultsBySection(groupedResults, section) {
+    if (!groupedResults[section]) {
+      return {};
+    }
+    return {
+      [section]: groupedResults[section]
+    };
+  }
+
+  /**
+   * Format text for display with smart transformations
+   */
+  formatDisplayText(value) {
+    if (!value) return 'Other';
+    return value
+      .split(/[-_]/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  /**
+   * Render section groups with sophisticated styling matching design system
+   */
+  renderSectionGroups(sectionData) {
+    return Object.keys(sectionData).map(parent => {
+      const parentResults = sectionData[parent];
+      
+      // Ensure parentResults is an array
+      if (!Array.isArray(parentResults)) {
+        console.warn('Expected parentResults to be an array, got:', typeof parentResults, parentResults);
+        return '';
       }
-      grouped[parent].push(result);
+      
+      const parentHTML = `
+        <div class="search-parent-group">
+          <h3>${this.formatDisplayText(parent)}</h3>
+          <div class="space-y-3">
+            ${parentResults.map(result => this.renderSearchHit(result)).join('')}
+          </div>
+        </div>
+      `;
+      
+      return parentHTML;
+    }).join('');
+  }
+
+  /**
+   * Render individual search hit with sophisticated styling matching design system
+   */
+  renderSearchHit(result) {
+    const description = result.description || result.summary || 'No description available.';
+    const lastCommit = result.lastCommit ? new Date(result.lastCommit).toLocaleDateString() : '';
+    const wordCount = result.wordCount || 0;
+    const readingTime = result.readingTime || Math.ceil(wordCount / 200);
+    
+    return `
+      <a href="${result.relURI || result.url || '#'}" 
+         class="search-hit" 
+         data-section="${result.section || ''}" 
+         data-parent="${result.parent || ''}">
+        <div class="search-hit-content">
+          
+          <!-- Hit Header -->
+          <div class="search-hit-header">
+            <div class="flex-1">
+              <div class="search-hit-section">
+                ${this.formatDisplayText(result.section || '')}
+              </div>
+              <h4 class="search-hit-title">
+                ${result.title || 'Untitled'}
+              </h4>
+            </div>
+            ${result.score ? `<div class="search-hit-score">
+                               ${Math.round(result.score * 100)}%
+                             </div>` : ''}
+          </div>
+          
+          <!-- Hit Description -->
+          <p class="search-hit-description">
+            ${this.truncateText(description, 150)}
+          </p>
+          
+          <!-- Hit Metadata -->
+          <div class="search-hit-metadata">
+            <div class="flex items-center space-x-4">
+              ${readingTime ? `<span>📖 ${readingTime} min read</span>` : ''}
+              ${wordCount ? `<span>📝 ${wordCount} words</span>` : ''}
+            </div>
+            ${lastCommit ? `<span>📅 ${lastCommit}</span>` : ''}
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  /**
+   * Truncate text with smart word boundaries
+   */
+  truncateText(text, maxLength) {
+    if (!text || text.length <= maxLength) return text;
+    const truncated = text.substr(0, maxLength);
+    const lastSpace = truncated.lastIndexOf(' ');
+    return (lastSpace > 0 ? truncated.substr(0, lastSpace) : truncated) + '...';
+  }
+
+  /**
+   * Add interactive behaviors to search results
+   */
+  addResultInteractions() {
+    const searchHits = this.searchResultsContainer.querySelectorAll('.search-hit');
+    
+    searchHits.forEach(hit => {
+      // Hover effects
+      hit.addEventListener('mouseenter', () => {
+        hit.querySelector('.search-hit-content').style.transform = 'translateY(-1px)';
+        hit.querySelector('.search-hit-content').style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+      });
+      
+      hit.addEventListener('mouseleave', () => {
+        hit.querySelector('.search-hit-content').style.transform = 'translateY(0)';
+        hit.querySelector('.search-hit-content').style.boxShadow = '';
+      });
+      
+      // Click tracking
+      hit.addEventListener('click', (e) => {
+        const section = hit.getAttribute('data-section');
+        const parent = hit.getAttribute('data-parent');
+        const title = hit.querySelector('.search-hit-title').textContent;
+        
+        this.emit('search:resultClicked', {
+          section,
+          parent,
+          title,
+          url: hit.href
+        });
+        
+        // Visual feedback
+        hit.style.opacity = '0.7';
+        setTimeout(() => {
+          hit.style.opacity = '1';
+        }, 150);
+      });
     });
-    return grouped;
   }
 
   /**
@@ -655,5 +875,4 @@ export class Search extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('search', Search);

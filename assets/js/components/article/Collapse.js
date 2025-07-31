@@ -4,7 +4,7 @@
  * Migrated and enhanced from article-collapse.js
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
 import { $$, aria } from '../../utils/index.js';
 import { transitions } from '../../utils/animation.js';
 
@@ -368,5 +368,4 @@ export class ArticleCollapse extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('article-collapse', ArticleCollapse);

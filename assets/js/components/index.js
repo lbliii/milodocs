@@ -27,6 +27,7 @@ export const componentRegistry = {
   
   // UI components
   'toast': () => import('./ui/Toast.js'),
+  'search-filter': () => import('./ui/SearchFilter.js'),
   
   // Feature components
   'tutorial-manager': () => import('./features/TutorialManager.js'),

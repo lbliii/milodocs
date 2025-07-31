@@ -3,7 +3,7 @@
  * Handles dark/light theme switching with safe localStorage and icon updates
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
 import { localStorage } from '../../utils/storage.js';
 
 export class ThemeToggle extends Component {
@@ -238,5 +238,4 @@ const themeToggle = new ThemeToggle();
 themeToggle.applyStoredTheme();
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('theme-toggle', ThemeToggle);

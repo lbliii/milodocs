@@ -29,7 +29,17 @@ export class MobileNav extends Component {
     this.closeButton = document.getElementById('closeMobileNav');
     
     if (!this.sidebarComponent) {
-      console.warn('MobileNav: Sidebar component instance not found');
+      console.warn('MobileNav: Sidebar component instance not found, retrying...');
+      // Retry after a short delay in case components are still initializing
+      setTimeout(() => {
+        this.sidebarComponent = ComponentManager.getInstances('navigation-sidebar-left')[0];
+        if (this.sidebarComponent) {
+          console.log('MobileNav: Sidebar component found on retry');
+          this.setupEventListeners();
+        } else {
+          console.error('MobileNav: Sidebar component still not found after retry');
+        }
+      }, 100);
       return;
     }
 
@@ -48,7 +58,7 @@ export class MobileNav extends Component {
     }
     
     this.addEventListener(document, 'keydown', (e) => {
-      if (e.key === 'Escape' && this.sidebarComponent.isOpen) {
+      if (e.key === 'Escape' && this.sidebarComponent && this.sidebarComponent.isOpen) {
         e.preventDefault();
         this.closeMobileNav();
       }
@@ -56,6 +66,11 @@ export class MobileNav extends Component {
   }
 
   openMobileNav() {
+    if (!this.sidebarComponent) {
+      console.warn('MobileNav: Cannot open - sidebar component not available');
+      return;
+    }
+    
     if (this.sidebarComponent.isOpen) return;
     
     this.sidebarComponent.open();
@@ -68,6 +83,11 @@ export class MobileNav extends Component {
   }
 
   closeMobileNav() {
+    if (!this.sidebarComponent) {
+      console.warn('MobileNav: Cannot close - sidebar component not available');
+      return;
+    }
+    
     if (!this.sidebarComponent.isOpen) return;
     
     this.sidebarComponent.close();

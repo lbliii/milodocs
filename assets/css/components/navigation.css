@@ -134,34 +134,98 @@
   border-right: 1px solid var(--color-border-primary);
 }
 
+/* Desktop sidebar styling */
 @media (min-width: 768px) {
   .sidebar-container {
     background-color: transparent;
     border-right: none;
+    /* Ensure it's always visible on desktop */
+    transform: translateX(0) !important;
+    position: sticky !important;
+    display: flex !important;
   }
 }
 
-/* Mobile Header Styling */
+/* Mobile sidebar styling */
+@media (max-width: 767px) {
+  .sidebar-container {
+    /* Ensure it starts hidden on mobile */
+    position: fixed;
+    z-index: 40;
+    width: 20rem; /* w-80 equivalent */
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sidebar-container.translate-x-0 {
+    transform: translateX(0) !important;
+  }
+}
+
+/* Mobile Header Styling - Force hide on desktop */
 .sidebar-header {
   border-bottom: 1px solid var(--color-border-primary);
   background-color: var(--color-surface);
   color: var(--color-text-primary);
+  display: flex;
+}
+
+/* Force hide sidebar header on desktop */
+@media (min-width: 768px) {
+  .sidebar-header {
+    display: none !important;
+  }
+}
+
+/* Ensure sidebar starts hidden on mobile */
+@media (max-width: 767px) {
+  .sidebar-container:not(.translate-x-0) {
+    transform: translateX(-100%) !important;
+  }
 }
 
 .sidebar-close-btn {
   color: var(--color-text-secondary);
   transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .sidebar-close-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text-primary);
+  border-radius: 0.5rem;
+}
+
+.sidebar-close-btn:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
 }
 
 /* LinkTree Styling */
 #linkTree {
   background-color: transparent;
   color: var(--color-text-primary);
+  width: 100%;
+}
+
+/* Desktop linkTree padding adjustment */
+@media (min-width: 768px) {
+  #linkTree {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Mobile linkTree styling */
+@media (max-width: 767px) {
+  #linkTree {
+    padding: 1rem;
+  }
 }
 
 /* Prevent layout shift during initialization */

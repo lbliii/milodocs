@@ -3,7 +3,7 @@
  * Handles lazy loading, performance monitoring, accessibility enhancements, and UX optimizations
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component, ComponentManager } from '../../core/ComponentManager.js';
 import { debounce, throttle } from '../../utils/dom.js';
 
 export class PerformanceOptimizer extends Component {
@@ -417,5 +417,4 @@ export class PerformanceOptimizer extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
 ComponentManager.register('performance-optimizer', PerformanceOptimizer);
