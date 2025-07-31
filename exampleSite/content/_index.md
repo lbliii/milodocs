@@ -15,6 +15,4 @@ cascade:
 
  {{%prod%}} is a [Hugo](https://gohugo.io/) theme made for **documentation engineers** and **technical writers**, by one.
 
- (Oh, and in case you are wondering --- my Russian Blue cat Milo inspired this theme!)
-
   {{<quicklinks>}}

@@ -1,8 +1,24 @@
-<div class="codeblock-wrapper relative rounded overflow-hidden">
-    <!-- Code content -->
-    {{- transform.Highlight .Inner .Type -}}
-
-    <!-- Copy code button -->
-    <button class="copy-btn absolute top-2 right-2 bg-zinc-600 hover:bg-zinc-900 transition duration-300 text-white rounded px-2 py-1 text-xs focus:outline-none z-10" onclick="copyCodeToClipboard(this)">Copy</button>
+{{- $codeId := printf "code-%d" (now.UnixNano) -}}
+<div class="code-block-enhanced">
+    <!-- Enhanced code header -->
+    <div class="code-header">
+        <span class="code-language">{{.Type | default "text"}}</span>
+        <div class="code-actions">
+            <button class="btn btn--sm btn--ghost copy-code" data-clipboard-target="#{{$codeId}}">
+                <svg class="btn__icon copy-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                <svg class="btn__icon check-icon w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="copy-text">Copy</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Code content with enhanced styling -->
+    <div class="code-content" id="{{$codeId}}">
+        {{- transform.Highlight .Inner .Type -}}
+    </div>
 </div>
 

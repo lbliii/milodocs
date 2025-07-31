@@ -17,7 +17,6 @@
 {{- if eq $env "nvidia" -}}
   {{/* NVIDIA: Preload critical brand fonts for optimal performance */}}
   <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/var/NVIDIASansVF_W_Wght.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/NVIDIASans_W_Rg.woff2" as="font" type="font/woff2" crossorigin>
   
   {{- $envFonts := resources.Get "css/fonts-nvidia.css" -}}
   {{- if $envFonts -}}
@@ -129,6 +128,13 @@
   {{- warnf "Component CSS: chat.css not found" -}}
 {{- end -}}
 
+{{- $collapseCSS := resources.Get "css/components/collapse.css" -}}
+{{- if $collapseCSS -}}
+  {{- $cssResources = $cssResources | append $collapseCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: collapse.css not found" -}}
+{{- end -}}
+
 {{/* 4. Article Components - Content-specific layout elements */}}
 {{- $articleHeaderCSS := resources.Get "css/components/article-header.css" -}}
 {{- if $articleHeaderCSS -}}
@@ -170,6 +176,13 @@
   {{- $cssResources = $cssResources | append $nextPrevCSS -}}
 {{- else -}}
   {{- warnf "Component CSS: next-prev.css not found" -}}
+{{- end -}}
+
+{{- $tutorialCSS := resources.Get "css/components/tutorial.css" -}}
+{{- if $tutorialCSS -}}
+  {{- $cssResources = $cssResources | append $tutorialCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: tutorial.css not found" -}}
 {{- end -}}
 
 {{/* Advanced CSS bundling with environment-specific optimization */}}

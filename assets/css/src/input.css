@@ -13,6 +13,7 @@
 @import "../components/glossary.css";
 @import "../components/quicklinks.css";
 @import "../components/next-prev.css";
+@import "../components/tutorial.css";
 
 @tailwind base;
 
