@@ -5,7 +5,7 @@
     }
   },
   "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.146.0/hugo_extended_0.146.0_linux-amd64.tar.gz | tar -xz && mv hugo /usr/local/bin/",
-  "buildCommand": "./build.sh",
+  "buildCommand": "cd exampleSite && mkdir -p themes && rm -rf themes/milodocs && ln -sf ../../ themes/milodocs && hugo --environment production --minify",
   "outputDirectory": "exampleSite/public",
   "framework": null
 }
