@@ -9,7 +9,7 @@
     {{/* Fallback: try reading directly from file system */}}
     {{- $content = readFile $fullPath -}}
     {{- if not $content -}}
-        {{- errorf "RST shortcode: File not found in assets/%s or %s on page %s" $fullPath $fullPath .Page.RelPermalink -}}
+        {{- errorf "RST shortcode: File not found in assets/%s or directly in the file system at %s on page %s" $fullPath $fullPath .Page.RelPermalink -}}
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <strong>RST Error:</strong> File "{{ $fullPath }}" not found.
         </div>
