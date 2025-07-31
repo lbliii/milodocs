@@ -1,7 +1,0 @@
-{
-  "buildCommand": "mkdir -p themes && ln -sf ../.. themes/milodocs && hugo --minify",
-  "outputDirectory": "public",
-  "framework": null,
-  "installCommand": "npm install",
-  "rootDirectory": "exampleSite"
-}
