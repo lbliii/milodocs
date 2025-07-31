@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd exampleSite && mkdir -p themes && ln -sf ../.. themes/milodocs && hugo --minify",
+  "outputDirectory": "exampleSite/public",
+  "framework": null,
+  "installCommand": "cd exampleSite && npm install"
+}
