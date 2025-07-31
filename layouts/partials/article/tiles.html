@@ -3,7 +3,7 @@
 {{$descTrunc := .Site.Params.article.childArticles.descTrunc }}
 {{$count := .Site.Params.article.childArticles.count }}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-component="article-tiles">
     {{ range .Pages }}
         {{ if  .Params.hidden }}
             {{/* Do not show the hidden child page or its descendants */}}

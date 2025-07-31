@@ -18,10 +18,60 @@
     <div class="topbar__controls">
         {{- partial "navigation/language-switcher.html" . -}}
         
-        <button id="chatTocToggle" aria-label="Toggle Chat" class="topbar__button">
-            <img id="chatRob" src="/icons/robot.svg" alt="toggle" class="hidden" title="Chat Panel">
-            <img id="chatToc" src="/icons/toc.svg" alt="toggle" class="hidden" title="TOC Panel">
-        </button>
+        <div id="chatTocToggle" class="chat-toc-toggle" role="group" aria-label="Switch between Chat and Table of Contents">
+            <button class="chat-toc-toggle__option" data-mode="chat" aria-label="Switch to Chat" title="Chat Panel">
+                <img src="/icons/robot.svg" alt="Chat" class="chat-toc-toggle__icon">
+            </button>
+            <button class="chat-toc-toggle__option" data-mode="toc" aria-label="Switch to Table of Contents" title="Table of Contents">
+                <img src="/icons/toc.svg" alt="TOC" class="chat-toc-toggle__icon">
+            </button>
+        </div>
+        
+        <!-- Inline script to set correct state immediately, preventing any flicker -->
+        <script>
+        (function() {
+            try {
+                const savedState = localStorage.getItem('chatTocSettings') || 'chat';
+                const toggle = document.getElementById('chatTocToggle');
+                if (toggle) {
+                    const chatBtn = toggle.querySelector('[data-mode="chat"]');
+                    const tocBtn = toggle.querySelector('[data-mode="toc"]');
+                    
+                    // Set button states
+                    if (savedState === 'chat') {
+                        chatBtn?.classList.add('chat-toc-toggle__option--active');
+                        tocBtn?.classList.remove('chat-toc-toggle__option--active');
+                    } else {
+                        chatBtn?.classList.remove('chat-toc-toggle__option--active');
+                        tocBtn?.classList.add('chat-toc-toggle__option--active');
+                    }
+                    
+                    // Handle container visibility if they exist
+                    const chatContainer = document.getElementById('chatContainer');
+                    const tocContainer = document.getElementById('tocContainer');
+                    if (chatContainer && tocContainer) {
+                        if (savedState === 'chat') {
+                            chatContainer.classList.remove('hidden');
+                            tocContainer.classList.add('hidden');
+                            chatContainer.setAttribute('aria-hidden', 'false');
+                            tocContainer.setAttribute('aria-hidden', 'true');
+                        } else {
+                            chatContainer.classList.add('hidden');
+                            tocContainer.classList.remove('hidden');
+                            chatContainer.setAttribute('aria-hidden', 'true');
+                            tocContainer.setAttribute('aria-hidden', 'false');
+                        }
+                    }
+                    
+                    // Show the component immediately with correct state
+                    toggle.classList.add('initialized');
+                }
+            } catch (e) {
+                // Fallback: show with default state
+                document.getElementById('chatTocToggle')?.classList.add('initialized');
+            }
+        })();
+        </script>
         
         <button id="darkModeToggle" aria-label="Toggle Darkmode" class="topbar__button">
             <img id="moon" src="/icons/dark.svg" alt="moon" class="hidden" title="Dark Mode">

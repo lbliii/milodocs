@@ -109,6 +109,23 @@ export class Component {
   }
 
   /**
+   * Find a child element within the component's element
+   * Useful for components that work with multiple related elements
+   */
+  findChild(selector) {
+    if (!this.element) return null;
+    return this.element.querySelector(selector);
+  }
+
+  /**
+   * Find multiple child elements within the component's element
+   */
+  findChildren(selector) {
+    if (!this.element) return [];
+    return Array.from(this.element.querySelectorAll(selector));
+  }
+
+  /**
    * Bind event listeners - override in subclasses
    */
   bindEvents() {
@@ -311,8 +328,11 @@ export class ComponentManager {
       const componentName = element.getAttribute('data-component');
       const componentId = element.getAttribute('data-component-id');
       
+      console.log(`🔍 Found element with data-component="${componentName}":`, element);
+      
       // Skip if already initialized
       if (componentId && this.getInstance(componentId)) {
+        console.log(`⏭️ Skipping ${componentName} - already initialized`);
         return;
       }
       
@@ -322,16 +342,27 @@ export class ComponentManager {
           element,
           selector: null
         });
+        console.log(`✅ Will load component: ${componentName}`);
+      } else {
+        console.warn(`⚠️ Component "${componentName}" not registered`);
       }
     });
     
+    console.log(`🔍 Discovered ${discoveredComponents.length} components to load`);
+    
     // Load discovered components
     const loadPromises = discoveredComponents.map(({ name, element }) => {
+      console.log(`🚀 Loading component: ${name}`);
       return this.load(name, { element });
     });
     
     const results = await Promise.allSettled(loadPromises);
     const successful = results.filter(r => r.status === 'fulfilled' && r.value).map(r => r.value);
+    const failed = results.filter(r => r.status === 'rejected');
+    
+    if (failed.length > 0) {
+      console.warn(`❌ ${failed.length} components failed to load:`, failed.map(f => f.reason));
+    }
     
     console.log(`🔍 Auto-discovered and loaded ${successful.length} components`);
     return successful;

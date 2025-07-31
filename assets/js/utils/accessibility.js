@@ -16,11 +16,8 @@ class ScreenReaderAnnouncer {
     if (this.announcer) return;
     
     this.announcer = document.createElement('div');
-    Object.assign(this.announcer, {
-      id: 'sr-announcer',
-      className: 'sr-only',
-      setAttribute: (name, value) => this.announcer.setAttribute(name, value)
-    });
+    this.announcer.id = 'sr-announcer';
+    this.announcer.className = 'sr-only';
     
     this.announcer.setAttribute('aria-live', 'polite');
     this.announcer.setAttribute('aria-atomic', 'true');
