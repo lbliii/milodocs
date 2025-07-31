@@ -20,7 +20,7 @@ function initializeMermaidDiagram() {
     } else {
         // Fallback: load mermaid if not already loaded
         const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+        script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
         script.onload = () => {
             mermaid.initialize({ 
                 theme: theme,
