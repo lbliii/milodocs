@@ -250,11 +250,13 @@
   }
 
   /* Link Styles - NVIDIA Style */
-  #articleContent a:not(#quick-install a) {
+  #articleContent a:not(#quick-install a),
+  .notebook-cell__markdown-content a {
     @apply underline;
     text-decoration-color: var(--color-brand);
   }
-  #articleContent a:hover:not(#quick-install a) {
+  #articleContent a:hover:not(#quick-install a),
+  .notebook-cell__markdown-content a:hover {
     @apply text-brand-1 transition duration-300;
   }
   #articleContent a.headerlink {

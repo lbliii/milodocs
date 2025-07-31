@@ -12,28 +12,24 @@
 {{ $outputId := printf "%s-output-%d" $cellId $index }}
 
 {{ if eq $output.output_type "stream" }}
-  {{/* Stream output (stdout, stderr) */}}
-  <div class="notebook-cell__output notebook-cell__output--stream" 
+  {{/* Stream output (stdout, stderr) - simplified */}}
+  <pre class="notebook-cell__output notebook-cell__output--stream" 
        data-output-type="stream" 
        data-output-id="{{ $outputId }}">
-    <pre class="notebook-cell__stream-content">
-      {{- range $output.text -}}
-        {{- . -}}
-      {{- end -}}
-    </pre>
-  </div>
+    {{- range $output.text -}}
+      {{- . -}}
+    {{- end -}}
+  </pre>
 
 {{ else if eq $output.output_type "execute_result" }}
-  {{/* Execute result output */}}
+  {{/* Execute result output - simplified */}}
   <div class="notebook-cell__output notebook-cell__output--execute-result" 
        data-output-type="execute_result" 
        data-output-id="{{ $outputId }}">
     
     {{/* HTML output */}}
     {{ with index $output.data "text/html" }}
-      <div class="notebook-cell__html-output">
-        {{ . | safeHTML }}
-      </div>
+      {{ . | safeHTML }}
     {{ end }}
     
     {{/* Plain text output */}}
@@ -47,18 +43,16 @@
     
     {{/* Image output */}}
     {{ with index $output.data "image/png" }}
-      <div class="notebook-cell__image-output">
-        <img src="data:image/png;base64,{{ . }}" 
-             alt="Execution result" 
-             class="notebook-cell__output-image">
-      </div>
+      <img src="data:image/png;base64,{{ . }}" 
+           alt="Execution result" 
+           class="notebook-cell__output-image">
     {{ end }}
     
-    {{/* Other data formats could be added here */}}
+    {{/* JSON output */}}
     {{ with index $output.data "application/json" }}
       <details class="notebook-cell__json-output">
         <summary>JSON Output</summary>
-        <pre class="notebook-cell__json-content"><code>{{ . | jsonify (dict "indent" "  ") }}</code></pre>
+        <pre><code>{{ . | jsonify (dict "indent" "  ") }}</code></pre>
       </details>
     {{ end }}
   </div>
@@ -71,46 +65,34 @@
     
     {{/* Image data */}}
     {{ with index $output.data "image/png" }}
-      <div class="notebook-cell__image-output">
-        <img src="data:image/png;base64,{{ . }}" 
-             alt="Display output" 
-             class="notebook-cell__output-image">
-      </div>
+      <img src="data:image/png;base64,{{ . }}" 
+           alt="Display output" 
+           class="notebook-cell__output-image">
     {{ end }}
     
     {{ with index $output.data "image/jpeg" }}
-      <div class="notebook-cell__image-output">
-        <img src="data:image/jpeg;base64,{{ . }}" 
-             alt="Display output" 
-             class="notebook-cell__output-image">
-      </div>
+      <img src="data:image/jpeg;base64,{{ . }}" 
+           alt="Display output" 
+           class="notebook-cell__output-image">
     {{ end }}
     
     {{ with index $output.data "image/svg+xml" }}
-      <div class="notebook-cell__svg-output">
-        {{ . | safeHTML }}
-      </div>
+      {{ . | safeHTML }}
     {{ end }}
     
     {{/* HTML data */}}
     {{ with index $output.data "text/html" }}
-      <div class="notebook-cell__html-output">
-        {{ . | safeHTML }}
-      </div>
+      {{ . | safeHTML }}
     {{ end }}
     
     {{/* Markdown data */}}
     {{ with index $output.data "text/markdown" }}
-      <div class="notebook-cell__markdown-output">
-        {{ . | markdownify }}
-      </div>
+      {{ . | markdownify }}
     {{ end }}
     
     {{/* LaTeX data */}}
     {{ with index $output.data "text/latex" }}
-      <div class="notebook-cell__latex-output">
-        {{ . | safeHTML }}
-      </div>
+      {{ . | safeHTML }}
     {{ end }}
     
     {{/* Plain text fallback */}}
@@ -131,31 +113,27 @@
        role="alert"
        aria-live="polite">
     
-    <div class="notebook-cell__error-header">
-      <div class="notebook-cell__error-name">{{ $output.ename }}</div>
-      <div class="notebook-cell__error-value">{{ $output.evalue }}</div>
-    </div>
+    <div class="notebook-cell__error-name">{{ $output.ename }}</div>
+    <div class="notebook-cell__error-value">{{ $output.evalue }}</div>
     
     {{ if $output.traceback }}
       <details class="notebook-cell__error-traceback" open>
         <summary>Traceback</summary>
-        <div class="notebook-cell__traceback-content">
-          {{ range $output.traceback }}
-            <div class="notebook-cell__traceback-line">{{ . | safeHTML }}</div>
-          {{ end }}
-        </div>
+        {{ range $output.traceback }}
+          <div class="notebook-cell__traceback-line">{{ . | safeHTML }}</div>
+        {{ end }}
       </details>
     {{ end }}
   </div>
 
 {{ else }}
-  {{/* Unknown output type - render as generic */}}
+  {{/* Unknown output type - simplified */}}
   <div class="notebook-cell__output notebook-cell__output--unknown" 
        data-output-type="{{ $output.output_type }}" 
        data-output-id="{{ $outputId }}">
-    <details class="notebook-cell__raw-output">
+    <details>
       <summary>{{ $output.output_type | title }} Output</summary>
-      <pre class="notebook-cell__raw-content"><code>{{ $output | jsonify (dict "indent" "  ") }}</code></pre>
+      <pre><code>{{ $output | jsonify (dict "indent" "  ") }}</code></pre>
     </details>
   </div>
 {{ end }}

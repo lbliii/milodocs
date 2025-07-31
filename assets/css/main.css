@@ -6313,28 +6313,24 @@ h1[id]::before {
 /**
  * Notebook Component Styles
  * Modern, accessible styling for Jupyter notebook rendering
- * Supports theming, responsive design, and interactive features
+ * Aligned with site-wide design system for consistency
+ * 
+ * Features:
+ * - Unified code block styling with article content
+ * - Consistent button components across the site
+ * - Aligned typography and spacing patterns
+ * - Semantic color system integration
+ * - Performance optimizations for theme switching
+ * - Simplified container structure (reduced nesting)
  */
 /* ========================================
-   Core Notebook Container
+   Core Notebook Container (consolidated into .notebook__cells)
    ======================================== */
-.notebook {
-  /* Inherit existing theme variables */
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 1rem;
-  background: var(--color-bg-primary);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  
-  /* Performance optimizations */
-  contain: layout style;
-  will-change: background-color;
-}
 /* ========================================
    Progressive Cell Visibility
    ======================================== */
-.notebook-cell-wrapper {
+/* Notebook cell wrapper functionality merged into .notebook-cell */
+.notebook-cell.notebook-cell-wrapper {
   /* CSS containment for performance isolation */
   contain: layout style paint;
   /* No transitions on wrapper to avoid layout issues */
@@ -6359,18 +6355,23 @@ h1[id]::before {
    ======================================== */
 .notebook__header {
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--notebook-border);
-  background: var(--notebook-bg);
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-surface);
+  margin-bottom: 1rem;
+}
+/* Hide header if it's empty */
+.notebook__header:empty {
+  display: none;
 }
 .notebook__title {
   font-size: 1.875rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   margin: 0 0 0.5rem 0;
   line-height: 1.2;
 }
 .notebook__description {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-size: 1.125rem;
   margin: 0;
   line-height: 1.5;
@@ -6382,13 +6383,15 @@ h1[id]::before {
   flex-wrap: wrap;
 }
 .notebook__metadata-item {
+  /* Align with site button/badge patterns */
   display: flex;
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: var(--toggle-bg);
-  color: var(--toggle-text);
-  border-radius: 0.375rem;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border-radius: 0.375rem; /* Match site border radius */
+  border: 1px solid var(--color-border-primary);
   font-size: 0.875rem;
   font-weight: 500;
 }
@@ -6396,9 +6399,22 @@ h1[id]::before {
    Notebook Cells Container
    ======================================== */
 .notebook__cells {
+  /* Simplified container - no shadow since cells have their own */
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  
+  /* Layout for cells */
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+  
+  /* Performance optimizations */
+  contain: layout style;
+}
+/* Reduce space for first cell */
+.notebook__cells > .notebook-cell-wrapper:first-child .notebook-cell.collapse {
+  margin-top: 0;
 }
 /* ========================================
    Individual Cell Styling (extends existing collapse)
@@ -6460,12 +6476,22 @@ h1[id]::before {
 .notebook-cell__markdown-content h4,
 .notebook-cell__markdown-content h5,
 .notebook-cell__markdown-content h6 {
+  /* Align with global heading styles from input.css */
   margin-top: 0;
   margin-bottom: 1rem;
   color: var(--color-text-primary);
+  font-weight: 700;
+  word-wrap: break-word;
 }
+.notebook-cell__markdown-content h1 { font-size: 1.875rem; font-weight: 900; }
+.notebook-cell__markdown-content h2 { font-size: 1.5rem; }
+.notebook-cell__markdown-content h3 { font-size: 1.25rem; }
+.notebook-cell__markdown-content h4 { font-size: 1.125rem; }
+.notebook-cell__markdown-content h5 { font-size: 1rem; }
+.notebook-cell__markdown-content h6 { font-size: 0.875rem; }
 .notebook-cell__markdown-content p {
-  margin-bottom: 1rem;
+  /* Match #articleContent spacing pattern */
+  margin: 0.75rem 0;
   color: var(--color-text-primary);
 }
 .notebook-cell__markdown-content p:last-child {
@@ -6473,62 +6499,55 @@ h1[id]::before {
 }
 .notebook-cell__markdown-content ul,
 .notebook-cell__markdown-content ol {
-  margin-bottom: 1rem;
+  /* Match #articleContent list patterns */
+  margin: 0.75rem 0;
   padding-left: 1.5rem;
 }
+.notebook-cell__markdown-content ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}
+.notebook-cell__markdown-content strong {
+  /* Match #articleContent strong styling */
+  font-family: var(--font-family-brand);
+  font-weight: 600;
+}
 .notebook-cell__markdown-content code {
-  background: var(--color-bg-secondary);
+  /* Align with #articleContent code:not(pre code) styling */
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 300;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-brand-1);
+  font-family: var(--font-family-mono, RobotoMono, monospace);
+}
+/* Dark mode support for inline code */
+.dark .notebook-cell__markdown-content code {
   color: var(--color-brand);
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.125rem;
-  font-size: 0.875em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 /* ========================================
    Code Cells
    ======================================== */
 .notebook-cell--code .notebook-cell__type-icon {
-  color: #2563eb;
+  color: var(--color-brand-3); /* Uses semantic color system */
 }
-.notebook-cell__code-container {
-  position: relative;
-  background: var(--color-bg-secondary);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  border: 1px solid var(--color-border-primary);
+/* Notebook code cells now use .code-block-enhanced with proper corner radius handling */
+/* Fix border radius for code blocks with headers */
+.code-block-enhanced .code-header {
+  border-radius: 0.75rem 0.75rem 0 0; /* Only top corners rounded */
 }
-.notebook-cell__code-content {
-  position: relative;
-  background: var(--color-bg-secondary);
-  overflow-x: auto;
+.code-block-enhanced .code-content {
+  border-radius: 0 0 0.75rem 0.75rem; /* Only bottom corners rounded */
 }
-.notebook-cell__code-content pre {
-  margin: 0;
-  padding: 1rem;
-  background: transparent;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.875rem;
-  line-height: 1.5;
+/* Target the actual highlighted code element that has the background */
+.code-block-enhanced .code-content .highlight {
+  border-radius: 0 0 0.75rem 0.75rem; /* Only bottom corners rounded */
 }
-.notebook-cell__code-content code {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
+.code-block-enhanced .code-content .highlight pre {
+  border-radius: 0 0 0.75rem 0.75rem; /* Only bottom corners rounded */
 }
-/* ========================================
-   Copy Button (uses existing button styles)
-   ======================================== */
-.notebook-cell__code-content .copy-code {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.notebook-cell__code-container:hover .copy-code,
-.copy-code:focus {
-  opacity: 1;
-}
+/* Copy button styling handled by .code-block-enhanced */
 /* ========================================
    Cell Outputs
    ======================================== */
@@ -6691,12 +6710,7 @@ h1[id]::before {
 /* ========================================
    Light Mode Enhancements
    ======================================== */
-.notebook {
-  /* Light mode is the default - already uses CSS variables */
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    0 2px 4px rgba(0, 0, 0, 0.02);
-}
+/* Light mode styles handled in .notebook__cells */
 .notebook-cell.collapse {
   /* Light mode cell styling */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
@@ -6708,76 +6722,54 @@ h1[id]::before {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
   transform: translateY(-1px);
 }
-.notebook-cell__code-container {
-  /* Light mode code styling */
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  
-  /* Optimize for theme transitions */
-  contain: layout style paint;
-}
-.notebook-cell__code-content {
-  background: #f9fafb;
-}
+/* Light mode styling handled by .code-block-enhanced */
 .notebook-cell__output--stream {
-  /* Light mode stream output */
-  background: #111827;
-  color: #4ade80;
+  /* Stream output styling with consistent colors */
+  background: var(--color-bg-inverse);
+  color: var(--color-brand-2);
 }
 .notebook-cell__output--error {
-  /* Light mode error output */
-  background: #fef2f2;
-  color: #7f1d1d;
-  border-color: #fecaca;
+  /* Error output styling with semantic colors */
+  background: rgba(var(--color-brand-7-rgb, 243, 179, 166), 0.1);
+  color: var(--color-brand-7);
+  border-color: rgba(var(--color-brand-7-rgb, 243, 179, 166), 0.3);
 }
 .notebook-cell__output--error .notebook-cell__error-name {
-  color: #b91c1c;
+  color: var(--color-brand-7);
+  font-weight: 600;
 }
 .notebook-cell__traceback-line {
-  border-left-color: #f87171;
+  border-left-color: var(--color-brand-7);
 }
 /* ========================================
    Dark Theme Support
    ======================================== */
-.dark .notebook {
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    0 2px 4px rgba(0, 0, 0, 0.2);
-}
+/* Dark mode handled by individual cell shadows */
 .dark .notebook-cell.collapse {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 .dark .notebook-cell.collapse:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
-.dark .notebook-cell__code-container {
-  background: #111827;
-  border-color: #374151;
-}
-.dark .notebook-cell__code-content {
-  background: #111827;
-}
+/* Dark mode styling handled by .code-block-enhanced */
 .dark .notebook-cell__output--error {
-  background: #7f1d1d;
-  color: #fee2e2;
-  border-color: #b91c1c;
+  background: rgba(var(--color-brand-7-rgb, 243, 179, 166), 0.2);
+  color: var(--color-text-primary);
+  border-color: var(--color-brand-7);
 }
 .dark .notebook-cell__output--error .notebook-cell__error-name {
-  color: #fca5a5;
+  color: var(--color-brand-7);
 }
 .dark .notebook-cell__traceback-line {
-  border-left-color: #ef4444;
+  border-left-color: var(--color-brand-7);
 }
 /* ========================================
    Responsive Design
    ======================================== */
 @media (max-width: 768px) {
-  .notebook {
+  .notebook__cells {
     margin: 0;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    box-shadow: none;
+    padding: 0.5rem;
   }
   
   .notebook__header {
@@ -6800,17 +6792,7 @@ h1[id]::before {
     padding: 1rem;
   }
   
-  .notebook-cell__code-content pre {
-    font-size: 0.75rem;
-    padding: 0.75rem;
-  }
-  
-  .notebook-cell__code-content .copy-code {
-    position: static;
-    margin-top: 0.5rem;
-    opacity: 1;
-    align-self: flex-start;
-  }
+  /* Mobile code block styling handled by .code-block-enhanced */
   
   .notebook__performance-notice {
     margin: 0 1rem 1.5rem;
@@ -6830,9 +6812,7 @@ h1[id]::before {
     padding: 0.75rem;
   }
   
-  .notebook-cell__code-content pre {
-    padding: 0.5rem;
-  }
+  /* Print code block styling handled by .code-block-enhanced */
   
   .notebook-cell__type-text {
     font-size: 0.875rem;
@@ -6846,8 +6826,7 @@ h1[id]::before {
    Print Styles
    ======================================== */
 @media print {
-  .notebook {
-    box-shadow: none;
+  .notebook__cells {
     border: 1px solid #ccc;
     -moz-column-break-inside: avoid;
          break-inside: avoid;
@@ -6880,10 +6859,7 @@ h1[id]::before {
          break-inside: avoid;
   }
   
-  .notebook-cell__code-content {
-    background: #f8f9fa !important;
-    color: #333 !important;
-  }
+  /* Print code styling handled by .code-block-enhanced */
   
   .notebook-cell__output--stream {
     background: #f0f0f0 !important;
@@ -6902,14 +6878,14 @@ h1[id]::before {
   }
 }
 @media (prefers-contrast: high) {
-  .notebook {
+  .notebook__cells {
     --notebook-border: #111827;
     --cell-border: #1f2937;
     --cell-hover-border: #1d4ed8;
     --cell-active-border: #2563eb;
   }
   
-  .dark .notebook {
+  .dark .notebook__cells {
     --notebook-border: #f3f4f6;
     --cell-border: #d1d5db;
     --cell-hover-border: #93c5fd;
@@ -7644,11 +7620,13 @@ main {
     z-index: 10;
   }
 /* Link Styles - NVIDIA Style */
-#articleContent a:not(#quick-install a) {
+#articleContent a:not(#quick-install a),
+  .notebook-cell__markdown-content a {
   text-decoration-line: underline;
     text-decoration-color: var(--color-brand);
 }
-#articleContent a:hover:not(#quick-install a) {
+#articleContent a:hover:not(#quick-install a),
+  .notebook-cell__markdown-content a:hover {
   color: var(--color-brand-1);
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -7871,9 +7849,6 @@ button:focus-visible,
 }
 .right-0 {
   right: 0px;
-}
-.right-2 {
-  right: 0.5rem;
 }
 .top-0 {
   top: 0px;
@@ -8129,9 +8104,6 @@ button:focus-visible,
 .max-w-7xl {
   max-width: 80rem;
 }
-.max-w-full {
-  max-width: 100%;
-}
 .max-w-none {
   max-width: none;
 }
@@ -8323,9 +8295,6 @@ button:focus-visible,
 .whitespace-nowrap {
   white-space: nowrap;
 }
-.whitespace-pre-wrap {
-  white-space: pre-wrap;
-}
 .rounded {
   border-radius: 0.25rem;
 }
@@ -8386,10 +8355,6 @@ button:focus-visible,
 .border-red-500 {
   --tw-border-opacity: 1;
   border-color: rgb(239 68 68 / var(--tw-border-opacity, 1));
-}
-.border-red-700 {
-  --tw-border-opacity: 1;
-  border-color: rgb(185 28 28 / var(--tw-border-opacity, 1));
 }
 .border-transparent {
   border-color: transparent;
@@ -8467,10 +8432,6 @@ button:focus-visible,
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
 }
-.bg-red-900 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(127 29 29 / var(--tw-bg-opacity, 1));
-}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
@@ -8494,10 +8455,6 @@ button:focus-visible,
 .bg-zinc-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(82 82 91 / var(--tw-bg-opacity, 1));
-}
-.bg-zinc-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(39 39 42 / var(--tw-bg-opacity, 1));
 }
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
@@ -8608,9 +8565,6 @@ button:focus-visible,
 }
 .font-brand {
   font-family: NVIDIA, Arial, Helvetica, sans-serif;
-}
-.font-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 .text-2xl {
   font-size: 1.5rem;
@@ -8898,10 +8852,6 @@ button:focus-visible,
 .hover\:bg-zinc-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity, 1));
-}
-.hover\:bg-zinc-900:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(24 24 27 / var(--tw-bg-opacity, 1));
 }
 .hover\:text-blue-600:hover {
   --tw-text-opacity: 1;

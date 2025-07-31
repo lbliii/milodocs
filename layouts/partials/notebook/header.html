@@ -6,13 +6,19 @@
   Usage: {{ partial "notebook/header.html" . }}
 */}}
 
+{{ $hasContent := or .Title .Description .Params.notebook_metadata .Date .Params.jupyter_version .Params.kernel }}
+{{ if $hasContent }}
 <header class="notebook__header">
-  <div class="notebook__title-section">
-    <h1 class="notebook__title">{{ .Title }}</h1>
-    {{ with .Description }}
-      <p class="notebook__description">{{ . }}</p>
-    {{ end }}
-  </div>
+  {{ if or .Title .Description }}
+    <div class="notebook__title-section">
+      {{ with .Title }}
+        <h1 class="notebook__title">{{ . }}</h1>
+      {{ end }}
+      {{ with .Description }}
+        <p class="notebook__description">{{ . }}</p>
+      {{ end }}
+    </div>
+  {{ end }}
   
   {{ if .Params.notebook_metadata | or .Date | or .Params.jupyter_version }}
     <div class="notebook__metadata">
@@ -55,3 +61,4 @@
     </div>
   {{ end }}
 </header>
+{{ end }}
