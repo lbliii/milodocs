@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "HUGO_VERSION": "0.148.0",
+      "BUNDLE_PATH": "./vendor/bundle",
+      "BUNDLE_BIN": "./vendor/bundle/bin",
+      "GEM_PATH": "./vendor/bundle:$GEM_PATH",
+      "PATH": "./vendor/bundle/bin:/usr/local/bin:/opt/python/3.9.16/bin:$PATH"
+    }
+  },
+  "installCommand": "cd exampleSite && bundle install --path vendor/bundle --deployment && pip3 install -r requirements.txt --user && npm install",
+  "buildCommand": "cd exampleSite && bundle exec hugo --environment production --minify"
+}
