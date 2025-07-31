@@ -64,7 +64,7 @@
     }
 
     // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
+    const handleClickOutside = function(event) {
       const menu = document.getElementById('language-menu');
       const button = document.getElementById('language-menu-button');
       
