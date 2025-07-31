@@ -33,9 +33,12 @@
                 </label>
                 {{end}}
             </div>
-            <button class="btn btn--primary validate-step" disabled data-action="complete-step">
+            <button class="btn btn--primary validate-step" disabled aria-disabled="true" aria-describedby="complete-step-disabled-reason" data-action="complete-step">
                 Mark Step Complete
             </button>
+            <span id="complete-step-disabled-reason" class="sr-only">
+                You must complete all tasks in the checklist before marking this step as complete.
+            </span>
         </div>
         {{end}}
         
