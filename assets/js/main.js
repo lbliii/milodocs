@@ -1,7 +1,12 @@
-console.log('🚀 MiloDocs theme loaded - optimized for stellar UX');
+// Enhanced MiloDocs initialization system
+// Transitioning to new modular architecture
+
+// Feature flag for new system
+const USE_NEW_SYSTEM = window.location.search.includes('new-system') || 
+                      localStorage.getItem('milo-use-new-system') === 'true';
 
 // Environment-aware initialization system
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Get Hugo environment data
     const env = window.HugoEnvironment || {};
     const environment = env.environment || 'development';
@@ -19,6 +24,18 @@ document.addEventListener('DOMContentLoaded', function() {
         console.groupEnd();
     } else if (!isProduction) {
         console.log(`📱 Initializing MiloDocs UX enhancements (${environment})...`);
+    }
+    
+    // Try new modular system first, fallback to legacy
+    if (USE_NEW_SYSTEM) {
+        try {
+            console.log('🚀 Loading new modular system...');
+            const { initializeMiloDocs } = await import('./main-new.js');
+            await initializeMiloDocs();
+            return; // Exit early if new system succeeds
+        } catch (error) {
+            console.warn('⚠️ New system failed, falling back to legacy:', error);
+        }
     }
     
     // Initialize performance optimizations
