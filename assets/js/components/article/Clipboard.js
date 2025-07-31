@@ -11,7 +11,7 @@ export class ArticleClipboard extends Component {
   constructor(config = {}) {
     super({
       name: 'article-clipboard',
-      selector: config.selector || '.copy-btn',
+      selector: config.selector || '.copy-btn, .copy-code',
       ...config
     });
     
@@ -32,7 +32,7 @@ export class ArticleClipboard extends Component {
     super.setupElements();
     
     // Find all copy buttons on the page
-    this.copyButtons = $$('.copy-btn');
+    this.copyButtons = [...$$('.copy-btn'), ...$$('.copy-code')];
     
     if (this.copyButtons.length === 0) {
       console.log('No copy buttons found on page');
@@ -63,7 +63,7 @@ export class ArticleClipboard extends Component {
   bindEvents() {
     // Use event delegation for better performance
     this.addEventListener(document, 'click', (e) => {
-      const button = e.target.closest('.copy-btn');
+      const button = e.target.closest('.copy-btn, .copy-code');
       if (button && this.buttons.has(button)) {
         e.preventDefault();
         this.handleCopyClick(button);
@@ -124,10 +124,14 @@ export class ArticleClipboard extends Component {
       if (codeBlock) return codeBlock;
     }
     
-    // Strategy 4: Use data attribute if available
-    const targetSelector = button.getAttribute('data-copy-target');
+    // Strategy 4: Use data attribute if available (support both formats)
+    const targetSelector = button.getAttribute('data-copy-target') || button.getAttribute('data-clipboard-target');
     if (targetSelector) {
-      return document.querySelector(targetSelector);
+      const targetElement = document.querySelector(targetSelector);
+      if (targetElement) {
+        // If target is a container, look for code element inside
+        return targetElement.querySelector('code') || targetElement;
+      }
     }
     
     return null;
@@ -162,7 +166,7 @@ export class ArticleClipboard extends Component {
     // Announce to screen readers
     this.announceToScreenReader('Code copied to clipboard!');
     
-    // Show notification if available
+    // Show success notification
     this.showNotification('Code copied to clipboard!', 'success');
     
     // Reset after delay
@@ -187,7 +191,7 @@ export class ArticleClipboard extends Component {
     // Announce to screen readers
     this.announceToScreenReader('Failed to copy code');
     
-    // Show notification if available
+    // Show error notification
     this.showNotification('Failed to copy code', 'error');
     
     // Reset after delay
@@ -199,12 +203,19 @@ export class ArticleClipboard extends Component {
   }
 
   /**
-   * Show notification using global notification system
+   * Show notification using dedicated toast system
    */
   showNotification(message, type) {
-    if (window.MiloUX && typeof window.MiloUX.showNotification === 'function') {
-      const duration = type === 'error' ? this.options.errorDuration : this.options.successDuration;
+    const duration = type === 'error' ? this.options.errorDuration : this.options.successDuration;
+    
+    // Use the dedicated toast system
+    if (window.toast) {
+      window.toast(message, type, duration);
+    } else if (window.MiloUX && window.MiloUX.showNotification) {
       window.MiloUX.showNotification(message, type, duration);
+    } else {
+      // Final fallback - just log
+      console.log(`Toast (${type}): ${message}`);
     }
   }
 

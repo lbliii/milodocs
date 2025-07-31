@@ -114,10 +114,8 @@ export class TutorialManager extends Component {
       validateBtn.addEventListener('click', () => this.completeStep());
     }
 
-    // Copy code buttons
-    document.querySelectorAll('.copy-code').forEach(button => {
-      button.addEventListener('click', (e) => this.copyCode(e));
-    });
+    // Copy code buttons are now handled by ArticleClipboard component
+    // No need for duplicate implementation here
 
     // Collapsible sections
     document.querySelectorAll('[data-toggle="collapse"]').forEach(trigger => {
@@ -140,7 +138,7 @@ export class TutorialManager extends Component {
       lastVisitedStep: this.currentStep
     };
     
-    localStorage.setItem(`tutorial-${this.tutorialId}`, JSON.stringify(progress));
+    localStorage.set(`tutorial-${this.tutorialId}`, progress);
     this.progressData = progress;
     
     // Show save confirmation
@@ -156,10 +154,10 @@ export class TutorialManager extends Component {
   loadProgress() {
     if (!this.tutorialId) return;
     
-    const saved = localStorage.getItem(`tutorial-${this.tutorialId}`);
+    const saved = localStorage.get(`tutorial-${this.tutorialId}`);
     if (saved) {
       try {
-        this.progressData = JSON.parse(saved);
+        this.progressData = saved; // SafeStorage already handles JSON parsing
         this.updateUIFromProgress(this.progressData);
         this.emit('tutorial:progressLoaded', { tutorialId: this.tutorialId, progress: this.progressData });
         console.log('TutorialManager: Loaded progress', this.progressData);
@@ -176,7 +174,7 @@ export class TutorialManager extends Component {
     if (!this.tutorialId) return;
     
     if (confirm('Are you sure you want to reset your progress? This cannot be undone.')) {
-      localStorage.removeItem(`tutorial-${this.tutorialId}`);
+      localStorage.remove(`tutorial-${this.tutorialId}`);
       this.progressData = {};
       
       // Reset UI
@@ -399,49 +397,15 @@ export class TutorialManager extends Component {
 
   /**
    * Initialize code block copy functionality
+   * Note: Copy functionality is now handled by the ArticleClipboard component
    */
   initializeCodeBlocks() {
-    // Code blocks should already have copy buttons from render-codeblock.html
-    document.querySelectorAll('.copy-code').forEach(button => {
-      button.addEventListener('click', (e) => this.copyCode(e));
+    // Listen for copy events from ArticleClipboard component
+    document.addEventListener('copy-success', (event) => {
+      this.emit('tutorial:codeCopied', { 
+        codeText: event.detail.text.substring(0, 50) + '...' 
+      });
     });
-  }
-
-  /**
-   * Copy code to clipboard
-   */
-  async copyCode(event) {
-    const button = event.currentTarget;
-    const targetId = button.dataset.clipboardTarget;
-    const codeElement = document.querySelector(targetId);
-    
-    if (!codeElement) return;
-    
-    try {
-      const codeText = codeElement.querySelector('code')?.textContent || codeElement.textContent;
-      await navigator.clipboard.writeText(codeText);
-      
-      // Visual feedback
-      button.classList.add('copied');
-      const originalText = button.innerHTML;
-      button.innerHTML = `
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        Copied!
-      `;
-      
-      setTimeout(() => {
-        button.classList.remove('copied');
-        button.innerHTML = originalText;
-      }, 2000);
-      
-      this.emit('tutorial:codeCopied', { codeText: codeText.substring(0, 50) + '...' });
-      
-    } catch (error) {
-      console.error('Failed to copy code:', error);
-      this.showNotification('Failed to copy code to clipboard', 'error');
-    }
   }
 
   /**

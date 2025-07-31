@@ -364,48 +364,18 @@ export class PerformanceOptimizer extends Component {
    * Setup UX utilities
    */
   setupUXUtilities() {
-    // Enhanced global UX utilities
-    window.MiloUX = {
-      showNotification: (message, type = 'info', duration = 3000) => {
-        this.showNotification(message, type, duration);
-      },
-      smoothScrollTo: (element, offset = 0) => {
-        this.smoothScrollTo(element, offset);
-      }
+    // Enhanced global UX utilities (notifications now handled by Toast component)
+    if (!window.MiloUX) {
+      window.MiloUX = {};
+    }
+    
+    // Only add utilities that aren't handled by other components
+    window.MiloUX.smoothScrollTo = (element, offset = 0) => {
+      this.smoothScrollTo(element, offset);
     };
   }
 
-  /**
-   * Show notification toast
-   */
-  showNotification(message, type = 'info', duration = 3000) {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300 ${
-      type === 'success' ? 'bg-green-500 text-white' :
-      type === 'error' ? 'bg-red-500 text-white' :
-      type === 'warning' ? 'bg-yellow-500 text-black' :
-      'bg-blue-500 text-white'
-    }`;
-    notification.innerHTML = `
-      <div class="flex items-center">
-        <span>${message}</span>
-        <button class="ml-4 text-lg" onclick="this.parentElement.parentElement.remove()" aria-label="Close notification">&times;</button>
-      </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Slide in animation
-    setTimeout(() => notification.classList.remove('translate-x-full'), 100);
-    
-    // Auto remove
-    setTimeout(() => {
-      notification.classList.add('translate-x-full');
-      setTimeout(() => notification.remove(), 300);
-    }, duration);
-    
-    this.emit('ux:notificationShown', { message, type, duration });
-  }
+  // Notification system moved to dedicated Toast component
 
   /**
    * Smooth scroll to element

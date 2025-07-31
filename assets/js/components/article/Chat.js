@@ -331,14 +331,14 @@ export class ArticleChat extends Component {
       const texts = bubbles.map((bubble) => bubble.innerText);
       return { user: texts[0], bot: texts[1] };
     });
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    localStorage.set('chatHistory', chatHistory);
   }
 
   /**
    * Load chat history from localStorage
    */
   async loadChatHistory() {
-    const chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+    const chatHistory = localStorage.get('chatHistory', []);
     this.chatMessages.innerHTML = '';
 
     if (!chatHistory || chatHistory.length === 0) {

@@ -44,7 +44,7 @@ export class Component {
       
       // Check if element exists (for DOM-dependent components)
       if (this.selector && !this.element) {
-        console.warn(`Element not found for selector: ${this.selector}`);
+        console.debug(`${this.name}: No elements found for selector "${this.selector}" - component will remain inactive`);
         this.state = 'failed';
         return null;
       }

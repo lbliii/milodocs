@@ -17,6 +17,37 @@
 {{- end -}}
 <meta name="description" content="{{ $description }}" />
 
+{{/* Immediate theme application to prevent flash */}}
+<script>
+  (function() {
+    // Disable transitions during theme application
+    document.documentElement.classList.add('no-transitions');
+    
+    // Apply saved theme immediately (before any CSS loads)
+    try {
+      const saved = localStorage.getItem('theme.mode') || 
+                   localStorage.getItem('theme-mode') ||
+                   '{{ site.Params.theme.mode | default "light" }}';
+      
+      if (saved === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (e) {
+      // Fallback if localStorage fails
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+    
+    // Re-enable transitions after a short delay
+    setTimeout(function() {
+      document.documentElement.classList.remove('no-transitions');
+    }, 100);
+  })();
+</script>
+
 {{/* Enhanced Keywords - combining page keywords with automatic extraction */}}
 {{- $keywords := slice -}}
 {{- with .Keywords -}}

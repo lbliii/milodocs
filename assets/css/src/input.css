@@ -14,18 +14,25 @@
 @import "../components/quicklinks.css";
 @import "../components/next-prev.css";
 @import "../components/tutorial.css";
+@import "../components/toast.css";
 
 @tailwind base;
 
 @layer base {
 
-  /* Smooth theme transitions */
-  html {
+  /* Smooth theme transitions - only when not loading */
+  html:not(.no-transitions) {
     transition: color-scheme 0.3s ease;
   }
   
-  * {
+  html:not(.no-transitions) * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  /* Disable transitions during page load to prevent flash */
+  html.no-transitions,
+  html.no-transitions * {
+    transition: none !important;
   }
 
   /* Global Header Sizes & Thickness - NVIDIA Style */

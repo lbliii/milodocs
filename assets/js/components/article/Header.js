@@ -88,7 +88,7 @@ export class ArticleHeader extends Component {
    */
   initializeState() {
     // Check if there's a stored preference
-    const stored = localStorage.getItem('article-metadata-expanded');
+    const stored = localStorage.get('article-metadata-expanded');
     const shouldExpand = stored === 'true';
     
     if (shouldExpand) {
@@ -155,7 +155,7 @@ export class ArticleHeader extends Component {
     }
 
     // Store preference
-    localStorage.setItem('article-metadata-expanded', 'true');
+          localStorage.set('article-metadata-expanded', true);
   }
 
   /**
@@ -204,7 +204,7 @@ export class ArticleHeader extends Component {
     }
 
     // Store preference
-    localStorage.setItem('article-metadata-expanded', 'false');
+          localStorage.set('article-metadata-expanded', false);
   }
 
   /**
@@ -263,7 +263,7 @@ export class ArticleHeader extends Component {
    */
   reset() {
     this.collapse(false);
-    localStorage.removeItem('article-metadata-expanded');
+    localStorage.remove('article-metadata-expanded');
     this.emit('header:reset');
   }
 

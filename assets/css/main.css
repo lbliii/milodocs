@@ -829,6 +829,111 @@ table tr:hover {
   }
 }
 /* Navigation Component - Topbar, dropdown, and sidebar navigation with NVIDIA styling */
+/* Chat/TOC Toggle Component */
+.chat-toc-toggle {
+  display: flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 2.25rem;
+  
+  /* Prevent flash during initialization */
+  opacity: 0;
+  transition: opacity 0.05s ease;
+  
+  /* Fallback: show after 500ms even if JavaScript fails */
+  animation: fallback-show 0.05s ease 0.5s forwards;
+}
+.chat-toc-toggle.initialized {
+  opacity: 1;
+  animation: none; /* Cancel fallback animation */
+}
+@keyframes fallback-show {
+  to { opacity: 1; }
+}
+.chat-toc-toggle__option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+.chat-toc-toggle__option:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.chat-toc-toggle__option--active {
+  background: var(--color-brand);
+  color: var(--color-text-inverse);
+}
+.chat-toc-toggle__option--active:hover {
+  background: var(--color-brand-1);
+  transform: translateY(-1px);
+}
+.chat-toc-toggle__icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  filter: brightness(0.8);
+}
+.chat-toc-toggle__option:hover .chat-toc-toggle__icon {
+  filter: brightness(1);
+  transform: scale(1.1);
+}
+.chat-toc-toggle__option--active .chat-toc-toggle__icon {
+  filter: brightness(0) invert(1);
+}
+.chat-toc-toggle__option--active:hover .chat-toc-toggle__icon {
+  filter: brightness(0) invert(1);
+  transform: scale(1.1);
+}
+/* Focus states for accessibility */
+.chat-toc-toggle__option:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-brand);
+  z-index: 1;
+}
+/* Ripple effect on click */
+.chat-toc-toggle__option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--color-brand-rgb), 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.chat-toc-toggle__option:hover::before {
+  opacity: 1;
+}
+.chat-toc-toggle__option:active::before {
+  opacity: 1;
+}
+.chat-toc-toggle__option:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 /* Enhanced Sidebar Navigation Animations */
 /* Hide nested content by default to prevent flash */
 .nested-content {
@@ -5289,6 +5394,200 @@ h1[id]::before {
     border-width: 2px;
   }
 }
+/* Toast Notification Component - Dedicated CSS */
+/* Enhanced Toast Styles */
+.toast-notification {
+  /* Enhanced backdrop blur for modern glass effect */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  
+  /* Smooth shadow that matches notice components */
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+  /* Ensure proper font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Base positioning and sizing */
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  max-width: 20rem;
+  width: 100%;
+  transform: translateX(100%);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid;
+}
+/* Toast content */
+.toast-notification__content {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  gap: 0.75rem;
+}
+.toast-notification__icon {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.toast-notification__message {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  font-family: "NVIDIA", Arial, Helvetica, sans-serif;
+}
+.toast-notification__close {
+  flex-shrink: 0;
+  margin-left: 1rem;
+  color: rgba(156, 163, 175, 1);
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 1rem;
+  height: 1rem;
+}
+.toast-notification__close:hover {
+  color: rgba(107, 114, 128, 1);
+}
+/* Dark mode close button */
+.dark .toast-notification__close:hover {
+  color: rgba(209, 213, 219, 1);
+}
+/* Type-specific styling */
+.toast-notification--success {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1) 0%,
+    rgba(34, 197, 94, 0.05) 100%
+  );
+  border-color: rgba(34, 197, 94, 0.2);
+  color: rgb(20, 83, 45);
+}
+.toast-notification--success .toast-notification__icon {
+  color: rgb(34, 197, 94);
+}
+.dark .toast-notification--success {
+  color: rgb(187, 247, 208);
+}
+.toast-notification--error {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(239, 68, 68, 0.05) 100%
+  );
+  border-color: rgba(239, 68, 68, 0.2);
+  color: rgb(127, 29, 29);
+}
+.toast-notification--error .toast-notification__icon {
+  color: rgb(239, 68, 68);
+}
+.dark .toast-notification--error {
+  color: rgb(254, 202, 202);
+}
+.toast-notification--warning {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1) 0%,
+    rgba(245, 158, 11, 0.05) 100%
+  );
+  border-color: rgba(245, 158, 11, 0.2);
+  color: rgb(120, 53, 15);
+}
+.toast-notification--warning .toast-notification__icon {
+  color: rgb(245, 158, 11);
+}
+.dark .toast-notification--warning {
+  color: rgb(254, 215, 170);
+}
+.toast-notification--info {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  border-color: rgba(59, 130, 246, 0.2);
+  color: rgb(30, 58, 138);
+}
+.toast-notification--info .toast-notification__icon {
+  color: rgb(59, 130, 246);
+}
+.dark .toast-notification--info {
+  color: rgb(191, 219, 254);
+}
+/* Animation states */
+.toast-notification--visible {
+  transform: translateX(0);
+}
+.toast-notification--hiding {
+  transform: translateX(100%);
+  opacity: 0;
+  scale: 0.95;
+}
+/* Enhanced animations */
+@keyframes toast-slide-in {
+  0% {
+    transform: translateX(100%) scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+.toast-notification--entering {
+  animation: toast-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Dark mode enhancements */
+.dark .toast-notification {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .toast-notification {
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+    transform: translateY(-100%);
+  }
+  
+  .toast-notification--visible {
+    transform: translateY(0);
+  }
+  
+  .toast-notification--hiding {
+    transform: translateY(-100%);
+  }
+  
+  @keyframes toast-slide-in {
+    0% {
+      transform: translateY(-100%) scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+}
+/* Stacking for multiple toasts */
+.toast-notification:nth-child(1) { z-index: 9999; }
+.toast-notification:nth-child(2) { z-index: 9998; top: 5.5rem; }
+.toast-notification:nth-child(3) { z-index: 9997; top: 9.5rem; }
+.toast-notification:nth-child(4) { z-index: 9996; top: 13.5rem; }
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -5722,12 +6021,17 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
-/* Smooth theme transitions */
-html {
+/* Smooth theme transitions - only when not loading */
+html:not(.no-transitions) {
     transition: color-scheme 0.3s ease;
   }
-* {
+html:not(.no-transitions) * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+/* Disable transitions during page load to prevent flash */
+html.no-transitions,
+  html.no-transitions * {
+    transition: none !important;
   }
 /* Global Header Sizes & Thickness - NVIDIA Style */
 h1 {
@@ -6192,9 +6496,6 @@ button:focus-visible,
 .right-2 {
   right: 0.5rem;
 }
-.right-4 {
-  right: 1rem;
-}
 .top-0 {
   top: 0px;
 }
@@ -6469,10 +6770,6 @@ button:focus-visible,
 }
 .-translate-x-full {
   --tw-translate-x: -100%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-.translate-x-full {
-  --tw-translate-x: 100%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .rotate-90 {
@@ -6752,10 +7049,6 @@ button:focus-visible,
   --tw-bg-opacity: 1;
   background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1));
 }
-.bg-blue-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
-}
 .bg-brand {
   background-color: var(--color-brand);
 }
@@ -6787,10 +7080,6 @@ button:focus-visible,
   --tw-bg-opacity: 1;
   background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
 }
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
-}
 .bg-red-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
@@ -6810,10 +7099,6 @@ button:focus-visible,
 .bg-yellow-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1));
-}
-.bg-yellow-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
 }
 .bg-zinc-100 {
   --tw-bg-opacity: 1;

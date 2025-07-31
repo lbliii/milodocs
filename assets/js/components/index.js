@@ -25,6 +25,9 @@ export const componentRegistry = {
   'glossary': () => import('./layout/Glossary.js'),
   'chat-toc-toggle': () => import('./layout/ChatTocToggle.js'),
   
+  // UI components
+  'toast': () => import('./ui/Toast.js'),
+  
   // Feature components
   'tutorial-manager': () => import('./features/TutorialManager.js'),
   'debug-tray': () => import('./features/DebugTray.js'),
@@ -80,7 +83,8 @@ export async function loadComponents(names) {
 export function registerAllComponents() {
   // Critical components that should be registered immediately
   const critical = [
-    'theme-toggle',              // Must be first for theme application
+    'toast',                     // Must be first for notifications
+    'theme-toggle',              // Must be early for theme application
     'navigation-sidebar-left',   // Essential for navigation
     'search',                    // Essential search functionality
     'navigation-mobile-toggle',  // Mobile navigation

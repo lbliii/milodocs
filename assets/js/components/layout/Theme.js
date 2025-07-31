@@ -111,7 +111,7 @@ export class Theme extends Component {
     const oldTheme = this.currentTheme;
     this.currentTheme = theme;
     
-    // Update document class
+    // Update document class (don't interfere if no-transitions is active)
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {

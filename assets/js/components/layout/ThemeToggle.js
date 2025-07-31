@@ -72,14 +72,17 @@ export class ThemeToggle extends Component {
 
   /**
    * Apply stored theme immediately (before DOM ready)
+   * Note: This may be redundant if the head script already applied the theme
    */
   applyStoredTheme() {
     const savedTheme = localStorage.get(this.themeKey);
     const isDarkMode = savedTheme === 'dark';
     
-    if (isDarkMode) {
+    // Only apply if theme isn't already set (avoid redundant work)
+    const currentlyDark = document.documentElement.classList.contains('dark');
+    if (isDarkMode && !currentlyDark) {
       document.documentElement.classList.add('dark');
-    } else {
+    } else if (!isDarkMode && currentlyDark) {
       document.documentElement.classList.remove('dark');
     }
   }
@@ -91,7 +94,7 @@ export class ThemeToggle extends Component {
     const isDarkMode = document.documentElement.classList.toggle('dark');
     
     // Save preference
-    localStorage.setItem(this.themeKey, isDarkMode ? 'dark' : 'light');
+          localStorage.set(this.themeKey, isDarkMode ? 'dark' : 'light');
     
     // Update UI
     this.updateUI();
@@ -207,7 +210,7 @@ export class ThemeToggle extends Component {
    */
   resetTheme() {
     this.setTheme(this.defaultTheme);
-    localStorage.removeItem(this.themeKey);
+    localStorage.remove(this.themeKey);
   }
 
   /**

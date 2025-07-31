@@ -293,10 +293,10 @@ export class ArticleCollapse extends Component {
     const key = this.getStorageKey(toggle);
     
     try {
-      localStorage.setItem(key, JSON.stringify({
+      localStorage.set(key, {
         expanded: toggleData.isExpanded,
         timestamp: Date.now()
-      }));
+      });
     } catch (error) {
       console.warn('Failed to save collapse state:', error);
     }
@@ -311,9 +311,9 @@ export class ArticleCollapse extends Component {
     const key = this.getStorageKey(toggle);
     
     try {
-      const stored = localStorage.getItem(key);
+      const stored = localStorage.get(key);
       if (stored) {
-        const { expanded } = JSON.parse(stored);
+        const { expanded } = stored; // SafeStorage already handles JSON parsing
         if (expanded) {
           // Expand without animation on page load
           const toggleData = this.toggles.get(toggle);
