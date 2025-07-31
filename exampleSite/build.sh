@@ -5,18 +5,30 @@
 
 set -e
 
+# Navigate to exampleSite directory first
+cd exampleSite
+
 echo "Installing dependencies for markup renderers..."
+
+# Debug: List current directory and files
+echo "Current directory: $(pwd)"
+echo "Files in current directory:"
+ls -la
 
 # Install Python dependencies (for RST support)
 if [ -f "requirements.txt" ]; then
-    echo "Installing Python dependencies..."
+    echo "Found requirements.txt, installing Python dependencies..."
     pip install -r requirements.txt
+else
+    echo "requirements.txt not found"
 fi
 
 # Install Ruby dependencies (for AsciiDoc support)
 if [ -f "Gemfile" ]; then
-    echo "Installing Ruby dependencies..."
+    echo "Found Gemfile, installing Ruby dependencies..."
     bundle install
+else
+    echo "Gemfile not found"
 fi
 
 echo "Setting up theme for cloud deployment..."
