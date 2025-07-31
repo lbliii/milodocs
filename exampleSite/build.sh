@@ -15,10 +15,17 @@ echo "Current directory: $(pwd)"
 echo "Files in current directory:"
 ls -la
 
+# Check if required tools are available
+echo "Checking available tools:"
+which python3 || echo "python3 not found"
+which pip3 || echo "pip3 not found"
+which ruby || echo "ruby not found"
+which bundle || echo "bundle not found"
+
 # Install Python dependencies (for RST support)
 if [ -f "requirements.txt" ]; then
     echo "Found requirements.txt, installing Python dependencies..."
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 else
     echo "requirements.txt not found"
 fi

@@ -4,7 +4,7 @@
       "HUGO_VERSION": "0.146.0"
     }
   },
-  "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.146.0/hugo_extended_0.146.0_linux-amd64.tar.gz | tar -xz && mv hugo /usr/local/bin/ && gem install bundler",
+  "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.146.0/hugo_extended_0.146.0_linux-amd64.tar.gz | tar -xz && mv hugo /usr/local/bin/ && gem install bundler && apt-get update && apt-get install -y python3 python3-pip",
   "buildCommand": "bash ./exampleSite/build.sh",
   "outputDirectory": "exampleSite/public",
   "framework": null
