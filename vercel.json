@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd exampleSite && hugo --theme ../..",
+  "outputDirectory": "exampleSite/public",
+  "env": {
+    "HUGO_VERSION": "0.146.0",
+    "HUGO_THEME": "milodocs"
+  }
+}
