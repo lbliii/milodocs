@@ -21,7 +21,7 @@
   // Modern dynamic import with error handling
   async function loadPlayer() {
     try {
-      const { default: Clappr } = await import('https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js');
+      const { default: Clappr } = await import('https://cdn.jsdelivr.net/npm/@clappr/player@0.4.0/dist/clappr.min.js');
       
       const player = new Clappr.Player({
         source: {{ $src | jsonify }},
