@@ -6,7 +6,7 @@
   {{- $others := complement (union $images $videos $documents) . -}}
   
   {{- if or $images $videos $documents $others -}}
-    <aside class="enhanced-metadata mt-8 not-prose" data-component="article-page-resources">
+    <aside class="content-metadata mt-8 not-prose" data-component="article-page-resources">
       <div class="toc-header">
         <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -26,7 +26,7 @@
           </h3>
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {{- range $images -}}
-              <div class="enhanced-resource-card group relative">
+              <div class="resource-card group relative">
                 <img src="{{ .RelPermalink }}" 
                      alt="{{ .Title | default "Resource image" }}" 
                      class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-200"
@@ -56,7 +56,7 @@
           </h3>
           <div class="space-y-3">
             {{- range $documents -}}
-              <div class="enhanced-resource-card flex items-center justify-between p-4">
+              <div class="resource-card flex items-center justify-between p-4">
                 <div class="flex items-center flex-1 min-w-0">
                   <svg class="w-5 h-5 mr-3 opacity-60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>

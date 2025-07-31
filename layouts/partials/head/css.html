@@ -67,7 +67,10 @@
   {{- warnf "Enhancement CSS: page-enhancements.css not found" -}}
 {{- end -}}
 
-{{/* Add component styles */}}
+{{/* ==== MODULAR COMPONENT CSS ARCHITECTURE ==== */}}
+{{/* Load all component CSS files in dependency order */}}
+
+{{/* 1. Foundation Components - Base UI elements */}}
 {{- $debugCSS := resources.Get "css/components/debug.css" -}}
 {{- if $debugCSS -}}
   {{- $cssResources = $cssResources | append $debugCSS -}}
@@ -75,7 +78,20 @@
   {{- warnf "Component CSS: debug.css not found" -}}
 {{- end -}}
 
-{{/* Add notice component styles */}}
+{{- $buttonsCSS := resources.Get "css/components/buttons.css" -}}
+{{- if $buttonsCSS -}}
+  {{- $cssResources = $cssResources | append $buttonsCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: buttons.css not found" -}}
+{{- end -}}
+
+{{- $tablesCSS := resources.Get "css/components/tables.css" -}}
+{{- if $tablesCSS -}}
+  {{- $cssResources = $cssResources | append $tablesCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: tables.css not found" -}}
+{{- end -}}
+
 {{- $noticeCSS := resources.Get "css/components/notice.css" -}}
 {{- if $noticeCSS -}}
   {{- $cssResources = $cssResources | append $noticeCSS -}}
@@ -83,15 +99,14 @@
   {{- warnf "Component CSS: notice.css not found" -}}
 {{- end -}}
 
-{{/* Add article header component styles */}}
-{{- $articleHeaderCSS := resources.Get "css/components/article-header.css" -}}
-{{- if $articleHeaderCSS -}}
-  {{- $cssResources = $cssResources | append $articleHeaderCSS -}}
+{{/* 2. Navigation Components - Site navigation and wayfinding */}}
+{{- $navigationCSS := resources.Get "css/components/navigation.css" -}}
+{{- if $navigationCSS -}}
+  {{- $cssResources = $cssResources | append $navigationCSS -}}
 {{- else -}}
-  {{- warnf "Component CSS: article-header.css not found" -}}
+  {{- warnf "Component CSS: navigation.css not found" -}}
 {{- end -}}
 
-{{/* Add breadcrumbs component styles */}}
 {{- $breadcrumbsCSS := resources.Get "css/components/breadcrumbs.css" -}}
 {{- if $breadcrumbsCSS -}}
   {{- $cssResources = $cssResources | append $breadcrumbsCSS -}}
@@ -99,7 +114,63 @@
   {{- warnf "Component CSS: breadcrumbs.css not found" -}}
 {{- end -}}
 
-{{/* Metadata styles are now included in article-header.css */}}
+{{/* 3. Interactive Components - User interaction elements */}}
+{{- $searchCSS := resources.Get "css/components/search.css" -}}
+{{- if $searchCSS -}}
+  {{- $cssResources = $cssResources | append $searchCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: search.css not found" -}}
+{{- end -}}
+
+{{- $chatCSS := resources.Get "css/components/chat.css" -}}
+{{- if $chatCSS -}}
+  {{- $cssResources = $cssResources | append $chatCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: chat.css not found" -}}
+{{- end -}}
+
+{{/* 4. Article Components - Content-specific layout elements */}}
+{{- $articleHeaderCSS := resources.Get "css/components/article-header.css" -}}
+{{- if $articleHeaderCSS -}}
+  {{- $cssResources = $cssResources | append $articleHeaderCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: article-header.css not found" -}}
+{{- end -}}
+
+{{- $tilesCSS := resources.Get "css/components/tiles.css" -}}
+{{- if $tilesCSS -}}
+  {{- $cssResources = $cssResources | append $tilesCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: tiles.css not found" -}}
+{{- end -}}
+
+{{- $cardsCSS := resources.Get "css/components/cards.css" -}}
+{{- if $cardsCSS -}}
+  {{- $cssResources = $cssResources | append $cardsCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: cards.css not found" -}}
+{{- end -}}
+
+{{- $glossaryCSS := resources.Get "css/components/glossary.css" -}}
+{{- if $glossaryCSS -}}
+  {{- $cssResources = $cssResources | append $glossaryCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: glossary.css not found" -}}
+{{- end -}}
+
+{{- $quicklinksCSS := resources.Get "css/components/quicklinks.css" -}}
+{{- if $quicklinksCSS -}}
+  {{- $cssResources = $cssResources | append $quicklinksCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: quicklinks.css not found" -}}
+{{- end -}}
+
+{{- $nextPrevCSS := resources.Get "css/components/next-prev.css" -}}
+{{- if $nextPrevCSS -}}
+  {{- $cssResources = $cssResources | append $nextPrevCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: next-prev.css not found" -}}
+{{- end -}}
 
 {{/* Advanced CSS bundling with environment-specific optimization */}}
 {{- if $cssResources -}}

@@ -65,10 +65,13 @@
 }
 
 .breadcrumb__link:focus {
-  outline: 2px solid var(--color-brand);
+  outline: 2px solid transparent;
   outline-offset: 2px;
   color: var(--color-brand);
   background-color: var(--color-surface-hover);
+  box-shadow: 
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.15); /* Enhanced double focus ring */
 }
 
 .breadcrumb__separator {
@@ -118,6 +121,7 @@
 .breadcrumb__current,
 .breadcrumb__link {
   animation: breadcrumb-enter 0.3s ease-out;
+  animation-fill-mode: both;
 }
 
 @keyframes breadcrumb-enter {

@@ -108,15 +108,23 @@ function initializeScrollEnhancements() {
 }
 
 function initializeMicroInteractions() {
-    // Add ripple effect to buttons
-    const buttons = document.querySelectorAll('button, .btn');
-    buttons.forEach(button => {
-        button.addEventListener('click', createRippleEffect);
+    // Add ripple effect to buttons and interactive elements
+    const clickableElements = document.querySelectorAll(`
+        button, .btn, .topbar__button,
+        .nav-link, .breadcrumb__link, .toc-link,
+        .quicklinks__link, .quicklinks__item,
+        .tile, .card, .resource-card,
+        .topbar__logo-link, .dropdown-link,
+        .sidebar-item__link, .expand-toggle
+    `);
+    
+    clickableElements.forEach(element => {
+        element.addEventListener('click', createRippleEffect);
     });
     
-    // Enhanced hover states for cards and links
-    const interactiveElements = document.querySelectorAll('.tile, .card, .nav-link');
-    interactiveElements.forEach(element => {
+    // Enhanced hover states for cards and interactive elements
+    const hoverElements = document.querySelectorAll('.tile, .card, .quicklinks__item');
+    hoverElements.forEach(element => {
         element.addEventListener('mouseenter', () => {
             element.style.transform = 'translateY(-2px)';
             element.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';

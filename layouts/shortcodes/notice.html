@@ -1,11 +1,11 @@
 {{ $type := .Get 0 | default "info" }}
 {{ $title := .Get 1 }}
-<div class="enhanced-notice enhanced-notice--{{ $type }} group" 
+<div class="notice notice--{{ $type }} group" 
      data-notice-type="{{ $type }}"
      role="alert"
      aria-live="polite">
-    <div class="enhanced-notice__container">
-        <div class="enhanced-notice__icon-wrapper">
+      <div class="notice__container">
+    <div class="notice__icon-wrapper">
            <img src="/icons/notice/
             {{- with $type}}
                 {{- if eq . "danger" -}} danger
@@ -17,13 +17,13 @@
                 {{- else if eq . "snack" -}} snack 
                 {{- end -}}
             {{- end -}}
-           .svg" class="enhanced-notice__icon" alt="{{ $type | title }} notice">
+           .svg" class="notice__icon" alt="{{ $type | title }} notice">
         </div>
-        <div class="enhanced-notice__content">
-            {{- if $title -}}
-            <div class="enhanced-notice__title">{{ $title }}</div>
-            {{- end -}}
-            <div class="enhanced-notice__text">
+            <div class="notice__content">
+      {{- if $title -}}
+        <div class="notice__title">{{ $title }}</div>
+      {{- end -}}
+      <div class="notice__text">
                 {{ $.Page.RenderString .Inner }}
             </div>
         </div>

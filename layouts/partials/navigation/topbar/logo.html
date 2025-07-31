@@ -1,13 +1,9 @@
 {{- $logo := .Site.Params.logo -}}
-<a href="/" class="flex items-center" data-component="navigation-topbar-logo">
-    <span class="w-5 h-5">
-        {{- if $logo -}}
-            <!-- Display a smaller version of the logo or similar -->
-            <img src="{{ $logo }}" alt="Logo Small" class="w-5">
-        {{- else -}}
-            <!-- Fallback to a generic home icon -->
-            <img id="lightModeHome" src="/icons/light/home.svg" alt="Home" class="hidden">
-             <img id="darkModeHome" src="/icons/dark/home.svg" alt="Home" class="hidden">
-        {{- end -}}
-    </span>
+<a href="/" class="topbar__logo-link">
+    {{- if $logo -}}
+    <img src="{{ $logo }}" alt="Home" class="topbar__logo-image">
+    {{- else -}}
+    <img id="lightModeHome" src="/icons/light/home.svg" alt="Home" class="topbar__logo-image hidden">
+    <img id="darkModeHome" src="/icons/dark/home.svg" alt="Home" class="topbar__logo-image hidden">
+    {{- end -}}
 </a>

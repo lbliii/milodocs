@@ -127,12 +127,12 @@ class ArticleHeader {
       // Clean up after animation
       setTimeout(() => {
         this.container.classList.remove('expanding');
-        this.metadataPanel.style.maxHeight = 'none'; // Allow natural height
+        this.metadataPanel.style.maxHeight = '200px'; // Match CSS max-height limit
         this.isAnimating = false;
       }, 400);
     } else {
       // Immediate expand
-      this.metadataPanel.style.maxHeight = 'none';
+      this.metadataPanel.style.maxHeight = '200px'; // Match CSS max-height limit
       this.isAnimating = false;
     }
 

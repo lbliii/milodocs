@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const tiles = document.querySelectorAll(".enhanced-tile");
+  const tiles = document.querySelectorAll(".tile");
   
   if (tiles.length > 0) {
     const globalPosition = { x: 50, y: 50 }; // Default to center

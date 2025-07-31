@@ -1,0 +1,204 @@
+/* Chat Component - Enhanced chat interface with NVIDIA styling */
+
+/* Enhanced Chat Interface */
+.chat-controls {
+  @apply flex flex-col space-y-3 p-4 rounded-xl;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.chat-form {
+  @apply flex space-x-3;
+}
+
+.chat-input {
+  @apply flex-grow px-4 py-3 rounded-lg border-2 
+         transition-all duration-200 focus:outline-none focus:ring-2;
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-brand);
+  --tw-ring-color: var(--color-brand);
+}
+
+.chat-input:hover {
+  border-color: var(--color-brand);
+  background-color: var(--color-surface-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-input:focus {
+  border-color: var(--color-brand);
+  background-color: var(--color-bg-primary);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 0 30px rgba(var(--color-brand-rgb), 0.4),
+    0 0 60px rgba(var(--color-brand-rgb), 0.2),
+    0 0 100px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2); /* Enhanced multi-layered glow like search */
+}
+
+.chat-input::placeholder {
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+/* Enhanced Chat Messages */
+#chat-messages {
+  @apply flex flex-col space-y-4 p-4;
+  max-height: calc(100vh - 12rem);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.chat-bubble {
+  @apply p-4 rounded-xl shadow-sm relative max-w-none;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-family: var(--font-brand);
+}
+
+.chat-bubble--user {
+  @apply ml-8;
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  border-bottom-right-radius: 0.375rem;
+}
+
+.chat-bubble--bot {
+  @apply mr-8;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: 0.375rem;
+}
+
+.chat-bubble--error {
+  @apply mr-8;
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(239, 68, 68, 0.05) 100%
+  );
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: 0.375rem;
+}
+
+/* Chat message formatting */
+.chat-bubble p {
+  @apply mb-3 last:mb-0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chat-bubble code {
+  @apply px-2 py-1 rounded text-sm;
+  background-color: rgba(var(--color-brand-rgb), 0.1);
+  color: var(--color-brand);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  word-break: break-all;
+}
+
+.chat-bubble pre {
+  @apply p-3 rounded-lg overflow-x-auto text-sm my-3;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-primary);
+}
+
+.chat-bubble pre code {
+  @apply p-0;
+  background: none;
+  color: var(--color-text-primary);
+}
+
+/* Chat message animations */
+.chat-bubble {
+  animation: chat-message-enter 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes chat-message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced typing indicator */
+.typing-indicator {
+  @apply flex items-center space-x-2 p-4 rounded-xl mr-8;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+}
+
+.typing-indicator::after {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+  animation: typing-dot 1.4s infinite;
+}
+
+.typing-indicator::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+  animation: typing-dot 1.4s infinite 0.2s;
+  margin-right: 4px;
+}
+
+@keyframes typing-dot {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Chat pair container */
+.chat-pair {
+  @apply space-y-2;
+}
+
+/* Delete button styling */
+.chat-delete {
+  @apply absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white 
+         rounded-full flex items-center justify-center text-xs
+         opacity-0 group-hover:opacity-100 transition-opacity duration-200
+         hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500;
+}
+
+.chat-pair:hover .chat-delete {
+  opacity: 1;
+}

@@ -3,7 +3,7 @@
   {{- $relatedPages := .RegularPages | first 6 -}}
   {{- $relatedPages = $relatedPages | complement (slice $.Page) -}}
   {{- if $relatedPages -}}
-    <aside class="enhanced-metadata mt-12 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
+    <aside class="content-metadata mt-12 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
       <div class="toc-header">
         <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
@@ -13,7 +13,7 @@
 
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {{- range $relatedPages -}}
-          <div class="enhanced-resource-card p-6 space-y-3" 
+          <div class="resource-card p-6 space-y-3" 
                data-related-article="{{ .RelPermalink }}" 
                data-article-title="{{ .LinkTitle | urlize }}">
             <a href="{{ .RelPermalink }}" class="space-y-3 block" aria-describedby="{{ .RelPermalink | anchorize }}-summary">

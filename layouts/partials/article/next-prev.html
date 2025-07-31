@@ -2,7 +2,7 @@
 {{$trunc := .Site.Params.article.nextPrev.trunc}}
 <nav class="mt-8 flex justify-between items-center gap-4" data-component="article-next-prev">
     {{with .PrevInSection }}
-        <a href="{{.RelPermalink}}" class="enhanced-nav-link flex-1 text-left" aria-label="Previous: {{.Title}}">
+        <a href="{{.RelPermalink}}" class="nav-link flex-1 text-left" aria-label="Previous: {{.Title}}">
             <div class="flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -14,7 +14,7 @@
             </div>
         </a>
     {{else}}
-        <div class="enhanced-nav-link enhanced-nav-link--disabled flex-1 text-left">
+        <div class="nav-link nav-link--disabled flex-1 text-left">
             <div class="flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -28,7 +28,7 @@
     {{ end }}
 
     {{with .NextInSection }}
-        <a href="{{.RelPermalink}}" class="enhanced-nav-link flex-1 text-right" aria-label="Next: {{.Title}}">
+        <a href="{{.RelPermalink}}" class="nav-link flex-1 text-right" aria-label="Next: {{.Title}}">
             <div class="flex items-center justify-end">
                 <div>
                     <div class="text-xs opacity-70 mb-1">Next</div>
@@ -41,7 +41,7 @@
         </a>
     {{else}}
         {{- range first 1 .Pages}}
-        <a href="{{.RelPermalink}}" class="enhanced-nav-link flex-1 text-right" aria-label="Next: {{.Title}}">
+        <a href="{{.RelPermalink}}" class="nav-link flex-1 text-right" aria-label="Next: {{.Title}}">
             <div class="flex items-center justify-end">
                 <div>
                     <div class="text-xs opacity-70 mb-1">Next</div>
@@ -53,7 +53,7 @@
             </div>
         </a>
         {{- else}}
-        <div class="enhanced-nav-link enhanced-nav-link--disabled flex-1 text-right">
+        <div class="nav-link nav-link--disabled flex-1 text-right">
             <div class="flex items-center justify-end">
                 <div>
                     <div class="text-xs opacity-70 mb-1">Next</div>

@@ -1,0 +1,263 @@
+/* Glossary Component - Enhanced UX for glossary entries and navigation */
+
+/* Base Glossary Entry Styles */
+.glossary-entry {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border-radius: 0.875rem;
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.glossary-entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    transparent 50%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Enhanced hover states */
+.glossary-entry:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-brand);
+  box-shadow: 
+    0 12px 28px rgba(0, 0, 0, 0.12),
+    0 0 20px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.glossary-entry:hover::before {
+  opacity: 1;
+}
+
+/* Focus states for accessibility */
+.glossary-entry:focus-within {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  transform: translateY(-2px);
+}
+
+/* Glossary entry content */
+.glossary-entry a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.glossary-entry h2 {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.glossary-entry:hover h2 {
+  color: var(--color-brand);
+}
+
+.glossary-entry h2::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.5) 100%
+  );
+  transition: width 0.3s ease;
+}
+
+.glossary-entry:hover h2::after {
+  width: 100%;
+}
+
+/* Glossary entry descriptions */
+.glossary-entry p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+.glossary-entry:hover p {
+  color: var(--color-text-primary);
+}
+
+/* Glossary letter headers */
+.glossary-entry + h1 {
+  color: var(--color-text-primary);
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 3rem 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--color-brand);
+  position: relative;
+}
+
+.glossary-entry + h1 a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.glossary-entry + h1 a:hover {
+  color: var(--color-brand);
+  transform: translateX(4px);
+}
+
+/* First letter styling for glossary headers */
+h1[id] {
+  color: var(--color-text-primary);
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 3rem 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--color-brand);
+  position: relative;
+  scroll-margin-top: 2rem;
+}
+
+h1[id] a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+h1[id] a:hover {
+  color: var(--color-brand);
+  transform: translateX(4px);
+}
+
+h1[id]::before {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.3) 70%,
+    transparent 100%
+  );
+}
+
+/* Glossary container */
+#enteries-container {
+  padding: 1rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .glossary-entry {
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .glossary-entry:hover {
+    transform: translateY(-2px);
+  }
+  
+  h1[id] {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem 0;
+  }
+}
+
+/* Dark mode enhancements */
+.dark .glossary-entry {
+  border-color: var(--color-border-secondary);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .glossary-entry:hover {
+  box-shadow: 
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-brand-rgb), 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Animation improvements */
+.glossary-entry {
+  animation: glossary-enter 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes glossary-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Stagger animation for multiple entries */
+.glossary-entry:nth-child(odd) { animation-delay: 0s; }
+.glossary-entry:nth-child(even) { animation-delay: 0.1s; }
+
+/* Glossary navigation enhancements */
+.glossary-nav {
+  position: sticky;
+  top: 2rem;
+  background: var(--color-surface);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+}
+
+.glossary-nav a {
+  display: inline-block;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  border-radius: 0.5rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.glossary-nav a:hover {
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  transform: translateY(-1px);
+}

@@ -1,19 +1,17 @@
 
-<div id="topNavLinks" class="nav-links" data-component="navigation-topbar-links">
-        {{if .Site.Params.topNav.globalLinks.display}}
-        {{- range .Site.Params.topNav.globalLinks.links -}}
-            <a href="{{.url}}" aria-label="{{.title}}" class="nav-link">{{.title}}</a>
+{{if .Site.Params.topNav.globalLinks.display}}
+{{- range .Site.Params.topNav.globalLinks.links -}}
+<a href="{{.url}}" aria-label="{{.title}}" class="nav-link">{{.title}}</a>
+{{- end -}}
+{{- end -}}
+
+{{if .Site.Params.topNav.dropdown.display}}
+<div class="relative group z-50">
+    <a href="{{.Site.Params.topNav.dropdown.url}}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="nav-link">{{.Site.Params.topNav.dropdown.name}}</a>
+    <div class="dropdown">
+        {{- range .Site.Params.topNav.dropdown.links -}}
+        <a href="{{.url}}" aria-label="{{.name}}" class="dropdown-link">{{.name}}</a>
         {{- end -}}
-        {{- end -}}
-    <!-- Dropdown -->
-    {{if .Site.Params.topNav.dropdown.display}}
-    <div id="topNavPrimaryDropdown" class="hidden md:block relative group z-50">
-        <a href="{{.Site.Params.topNav.dropdown.url}}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="nav-link">{{.Site.Params.topNav.dropdown.name}}</a>
-        <div class="dropdown">
-            {{- range .Site.Params.topNav.dropdown.links -}}
-            <a href="{{.url}}" aria-label="{{.name}}" class="dropdown-link">{{.name}}</a>
-            {{- end -}}
-        </div>
     </div>
-    {{- end -}}
 </div>
+{{- end -}}

@@ -1,0 +1,697 @@
+/* Navigation Component - Topbar, dropdown, and sidebar navigation with NVIDIA styling */
+
+/* Enhanced Sidebar Navigation Animations */
+/* Hide nested content by default to prevent flash */
+.nested-content {
+  display: none;
+}
+
+/* Sidebar Container Styling */
+.sidebar-container {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border-right: 1px solid var(--color-border-primary);
+}
+
+@media (min-width: 768px) {
+  .sidebar-container {
+    background-color: transparent;
+    border-right: none;
+  }
+}
+
+/* Mobile Header Styling */
+.sidebar-header {
+  border-bottom: 1px solid var(--color-border-primary);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.sidebar-close-btn {
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.sidebar-close-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+/* LinkTree Styling */
+#linkTree {
+  background-color: transparent;
+  color: var(--color-text-primary);
+}
+
+/* Prevent layout shift during initialization */
+#linkTree:not(.initialized) {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#linkTree.initialized {
+  opacity: 1;
+}
+
+/* Show nested content when sidebar is initialized and expanded */
+#linkTree.initialized .nested-content.expanded {
+  display: block;
+}
+
+/* Only animate after initialization to prevent flash */
+#linkTree.initialized .nested-content.expanding {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+#linkTree.initialized .nested-content.collapsing {
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Enhanced hover states */
+.nested-content a:hover {
+  transform: translateX(4px);
+  @apply transition-transform duration-200;
+}
+
+/* Expand toggle button styling */
+.expand-toggle {
+  @apply p-1 rounded transition-colors duration-200;
+  color: var(--color-text-secondary);
+}
+
+.expand-toggle:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+}
+
+.expand-toggle svg {
+  @apply transition-transform duration-200;
+}
+
+/* Enhanced TOC Styling */
+.toc {
+  @apply rounded-xl p-6 mb-8;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.toc-header {
+  @apply flex items-center mb-4 pb-3 border-b;
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+.toc-content a {
+  @apply inline-block py-2 px-3 rounded-lg transition-all duration-200;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.toc-content a:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+  transform: translateX(4px);
+}
+
+/* Enhanced Right Sidebar TOC */
+.toc-sidebar {
+  @apply p-6 text-sm;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+  color: var(--color-text-primary);
+}
+
+.toc-sidebar nav {
+  position: relative;
+}
+
+.toc-sidebar nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.3) 50%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+.toc-sidebar ul {
+  @apply list-none pl-4 space-y-1;
+  margin: 0;
+}
+
+.toc-sidebar ul ul {
+  @apply pl-4 mt-2 border-l border-opacity-20;
+  border-color: var(--color-border-primary);
+}
+
+/* TOC Link Styling */
+.toc-link {
+  @apply block py-2 px-3 rounded-lg transition-all duration-200 
+         relative overflow-hidden;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  line-height: 1.4;
+  font-weight: 400;
+  cursor: pointer; /* Ensure ripple-ready */
+}
+
+.toc-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-brand-rgb), 0.08) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.toc-link:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+  transform: translateX(4px);
+  padding-left: calc(0.75rem + 2px);
+  border-left: 2px solid var(--color-brand);
+}
+
+.toc-link:hover::before {
+  opacity: 1;
+}
+
+.toc-link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  color: var(--color-brand);
+  box-shadow: 
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.15); /* Enhanced double focus ring */
+}
+
+/* Heading Level Variations */
+.toc-link--h1 {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: var(--color-text-primary);
+}
+
+.toc-link--h2 {
+  font-weight: 500;
+  color: var(--color-brand);
+  opacity: 0.9;
+}
+
+.toc-link--h3 {
+  font-size: 0.85em;
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+
+/* Active state styling */
+.toc-link.active {
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  font-weight: 500;
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+}
+
+.toc-link.active::before {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 100%
+  );
+  opacity: 1;
+}
+
+/* Smooth scrolling indicator */
+.toc-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 0%;
+  background-color: var(--color-brand);
+  transition: height 0.3s ease;
+  border-radius: 1px;
+}
+
+/* Enhanced animations */
+.toc-sidebar {
+  animation: toc-enter 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes toc-enter {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .toc-sidebar {
+    @apply p-4 text-xs;
+  }
+  
+  .toc-link {
+    @apply py-1.5 px-2;
+  }
+}
+
+/* Clean CSS Grid Topbar Layout */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-primary);
+  transition: all 0.3s ease;
+  
+  /* CSS Grid Layout */
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  grid-template-areas: "logo navigation search controls";
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 4rem;
+}
+
+/* Grid Areas */
+.topbar__logo {
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.topbar__logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.topbar__logo-link:hover {
+  opacity: 0.8;
+}
+
+.topbar__logo-image {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.topbar__navigation {
+  grid-area: navigation;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0; /* Allow shrinking */
+}
+
+.topbar__search {
+  grid-area: search;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0; /* Allow shrinking */
+}
+
+.topbar__controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Responsive Grid Layout */
+@media (max-width: 1024px) {
+  .topbar {
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas: "logo navigation search controls";
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "logo search controls";
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 3.5rem;
+  }
+  
+  /* Hide navigation on mobile - it should be in a hamburger menu */
+  .topbar__navigation {
+    display: none;
+  }
+}
+
+/* Updated Navigation Links for Grid Layout */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Tighter spacing for minimal look */
+  font-family: var(--font-brand);
+  font-weight: 300;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  min-height: 2.25rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden; /* Essential for ripple containment */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Enhanced focus states for nav-links */
+.nav-link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.2); /* Double focus ring */
+}
+
+/* Focus states now handled above with enhanced double rings */
+
+@media (max-width: 768px) {
+  .nav-link {
+    display: none; /* Hidden on mobile, shown via hamburger menu */
+  }
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.08) 0%,
+    transparent 50%,
+    rgba(var(--color-brand-rgb), 0.03) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: var(--color-brand);
+  /* Removed transform and background for cleaner minimal look */
+}
+
+.nav-link:hover::before,
+.nav-link:focus::before {
+  opacity: 0.5; /* More subtle hover effect */
+}
+
+.dropdown {
+  @apply absolute left-0 mt-2 w-52 rounded-xl overflow-hidden 
+         shadow-xl p-2 transition-all duration-300;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.group:hover .dropdown {
+  @apply block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-bottom: none;
+  border-right: none;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+.dropdown-link {
+  @apply flex items-center px-4 py-3 text-sm rounded-lg 
+         transition-all duration-200 focus:outline-none focus:ring-2
+         relative overflow-hidden;
+  color: var(--color-text-primary);
+  --tw-ring-color: var(--color-brand);
+  text-decoration: none;
+  margin: 2px 0;
+}
+
+.dropdown-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-brand-rgb), 0.08) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.dropdown-link:hover,
+.dropdown-link:focus {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+  transform: translateX(4px);
+  border-left: 3px solid var(--color-brand);
+  padding-left: calc(1rem - 3px);
+}
+
+.dropdown-link:hover::before,
+.dropdown-link:focus::before {
+  opacity: 1;
+}
+
+/* Sidebar Navigation Components - Cohesive Design */
+.sidebar-item {
+  @apply flex items-center rounded-md transition-all duration-200;
+  background-color: transparent;
+  margin: 1px 0;
+}
+
+.sidebar-item:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.sidebar-item__link {
+  @apply flex items-center flex-grow p-2 transition-all duration-200 
+         focus:outline-none focus:ring-2 rounded-l-md;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  --tw-ring-color: var(--color-brand);
+  min-height: 2.5rem; /* Consistent touch target */
+}
+
+.sidebar-item__link:hover,
+.sidebar-item__link:focus {
+  color: var(--color-brand);
+}
+
+.sidebar-item__link--active {
+  color: var(--color-brand);
+  background-color: var(--color-hover);
+}
+
+.sidebar-item__icon {
+  @apply w-5 h-5 mr-3 flex-shrink-0;
+}
+
+.sidebar-item__text {
+  @apply flex-grow;
+}
+
+.sidebar-item__expander {
+  @apply p-2 transition-all duration-200 focus:outline-none focus:ring-2 
+         rounded-r-md flex items-center justify-center;
+  color: var(--color-text-secondary);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  --tw-ring-color: var(--color-brand);
+}
+
+.sidebar-item__expander:hover,
+.sidebar-item__expander:focus {
+  color: var(--color-brand);
+  background-color: var(--color-surface-active);
+}
+
+.sidebar-item__chevron {
+  @apply w-4 h-4 transition-transform duration-200;
+}
+
+/* Level-specific styling */
+.sidebar-item--level-1 .sidebar-item__text {
+  @apply text-lg font-brand font-bold;
+}
+
+.sidebar-item--level-1 {
+  @apply mb-1;
+}
+
+.sidebar-item--level-2 {
+  @apply ml-4;
+}
+
+.sidebar-item--level-2 .sidebar-item__text {
+  @apply font-normal text-base;
+}
+
+.sidebar-item--level-3 {
+  @apply ml-6;
+}
+
+.sidebar-item--level-3 .sidebar-item__text {
+  @apply font-light text-sm;
+}
+
+.sidebar-item--level-4 {
+  @apply ml-8;
+}
+
+.sidebar-item--level-4 .sidebar-item__text {
+  @apply text-sm;
+}
+
+.sidebar-item--level-default {
+  @apply ml-10;
+}
+
+.sidebar-item--level-default .sidebar-item__text {
+  @apply text-xs;
+}
+
+/* Ensure text-brand utility works with sidebar items */
+.sidebar-item__link.text-brand {
+  color: var(--color-brand) !important;
+}
+
+/* Enhanced active state for the whole item */
+.sidebar-item:has(.sidebar-item__link--active) {
+  background-color: var(--color-hover);
+}
+
+/* Right Sidebar Styling - Remove background in dark mode */
+#sidebar-right {
+  background: transparent;
+}
+
+.dark #sidebar-right {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Remove TOC sidebar background in dark mode */
+.dark .toc-sidebar {
+  background: transparent !important;
+}
+
+/* Remove chat controls background in dark mode */
+.dark .chat-controls {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}

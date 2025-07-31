@@ -8,7 +8,7 @@
         {{ if  .Params.hidden }}
             {{/* Do not show the hidden child page or its descendants */}}
         {{else}}
-        <div class="tile enhanced-tile rounded-lg shadow-md p-6 transition duration-300 space-y-3">
+        <div class="tile tile rounded-lg shadow-md p-6 transition duration-300 space-y-3">
             <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-3 block">
                 <div class="flex items-start space-x-3">
                     {{with .Params.icon}}

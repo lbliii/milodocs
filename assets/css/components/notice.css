@@ -1,7 +1,7 @@
 /* Enhanced Notice Component */
 
 /* Base Enhanced Notice Styles */
-.enhanced-notice {
+.notice {
   position: relative;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -12,6 +12,7 @@
   overflow: hidden;
   backdrop-filter: blur(10px);
   animation: notice-enter 0.4s ease-out;
+  animation-fill-mode: both;
 }
 
 /* Legacy Notice Override */
@@ -25,7 +26,7 @@
 }
 
 /* Enhanced Notice Container */
-.enhanced-notice__container {
+.notice__container {
   display: flex;
   align-items: flex-start;
   padding: 1.25rem;
@@ -33,13 +34,13 @@
 }
 
 /* Enhanced Notice Icon */
-.enhanced-notice__icon-wrapper {
+.notice__icon-wrapper {
   margin-right: 1rem;
   flex-shrink: 0;
   position: relative;
 }
 
-.enhanced-notice__icon {
+.notice__icon {
   height: 1.5rem;
   width: 1.5rem;
   transition-property: all;
@@ -49,12 +50,12 @@
 }
 
 /* Enhanced Notice Content */
-.enhanced-notice__content {
+.notice__content {
   min-width: 0;
   flex: 1 1 0%;
 }
 
-.enhanced-notice__title {
+.notice__title {
   margin-bottom: 0.5rem;
   font-family: "NVIDIA", Arial, Helvetica, sans-serif;
   font-size: 1.125rem;
@@ -66,7 +67,7 @@
   line-height: 1.3;
 }
 
-.enhanced-notice__text {
+.notice__text {
   font-size: 0.875rem;
   line-height: 1.25rem;
   line-height: 1.625;
@@ -98,7 +99,7 @@
 /* Notice Type Variations */
 
 /* Info Notice */
-.enhanced-notice--info {
+.notice--info {
   background: linear-gradient(
     135deg,
     rgba(59, 130, 246, 0.1) 0%,
@@ -110,16 +111,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--info .enhanced-notice__title {
+.notice--info .notice__title {
   color: #1d4ed8;
 }
 
-.enhanced-notice--info .enhanced-notice__icon {
+.notice--info .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(59, 130, 246, 0.3));
 }
 
 /* Note Notice */
-.enhanced-notice--note {
+.notice--note {
   background: linear-gradient(
     135deg,
     rgba(99, 102, 241, 0.1) 0%,
@@ -131,16 +132,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--note .enhanced-notice__title {
+.notice--note .notice__title {
   color: #4c1d95;
 }
 
-.enhanced-notice--note .enhanced-notice__icon {
+.notice--note .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(99, 102, 241, 0.3));
 }
 
 /* Tip Notice */
-.enhanced-notice--tip {
+.notice--tip {
   background: linear-gradient(
     135deg,
     rgba(34, 197, 94, 0.1) 0%,
@@ -152,16 +153,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--tip .enhanced-notice__title {
+.notice--tip .notice__title {
   color: #15803d;
 }
 
-.enhanced-notice--tip .enhanced-notice__icon {
+.notice--tip .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(34, 197, 94, 0.3));
 }
 
 /* Warning Notice */
-.enhanced-notice--warning {
+.notice--warning {
   background: linear-gradient(
     135deg,
     rgba(245, 158, 11, 0.1) 0%,
@@ -173,16 +174,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--warning .enhanced-notice__title {
+.notice--warning .notice__title {
   color: #d97706;
 }
 
-.enhanced-notice--warning .enhanced-notice__icon {
+.notice--warning .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(245, 158, 11, 0.3));
 }
 
 /* Danger Notice */
-.enhanced-notice--danger {
+.notice--danger {
   background: linear-gradient(
     135deg,
     rgba(239, 68, 68, 0.1) 0%,
@@ -194,16 +195,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--danger .enhanced-notice__title {
+.notice--danger .notice__title {
   color: #dc2626;
 }
 
-.enhanced-notice--danger .enhanced-notice__icon {
+.notice--danger .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(239, 68, 68, 0.3));
 }
 
 /* Security Notice */
-.enhanced-notice--security {
+.notice--security {
   background: linear-gradient(
     135deg,
     rgba(168, 85, 247, 0.1) 0%,
@@ -215,16 +216,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--security .enhanced-notice__title {
+.notice--security .notice__title {
   color: #7c3aed;
 }
 
-.enhanced-notice--security .enhanced-notice__icon {
+.notice--security .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(168, 85, 247, 0.3));
 }
 
 /* Snack Notice */
-.enhanced-notice--snack {
+.notice--snack {
   background: linear-gradient(
     135deg,
     rgba(236, 72, 153, 0.1) 0%,
@@ -236,11 +237,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-.enhanced-notice--snack .enhanced-notice__title {
+.notice--snack .notice__title {
   color: #db2777;
 }
 
-.enhanced-notice--snack .enhanced-notice__icon {
+.notice--snack .notice__icon {
   filter: drop-shadow(0 1px 2px rgba(236, 72, 153, 0.3));
 }
 
@@ -249,11 +250,11 @@
   transform: translateY(-1px);
 }
 
-.enhanced-notice:hover .enhanced-notice__icon {
+.enhanced-notice:hover .notice__icon {
   transform: scale(1.1);
 }
 
-.enhanced-notice.group:hover .enhanced-notice__title {
+.enhanced-notice.group:hover .notice__title {
   transform: translateX(2px);
 }
 

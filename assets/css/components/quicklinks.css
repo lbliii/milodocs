@@ -1,0 +1,430 @@
+/* Quicklinks Component - Enhanced UX for quickstart/feature tiles */
+
+/* Base Quicklinks Container */
+.quicklinks {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.quicklinks--home {
+  padding-bottom: 1rem;
+}
+
+/* Quicklinks Grid */
+.quicklinks__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  /* Responsive grid */
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+  }
+  
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Quicklinks Item - Compact distinctive call-to-action card design */
+.quicklinks__item {
+  position: relative;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 160px;
+  
+  /* Distinctive card styling - not like regular tiles */
+  background: linear-gradient(
+    145deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.03) 50%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 2px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Accent border - distinctive feature */
+  border-left: 3px solid var(--color-brand);
+  
+  /* Optimized transition for performance */
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden; /* Essential for ripple effects */
+  cursor: pointer;
+}
+
+.quicklinks__item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--color-brand-rgb), 0.06);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.quicklinks__item:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-brand);
+  border-left-color: var(--color-brand-2);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.quicklinks__item:hover::before {
+  opacity: 1;
+}
+
+/* Quicklinks Header */
+.quicklinks__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Quicklinks Icon - Compact design */
+.quicklinks__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  padding: 0.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.1) 0%,
+    rgba(var(--color-brand-rgb), 0.05) 100%
+  );
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--color-brand-rgb), 0.2);
+  filter: brightness(0.9);
+  transition: all 0.2s ease;
+  margin-top: 0;
+}
+
+.quicklinks__item:hover .quicklinks__icon {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand) 0%,
+    var(--color-brand-2) 100%
+  );
+  border-color: var(--color-brand);
+  filter: brightness(1) saturate(1.2);
+  transform: scale(1.05);
+}
+
+/* Target the actual SVG/image inside the icon container */
+.quicklinks__item:hover .quicklinks__icon img,
+.quicklinks__item:hover .quicklinks__icon svg {
+  filter: brightness(0) invert(1);
+}
+
+/* Quicklinks Title - Compact but prominent */
+.quicklinks__title {
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: var(--font-brand);
+  line-height: 1.3;
+  margin: 0;
+  transition: color 0.2s ease;
+  position: relative;
+  letter-spacing: -0.025em;
+}
+
+.quicklinks__item:hover .quicklinks__title {
+  color: var(--color-brand);
+}
+
+.quicklinks__title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-brand);
+  border-radius: 1px;
+  transition: width 0.2s ease;
+}
+
+.quicklinks__item:hover .quicklinks__title::after {
+  width: 100%;
+}
+
+/* Quicklinks Description */
+.quicklinks__description {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+  transition: color 0.2s ease;
+  font-family: var(--font-body);
+}
+
+.quicklinks__item:hover .quicklinks__description {
+  color: var(--color-text-primary);
+}
+
+/* Quicklinks Actions Container */
+.quicklinks__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border-primary);
+  transition: border-color 0.2s ease;
+}
+
+.quicklinks__item:hover .quicklinks__actions {
+  border-color: var(--color-brand);
+}
+
+/* Quicklinks Action Links - Compact CTA buttons */
+.quicklinks__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--color-brand);
+  border: 1px solid var(--color-brand);
+  border-radius: 0.5rem;
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+  transition: all 0.2s ease;
+  overflow: hidden; /* Enable ripple effects */
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(var(--color-brand-rgb), 0.25);
+}
+
+.quicklinks__link:hover {
+  background: var(--color-brand-2);
+  border-color: var(--color-brand-2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--color-brand-rgb), 0.35);
+}
+
+.quicklinks__link:active {
+  transform: translateY(0);
+}
+
+/* Enhanced focus states for accessibility */
+.quicklinks__link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 
+    0 2px 6px rgba(var(--color-brand-rgb), 0.25),
+    0 0 0 2px var(--color-surface),
+    0 0 0 4px var(--color-brand); /* Inverted double focus ring */
+}
+
+/* Enhanced focus for quicklinks items */
+.quicklinks__item:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.2); /* Double focus ring */
+}
+
+/* External link indicator */
+.quicklinks__link[href^="http"]::after {
+  content: '↗';
+  margin-left: 0.25rem;
+  font-size: 0.75em;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.quicklinks__link[href^="http"]:hover::after {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .quicklinks__grid {
+    gap: 1.25rem;
+  }
+  
+  .quicklinks__item {
+    padding: 1rem;
+    min-height: 140px;
+  }
+  
+  .quicklinks__item:hover {
+    transform: translateY(-2px);
+  }
+  
+  .quicklinks__icon {
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 0.25rem;
+  }
+  
+  .quicklinks__title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  
+  .quicklinks__description {
+    font-size: 0.75rem;
+  }
+  
+  .quicklinks__actions {
+    flex-direction: column;
+    gap: 0.375rem;
+    padding-top: 0.375rem;
+  }
+  
+  .quicklinks__link {
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .quicklinks__item {
+    padding: 0.875rem;
+    min-height: 120px;
+    gap: 0.5rem;
+  }
+  
+  .quicklinks__header {
+    gap: 0.375rem;
+    margin-bottom: 0.125rem;
+  }
+  
+  .quicklinks__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0.1875rem;
+  }
+  
+  .quicklinks__title {
+    font-size: 0.9375rem;
+  }
+}
+
+/* Dark mode enhancements */
+.dark .quicklinks__item {
+  background: linear-gradient(
+    145deg,
+    rgba(var(--color-surface), 0.9) 0%,
+    rgba(var(--color-brand-rgb), 0.05) 50%,
+    rgba(var(--color-bg-secondary), 0.7) 100%
+  );
+  border-color: var(--color-border-secondary);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .quicklinks__item:hover {
+  border-color: var(--color-brand);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 8px 32px rgba(var(--color-brand-rgb), 0.3),
+    0 0 40px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark .quicklinks__icon {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.15) 0%,
+    rgba(var(--color-brand-rgb), 0.08) 100%
+  );
+  border-color: rgba(var(--color-brand-rgb), 0.3);
+}
+
+.dark .quicklinks__item:hover .quicklinks__icon {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand) 0%,
+    var(--color-brand-2) 100%
+  );
+  border-color: var(--color-brand);
+}
+
+/* Target the actual SVG/image inside the icon container for dark mode */
+.dark .quicklinks__item:hover .quicklinks__icon img,
+.dark .quicklinks__item:hover .quicklinks__icon svg {
+  filter: brightness(0) invert(1);
+}
+
+/* Animation improvements - simplified for performance */
+.quicklinks__item {
+  animation: quicklinks-enter 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes quicklinks-enter {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for multiple items */
+.quicklinks__item:nth-child(1) { animation-delay: 0s; }
+.quicklinks__item:nth-child(2) { animation-delay: 0.1s; }
+.quicklinks__item:nth-child(3) { animation-delay: 0.2s; }
+.quicklinks__item:nth-child(4) { animation-delay: 0.3s; }
+
+/* Loading state placeholders */
+.quicklinks--loading .quicklinks__item {
+  background: linear-gradient(90deg, 
+    var(--color-surface) 25%, 
+    var(--color-bg-secondary) 50%, 
+    var(--color-surface) 75%);
+  background-size: 200% 100%;
+  animation: quicklinks-loading 2s infinite;
+}
+
+@keyframes quicklinks-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Print styles */
+@media print {
+  .quicklinks__item {
+    break-inside: avoid;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+  
+  .quicklinks__link {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+}

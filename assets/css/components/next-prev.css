@@ -1,0 +1,297 @@
+/* Next-Prev Navigation Component - Enhanced UX for page navigation */
+
+/* Base Navigation Container */
+[data-component="article-next-prev"] {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+/* Next-Prev Navigation Link Base Styles - Scoped to avoid topbar conflicts */
+[data-component="article-next-prev"] .nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  min-height: 4rem;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+[data-component="article-next-prev"] .nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--color-brand-rgb), 0.04);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+/* Navigation Link Hover States */
+[data-component="article-next-prev"] .nav-link:hover {
+  border-color: var(--color-brand);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+[data-component="article-next-prev"] .nav-link:hover::before {
+  opacity: 1;
+}
+
+[data-component="article-next-prev"] .nav-link:hover div > div[class*="font-medium"],
+[data-component="article-next-prev"] .nav-link:hover .nav-link__title {
+  color: var(--color-brand) !important;
+}
+
+[data-component="article-next-prev"] .nav-link:hover svg {
+  color: var(--color-brand);
+  transform: translateX(2px);
+}
+
+/* Previous link - align icon to left, slide left on hover */
+[data-component="article-next-prev"] .nav-link:hover:has(svg[class*="mr-"]) svg {
+  transform: translateX(-2px);
+}
+
+/* Navigation Link Typography */
+[data-component="article-next-prev"] .nav-link .text-xs {
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+/* Target the title content specifically, avoiding Tailwind utility classes */
+[data-component="article-next-prev"] .nav-link div > div[class*="font-medium"],
+[data-component="article-next-prev"] .nav-link__title {
+  color: var(--color-text-primary) !important;
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  transition: color 0.2s ease !important;
+  font-family: var(--font-brand) !important;
+}
+
+[data-component="article-next-prev"] .nav-link:hover .text-xs {
+  color: var(--color-text-secondary);
+}
+
+/* SVG Icons */
+[data-component="article-next-prev"] .nav-link svg {
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* Disabled Navigation Links */
+[data-component="article-next-prev"] .nav-link--disabled {
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    rgba(var(--color-surface), 0.5) 100%
+  );
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+[data-component="article-next-prev"] .nav-link--disabled svg {
+  color: var(--color-text-tertiary);
+  opacity: 0.5;
+}
+
+[data-component="article-next-prev"] .nav-link--disabled .text-xs,
+[data-component="article-next-prev"] .nav-link--disabled div > div[class*="font-medium"] {
+  color: var(--color-text-tertiary) !important;
+}
+
+/* Focus States for Accessibility */
+[data-component="article-next-prev"] .nav-link:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+[data-component="article-next-prev"] .nav-link:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Enhanced Visual Hierarchy */
+[data-component="article-next-prev"] .nav-link[aria-label*="Previous"] {
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease, border-left-color 0.2s ease;
+}
+
+[data-component="article-next-prev"] .nav-link[aria-label*="Next"] {
+  border-right: 3px solid transparent;
+  transition: all 0.2s ease, border-right-color 0.2s ease;
+}
+
+[data-component="article-next-prev"] .nav-link[aria-label*="Previous"]:hover {
+  border-left-color: var(--color-brand);
+}
+
+[data-component="article-next-prev"] .nav-link[aria-label*="Next"]:hover {
+  border-right-color: var(--color-brand);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  [data-component="article-next-prev"] {
+    margin-top: 1.5rem;
+  }
+  
+  [data-component="article-next-prev"] .nav-link {
+    padding: 1rem;
+    min-height: 3.5rem;
+  }
+  
+  [data-component="article-next-prev"] .nav-link div > div[class*="font-medium"],
+  [data-component="article-next-prev"] .nav-link__title {
+    font-size: 0.875rem !important;
+  }
+  
+  [data-component="article-next-prev"] .nav-link .text-xs {
+    font-size: 0.6875rem;
+  }
+  
+  [data-component="article-next-prev"] .nav-link svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  [data-component="article-next-prev"] {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  [data-component="article-next-prev"] .nav-link {
+    padding: 0.875rem;
+    min-height: 3rem;
+    flex: none;
+  }
+  
+  [data-component="article-next-prev"] .nav-link[aria-label*="Previous"] {
+    border-left: none;
+    border-top: 3px solid transparent;
+  }
+  
+  [data-component="article-next-prev"] .nav-link[aria-label*="Next"] {
+    border-right: none;
+    border-bottom: 3px solid transparent;
+  }
+  
+  [data-component="article-next-prev"] .nav-link[aria-label*="Previous"]:hover {
+    border-left-color: transparent;
+    border-top-color: var(--color-brand);
+  }
+  
+  [data-component="article-next-prev"] .nav-link[aria-label*="Next"]:hover {
+    border-right-color: transparent;
+    border-bottom-color: var(--color-brand);
+  }
+}
+
+/* Dark Mode Enhancements */
+.dark [data-component="article-next-prev"] .nav-link {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-surface), 0.8) 0%,
+    rgba(var(--color-bg-secondary), 0.6) 100%
+  );
+  border-color: var(--color-border-secondary);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark [data-component="article-next-prev"] .nav-link:hover {
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(var(--color-brand-rgb), 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark [data-component="article-next-prev"] .nav-link--disabled {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-bg-secondary), 0.4) 0%,
+    rgba(var(--color-surface), 0.2) 100%
+  );
+  border-color: rgba(var(--color-border-secondary), 0.5);
+}
+
+/* Animation Enhancements */
+[data-component="article-next-prev"] .nav-link {
+  animation: nav-link-enter 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes nav-link-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for prev/next pair */
+[data-component="article-next-prev"] .nav-link[aria-label*="Previous"] { animation-delay: 0s; }
+[data-component="article-next-prev"] .nav-link[aria-label*="Next"] { animation-delay: 0.1s; }
+
+/* Loading state placeholders */
+[data-component="article-next-prev"] .nav-link--loading {
+  background: linear-gradient(90deg, 
+    var(--color-surface) 25%, 
+    var(--color-bg-secondary) 50%, 
+    var(--color-surface) 75%);
+  background-size: 200% 100%;
+  animation: nav-link-loading 2s infinite;
+}
+
+@keyframes nav-link-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Print styles */
+@media print {
+  [data-component="article-next-prev"] .nav-link {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    background: white;
+  }
+  
+  [data-component="article-next-prev"] .nav-link svg {
+    display: none;
+  }
+}
