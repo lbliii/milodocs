@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .light-mode { fill: #76B900; }
+      .dark-mode { fill: #ffffff; }
+      @media (prefers-color-scheme: dark) {
+        .light-mode { fill: #ffffff; }
+        .dark-mode { fill: #76B900; }
+      }
+    </style>
+  </defs>
+  <!-- Simplified Milo icon - circular design with "M" -->
+  <circle cx="50" cy="50" r="45" class="light-mode"/>
+  <text x="50" y="65" font-family="Arial, sans-serif" font-size="40" font-weight="bold" text-anchor="middle" class="dark-mode">M</text>
+</svg>

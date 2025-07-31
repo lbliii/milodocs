@@ -1,8 +1,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="{{ site.Params.themeColor | default "#ffffff" }}" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="{{ site.Params.themeColorDark | default "#1a1a1a" }}" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+
+{{/* Modern Favicon System - 2024 Best Practices */}}
+{{/* Check for custom favicon params, fallback to Milo defaults */}}
+{{- $faviconIco := site.Params.favicon.ico | default "/favicon.ico" -}}
+{{- $faviconSvg := site.Params.favicon.svg | default "/icon.svg" -}}
+{{- $appleTouchIcon := site.Params.favicon.appleTouchIcon | default "/apple-touch-icon.png" -}}
+{{- $manifest := site.Params.favicon.manifest | default "/manifest.webmanifest" -}}
+
+<link rel="icon" href="{{ $faviconIco }}" sizes="32x32">
+<link rel="icon" href="{{ $faviconSvg }}" type="image/svg+xml">  
+<link rel="apple-touch-icon" href="{{ $appleTouchIcon }}">
+<link rel="manifest" href="{{ $manifest }}">
 
 {{/* SEO Meta Tags */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>

@@ -57,3 +57,11 @@ article:
 
 # Development & Debug Settings
 debug: false  # Set to true to enable template debugging information
+
+# Favicon Configuration (optional - defaults to Milo branding)
+# Uncomment and customize these paths to override the default Milo favicon
+favicon:
+  ico: "/favicon.ico"                  # 32x32 ICO for legacy browsers (Milo)
+  svg: "/icon.svg"                     # SVG with light/dark theme support (Milo)
+  appleTouchIcon: "/apple-touch-icon.png"  # 180x180 PNG for iOS (Milo)
+  manifest: "/manifest.webmanifest"    # Web app manifest for Android (Milo)
