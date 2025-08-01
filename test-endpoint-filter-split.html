@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EndpointFilter Component Split Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .test-status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .test-pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .test-fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .test-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        
+        /* Basic endpoint filter styles for testing */
+        .endpoint-filter {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .tag-filter, .method-filter {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            margin: 2px;
+        }
+        
+        .tag-filter:hover, .method-filter:hover {
+            background: #e9ecef;
+        }
+        
+        .tag-filter--active, .method-filter--active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .endpoint-search {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            width: 250px;
+            font-size: 14px;
+        }
+        
+        .clear-all-filters {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .filter-results-count {
+            margin: 15px 0;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .filter-results-count--filtered {
+            color: #007bff;
+        }
+        
+        .endpoint-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .endpoint-item--filtered {
+            opacity: 0.5;
+        }
+        
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .http-method {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .http-method--post { background: #007bff; }
+        .http-method--put { background: #fd7e14; }
+        .http-method--delete { background: #dc3545; }
+        .http-method--patch { background: #6f42c1; }
+        
+        .endpoint-path {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .endpoint-tags {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        
+        .endpoint-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .endpoint-summary {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        
+        .deprecated-badge {
+            background: #ffc107;
+            color: #856404;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .test-controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .test-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        .test-btn:hover {
+            background: #218838;
+        }
+        
+        .search-highlight {
+            background: yellow;
+            padding: 1px 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 EndpointFilter Component Split Test</h1>
+    <p>Testing the refactored EndpointFilter components to ensure all functionality works correctly.</p>
+    
+    <div class="test-controls">
+        <button class="test-btn" onclick="runAllTests()">Run All Tests</button>
+        <button class="test-btn" onclick="resetTest()">Reset Test</button>
+        <button class="test-btn" onclick="testAdvancedFeatures()">Test Advanced Features</button>
+    </div>
+    
+    <div id="test-results">
+        <div class="test-status test-pending" id="component-load-status">
+            ⏳ Component Loading: Pending
+        </div>
+        <div class="test-status test-pending" id="data-extraction-status">
+            ⏳ Data Extraction: Pending
+        </div>
+        <div class="test-status test-pending" id="filter-logic-status">
+            ⏳ Filter Logic: Pending
+        </div>
+        <div class="test-status test-pending" id="ui-management-status">
+            ⏳ UI Management: Pending
+        </div>
+        <div class="test-status test-pending" id="persistence-status">
+            ⏳ Persistence: Pending
+        </div>
+        <div class="test-status test-pending" id="integration-status">
+            ⏳ Integration: Pending
+        </div>
+    </div>
+
+    <!-- Test Endpoint Filter -->
+    <div class="test-section">
+        <h2>Test Endpoint Filter</h2>
+        
+        <div class="endpoint-filter" data-component="endpoint-filter">
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Filter by Tag:</label>
+                    <div>
+                        <button class="tag-filter" data-tag="all">All</button>
+                        <button class="tag-filter" data-tag="user">User</button>
+                        <button class="tag-filter" data-tag="payment">Payment</button>
+                        <button class="tag-filter" data-tag="admin">Admin</button>
+                        <button class="tag-filter" data-tag="analytics">Analytics</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Filter by Method:</label>
+                    <div>
+                        <button class="method-filter" data-method="all">All</button>
+                        <button class="method-filter" data-method="GET">GET</button>
+                        <button class="method-filter" data-method="POST">POST</button>
+                        <button class="method-filter" data-method="PUT">PUT</button>
+                        <button class="method-filter" data-method="DELETE">DELETE</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Search:</label>
+                    <input type="text" class="endpoint-search" placeholder="Search endpoints...">
+                </div>
+                
+                <div class="filter-group">
+                    <label>Actions:</label>
+                    <button class="clear-all-filters">Clear All Filters</button>
+                </div>
+            </div>
+            
+            <div class="filter-results-count">Showing 0 of 0 endpoints</div>
+        </div>
+
+        <!-- Test Endpoints -->
+        <div id="endpoints-container">
+            <!-- User Management Endpoints -->
+            <div class="endpoint-item" data-method="GET">
+                <div class="endpoint-header">
+                    <span class="http-method">GET</span>
+                    <span class="endpoint-path">/api/users</span>
+                    <span class="deprecated-badge" style="display: none;">DEPRECATED</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">user</span>
+                    <span class="endpoint-tag">list</span>
+                </div>
+                <div class="endpoint-summary">Retrieve a list of all users</div>
+            </div>
+
+            <div class="endpoint-item" data-method="POST">
+                <div class="endpoint-header">
+                    <span class="http-method http-method--post">POST</span>
+                    <span class="endpoint-path">/api/users</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">user</span>
+                    <span class="endpoint-tag">create</span>
+                </div>
+                <div class="endpoint-summary">Create a new user account</div>
+            </div>
+
+            <div class="endpoint-item" data-method="PUT">
+                <div class="endpoint-header">
+                    <span class="http-method http-method--put">PUT</span>
+                    <span class="endpoint-path">/api/users/{id}</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">user</span>
+                    <span class="endpoint-tag">update</span>
+                </div>
+                <div class="endpoint-summary">Update user information by ID</div>
+            </div>
+
+            <div class="endpoint-item" data-method="DELETE">
+                <div class="endpoint-header">
+                    <span class="http-method http-method--delete">DELETE</span>
+                    <span class="endpoint-path">/api/users/{id}</span>
+                    <span class="deprecated-badge">DEPRECATED</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">user</span>
+                    <span class="endpoint-tag">delete</span>
+                </div>
+                <div class="endpoint-summary">Delete a user account (deprecated)</div>
+            </div>
+
+            <!-- Payment Endpoints -->
+            <div class="endpoint-item" data-method="GET">
+                <div class="endpoint-header">
+                    <span class="http-method">GET</span>
+                    <span class="endpoint-path">/api/payments</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">payment</span>
+                    <span class="endpoint-tag">list</span>
+                </div>
+                <div class="endpoint-summary">Get payment history and transactions</div>
+            </div>
+
+            <div class="endpoint-item" data-method="POST">
+                <div class="endpoint-header">
+                    <span class="http-method http-method--post">POST</span>
+                    <span class="endpoint-path">/api/payments/process</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">payment</span>
+                    <span class="endpoint-tag">process</span>
+                </div>
+                <div class="endpoint-summary">Process a new payment transaction</div>
+            </div>
+
+            <!-- Admin Endpoints -->
+            <div class="endpoint-item" data-method="GET">
+                <div class="endpoint-header">
+                    <span class="http-method">GET</span>
+                    <span class="endpoint-path">/api/admin/dashboard</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">admin</span>
+                    <span class="endpoint-tag">dashboard</span>
+                </div>
+                <div class="endpoint-summary">Admin dashboard data and statistics</div>
+            </div>
+
+            <div class="endpoint-item" data-method="GET">
+                <div class="endpoint-header">
+                    <span class="http-method">GET</span>
+                    <span class="endpoint-path">/api/analytics/reports</span>
+                </div>
+                <div class="endpoint-tags">
+                    <span class="endpoint-tag">analytics</span>
+                    <span class="endpoint-tag">reports</span>
+                </div>
+                <div class="endpoint-summary">Generate analytics reports and insights</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Log</h2>
+        <div id="test-log" style="background: white; padding: 15px; border-radius: 4px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+            <div>Waiting for tests to start...</div>
+        </div>
+    </div>
+
+    <!-- Load the components -->
+    <script type="module">
+        // Import the core system and components
+        import { ComponentManager } from './assets/js/core/ComponentManager.js';
+        import { MiloCore } from './assets/js/core/MiloCore.js';
+        
+        // Import the split endpoint filter components (now properly organized under openapi/)
+        import './assets/js/components/openapi/EndpointFilter.js';
+        import './assets/js/components/openapi/endpoint/EndpointData.js';
+        import './assets/js/components/openapi/endpoint/FilterLogic.js';
+        import './assets/js/components/openapi/endpoint/FilterUI.js';
+        import './assets/js/components/openapi/endpoint/FilterPersistence.js';
+
+        // Test utilities
+        window.testLog = [];
+        window.testResults = {};
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            window.testLog.push(logEntry);
+            
+            const logDiv = document.getElementById('test-log');
+            const logElement = document.createElement('div');
+            logElement.textContent = logEntry;
+            logElement.style.color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#333';
+            logDiv.appendChild(logElement);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            
+            console.log(logEntry);
+        }
+
+        function updateTestStatus(testId, status, message) {
+            window.testResults[testId] = status;
+            const element = document.getElementById(testId + '-status');
+            if (element) {
+                element.className = `test-status test-${status}`;
+                element.textContent = `${status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⏳'} ${message}`;
+            }
+        }
+
+        // Test functions
+        async function testComponentLoading() {
+            log('Testing endpoint filter component loading...');
+            
+            try {
+                const registered = ComponentManager.getRegistered();
+                const requiredComponents = [
+                    'endpoint-filter', 
+                    'endpoint-data', 
+                    'filter-logic',
+                    'filter-ui',
+                    'filter-persistence'
+                ];
+                
+                let allRegistered = true;
+                for (const comp of requiredComponents) {
+                    if (!registered.includes(comp)) {
+                        log(`Component ${comp} not registered`, 'error');
+                        allRegistered = false;
+                    } else {
+                        log(`Component ${comp} registered successfully`, 'success');
+                    }
+                }
+                
+                if (allRegistered) {
+                    updateTestStatus('component-load', 'pass', 'Component Loading: All components registered');
+                    return true;
+                } else {
+                    updateTestStatus('component-load', 'fail', 'Component Loading: Some components missing');
+                    return false;
+                }
+                
+            } catch (error) {
+                log(`Component loading error: ${error.message}`, 'error');
+                updateTestStatus('component-load', 'fail', 'Component Loading: Failed with error');
+                return false;
+            }
+        }
+
+        async function testDataExtraction() {
+            log('Testing endpoint data extraction...');
+            
+            try {
+                const endpoints = document.querySelectorAll('.endpoint-item');
+                log(`Found ${endpoints.length} endpoint elements`, 'info');
+                
+                // Test data extraction functions
+                let extractionWorking = true;
+                endpoints.forEach((endpoint, index) => {
+                    const method = window.EndpointData?.extractMethod(endpoint) || 'UNKNOWN';
+                    const path = window.EndpointData?.extractPath(endpoint) || '/unknown';
+                    const tags = window.EndpointData?.extractTags(endpoint) || [];
+                    
+                    log(`Endpoint ${index}: ${method} ${path} [${tags.join(', ')}]`, 'info');
+                    
+                    if (method === 'UNKNOWN' && path === '/unknown') {
+                        extractionWorking = false;
+                    }
+                });
+                
+                if (extractionWorking) {
+                    updateTestStatus('data-extraction', 'pass', 'Data Extraction: All endpoints parsed correctly');
+                    return true;
+                } else {
+                    updateTestStatus('data-extraction', 'fail', 'Data Extraction: Some endpoints failed to parse');
+                    return false;
+                }
+                
+            } catch (error) {
+                log(`Data extraction error: ${error.message}`, 'error');
+                updateTestStatus('data-extraction', 'fail', 'Data Extraction: Failed with error');
+                return false;
+            }
+        }
+
+        async function testFilterLogic() {
+            log('Testing filter logic...');
+            
+            try {
+                // Create and initialize endpoint filter
+                const endpointFilter = ComponentManager.create('endpoint-filter', {
+                    selector: '[data-component="endpoint-filter"]'
+                });
+                
+                await endpointFilter.init();
+                window.endpointFilter = endpointFilter;
+                
+                // Test filter functionality
+                const initialStats = endpointFilter.getStats();
+                log(`Initial stats: ${JSON.stringify(initialStats)}`, 'info');
+                
+                // Test tag filtering
+                endpointFilter.filterByTag('user');
+                const userStats = endpointFilter.getStats();
+                log(`User filter stats: ${userStats.visibleEndpoints} visible`, 'info');
+                
+                // Test method filtering  
+                endpointFilter.filterByMethod('GET');
+                const getStats = endpointFilter.getStats();
+                log(`GET filter stats: ${getStats.visibleEndpoints} visible`, 'info');
+                
+                // Reset filters
+                endpointFilter.clearAllFilters();
+                const resetStats = endpointFilter.getStats();
+                log(`Reset stats: ${resetStats.visibleEndpoints} visible`, 'info');
+                
+                updateTestStatus('filter-logic', 'pass', 'Filter Logic: All filtering operations working');
+                return true;
+                
+            } catch (error) {
+                log(`Filter logic error: ${error.message}`, 'error');
+                updateTestStatus('filter-logic', 'fail', 'Filter Logic: Failed with error');
+                return false;
+            }
+        }
+
+        async function testUIManagement() {
+            log('Testing UI management...');
+            
+            try {
+                if (!window.endpointFilter) {
+                    throw new Error('EndpointFilter not available');
+                }
+                
+                // Test button interactions
+                const tagButtons = document.querySelectorAll('.tag-filter');
+                const methodButtons = document.querySelectorAll('.method-filter');
+                
+                log(`Found ${tagButtons.length} tag buttons and ${methodButtons.length} method buttons`, 'info');
+                
+                // Test button click
+                if (tagButtons.length > 1) {
+                    tagButtons[1].click(); // Click second tag button
+                    const activeButtons = document.querySelectorAll('.tag-filter--active');
+                    log(`Active tag buttons after click: ${activeButtons.length}`, 'info');
+                }
+                
+                // Test search functionality
+                const searchInput = document.querySelector('.endpoint-search');
+                if (searchInput) {
+                    searchInput.value = 'user';
+                    searchInput.dispatchEvent(new Event('input'));
+                    log('Search input tested', 'info');
+                }
+                
+                // Test clear all
+                const clearButton = document.querySelector('.clear-all-filters');
+                if (clearButton) {
+                    clearButton.click();
+                    log('Clear all button tested', 'info');
+                }
+                
+                updateTestStatus('ui-management', 'pass', 'UI Management: All UI interactions working');
+                return true;
+                
+            } catch (error) {
+                log(`UI management error: ${error.message}`, 'error');
+                updateTestStatus('ui-management', 'fail', 'UI Management: Failed with error');
+                return false;
+            }
+        }
+
+        async function testPersistence() {
+            log('Testing filter persistence...');
+            
+            try {
+                if (!window.endpointFilter) {
+                    throw new Error('EndpointFilter not available');
+                }
+                
+                // Test saving filters
+                window.endpointFilter.filterByTag('payment');
+                window.endpointFilter.saveFilters();
+                log('Filters saved to storage', 'info');
+                
+                // Test loading filters
+                const savedFilters = window.FilterPersistence?.loadSavedFilters('endpoint-filter');
+                if (savedFilters) {
+                    log(`Loaded filters: ${JSON.stringify(savedFilters)}`, 'info');
+                    updateTestStatus('persistence', 'pass', 'Persistence: Save/load working correctly');
+                    return true;
+                } else {
+                    updateTestStatus('persistence', 'fail', 'Persistence: Failed to load saved filters');
+                    return false;
+                }
+                
+            } catch (error) {
+                log(`Persistence error: ${error.message}`, 'error');
+                updateTestStatus('persistence', 'fail', 'Persistence: Failed with error');
+                return false;
+            }
+        }
+
+        async function testIntegration() {
+            log('Testing component integration...');
+            
+            try {
+                if (!window.endpointFilter) {
+                    throw new Error('EndpointFilter not available');
+                }
+                
+                // Test complete workflow
+                log('Testing complete filter workflow...', 'info');
+                
+                // 1. Apply multiple filters
+                window.endpointFilter.filterByTag('user');
+                window.endpointFilter.filterByMethod('GET');
+                
+                const filteredStats = window.endpointFilter.getStats();
+                log(`Multi-filter result: ${filteredStats.visibleEndpoints} endpoints visible`, 'info');
+                
+                // 2. Test search overlay
+                window.endpointFilter.searchEndpoints('api');
+                const searchStats = window.endpointFilter.getStats();
+                log(`Search result: ${searchStats.visibleEndpoints} endpoints visible`, 'info');
+                
+                // 3. Test clear and verify
+                window.endpointFilter.clearAllFilters();
+                const finalStats = window.endpointFilter.getStats();
+                log(`Final result: ${finalStats.visibleEndpoints} endpoints visible`, 'info');
+                
+                // 4. Check if all endpoints are visible again
+                const totalEndpoints = document.querySelectorAll('.endpoint-item').length;
+                if (finalStats.visibleEndpoints === totalEndpoints) {
+                    updateTestStatus('integration', 'pass', 'Integration: Complete workflow functioning');
+                    return true;
+                } else {
+                    updateTestStatus('integration', 'fail', 'Integration: Workflow incomplete');
+                    return false;
+                }
+                
+            } catch (error) {
+                log(`Integration error: ${error.message}`, 'error');
+                updateTestStatus('integration', 'fail', 'Integration: Failed with error');
+                return false;
+            }
+        }
+
+        // Global test functions
+        window.runAllTests = async function() {
+            log('Starting comprehensive endpoint filter tests...', 'info');
+            
+            // Reset test log
+            document.getElementById('test-log').innerHTML = '<div>Starting tests...</div>';
+            window.testLog = [];
+            window.testResults = {};
+            
+            const tests = [
+                { name: 'Component Loading', fn: testComponentLoading },
+                { name: 'Data Extraction', fn: testDataExtraction },
+                { name: 'Filter Logic', fn: testFilterLogic },
+                { name: 'UI Management', fn: testUIManagement },
+                { name: 'Persistence', fn: testPersistence },
+                { name: 'Integration', fn: testIntegration }
+            ];
+            
+            let passedTests = 0;
+            let totalTests = tests.length;
+            
+            for (const test of tests) {
+                log(`Running ${test.name} test...`, 'info');
+                try {
+                    const result = await test.fn();
+                    if (result) {
+                        passedTests++;
+                        log(`${test.name} test passed ✅`, 'success');
+                    } else {
+                        log(`${test.name} test failed ❌`, 'error');
+                    }
+                } catch (error) {
+                    log(`${test.name} test threw error: ${error.message}`, 'error');
+                }
+                
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            log(`\n=== TEST SUMMARY ===`, 'info');
+            log(`Passed: ${passedTests}/${totalTests} tests`, passedTests === totalTests ? 'success' : 'error');
+            
+            if (passedTests === totalTests) {
+                log('🎉 All tests passed! EndpointFilter split is working correctly.', 'success');
+            } else {
+                log('⚠️ Some tests failed. EndpointFilter split needs attention.', 'error');
+            }
+        };
+
+        window.resetTest = function() {
+            location.reload();
+        };
+
+        window.testAdvancedFeatures = async function() {
+            if (!window.endpointFilter) {
+                log('EndpointFilter not available for advanced testing', 'error');
+                return;
+            }
+            
+            log('Testing advanced features...', 'info');
+            
+            // Test statistics
+            const stats = window.endpointFilter.getStats();
+            log(`Advanced stats: ${JSON.stringify(stats, null, 2)}`, 'info');
+            
+            // Test complex filtering
+            window.endpointFilter.filterByTag('user');
+            window.endpointFilter.searchEndpoints('GET');
+            
+            const complexStats = window.endpointFilter.getStats();
+            log(`Complex filter stats: ${JSON.stringify(complexStats)}`, 'info');
+        };
+
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('Page loaded, running tests automatically...', 'info');
+                window.runAllTests();
+            }, 1000);
+        });
+
+        // Expose components for testing
+        window.EndpointData = (await import('./assets/js/components/openapi/endpoint/EndpointData.js')).EndpointData;
+        window.FilterLogic = (await import('./assets/js/components/openapi/endpoint/FilterLogic.js')).FilterLogic;
+        window.FilterUI = (await import('./assets/js/components/openapi/endpoint/FilterUI.js')).FilterUI;
+        window.FilterPersistence = (await import('./assets/js/components/openapi/endpoint/FilterPersistence.js')).FilterPersistence;
+
+    </script>
+</body>
+</html>

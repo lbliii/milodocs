@@ -15,12 +15,20 @@ export const componentRegistry = {
   'article-toc': () => import('./article/TOC.js'),
   'article-tiles': () => import('./article/Tiles.js'),
   'article-summarization': () => import('./article/Summarization.js'),
+  'notebook-viewer': () => import('./notebook/NotebookViewer.js'),
   'notebook-progressive-reveal': () => import('./article/NotebookProgressiveReveal.js'),
+  'notebook-cell': () => import('./notebook/NotebookCell.js'),
+  'notebook-navigation': () => import('./notebook/NotebookNavigation.js'),
+  'notebook-state': () => import('./notebook/NotebookState.js'),
   
   // OpenAPI components
   'openapi-viewer': () => import('./article/OpenAPIViewer.js'),
   'openapi-collapse': () => import('./article/OpenAPICollapse.js'),
-  'endpoint-filter': () => import('./article/EndpointFilter.js'),
+  'endpoint-filter': () => import('./openapi/EndpointFilter.js'),
+  'endpoint-data': () => import('./openapi/endpoint/EndpointData.js'),
+  'filter-logic': () => import('./openapi/endpoint/FilterLogic.js'),
+  'filter-ui': () => import('./openapi/endpoint/FilterUI.js'),
+  'filter-persistence': () => import('./openapi/endpoint/FilterPersistence.js'),
 
   
   // Layout components
