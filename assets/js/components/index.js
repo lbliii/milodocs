@@ -3,6 +3,9 @@
  */
 
 import { ComponentManager } from '../core/ComponentManager.js';
+import { logger } from '../utils/Logger.js';
+
+const log = logger.component('ComponentLoader');
 
 // Component registration with lazy loading
 export const componentRegistry = {
@@ -36,13 +39,12 @@ export const componentRegistry = {
   'theme-toggle': () => import('./layout/ThemeToggle.js'),
   'navigation-mobile-toggle': () => import('./layout/MobileNav.js'),
   'navigation-sidebar-left': () => import('./layout/Sidebar.js'),
-  'search': () => import('./layout/Search.js'),
+
   'glossary': () => import('./layout/Glossary.js'),
   'chat-toc-toggle': () => import('./layout/ChatTocToggle.js'),
   
   // UI components
   'toast': () => import('./ui/Toast.js'),
-  'search-filter': () => import('./ui/SearchFilter.js'),
   
   // Feature components
   'tutorial-manager': () => import('./features/TutorialManager.js'),
@@ -56,27 +58,27 @@ export const componentRegistry = {
 export async function loadComponent(name) {
   const loader = componentRegistry[name];
   if (!loader) {
-    console.warn(`Component "${name}" not found in registry`);
+    log.warn(`Component "${name}" not found in registry`);
     return null;
   }
   
   try {
-    console.log(`🔄 Loading component module: ${name}`);
+    log.debug(`Loading component module: ${name}`);
     const module = await loader();
-    console.log(`📦 Component module loaded: ${name}`, module);
+    log.trace(`Component module loaded: ${name}`, module);
     
     // Component should be auto-registered when module loads
     const instance = ComponentManager.create(name);
     if (instance) {
-      console.log(`✅ Component instance created: ${name}`);
+      log.trace(`Component instance created: ${name}`);
       return await instance.init();
     } else {
-      console.error(`❌ Failed to create instance for: ${name}`);
+      log.error(`Failed to create instance for: ${name}`);
       return null;
     }
   } catch (error) {
-    console.error(`Failed to load component "${name}":`, error);
-    console.warn(`Falling back to legacy implementation for ${name}`);
+    log.error(`Failed to load component "${name}":`, error);
+    log.warn(`Falling back to legacy implementation for ${name}`);
     return null;
   }
 }
@@ -131,26 +133,27 @@ export function registerAllComponents() {
     'theme'                      // Base theme component
   ];
   
-  console.log(`🚀 Loading ${critical.length} critical components...`);
+  log.info(`Loading ${critical.length} critical components...`);
   
   // Register critical components first
   return Promise.all(critical.map(name => {
-    console.log(`🔧 Loading critical component: ${name}`);
+    log.debug(`Loading critical component: ${name}`);
     return loadComponent(name);
   }))
     .then((criticalResults) => {
-      console.log(`✅ Critical components loaded:`, criticalResults.filter(r => r).length);
-      console.log(`🔄 Loading ${secondary.length} secondary components...`);
+      const successfulCritical = criticalResults.filter(r => r).length;
+      log.info(`Critical components loaded: ${successfulCritical}/${critical.length}`);
+      log.debug(`Loading ${secondary.length} secondary components...`);
       
       // Load secondary components in background
       const secondaryPromises = secondary.map(name => {
-        console.log(`🔧 Loading secondary component: ${name}`);
+        log.trace(`Loading secondary component: ${name}`);
         return loadComponent(name);
       });
       
       return Promise.allSettled(secondaryPromises).then(results => {
         const successful = results.filter(r => r.status === 'fulfilled' && r.value);
-        console.log(`✅ Secondary components loaded:`, successful.length);
+        log.info(`Secondary components loaded: ${successful.length}/${secondary.length}`);
         return [...criticalResults.filter(r => r), ...successful.map(r => r.value)];
       });
     });

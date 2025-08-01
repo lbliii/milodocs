@@ -6,6 +6,9 @@
 import { milo } from './core/MiloCore.js';
 import { ready } from './utils/dom.js';
 import { registerAllComponents } from './components/index.js';
+import { logger } from './utils/Logger.js';
+
+const log = logger.component('MiloDocs');
 
 /**
  * Initialize MiloDocs system
@@ -24,14 +27,14 @@ async function initializeMiloDocs() {
     // Setup global utilities
     await setupGlobalUtilities();
     
-    console.log('🎉 MiloDocs fully initialized');
-    console.log('💡 Debug utilities:');
-    console.log('  - window.resetNavigation() - Reset sidebar state');
-    console.log('  - window.debugSidebar() - Debug sidebar info + auto-fix');
-    console.log('  - window.debugComponents() - Show all registered components');
+    log.info('MiloDocs fully initialized');
+    log.debug('Debug utilities available:');
+    log.debug('  - window.resetNavigation() - Reset sidebar state');
+    log.debug('  - window.debugSidebar() - Debug sidebar info + auto-fix');
+    log.debug('  - window.debugComponents() - Show all registered components');
     
   } catch (error) {
-    console.error('❌ MiloDocs initialization failed:', error);
+    log.error('MiloDocs initialization failed:', error);
     
     // Fallback to legacy system if new system fails
     await initializeLegacyFallback();
@@ -59,9 +62,9 @@ function initializeLegacySupport() {
     const sidebar = ComponentManager.getInstances('navigation-sidebar-left')[0];
     if (sidebar && sidebar.reset) {
       sidebar.reset();
-      console.log('🔧 Navigation reset successfully');
+      log.info('Navigation reset successfully');
     } else {
-      console.warn('⚠️ Sidebar component not found or reset method not available');
+      log.warn('Sidebar component not found or reset method not available');
     }
   };
   
@@ -133,7 +136,7 @@ function initializeLegacySupport() {
   if (!window.MiloUX) {
     window.MiloUX = {
       showNotification: (message, type = 'info', duration = 3000) => {
-        console.log(`Notification (${type}): ${message}`);
+        log.debug(`Notification (${type}): ${message}`);
         // This will be replaced with the proper notification system
       }
     };
@@ -142,7 +145,7 @@ function initializeLegacySupport() {
   // Legacy announcer
   if (!window.announceToScreenReader) {
     window.announceToScreenReader = (message) => {
-      console.log(`Screen Reader: ${message}`);
+      log.debug(`Screen Reader: ${message}`);
       // This will be replaced with the proper accessibility system
     };
   }
@@ -284,7 +287,7 @@ async function setupScrollEnhancements() {
  * Fallback to legacy system if new system fails
  */
 async function initializeLegacyFallback() {
-  console.warn('🔄 Falling back to legacy initialization');
+  log.warn('Falling back to legacy initialization');
   
   try {
     // Try to load and run the original main.js functionality
@@ -294,7 +297,7 @@ async function initializeLegacyFallback() {
       await originalMain.init();
     }
   } catch (error) {
-    console.error('❌ Legacy fallback also failed:', error);
+    log.error('Legacy fallback also failed:', error);
     
     // Last resort: basic functionality only
     initializeBasicFunctionality();
@@ -305,7 +308,7 @@ async function initializeLegacyFallback() {
  * Minimal functionality as last resort
  */
 function initializeBasicFunctionality() {
-  console.log('⚠️ Running in basic mode');
+  log.warn('Running in basic mode');
   
   // Ensure theme switching works at minimum
   const darkModeToggle = document.getElementById('darkModeToggle');

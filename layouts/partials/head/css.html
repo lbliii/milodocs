@@ -114,12 +114,14 @@
 {{- end -}}
 
 {{/* 3. Interactive Components - User interaction elements */}}
+{{/* Search CSS temporarily disabled
 {{- $searchCSS := resources.Get "css/components/search.css" -}}
 {{- if $searchCSS -}}
   {{- $cssResources = $cssResources | append $searchCSS -}}
 {{- else -}}
   {{- warnf "Component CSS: search.css not found" -}}
 {{- end -}}
+*/}}
 
 {{- $chatCSS := resources.Get "css/components/chat.css" -}}
 {{- if $chatCSS -}}

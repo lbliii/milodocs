@@ -5,6 +5,9 @@
 
 import { Component, ComponentManager } from '../../core/ComponentManager.js';
 import { debounce, throttle } from '../../utils/dom.js';
+import { logger } from '../../utils/Logger.js';
+
+const log = logger.component('PerformanceOptimizer');
 
 export class PerformanceOptimizer extends Component {
   constructor(config = {}) {
@@ -26,7 +29,7 @@ export class PerformanceOptimizer extends Component {
 
   async onInit() {
     if (!this.element) {
-      console.warn('PerformanceOptimizer: Target element not found');
+      log.warn('Target element not found');
       return;
     }
 
@@ -40,7 +43,7 @@ export class PerformanceOptimizer extends Component {
       this.setupUXUtilities()
     ]);
     
-    console.log('PerformanceOptimizer: All optimizations initialized');
+    log.debug('All optimizations initialized');
   }
 
   /**
@@ -48,7 +51,7 @@ export class PerformanceOptimizer extends Component {
    */
   async setupLazyLoading() {
     if (!('IntersectionObserver' in window)) {
-      console.warn('IntersectionObserver not supported, skipping lazy loading');
+      log.warn('IntersectionObserver not supported, skipping lazy loading');
       return;
     }
 
@@ -67,7 +70,7 @@ export class PerformanceOptimizer extends Component {
     const lazyElements = document.querySelectorAll('[data-src], [data-lazy-component]');
     lazyElements.forEach(el => this.lazyObserver.observe(el));
     
-    console.log(`PerformanceOptimizer: Observing ${lazyElements.length} lazy load elements`);
+    log.debug(`Observing ${lazyElements.length} lazy load elements`);
   }
 
   /**
@@ -91,7 +94,7 @@ export class PerformanceOptimizer extends Component {
       
       this.lazyObserver.unobserve(element);
     } catch (error) {
-      console.error('Lazy loading failed:', error);
+      log.error('Lazy loading failed:', error);
     }
   }
 
@@ -100,8 +103,8 @@ export class PerformanceOptimizer extends Component {
    */
   async loadLazyComponent(componentName, element) {
     const componentMap = {
-      'chat': () => import('../article/Chat.js'),
-      'search': () => import('../layout/Search.js')
+      'chat': () => import('../article/Chat.js')
+      // 'search': temporarily disabled
     };
     
     const loader = componentMap[componentName];
@@ -111,7 +114,7 @@ export class PerformanceOptimizer extends Component {
         element.classList.add('loaded');
         this.emit('performance:componentLoaded', { componentName, element });
       } catch (error) {
-        console.error(`Failed to load component ${componentName}:`, error);
+        log.error(`Failed to load component ${componentName}:`, error);
       }
     }
   }
@@ -126,7 +129,7 @@ export class PerformanceOptimizer extends Component {
     }
     
     // Note: Page transitions disabled for static sites
-    console.log('PerformanceOptimizer: Loading states configured');
+    log.debug('Loading states configured');
   }
 
   /**
@@ -152,7 +155,7 @@ export class PerformanceOptimizer extends Component {
    */
   setupPerformanceMonitoring() {
     if (!('PerformanceObserver' in window)) {
-      console.warn('PerformanceObserver not supported');
+      log.warn('PerformanceObserver not supported');
       return;
     }
 
@@ -162,14 +165,12 @@ export class PerformanceOptimizer extends Component {
         const entries = entryList.getEntries();
         const lastEntry = entries[entries.length - 1];
         this.emit('performance:lcp', { value: lastEntry.startTime });
-        if (this.isDebugMode) {
-          console.log('LCP:', lastEntry.startTime);
-        }
+        logger.performance('LCP', lastEntry.startTime);
       });
       lcpObserver.observe({entryTypes: ['largest-contentful-paint']});
       this.performanceObservers.push(lcpObserver);
     } catch (error) {
-      console.warn('LCP observer failed:', error);
+      log.warn('LCP observer failed:', error);
     }
 
     // First Input Delay
@@ -179,15 +180,13 @@ export class PerformanceOptimizer extends Component {
         entries.forEach(entry => {
           const fid = entry.processingStart - entry.startTime;
           this.emit('performance:fid', { value: fid });
-          if (this.isDebugMode) {
-            console.log('FID:', fid);
-          }
+          logger.performance('FID', fid);
         });
       });
       fidObserver.observe({entryTypes: ['first-input']});
       this.performanceObservers.push(fidObserver);
     } catch (error) {
-      console.warn('FID observer failed:', error);
+      log.warn('FID observer failed:', error);
     }
 
     // Memory monitoring (debug mode only)
@@ -199,7 +198,7 @@ export class PerformanceOptimizer extends Component {
           total: Math.round(memory.totalJSHeapSize / 1048576) + ' MB'
         };
         this.emit('performance:memory', memoryInfo);
-        console.log('Memory usage:', memoryInfo);
+        logger.performance('Memory', `${memoryInfo.used}/${memoryInfo.total}`);
       }, 30000);
     }
   }
@@ -412,7 +411,7 @@ export class PerformanceOptimizer extends Component {
       clearInterval(this.memoryCheckInterval);
     }
     
-    console.log('PerformanceOptimizer: Component destroyed and cleaned up');
+    log.debug('Component destroyed and cleaned up');
   }
 }
 

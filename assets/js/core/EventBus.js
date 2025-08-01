@@ -2,6 +2,8 @@
  * EventBus - Central event management system
  * Provides pub/sub functionality for component communication
  */
+import { logger } from '../utils/Logger.js';
+
 export class EventBus {
   constructor() {
     this.events = new Map();
@@ -86,14 +88,12 @@ export class EventBus {
           this.events.get(event).delete(listener);
         }
       } catch (error) {
-        console.error(`Error in event listener for "${event}":`, error);
+        logger.error('EventBus', `Error in event listener for "${event}":`, error);
       }
     }
     
-    // Global event logging for debug mode
-    if (window.HugoEnvironment?.debug) {
-      console.log(`📡 Event: ${event}`, data);
-    }
+    // Global event logging for trace mode only
+    logger.event(event, data);
     
     return results;
   }

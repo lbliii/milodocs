@@ -6,6 +6,9 @@
 import { eventBus } from './EventBus.js';
 import { ComponentManager } from './ComponentManager.js';
 import { ready } from '../utils/dom.js';
+import { logger } from '../utils/Logger.js';
+
+const log = logger.component('MiloCore');
 
 export class MiloCore {
   constructor() {
@@ -34,14 +37,14 @@ export class MiloCore {
    */
   async init() {
     if (this.initialized) {
-      console.warn('MiloCore already initialized');
+      log.warn('MiloCore already initialized');
       return this;
     }
 
     const startTime = performance.now();
     
     try {
-      console.group(`🚀 MiloDocs Core v${this.version} Initializing...`);
+      log.info(`MiloDocs Core v${this.version} initializing...`);
       
       // Detect environment and capabilities
       this.environment = this.detectEnvironment();
@@ -72,14 +75,12 @@ export class MiloCore {
         performance: this.performance
       });
       
-      console.log(`✅ MiloDocs initialized in ${this.performance.initTime.toFixed(2)}ms`);
-      console.groupEnd();
+      log.info(`MiloDocs initialized in ${this.performance.initTime.toFixed(2)}ms`);
       
       return this;
       
     } catch (error) {
-      console.error('❌ MiloDocs initialization failed:', error);
-      console.groupEnd();
+      log.error('MiloDocs initialization failed:', error);
       throw error;
     }
   }
@@ -169,19 +170,17 @@ export class MiloCore {
    * Log environment information
    */
   logEnvironment() {
-    if (this.environment.hugo.debug) {
-      console.group('🌍 Environment Detection');
-      console.log('Hugo Environment:', this.environment.hugo.environment);
-      console.log('Production Mode:', this.environment.hugo.isProduction);
-      console.log('Debug Mode:', this.environment.hugo.debug);
-      console.log('Device Type:', {
+    log.debug('Environment Detection', {
+      hugo: this.environment.hugo.environment,
+      production: this.environment.hugo.isProduction,
+      debug: this.environment.hugo.debug,
+      device: {
         mobile: this.environment.device.isMobile,
         tablet: this.environment.device.isTablet,
         desktop: this.environment.device.isDesktop
-      });
-      console.log('Browser Features:', this.environment.features);
-      console.groupEnd();
-    }
+      },
+      features: this.environment.features
+    });
   }
 
   /**
@@ -224,9 +223,9 @@ export class MiloCore {
       ]);
       
       this.features.add('utilities');
-      console.log('📦 Core utilities loaded and initialized');
+      log.debug('Core utilities loaded and initialized');
     } catch (error) {
-      console.warn('Failed to load core utilities:', error);
+      log.warn('Failed to load core utilities:', error);
     }
   }
 
@@ -242,9 +241,7 @@ export class MiloCore {
         list.getEntries().forEach(entry => {
           this.performance.components.set(entry.name, entry);
           
-          if (this.environment.hugo.debug) {
-            console.log(`⚡ Performance: ${entry.name}`, entry);
-          }
+          logger.performance(entry.name, `${entry.duration?.toFixed(2)}ms` || 'N/A', 'MiloCore');
         });
       });
       
@@ -252,7 +249,7 @@ export class MiloCore {
       this.features.add('performance-monitoring');
       
     } catch (error) {
-      console.warn('Performance monitoring failed to initialize:', error);
+      log.warn('Performance monitoring failed to initialize:', error);
     }
   }
 
@@ -289,7 +286,7 @@ export class MiloCore {
     this.setupDebugKeyboards();
     
     this.features.add('debug');
-    console.log('🐛 Debug features initialized');
+    log.debug('Debug features initialized');
   }
 
   /**
@@ -379,7 +376,7 @@ export class MiloCore {
   setupComponentSystem() {
     // Register core components here
     // This will be expanded as we migrate components
-    console.log('🔧 Component system ready');
+    log.debug('Component system ready');
   }
 
   /**
@@ -400,10 +397,7 @@ export class MiloCore {
   async discoverAndLoadComponents() {
     const components = await ComponentManager.autoDiscover();
     
-    if (this.environment.hugo.debug) {
-      console.log(`🔍 Discovered ${components.length} components:`, 
-        components.map(c => c.name));
-    }
+    log.debug(`Discovered ${components.length} components:`, components.map(c => c.name));
   }
 
   /**
@@ -432,12 +426,12 @@ export class MiloCore {
     // Online/offline detection
     window.addEventListener('online', () => {
       eventBus.emit('milo:online');
-      console.log('🌐 Connection restored');
+      log.info('Connection restored');
     });
     
     window.addEventListener('offline', () => {
       eventBus.emit('milo:offline');
-      console.log('📴 Connection lost');
+      log.info('Connection lost');
     });
   }
 
@@ -459,9 +453,7 @@ export class MiloCore {
    * Handle global errors
    */
   handleError(event) {
-    if (this.environment.hugo.debug) {
-      console.error('Global error caught:', event.error || event.reason);
-    }
+    log.error('Global error caught:', event.error || event.reason);
     
     eventBus.emit('milo:error', {
       error: event.error || event.reason,
@@ -475,9 +467,7 @@ export class MiloCore {
   handleUnload() {
     ComponentManager.destroyAll();
     
-    if (this.environment.hugo.debug) {
-      console.log('🧹 Cleanup completed');
-    }
+    log.debug('Cleanup completed');
   }
 
   /**

@@ -5,6 +5,9 @@
 
 import { eventBus } from './EventBus.js';
 import { $ } from '../utils/dom.js';
+import { logger } from '../utils/Logger.js';
+
+const log = logger.component('ComponentManager');
 
 /**
  * Base Component class that all components should extend
@@ -35,7 +38,7 @@ export class Component {
    */
   async init() {
     if (this.state !== 'uninitialized') {
-      console.warn(`Component ${this.name} already initialized`);
+      log.warn(`Component ${this.name} already initialized`);
       return this;
     }
 
@@ -44,7 +47,7 @@ export class Component {
       
       // Check if element exists (for DOM-dependent components)
       if (this.selector && !this.element) {
-        console.debug(`${this.name}: No elements found for selector "${this.selector}" - component will remain inactive`);
+        log.debug(`${this.name}: No elements found for selector "${this.selector}" - component will remain inactive`);
         this.state = 'failed';
         return null;
       }
@@ -67,11 +70,11 @@ export class Component {
       eventBus.emit(`component:${this.name}:ready`, this);
       eventBus.emit('component:ready', { component: this });
       
-      console.log(`✅ Component ${this.name} initialized`);
+      log.debug(`Component ${this.name} initialized`);
       return this;
       
     } catch (error) {
-      console.error(`❌ Component ${this.name} initialization failed:`, error);
+      log.error(`Component ${this.name} initialization failed:`, error);
       this.state = 'failed';
       return null;
     }
@@ -248,7 +251,7 @@ export class Component {
     this.state = 'destroyed';
     this.emit('destroyed');
     
-    console.log(`🗑️ Component ${this.name} destroyed`);
+    log.debug(`Component ${this.name} destroyed`);
   }
 
   /**
@@ -279,7 +282,7 @@ export class ComponentManager {
    */
   static register(name, ComponentClass, options = {}) {
     this.components.set(name, { ComponentClass, options });
-    console.log(`📝 Registered component: ${name}`);
+    log.trace(`Registered component: ${name}`);
   }
 
   /**
@@ -288,7 +291,7 @@ export class ComponentManager {
   static create(name, config = {}) {
     const registration = this.components.get(name);
     if (!registration) {
-      console.error(`Component "${name}" not registered`);
+      log.error(`Component "${name}" not registered`);
       return null;
     }
 
@@ -300,7 +303,7 @@ export class ComponentManager {
       this.instances.set(instance.id, instance);
       return instance;
     } catch (error) {
-      console.error(`Failed to create component "${name}":`, error);
+      log.error(`Failed to create component "${name}":`, error);
       return null;
     }
   }
@@ -328,11 +331,11 @@ export class ComponentManager {
       const componentName = element.getAttribute('data-component');
       const componentId = element.getAttribute('data-component-id');
       
-      console.log(`🔍 Found element with data-component="${componentName}":`, element);
+      log.trace(`Found element with data-component="${componentName}":`, element);
       
       // Skip if already initialized
       if (componentId && this.getInstance(componentId)) {
-        console.log(`⏭️ Skipping ${componentName} - already initialized`);
+        log.debug(`Skipping ${componentName} - already initialized`);
         return;
       }
       
@@ -342,17 +345,17 @@ export class ComponentManager {
           element,
           selector: null
         });
-        console.log(`✅ Will load component: ${componentName}`);
+        log.trace(`Will load component: ${componentName}`);
       } else {
-        console.warn(`⚠️ Component "${componentName}" not registered`);
+        log.warn(`Component "${componentName}" not registered`);
       }
     });
     
-    console.log(`🔍 Discovered ${discoveredComponents.length} components to load`);
+    log.debug(`Discovered ${discoveredComponents.length} components to load`);
     
     // Load discovered components
     const loadPromises = discoveredComponents.map(({ name, element }) => {
-      console.log(`🚀 Loading component: ${name}`);
+      log.trace(`Loading component: ${name}`);
       return this.load(name, { element });
     });
     
@@ -361,10 +364,10 @@ export class ComponentManager {
     const failed = results.filter(r => r.status === 'rejected');
     
     if (failed.length > 0) {
-      console.warn(`❌ ${failed.length} components failed to load:`, failed.map(f => f.reason));
+      log.warn(`${failed.length} components failed to load:`, failed.map(f => f.reason));
     }
     
-    console.log(`🔍 Auto-discovered and loaded ${successful.length} components`);
+    log.info(`Auto-discovered and loaded ${successful.length} components`);
     return successful;
   }
 

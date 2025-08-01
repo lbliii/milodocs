@@ -39,7 +39,7 @@
   {{- warnf "JavaScript: No JS files found in assets/js/ for environment '%s'" hugo.Environment -}}
 {{- end -}}
 
-{{/* Progressive Enhancement: Load search only when needed */}}
-{{- if site.Params.search.enabled | default true -}}
+{{/* Search JavaScript temporarily disabled */}}
+{{- if false -}}
   <script src="https://unpkg.com/lunr/lunr.js" crossorigin="anonymous" defer></script>
 {{- end -}}
