@@ -5,8 +5,7 @@
  */
 
 import { Component } from '../../core/ComponentManager.js';
-import { copyToClipboard } from '../../utils/dom.js';
-import { announceToScreenReader } from '../../utils/accessibility.js';
+import { CopyManager, localStorage } from '../../utils/index.js';
 
 export class NotebookViewer extends Component {
   constructor(config = {}) {
@@ -461,7 +460,7 @@ export class NotebookViewer extends Component {
   }
 
   /**
-   * Handle copy button click
+   * Handle copy button click using unified CopyManager
    */
   async handleCopyClick(button) {
     const cellId = button.dataset.cellId;
@@ -472,22 +471,25 @@ export class NotebookViewer extends Component {
       return;
     }
 
-    try {
-      const codeContent = this.extractCodeContent(cell.element);
-      const success = await copyToClipboard(codeContent);
-      
-      if (success) {
-        this.showCopySuccess(button, codeContent.length);
-        this.emit('notebook:copy-success', { cellId, content: codeContent });
-      } else {
-        throw new Error('Copy operation failed');
+    const result = await CopyManager.copy(cell.element, {
+      successMessage: '✅ Copied!',
+      errorMessage: '❌ Failed',
+      feedbackDuration: 2000,
+      preprocessText: (text) => this.cleanNotebookCode(text),
+      analytics: {
+        component: 'notebook-viewer',
+        cellId,
+        cellType: cell.type
+      },
+      onSuccess: (content) => {
+        this.emit('notebook:copy-success', { cellId, content });
+      },
+      onError: (error) => {
+        this.emit('notebook:copy-error', { cellId, error });
       }
-      
-    } catch (error) {
-      console.error('NotebookViewer: Copy failed:', error);
-      this.showCopyError(button);
-      this.emit('notebook:copy-error', { cellId, error });
-    }
+    });
+
+    return result;
   }
 
   /**
@@ -534,63 +536,16 @@ export class NotebookViewer extends Component {
   }
 
   /**
-   * Extract code content from cell
+   * Clean notebook code for copying (notebook-specific preprocessing)
    */
-  extractCodeContent(cellElement) {
-    const codeElement = cellElement.querySelector('pre code, .highlight code, code');
+  cleanNotebookCode(text) {
+    if (!text) return '';
     
-    if (codeElement) {
-      // Get text content, preserving line breaks
-      return codeElement.textContent || codeElement.innerText || '';
-    }
-    
-    // Fallback: get text from pre element
-    const preElement = cellElement.querySelector('pre');
-    if (preElement) {
-      return preElement.textContent || preElement.innerText || '';
-    }
-    
-    return '';
-  }
-
-  /**
-   * Show copy success feedback
-   */
-  showCopySuccess(button, contentLength) {
-    if (!this.preferences.copyFeedback) return;
-
-    const originalText = button.querySelector('.notebook-cell__copy-text').textContent;
-    const originalClass = button.className;
-    
-    button.classList.add('notebook-cell__copy-btn--success');
-    button.querySelector('.notebook-cell__copy-text').textContent = '✅ Copied!';
-    
-    announceToScreenReader(`Code copied to clipboard. ${contentLength} characters.`);
-
-    setTimeout(() => {
-      button.className = originalClass;
-      button.querySelector('.notebook-cell__copy-text').textContent = originalText;
-    }, this.options.copySuccessDuration);
-  }
-
-  /**
-   * Show copy error feedback
-   */
-  showCopyError(button) {
-    if (!this.preferences.copyFeedback) return;
-
-    const originalText = button.querySelector('.notebook-cell__copy-text').textContent;
-    const originalClass = button.className;
-    
-    button.classList.add('notebook-cell__copy-btn--error');
-    button.querySelector('.notebook-cell__copy-text').textContent = '❌ Failed';
-    
-    announceToScreenReader('Failed to copy code to clipboard.');
-
-    setTimeout(() => {
-      button.className = originalClass;
-      button.querySelector('.notebook-cell__copy-text').textContent = originalText;
-    }, this.options.copyErrorDuration);
+    return text
+      .replace(/^In \[\d*\]:\s*/gm, '')  // Remove input prompts
+      .replace(/^Out\[\d*\]:\s*/gm, '')  // Remove output prompts  
+      .replace(/^\s*[\r\n]/gm, '')       // Remove empty lines
+      .trim();
   }
 
   /**
@@ -807,7 +762,7 @@ export class NotebookViewer extends Component {
         timestamp: Date.now()
       };
       
-      localStorage.setItem(this.options.storageKey, JSON.stringify(state));
+      localStorage.set(this.options.storageKey, state);
     } catch (error) {
       console.warn('NotebookViewer: Failed to save state:', error);
     }
@@ -818,10 +773,8 @@ export class NotebookViewer extends Component {
    */
   loadStoredState() {
     try {
-      const stored = localStorage.getItem(this.options.storageKey);
-      if (!stored) return;
-      
-      const state = JSON.parse(stored);
+      const state = localStorage.get(this.options.storageKey);
+      if (!state) return;
       
       // Apply collapsed states
       if (state.collapsedCells) {

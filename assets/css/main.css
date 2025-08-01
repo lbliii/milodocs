@@ -9273,29 +9273,47 @@ main {
 .container {
   width: 100%;
 }
+.\!container {
+  width: 100% !important;
+}
 @media (min-width: 640px) {
   .container {
     max-width: 640px;
+  }
+  .\!container {
+    max-width: 640px !important;
   }
 }
 @media (min-width: 768px) {
   .container {
     max-width: 768px;
   }
+  .\!container {
+    max-width: 768px !important;
+  }
 }
 @media (min-width: 1024px) {
   .container {
     max-width: 1024px;
+  }
+  .\!container {
+    max-width: 1024px !important;
   }
 }
 @media (min-width: 1280px) {
   .container {
     max-width: 1280px;
   }
+  .\!container {
+    max-width: 1280px !important;
+  }
 }
 @media (min-width: 1536px) {
   .container {
     max-width: 1536px;
+  }
+  .\!container {
+    max-width: 1536px !important;
   }
 }
 /* Component styles are now imported above - this layer contains only unique styles */
@@ -9341,6 +9359,20 @@ button:focus-visible,
   }
 /* Notification styles */
 .notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+.\!notification {
   position: fixed;
   top: 1rem;
   right: 1rem;
@@ -9716,6 +9748,9 @@ button:focus-visible,
 }
 .flex-shrink-0 {
   flex-shrink: 0;
+}
+.flex-shrink {
+  flex-shrink: 1;
 }
 .flex-grow {
   flex-grow: 1;

@@ -4,7 +4,7 @@
  */
 
 import { Component, ComponentManager } from '../../core/ComponentManager.js';
-import { $$, $ } from '../../utils/index.js';
+import { $$, $, localStorage } from '../../utils/index.js';
 
 export class EndpointFilter extends Component {
   constructor(config = {}) {
@@ -467,10 +467,10 @@ export class EndpointFilter extends Component {
     if (!this.options.storeFilters) return;
     
     try {
-      localStorage.setItem(`${this.options.namespace}.filters`, JSON.stringify({
+      localStorage.set(`${this.options.namespace}.filters`, {
         filters: this.currentFilters,
         timestamp: Date.now()
-      }));
+      });
     } catch (error) {
       console.warn('Failed to save endpoint filters:', error);
     }
@@ -483,9 +483,9 @@ export class EndpointFilter extends Component {
     if (!this.options.storeFilters) return;
     
     try {
-      const stored = localStorage.getItem(`${this.options.namespace}.filters`);
+      const stored = localStorage.get(`${this.options.namespace}.filters`);
       if (stored) {
-        const { filters } = JSON.parse(stored);
+        const { filters } = stored;
         this.currentFilters = { ...this.currentFilters, ...filters };
         
         // Apply loaded filters

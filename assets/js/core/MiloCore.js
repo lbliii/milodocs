@@ -213,9 +213,21 @@ export class MiloCore {
    * Load core utilities
    */
   async loadCoreUtilities() {
-    // Utilities are imported statically, mark as loaded
-    this.features.add('utilities');
-    console.log('📦 Core utilities loaded');
+    // Import and initialize core management utilities
+    try {
+      // Import utilities to trigger their initialization
+      await Promise.all([
+        import('../utils/ErrorHandler.js'),    // Sets up global error handlers
+        import('../utils/NotificationManager.js'), // Sets up window.toast
+        import('../utils/LoadingStateManager.js'), // Injects CSS styles
+        import('../utils/CopyManager.js')      // Available for components
+      ]);
+      
+      this.features.add('utilities');
+      console.log('📦 Core utilities loaded and initialized');
+    } catch (error) {
+      console.warn('Failed to load core utilities:', error);
+    }
   }
 
   /**

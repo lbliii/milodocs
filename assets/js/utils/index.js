@@ -50,6 +50,46 @@ export {
   detectHighContrastMode
 } from './accessibility.js';
 
+// Copy management utilities
+export {
+  CopyManager,
+  copyText,
+  copyFromElement,
+  setupCopyButtons
+} from './CopyManager.js';
+
+// Loading state management utilities
+export {
+  LoadingStateManager,
+  showLoading,
+  hideLoading,
+  showSpinner,
+  showSkeleton,
+  updateProgress
+} from './LoadingStateManager.js';
+
+// Error handling utilities
+export {
+  ErrorHandler,
+  handleError,
+  handleNetworkError,
+  handleValidationError,
+  createErrorBoundary,
+  handleFetchError
+} from './ErrorHandler.js';
+
+// Notification management utilities
+export {
+  NotificationManager,
+  toast,
+  showSuccess,
+  showError,
+  showWarning,
+  showInfo,
+  dismissNotification,
+  dismissAllNotifications
+} from './NotificationManager.js';
+
 // Common utility patterns
 export const utils = {
   // Generate unique IDs

@@ -5,7 +5,7 @@
 
 import { Component, ComponentManager } from '../../core/ComponentManager.js';
 import { SearchFilter } from '../ui/SearchFilter.js';
-import { debounce } from '../../utils/dom.js';
+import { debounce, showLoading, hideLoading, handleError } from '../../utils/index.js';
 
 export class Search extends Component {
   constructor(config = {}) {
@@ -264,17 +264,52 @@ export class Search extends Component {
           break;
       }
 
+      // Display results (this will replace the loading state content)
       this.displayResults(results, query);
       this.emit('search:completed', { query, results: results.length });
       
     } catch (error) {
-      console.error('Search error:', error);
-      this.displayError('Search failed. Please try again.');
+      // Handle error without conflicting with results display
+      console.error('Search operation failed:', error);
+      
+      // Show user-friendly error message (this will replace the loading state content)
+      const errorMessage = this.getSearchErrorMessage(error);
+      this.displayError(errorMessage);
+      
+      // Log error for debugging but don't use ErrorHandler here 
+      // to avoid conflicts with loading state
+      if (window.eventBus) {
+        window.eventBus.emit('search:error', { 
+          query, 
+          error: error.message,
+          backend: this.searchBackend,
+          timestamp: new Date().toISOString()
+        });
+      }
+      
       this.emit('search:error', { query, error });
     } finally {
       this.isSearching = false;
-      this.hideLoadingState();
     }
+  }
+
+  /**
+   * Get user-friendly error message for search failures
+   */
+  getSearchErrorMessage(error) {
+    if (!navigator.onLine) {
+      return 'You appear to be offline. Please check your internet connection.';
+    }
+    
+    if (error.name === 'AbortError') {
+      return 'Search request timed out. Please try again.';
+    }
+    
+    if (error.message.includes('fetch')) {
+      return 'Unable to load search data. Please try again later.';
+    }
+    
+    return 'Search failed. Please try again.';
   }
 
   /**
@@ -331,12 +366,35 @@ export class Search extends Component {
    */
   async fetchAndBuildIndex() {
     try {
-      const response = await fetch('/index.json');
-      const documents = await response.json();
+      // Try multiple possible search index locations
+      const possibleUrls = [
+        '/index.json',
+        '/search.json',
+        '/search/index.json',
+        './search.json'
+      ];
+      
+      let response = null;
+      let documents = null;
+      
+      for (const url of possibleUrls) {
+        try {
+          console.log(`Search: Trying to fetch index from ${url}`);
+          response = await fetch(url);
+          if (response.ok) {
+            documents = await response.json();
+            console.log(`Search: Successfully loaded index from ${url} with ${documents?.length || 0} documents`);
+            break;
+          }
+        } catch (err) {
+          console.log(`Search: Failed to fetch from ${url}:`, err.message);
+          continue;
+        }
+      }
 
       if (!documents || documents.length === 0) {
-        console.warn('Search: No documents found in index.json');
-        return { idx: null, documents: [] };
+        console.warn('Search: No search index found - creating fallback index from page content');
+        return this.createFallbackIndex();
       }
 
       // Build Lunr index - fix binding issue
@@ -358,6 +416,70 @@ export class Search extends Component {
 
     } catch (error) {
       console.error('Search: Failed to fetch or build index:', error);
+      console.log('Search: Falling back to page content index');
+      return this.createFallbackIndex();
+    }
+  }
+
+  /**
+   * Create fallback search index from current page content
+   */
+  createFallbackIndex() {
+    try {
+      const documents = [];
+      
+      // Extract content from current page
+      const articles = document.querySelectorAll('article, main, .content, [role="main"]');
+      const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      
+      // Add current page as a document
+      const pageTitle = document.title || 'Current Page';
+      const pageDescription = document.querySelector('meta[name="description"]')?.content || '';
+      const pageContent = Array.from(articles).map(el => el.textContent).join(' ').substring(0, 1000);
+      
+      documents.push({
+        id: 'current-page',
+        title: pageTitle,
+        description: pageDescription,
+        body: pageContent,
+        url: window.location.pathname,
+        section: 'Current Page'
+      });
+      
+      // Add headings as searchable items
+      headings.forEach((heading, index) => {
+        const text = heading.textContent.trim();
+        if (text.length > 2) {
+          documents.push({
+            id: `heading-${index}`,
+            title: text,
+            description: `Section: ${text}`,
+            body: heading.nextElementSibling?.textContent?.substring(0, 200) || '',
+            url: `${window.location.pathname}#${heading.id || `heading-${index}`}`,
+            section: 'Page Sections'
+          });
+        }
+      });
+      
+      // Build Lunr index with fallback content
+      const lunrConfig = this.lunrConfig;
+      const idx = lunr(function () {
+        this.ref(lunrConfig?.ref || 'id');
+        const fields = lunrConfig?.fields || ['title', 'description', 'body'];
+        fields.forEach(field => {
+          this.field(field);
+        });
+
+        documents.forEach(function (doc) {
+          this.add(doc);
+        }, this);
+      });
+
+      console.log(`Search: Fallback index created with ${documents.length} documents`);
+      return { idx, documents };
+      
+    } catch (error) {
+      console.error('Search: Failed to create fallback index:', error);
       return { idx: null, documents: [] };
     }
   }
@@ -516,10 +638,19 @@ export class Search extends Component {
    * Display search results with sophisticated grouping
    */
   displayResults(groupedResults, query) {
-    if (!this.searchResultsContainer) return;
+    if (!this.searchResultsContainer) {
+      console.error('Search: No results container found');
+      return;
+    }
 
-    // Debug logging
-    console.log('displayResults called with:', { groupedResults, query });
+    // Clean up any active loading state before displaying results
+    this.cleanupLoadingState();
+
+    // Enhanced debug logging
+    console.log('Search: Displaying results for query:', query);
+    console.log('Search: Results container:', this.searchResultsContainer);
+    console.log('Search: Grouped results:', groupedResults);
+    console.log('Search: Container innerHTML length before:', this.searchResultsContainer.innerHTML.length);
 
     // Handle empty results
     if (!groupedResults || Object.keys(groupedResults).length === 0) {
@@ -588,6 +719,9 @@ export class Search extends Component {
    */
   displayNoResults(query) {
     if (!this.searchResultsContainer) return;
+
+    // Clean up any active loading state before displaying no results
+    this.cleanupLoadingState();
     
     this.searchResultsContainer.innerHTML = `
       <div class="search-no-results">
@@ -604,6 +738,9 @@ export class Search extends Component {
    */
   displayError(message) {
     if (!this.searchResultsContainer) return;
+
+    // Clean up any active loading state before displaying error
+    this.cleanupLoadingState();
     
     this.searchResultsContainer.innerHTML = `
       <div class="search-error">
@@ -794,16 +931,16 @@ export class Search extends Component {
   }
 
   /**
-   * Show loading state
+   * Show loading state using unified LoadingStateManager
    */
   showLoadingState() {
     if (this.searchResultsContainer) {
-      this.searchResultsContainer.innerHTML = `
-        <div class="text-center py-8">
-          <div class="animate-spin h-8 w-8 border-2 border-brand border-t-transparent rounded-full mx-auto mb-2"></div>
-          <p class="text-gray-500">Searching...</p>
-        </div>
-      `;
+      this.currentLoaderId = showLoading(this.searchResultsContainer, {
+        type: 'spinner',
+        message: 'Searching...',
+        size: 'medium',
+        variant: 'primary'
+      });
     }
   }
 
@@ -811,7 +948,26 @@ export class Search extends Component {
    * Hide loading state
    */
   hideLoadingState() {
-    // Loading state is replaced by results or error message
+    if (this.currentLoaderId) {
+      hideLoading(this.currentLoaderId);
+      this.currentLoaderId = null;
+    }
+  }
+
+  /**
+   * Clean up loading state without restoring original content
+   * This prevents the LoadingStateManager from overwriting our new content
+   */
+  cleanupLoadingState() {
+    if (this.currentLoaderId) {
+      // Get the loader data before cleanup
+      const { LoadingStateManager } = window.MiloCore?.utils || {};
+      if (LoadingStateManager?.activeLoaders?.has(this.currentLoaderId)) {
+        // Remove the loader from active loaders without restoring content
+        LoadingStateManager.activeLoaders.delete(this.currentLoaderId);
+      }
+      this.currentLoaderId = null;
+    }
   }
 
   /**

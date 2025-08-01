@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/ComponentManager.js';
+import { localStorage } from '../../utils/index.js';
 
 export class ChatTocToggle extends Component {
   constructor(config = {}) {
@@ -17,7 +18,7 @@ export class ChatTocToggle extends Component {
     this.defaultView = 'chat';
     
     // Read saved state immediately to prevent flicker
-    this.initialState = window.localStorage.getItem(this.storageKey) || this.defaultView;
+    this.initialState = localStorage.get(this.storageKey) || this.defaultView;
     
     this.elements = {
       container: null,
@@ -154,7 +155,7 @@ export class ChatTocToggle extends Component {
     
     // Save to localStorage if requested
     if (shouldSave) {
-      window.localStorage.setItem(this.storageKey, mode);
+      localStorage.set(this.storageKey, mode);
     }
     
     // Emit change event
@@ -172,7 +173,7 @@ export class ChatTocToggle extends Component {
     }
     
     // Fallback to localStorage or default
-    const savedSetting = window.localStorage.getItem(this.storageKey);
+    const savedSetting = localStorage.get(this.storageKey);
     return savedSetting || this.defaultView;
   }
 

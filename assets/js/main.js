@@ -160,6 +160,8 @@ async function setupGlobalUtilities() {
     throttle 
   } = await import('./utils/dom.js');
   
+  const { showLoading, hideLoading } = await import('./utils/LoadingStateManager.js');
+  
   // Global ripple effect setup (from old main.js)
   const clickableElements = document.querySelectorAll(`
     button, .btn, .topbar__button,
@@ -188,19 +190,48 @@ async function setupGlobalUtilities() {
     });
   });
   
-  // Form loading states (from old main.js)
+  // Form loading states using unified LoadingStateManager
   const forms = document.querySelectorAll('form');
   forms.forEach(form => {
     form.addEventListener('submit', function(e) {
       const submitButton = form.querySelector('button[type="submit"]');
       if (submitButton) {
         submitButton.disabled = true;
-        submitButton.innerHTML = `
-          <div class="flex items-center">
-            <div class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-            Processing...
-          </div>
-        `;
+        
+        // Store original content for restoration
+        const originalContent = submitButton.innerHTML;
+        submitButton.setAttribute('data-original-content', originalContent);
+        
+        // Show loading state using LoadingStateManager
+        const loaderId = showLoading(submitButton, {
+          type: 'dots',
+          message: 'Processing...',
+          size: 'small'
+        });
+        
+        // Store loader ID for potential cleanup
+        submitButton.setAttribute('data-loader-id', loaderId);
+      }
+    });
+    
+    // Handle form completion/error for cleanup
+    form.addEventListener('reset', function() {
+      const submitButton = form.querySelector('button[type="submit"]');
+      if (submitButton) {
+        const loaderId = submitButton.getAttribute('data-loader-id');
+        const originalContent = submitButton.getAttribute('data-original-content');
+        
+        if (loaderId) {
+          hideLoading(loaderId);
+          submitButton.removeAttribute('data-loader-id');
+        }
+        
+        if (originalContent) {
+          submitButton.innerHTML = originalContent;
+          submitButton.removeAttribute('data-original-content');
+        }
+        
+        submitButton.disabled = false;
       }
     });
   });

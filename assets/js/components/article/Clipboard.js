@@ -5,7 +5,7 @@
  */
 
 import { Component, ComponentManager } from '../../core/ComponentManager.js';
-import { copyToClipboard, $$ } from '../../utils/index.js';
+import { CopyManager, $$ } from '../../utils/index.js';
 
 export class ArticleClipboard extends Component {
   constructor(config = {}) {
@@ -72,180 +72,41 @@ export class ArticleClipboard extends Component {
   }
 
   /**
-   * Handle copy button click
+   * Handle copy button click using unified CopyManager
    */
   async handleCopyClick(button) {
-    try {
-      const codeBlock = this.findCodeBlock(button);
-      if (!codeBlock) {
-        throw new Error('Code block not found');
-      }
-
-      const text = this.extractText(codeBlock);
-      const success = await copyToClipboard(text);
-      
-      if (success) {
-        this.showSuccess(button);
+    const result = await CopyManager.copyCode(button, {
+      successMessage: this.options.successMessage,
+      errorMessage: this.options.errorMessage,
+      feedbackDuration: this.options.successDuration,
+      analytics: {
+        component: 'article-clipboard',
+        buttonId: button.id || 'unknown'
+      },
+      onSuccess: (text) => {
         this.trackCopyEvent(button, text.length);
         this.emit('copy-success', { button, text });
-      } else {
-        throw new Error('Copy operation failed');
+      },
+      onError: (error) => {
+        this.emit('copy-error', { button, error });
       }
-      
-    } catch (error) {
-      console.error('Copy failed:', error);
-      this.showError(button);
-      this.emit('copy-error', { button, error });
-    }
+    });
+
+    return result;
   }
 
-  /**
-   * Find the associated code block
-   */
-  findCodeBlock(button) {
-    // Try different strategies to find the code block
-    
-    // Strategy 1: Direct parent container with code element
-    let codeBlock = button.parentElement.querySelector('code');
-    if (codeBlock) return codeBlock;
-    
-    // Strategy 2: Previous sibling
-    let sibling = button.previousElementSibling;
-    while (sibling) {
-      codeBlock = sibling.querySelector('code') || (sibling.tagName === 'CODE' ? sibling : null);
-      if (codeBlock) return codeBlock;
-      sibling = sibling.previousElementSibling;
-    }
-    
-    // Strategy 3: Look in closest pre element
-    const preElement = button.closest('pre') || button.parentElement.querySelector('pre');
-    if (preElement) {
-      codeBlock = preElement.querySelector('code');
-      if (codeBlock) return codeBlock;
-    }
-    
-    // Strategy 4: Use data attribute if available (support both formats)
-    const targetSelector = button.getAttribute('data-copy-target') || button.getAttribute('data-clipboard-target');
-    if (targetSelector) {
-      const targetElement = document.querySelector(targetSelector);
-      if (targetElement) {
-        // If target is a container, look for code element inside
-        return targetElement.querySelector('code') || targetElement;
-      }
-    }
-    
-    return null;
-  }
+
 
   /**
-   * Extract text content from code block
-   */
-  extractText(codeBlock) {
-    // Get text content and clean it up
-    let text = codeBlock.textContent || codeBlock.innerText;
-    
-    // Remove any line numbers or prompt characters that might be present
-    text = text.replace(/^\d+\s+/gm, ''); // Remove line numbers
-    text = text.replace(/^\$\s+/gm, '');   // Remove shell prompts
-    text = text.replace(/^>\s+/gm, '');    // Remove quote markers
-    
-    return text.trim();
-  }
-
-  /**
-   * Show success feedback
-   */
-  showSuccess(button) {
-    const buttonData = this.buttons.get(button);
-    
-    // Visual feedback
-    button.innerHTML = this.options.successMessage;
-    button.classList.add('bg-green-600', 'copy-success');
-    button.classList.remove('bg-zinc-600', 'copy-error');
-    
-    // Announce to screen readers
-    this.announceToScreenReader('Code copied to clipboard!');
-    
-    // Show success notification
-    this.showNotification('Code copied to clipboard!', 'success');
-    
-    // Reset after delay
-    setTimeout(() => {
-      button.innerHTML = buttonData.originalContent;
-      button.classList.remove('bg-green-600', 'copy-success');
-      button.classList.add('bg-zinc-600');
-    }, this.options.successDuration);
-  }
-
-  /**
-   * Show error feedback
-   */
-  showError(button) {
-    const buttonData = this.buttons.get(button);
-    
-    // Error feedback
-    button.innerHTML = this.options.errorMessage;
-    button.classList.add('bg-red-600', 'copy-error');
-    button.classList.remove('bg-zinc-600', 'copy-success');
-    
-    // Announce to screen readers
-    this.announceToScreenReader('Failed to copy code');
-    
-    // Show error notification
-    this.showNotification('Failed to copy code', 'error');
-    
-    // Reset after delay
-    setTimeout(() => {
-      button.innerHTML = buttonData.originalContent;
-      button.classList.remove('bg-red-600', 'copy-error');
-      button.classList.add('bg-zinc-600');
-    }, this.options.errorDuration);
-  }
-
-  /**
-   * Show notification using dedicated toast system
-   */
-  showNotification(message, type) {
-    const duration = type === 'error' ? this.options.errorDuration : this.options.successDuration;
-    
-    // Use the dedicated toast system
-    if (window.toast) {
-      window.toast(message, type, duration);
-    } else if (window.MiloUX && window.MiloUX.showNotification) {
-      window.MiloUX.showNotification(message, type, duration);
-    } else {
-      // Final fallback - just log
-      console.log(`Toast (${type}): ${message}`);
-    }
-  }
-
-  /**
-   * Announce to screen readers
-   */
-  announceToScreenReader(message) {
-    if (window.announceToScreenReader) {
-      window.announceToScreenReader(message);
-    }
-  }
-
-  /**
-   * Track copy events for analytics
+   * Track copy events for analytics (component-specific tracking)
    */
   trackCopyEvent(button, textLength) {
-    // Find the programming language if available
-    const codeBlock = this.findCodeBlock(button);
-    const language = codeBlock?.className.match(/language-(\w+)/)?.[1] || 'unknown';
-    
     this.emit('copy-tracked', {
-      language,
+      component: 'article-clipboard',
       textLength,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      buttonCount: this.buttons.size
     });
-    
-    // Debug logging
-    if (window.MiloDebug) {
-      console.log(`📋 Code copied: ${language} (${textLength} chars)`);
-    }
   }
 
   /**

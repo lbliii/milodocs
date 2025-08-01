@@ -4,7 +4,7 @@
  */
 
 import { Component, ComponentManager } from '../../core/ComponentManager.js';
-import { $$, $ } from '../../utils/index.js';
+import { $$, $, CopyManager, localStorage } from '../../utils/index.js';
 
 export class OpenAPIViewer extends Component {
   constructor(config = {}) {
@@ -371,96 +371,31 @@ export class OpenAPIViewer extends Component {
   }
 
   /**
-   * Handle copy button clicks
+   * Handle copy button clicks using unified CopyManager
    */
   async handleCopyClick(button) {
-    const copyText = button.getAttribute('data-copy-text');
-    const copyTarget = button.getAttribute('data-copy-target');
-    
-    let textToCopy = copyText;
-    
-    // If no direct text, try to get from target element
-    if (!textToCopy && copyTarget) {
-      const targetElement = $(`#${copyTarget}`);
-      if (targetElement) {
-        textToCopy = targetElement.textContent;
-      }
-    }
-    
-    if (!textToCopy) {
-      console.warn('No text to copy found');
-      return;
-    }
-    
-    try {
-      await navigator.clipboard.writeText(textToCopy);
-      
-      // Visual feedback
-      const originalContent = button.innerHTML;
-      button.innerHTML = `
+    const result = await CopyManager.copy(button, {
+      successMessage: `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 6L9 17l-5-5"></path>
         </svg>
-      `;
-      button.classList.add('copy-button--success');
-      
-      setTimeout(() => {
-        button.innerHTML = originalContent;
-        button.classList.remove('copy-button--success');
-      }, 2000);
-      
-      // Announce to screen readers
-      if (window.announceToScreenReader) {
-        window.announceToScreenReader('Code copied to clipboard');
+      `,
+      errorMessage: '❌',
+      feedbackDuration: 2000,
+      announceMessage: 'Code copied to clipboard',
+      analytics: {
+        component: 'openapi-viewer',
+        endpointId: button.closest('.endpoint-item')?.id || 'unknown'
+      },
+      onSuccess: (text) => {
+        this.emit('code-copied', { text, button });
+      },
+      onError: (error) => {
+        this.emit('code-copy-failed', { error, button });
       }
-      
-      this.emit('code-copied', { text: textToCopy, button });
-      
-    } catch (error) {
-      console.error('Failed to copy text:', error);
-      
-      // Fallback for older browsers
-      this.fallbackCopy(textToCopy, button);
-    }
-  }
+    });
 
-  /**
-   * Fallback copy method for older browsers
-   */
-  fallbackCopy(text, button) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-      document.execCommand('copy');
-      
-      // Visual feedback
-      const originalContent = button.innerHTML;
-      button.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 6L9 17l-5-5"></path>
-        </svg>
-      `;
-      button.classList.add('copy-button--success');
-      
-      setTimeout(() => {
-        button.innerHTML = originalContent;
-        button.classList.remove('copy-button--success');
-      }, 2000);
-      
-      this.emit('code-copied', { text, button });
-      
-    } catch (error) {
-      console.error('Fallback copy also failed:', error);
-    } finally {
-      document.body.removeChild(textArea);
-    }
+    return result;
   }
 
   /**
@@ -507,7 +442,7 @@ export class OpenAPIViewer extends Component {
     });
     
     try {
-      localStorage.setItem(`${this.options.namespace}.preferences`, JSON.stringify(preferences));
+      localStorage.set(`${this.options.namespace}.preferences`, preferences);
     } catch (error) {
       console.warn('Failed to save OpenAPI preferences:', error);
     }
@@ -520,9 +455,8 @@ export class OpenAPIViewer extends Component {
     if (!this.options.storePreferences) return;
     
     try {
-      const stored = localStorage.getItem(`${this.options.namespace}.preferences`);
-      if (stored) {
-        const preferences = JSON.parse(stored);
+      const preferences = localStorage.get(`${this.options.namespace}.preferences`);
+      if (preferences) {
         
         // Apply filter
         if (preferences.filter && preferences.filter !== 'all') {

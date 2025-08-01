@@ -4,7 +4,7 @@
  */
 
 import { Component } from '../../core/ComponentManager.js';
-import { localStorage } from '../../utils/storage.js';
+import { localStorage, showLoading, hideLoading, handleError } from '../../utils/index.js';
 
 export class ArticleChat extends Component {
   constructor(config = {}) {
@@ -125,7 +125,11 @@ export class ArticleChat extends Component {
       const data = await response.json();
       const answer = data.answer || 'Sorry, I could not fetch the answer.';
       
-      // Remove loading bubble
+      // Clean up loading bubble
+      const loaderId = loadingBubble.getAttribute('data-loader-id');
+      if (loaderId) {
+        hideLoading(loaderId);
+      }
       loadingBubble.remove();
       
       // Add response with typing animation
@@ -140,39 +144,52 @@ export class ArticleChat extends Component {
       this.emit('chat:responseReceived', { question, answer });
       
     } catch (error) {
-      console.error('Chat error:', error);
+      // Clean up loading bubble
+      const loaderId = loadingBubble.getAttribute('data-loader-id');
+      if (loaderId) {
+        hideLoading(loaderId);
+      }
       loadingBubble.remove();
       
-      let errorMessage = "Sorry, I'm having trouble connecting. Please try again later.";
-      if (error.name === 'AbortError') {
-        errorMessage = 'Request timed out. Please try again with a shorter question.';
-      } else if (!navigator.onLine) {
-        errorMessage = 'You appear to be offline. Please check your connection.';
-      }
+      // Use unified error handling
+      const errorResult = await handleError(error, {
+        context: 'chat-ai-request',
+        recoverable: true,
+        onRetry: () => this.fetchAnswer(question),
+        maxRetries: 2,
+        metadata: { question, endpoint: this.chatEndpoint },
+        announce: false // We'll handle announcement via chat bubble
+      });
       
-      const errorBubble = this.createChatBubble(errorMessage, 'bot', 'error');
+      // Show error in chat interface
+      const errorBubble = this.createChatBubble(errorResult.message, 'bot', 'error');
       this.addChatBubble(errorBubble, 'bot');
       
       // Add retry functionality
       this.addRetryButton(question);
       
-      // Emit error event
-      this.emit('chat:error', { error, question });
+      // Emit error event with standardized error
+      this.emit('chat:error', { error: errorResult, question });
     }
   }
 
   /**
-   * Create loading bubble animation
+   * Create loading bubble using unified LoadingStateManager
    */
   createLoadingBubble() {
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble bot p-2 rounded-lg text-black font-regular text-sm';
-    bubble.innerHTML = `
-      <div class="flex items-center space-x-2">
-        <div class="animate-spin h-4 w-4 border-2 border-brand border-t-transparent rounded-full"></div>
-        <span>Thinking...</span>
-      </div>
-    `;
+    
+    // Use LoadingStateManager for consistent loading display
+    const loaderId = showLoading(bubble, {
+      type: 'dots',
+      message: 'Thinking...',
+      size: 'small',
+      variant: 'minimal'
+    });
+    
+    // Store loader ID for cleanup
+    bubble.setAttribute('data-loader-id', loaderId);
     return bubble;
   }
 
