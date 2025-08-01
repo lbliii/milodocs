@@ -1,0 +1,15 @@
+/* OpenAPI Component - Modular imports */
+
+@import "./base.css";
+@import "./header.css";
+@import "./overview.css";
+@import "./servers.css";
+@import "./navigation.css";
+@import "./endpoints.css";
+@import "./parameters.css";
+@import "./responses.css";
+@import "./schemas.css";
+@import "./code-examples.css";
+@import "./components.css";
+@import "./security.css";
+@import "./responsive.css";

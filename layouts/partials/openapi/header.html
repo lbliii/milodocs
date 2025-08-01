@@ -1,0 +1,56 @@
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+<header class="openapi-header">
+  <div class="openapi-header__meta">
+    <div class="openapi-header__badge">
+      <span class="openapi-version">OpenAPI {{ $spec.openapi }}</span>
+    </div>
+    {{ if $spec.info.version }}
+      <div class="openapi-header__version">
+        <span class="api-version">v{{ $spec.info.version }}</span>
+      </div>
+    {{ end }}
+  </div>
+  
+  <h1 class="openapi-header__title">{{ $spec.info.title }}</h1>
+  
+  {{ with $spec.info.summary }}
+    <div class="openapi-header__summary">{{ . | markdownify }}</div>
+  {{ end }}
+  
+  {{ with $spec.info.description }}
+    <div class="openapi-header__description">{{ . | markdownify }}</div>
+  {{ end }}
+  
+  <div class="openapi-header__info">
+    {{ with $spec.info.contact }}
+      <div class="openapi-contact">
+        <h3>Contact</h3>
+        {{ with .name }}<div class="contact-name">{{ . }}</div>{{ end }}
+        {{ with .email }}<div class="contact-email"><a href="mailto:{{ . }}">{{ . }}</a></div>{{ end }}
+        {{ with .url }}<div class="contact-url"><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></div>{{ end }}
+      </div>
+    {{ end }}
+    
+    {{ with $spec.info.license }}
+      <div class="openapi-license">
+        <h3>License</h3>
+        <div class="license-name">
+          {{ if .url }}
+            <a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a>
+          {{ else }}
+            {{ .name }}
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+    
+    {{ with $spec.info.termsOfService }}
+      <div class="openapi-terms">
+        <h3>Terms of Service</h3>
+        <div class="terms-link"><a href="{{ . }}" target="_blank" rel="noopener">View Terms</a></div>
+      </div>
+    {{ end }}
+  </div>
+</header>

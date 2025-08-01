@@ -1,0 +1,107 @@
+{{- $responses := .responses -}}
+{{- $spec := .spec -}}
+
+<div class="endpoint-section">
+  <h4>Responses</h4>
+  
+  <div class="responses-container">
+    {{ range $statusCode, $response := $responses }}
+      <div class="response-item">
+        <div class="response-header collapse__header"
+             data-target="response-{{ $statusCode }}"
+             role="button"
+             tabindex="0"
+             aria-expanded="false"
+             aria-controls="response-{{ $statusCode }}">
+          <div class="response-status">
+            <span class="status-code status-code--{{ substr $statusCode 0 1 }}xx">{{ $statusCode }}</span>
+            <div class="response-description">{{ $response.description | markdownify }}</div>
+          </div>
+          <div class="response-toggle">
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"></path>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="response-details" id="response-{{ $statusCode }}">
+          <!-- Response Headers -->
+          {{ with $response.headers }}
+            <div class="response-headers">
+              <h6>Headers</h6>
+              <div class="headers-list">
+                {{ range $headerName, $header := . }}
+                  <div class="header-item">
+                    <div class="header-name">
+                      <code>{{ $headerName }}</code>
+                      {{ if $header.required }}
+                        <span class="header-required">required</span>
+                      {{ end }}
+                    </div>
+                    {{ with $header.description }}
+                      <div class="header-description">{{ . | markdownify }}</div>
+                    {{ end }}
+                    {{ with $header.schema }}
+                      <div class="header-type">
+                        <span class="type-badge type-badge--{{ .type }}">{{ .type }}</span>
+                        {{ with .format }}<span class="type-format">({{ . }})</span>{{ end }}
+                      </div>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+            </div>
+          {{ end }}
+          
+          <!-- Response Content -->
+        {{ with $response.content }}
+          <div class="response-content">
+            <h6>Content</h6>
+            {{ range $mediaType, $content := . }}
+              <div class="response-media-type">
+                <div class="media-type-label">{{ $mediaType }}</div>
+                
+                {{ with $content.schema }}
+                  <div class="response-schema">
+                    {{ partial "openapi/schema.html" (dict "schema" . "spec" $spec "level" 0) }}
+                  </div>
+                {{ end }}
+                
+                {{ with $content.examples }}
+                  <div class="response-examples">
+                    <div class="examples-header">Examples</div>
+                    <div class="examples-container">
+                      {{ range $name, $example := . }}
+                        <div class="example-item">
+                          {{ if $example.summary }}
+                            <div class="example-summary">{{ $example.summary }}</div>
+                          {{ end }}
+                          {{ if $example.description }}
+                            <div class="example-description">{{ $example.description | markdownify }}</div>
+                          {{ end }}
+                          <div class="example-code">
+                            <pre><code class="language-json">{{ $example.value | jsonify (dict "indent" "  ") }}</code></pre>
+                          </div>
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+                
+                {{ with $content.example }}
+                  <div class="response-example">
+                    <div class="example-header">Example</div>
+                    <div class="example-code">
+                      <pre><code class="language-json">{{ . | jsonify (dict "indent" "  ") }}</code></pre>
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+            {{ end }}
+          </div>
+        {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</div>

@@ -1,0 +1,163 @@
+{{- $security := .security -}}
+{{- $components := .components -}}
+{{- $page := .page -}}
+
+<section class="openapi-security" id="security">
+  <div class="section-header">
+    <h2 class="section-title">Global Security Requirements</h2>
+    <div class="section-description">Authentication and authorization requirements for this API</div>
+  </div>
+  
+  <div class="security-requirements">
+    {{ range $index, $requirement := $security }}
+      <div class="security-requirement-group">
+        <h3>Security Requirement {{ add $index 1 }}</h3>
+        
+        {{ if eq (len $requirement) 0 }}
+          <div class="security-none">
+            <div class="security-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"></path>
+              </svg>
+            </div>
+            <div class="security-content">
+              <h4>No Authentication Required</h4>
+              <p>This endpoint can be accessed without authentication.</p>
+            </div>
+          </div>
+        {{ else }}
+          <div class="security-schemes-list">
+            {{ range $schemeName, $scopes := $requirement }}
+              {{ $securityScheme := index $components.securitySchemes $schemeName }}
+              {{ if $securityScheme }}
+                <div class="security-scheme-requirement">
+                  <div class="security-scheme-header">
+                    <div class="security-scheme-icon">
+                      {{ if eq $securityScheme.type "http" }}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M9 12l2 2 4-4"></path>
+                          <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+                          <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+                          <path d="M13 12h1"></path>
+                        </svg>
+                      {{ else if eq $securityScheme.type "apiKey" }}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                        </svg>
+                      {{ else if eq $securityScheme.type "oauth2" }}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                          <path d="M9 12l2 2 4-4"></path>
+                        </svg>
+                      {{ else }}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                      {{ end }}
+                    </div>
+                    <div class="security-scheme-info">
+                      <h4>{{ $schemeName }}</h4>
+                      <div class="security-scheme-type">{{ $securityScheme.type }}</div>
+                    </div>
+                  </div>
+                  
+                  {{ with $securityScheme.description }}
+                    <div class="security-scheme-description">{{ . | markdownify }}</div>
+                  {{ end }}
+                  
+                  <div class="security-scheme-details">
+                    {{ if eq $securityScheme.type "http" }}
+                      <div class="security-detail">
+                        <span class="detail-label">Scheme:</span>
+                        <code>{{ $securityScheme.scheme }}</code>
+                      </div>
+                      {{ with $securityScheme.bearerFormat }}
+                        <div class="security-detail">
+                          <span class="detail-label">Bearer Format:</span>
+                          <code>{{ . }}</code>
+                        </div>
+                      {{ end }}
+                      <div class="security-usage">
+                        <span class="detail-label">Usage:</span>
+                        <code>Authorization: {{ title $securityScheme.scheme }}{{ if eq $securityScheme.scheme "bearer" }} &lt;token&gt;{{ end }}</code>
+                      </div>
+                    {{ end }}
+                    
+                    {{ if eq $securityScheme.type "apiKey" }}
+                      <div class="security-detail">
+                        <span class="detail-label">Parameter Name:</span>
+                        <code>{{ $securityScheme.name }}</code>
+                      </div>
+                      <div class="security-detail">
+                        <span class="detail-label">Location:</span>
+                        <code>{{ $securityScheme.in }}</code>
+                      </div>
+                      <div class="security-usage">
+                        <span class="detail-label">Usage:</span>
+                        {{ if eq $securityScheme.in "header" }}
+                          <code>{{ $securityScheme.name }}: &lt;api-key&gt;</code>
+                        {{ else if eq $securityScheme.in "query" }}
+                          <code>?{{ $securityScheme.name }}=&lt;api-key&gt;</code>
+                        {{ else if eq $securityScheme.in "cookie" }}
+                          <code>Cookie: {{ $securityScheme.name }}=&lt;api-key&gt;</code>
+                        {{ end }}
+                      </div>
+                    {{ end }}
+                    
+                    {{ if eq $securityScheme.type "oauth2" }}
+                      {{ with $securityScheme.flows }}
+                        <div class="oauth-flows">
+                          <h5>Available Flows</h5>
+                          {{ range $flowType, $flow := . }}
+                            <div class="oauth-flow">
+                              <div class="flow-type">{{ title $flowType }}</div>
+                              {{ with $flow.authorizationUrl }}
+                                <div class="security-detail">
+                                  <span class="detail-label">Authorization URL:</span>
+                                  <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                                </div>
+                              {{ end }}
+                              {{ with $flow.tokenUrl }}
+                                <div class="security-detail">
+                                  <span class="detail-label">Token URL:</span>
+                                  <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                                </div>
+                              {{ end }}
+                            </div>
+                          {{ end }}
+                        </div>
+                      {{ end }}
+                    {{ end }}
+                    
+                    {{ if eq $securityScheme.type "openIdConnect" }}
+                      <div class="security-detail">
+                        <span class="detail-label">OpenID Connect URL:</span>
+                        <a href="{{ $securityScheme.openIdConnectUrl }}" target="_blank" rel="noopener">{{ $securityScheme.openIdConnectUrl }}</a>
+                      </div>
+                    {{ end }}
+                  </div>
+                  
+                  {{ if gt (len $scopes) 0 }}
+                    <div class="security-scopes">
+                      <h5>Required Scopes</h5>
+                      <div class="scopes-list">
+                        {{ range $scope := $scopes }}
+                          <code class="scope-item">{{ $scope }}</code>
+                        {{ end }}
+                      </div>
+                    </div>
+                  {{ end }}
+                </div>
+              {{ else }}
+                <div class="security-scheme-error">
+                  <span class="error-message">Security scheme "{{ $schemeName }}" not found</span>
+                </div>
+              {{ end }}
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</section>

@@ -1,0 +1,252 @@
+{{- $paths := .paths -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+<section class="openapi-endpoints" id="endpoints">
+  <div class="section-header">
+    <h2 class="section-title">API Endpoints</h2>
+    <div class="section-description">Available API operations and their details</div>
+  </div>
+  
+  <!-- Enhanced Endpoint Navigation -->
+  {{ $tags := slice }}
+  {{ $methods := slice }}
+  {{ range $path, $pathMethods := $paths }}
+    {{ range $method, $operation := $pathMethods }}
+      {{ $methodUpper := upper $method }}
+      {{ if not (in $methods $methodUpper) }}
+        {{ $methods = $methods | append $methodUpper }}
+      {{ end }}
+      {{ range $tag := $operation.tags }}
+        {{ if not (in $tags $tag) }}
+          {{ $tags = $tags | append $tag }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  
+  <nav class="endpoints-nav" data-component="endpoint-filter">
+    <div class="endpoints-nav__section">
+      <div class="endpoints-nav__header">Filter by Tag:</div>
+      <div class="endpoints-nav__tags">
+        <button class="tag-filter tag-filter--active" data-tag="all">All Tags</button>
+        {{ range $tag := $tags }}
+          <button class="tag-filter" data-tag="{{ $tag | urlize }}">{{ $tag }}</button>
+        {{ end }}
+      </div>
+    </div>
+    
+    {{ if gt (len $methods) 1 }}
+    <div class="endpoints-nav__section">
+      <div class="endpoints-nav__header">Filter by Method:</div>
+      <div class="endpoints-nav__methods">
+        <button class="method-filter method-filter--active" data-method="all">All Methods</button>
+        {{ range $method := $methods }}
+          <button class="method-filter method-filter--{{ lower $method }}" data-method="{{ lower $method }}">{{ $method }}</button>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+    
+    <div class="endpoints-nav__section">
+      <div class="endpoints-nav__header">Search:</div>
+      <div class="endpoints-nav__search">
+        <input type="text" class="endpoint-search" placeholder="Search endpoints..." data-search="endpoints">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Endpoints Grouped by Tags -->
+  <div class="endpoints-list">
+    {{ $endpointsByTag := dict }}
+    {{ $untaggedEndpoints := slice }}
+    
+    <!-- Group endpoints by their first tag -->
+    {{ range $path, $methods := $paths }}
+      {{ range $method, $operation := $methods }}
+        {{ $endpoint := dict "path" $path "method" $method "operation" $operation }}
+        {{ if $operation.tags }}
+          {{ $primaryTag := index $operation.tags 0 }}
+          {{ $existingEndpoints := index $endpointsByTag $primaryTag | default (slice) }}
+          {{ $endpointsByTag = merge $endpointsByTag (dict $primaryTag ($existingEndpoints | append $endpoint)) }}
+        {{ else }}
+          {{ $untaggedEndpoints = $untaggedEndpoints | append $endpoint }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    
+    <!-- Render grouped endpoints -->
+    {{ range $tag := $tags }}
+      {{ $tagEndpoints := index $endpointsByTag $tag }}
+      {{ if $tagEndpoints }}
+        <div class="endpoint-group" data-tag="{{ $tag | urlize }}">
+          <div class="endpoint-group-header collapse__header" 
+               data-target="tag-{{ $tag | urlize }}-endpoints"
+               role="button"
+               tabindex="0"
+               aria-expanded="false"
+               aria-controls="tag-{{ $tag | urlize }}-endpoints">
+            <div class="endpoint-group-title">
+              <h3>{{ $tag }}</h3>
+              <span class="endpoint-count">({{ len $tagEndpoints }} endpoint{{ if ne (len $tagEndpoints) 1 }}s{{ end }})</span>
+            </div>
+            <div class="endpoint-group-toggle">
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="endpoint-group-content" id="tag-{{ $tag | urlize }}-endpoints">
+            {{ range $endpoint := $tagEndpoints }}
+              {{ $methodUpper := upper $endpoint.method }}
+              {{ $sanitizedPath := $endpoint.path | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
+              {{ if eq $sanitizedPath "" }}{{ $sanitizedPath = "root" }}{{ end }}
+              {{ $endpointId := printf "%s-%s" $methodUpper $sanitizedPath }}
+              {{ $tagClasses := printf "endpoint-tag-%s" ($tag | urlize) }}
+              
+              <div class="endpoint-item {{ $tagClasses }}" 
+                   id="{{ $endpointId }}"
+                   data-method="{{ $methodUpper }}"
+                   data-path="{{ $endpoint.path }}">
+                
+                <!-- Endpoint Header -->
+                {{ partial "openapi/endpoint-header.html" (dict 
+                    "method" $methodUpper 
+                    "path" $endpoint.path 
+                    "operation" $endpoint.operation 
+                    "endpointId" $endpointId) }}
+          
+                <!-- Endpoint Details (Collapsible) -->
+                <div class="endpoint-details" id="{{ $endpointId }}-details">
+            
+                  <!-- Description -->
+                  {{ with $endpoint.operation.description }}
+              <div class="endpoint-section">
+                <h4>Description</h4>
+                <div class="endpoint-description">{{ . | markdownify }}</div>
+              </div>
+                  {{ end }}
+                  
+                  <!-- Parameters -->
+                  {{ with $endpoint.operation.parameters }}
+              {{ partial "openapi/endpoint-parameters.html" (dict "parameters" . "spec" $spec) }}
+                  {{ end }}
+                  
+                  <!-- Request Body -->
+                  {{ with $endpoint.operation.requestBody }}
+              {{ partial "openapi/endpoint-request-body.html" (dict "requestBody" . "spec" $spec) }}
+                  {{ end }}
+                  
+                  <!-- Responses -->
+                  {{ with $endpoint.operation.responses }}
+              {{ partial "openapi/endpoint-responses.html" (dict "responses" . "spec" $spec) }}
+                  {{ end }}
+                  
+                  <!-- Security -->
+                  {{ with $endpoint.operation.security }}
+              {{ partial "openapi/endpoint-security.html" (dict "security" . "spec" $spec) }}
+            {{ end }}
+            
+                  <!-- Code Examples -->
+                  {{ partial "openapi/endpoint-examples.html" (dict 
+                      "method" $methodUpper 
+                      "path" $endpoint.path 
+                      "operation" $endpoint.operation 
+                      "spec" $spec) }}
+                </div>
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+    
+    <!-- Untagged endpoints -->
+    {{ if $untaggedEndpoints }}
+      <div class="endpoint-group" data-tag="untagged">
+        <div class="endpoint-group-header collapse__header" 
+             data-target="tag-untagged-endpoints"
+             role="button"
+             tabindex="0"
+             aria-expanded="false"
+             aria-controls="tag-untagged-endpoints">
+          <div class="endpoint-group-title">
+            <h3>Other Endpoints</h3>
+            <span class="endpoint-count">({{ len $untaggedEndpoints }} endpoint{{ if ne (len $untaggedEndpoints) 1 }}s{{ end }})</span>
+          </div>
+          <div class="endpoint-group-toggle">
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"></path>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="endpoint-group-content" id="tag-untagged-endpoints">
+          {{ range $endpoint := $untaggedEndpoints }}
+            {{ $methodUpper := upper $endpoint.method }}
+            {{ $sanitizedPath := $endpoint.path | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
+            {{ if eq $sanitizedPath "" }}{{ $sanitizedPath = "root" }}{{ end }}
+            {{ $endpointId := printf "%s-%s" $methodUpper $sanitizedPath }}
+            
+            <div class="endpoint-item" 
+                 id="{{ $endpointId }}"
+                 data-method="{{ $methodUpper }}"
+                 data-path="{{ $endpoint.path }}">
+              
+              <!-- Endpoint Header -->
+              {{ partial "openapi/endpoint-header.html" (dict 
+                  "method" $methodUpper 
+                  "path" $endpoint.path 
+                  "operation" $endpoint.operation 
+                  "endpointId" $endpointId) }}
+              
+              <!-- Endpoint Details (Collapsible) -->
+              <div class="endpoint-details" id="{{ $endpointId }}-details">
+                
+                <!-- Description -->
+                {{ with $endpoint.operation.description }}
+                  <div class="endpoint-section">
+                    <h4>Description</h4>
+                    <div class="endpoint-description">{{ . | markdownify }}</div>
+                  </div>
+                {{ end }}
+                
+                <!-- Parameters -->
+                {{ with $endpoint.operation.parameters }}
+                  {{ partial "openapi/endpoint-parameters.html" (dict "parameters" . "spec" $spec) }}
+                {{ end }}
+                
+                <!-- Request Body -->
+                {{ with $endpoint.operation.requestBody }}
+                  {{ partial "openapi/endpoint-request-body.html" (dict "requestBody" . "spec" $spec) }}
+                {{ end }}
+                
+                <!-- Responses -->
+                {{ with $endpoint.operation.responses }}
+                  {{ partial "openapi/endpoint-responses.html" (dict "responses" . "spec" $spec) }}
+                {{ end }}
+                
+                <!-- Security -->
+                {{ with $endpoint.operation.security }}
+                  {{ partial "openapi/endpoint-security.html" (dict "security" . "spec" $spec) }}
+                {{ end }}
+                
+                <!-- Code Examples -->
+                {{ partial "openapi/endpoint-examples.html" (dict 
+                    "method" $methodUpper 
+                    "path" $endpoint.path 
+                    "operation" $endpoint.operation 
+                    "spec" $spec) }}
+              </div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</section>

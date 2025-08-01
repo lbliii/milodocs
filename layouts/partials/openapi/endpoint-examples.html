@@ -1,0 +1,86 @@
+{{- $method := .method -}}
+{{- $path := .path -}}
+{{- $operation := .operation -}}
+{{- $spec := .spec -}}
+
+<div class="endpoint-section">
+  <h4>Code Examples</h4>
+  
+  <div class="code-examples" data-component="code-tabs">
+    <!-- Example Tabs -->
+    <div class="code-tabs-nav">
+      <button class="code-tab code-tab--active" data-tab="curl">cURL</button>
+      <button class="code-tab" data-tab="javascript">JavaScript</button>
+      <button class="code-tab" data-tab="python">Python</button>
+      <button class="code-tab" data-tab="go">Go</button>
+    </div>
+    
+    <!-- Example Content -->
+    <div class="code-tabs-content">
+      
+      <!-- cURL Example -->
+      <div class="code-tab-panel code-tab-panel--active" data-panel="curl">
+        <div class="code-example">
+          <div class="code-example-header">
+            <span class="code-example-title">cURL</span>
+            <button class="copy-button" data-copy-target="curl-example" aria-label="Copy cURL command">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+            </button>
+          </div>
+          <pre id="curl-example"><code class="language-bash">{{ partial "openapi/examples/curl.html" (dict "method" $method "path" $path "operation" $operation "spec" $spec) }}</code></pre>
+        </div>
+      </div>
+      
+      <!-- JavaScript Example -->
+      <div class="code-tab-panel" data-panel="javascript">
+        <div class="code-example">
+          <div class="code-example-header">
+            <span class="code-example-title">JavaScript (fetch)</span>
+            <button class="copy-button" data-copy-target="js-example" aria-label="Copy JavaScript code">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+            </button>
+          </div>
+          <pre id="js-example"><code class="language-javascript">{{ partial "openapi/examples/javascript.html" (dict "method" $method "path" $path "operation" $operation "spec" $spec) }}</code></pre>
+        </div>
+      </div>
+      
+      <!-- Python Example -->
+      <div class="code-tab-panel" data-panel="python">
+        <div class="code-example">
+          <div class="code-example-header">
+            <span class="code-example-title">Python (requests)</span>
+            <button class="copy-button" data-copy-target="python-example" aria-label="Copy Python code">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+            </button>
+          </div>
+          <pre id="python-example"><code class="language-python">{{ partial "openapi/examples/python.html" (dict "method" $method "path" $path "operation" $operation "spec" $spec) }}</code></pre>
+        </div>
+      </div>
+      
+      <!-- Go Example -->
+      <div class="code-tab-panel" data-panel="go">
+        <div class="code-example">
+          <div class="code-example-header">
+            <span class="code-example-title">Go</span>
+            <button class="copy-button" data-copy-target="go-example" aria-label="Copy Go code">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+            </button>
+          </div>
+          <pre id="go-example"><code class="language-go">{{ partial "openapi/examples/go.html" (dict "method" $method "path" $path "operation" $operation "spec" $spec) }}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

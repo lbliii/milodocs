@@ -16,6 +16,7 @@
 @import "../components/tutorial.css";
 @import "../components/toast.css";
 @import "../components/notebook.css";
+@import "../components/openapi/index.css";
 
 @tailwind base;
 

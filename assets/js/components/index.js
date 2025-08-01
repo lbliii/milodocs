@@ -16,6 +16,11 @@ export const componentRegistry = {
   'article-tiles': () => import('./article/Tiles.js'),
   'article-summarization': () => import('./article/Summarization.js'),
   'notebook-progressive-reveal': () => import('./article/NotebookProgressiveReveal.js'),
+  
+  // OpenAPI components
+  'openapi-viewer': () => import('./article/OpenAPIViewer.js'),
+  'openapi-collapse': () => import('./article/OpenAPICollapse.js'),
+  'endpoint-filter': () => import('./article/EndpointFilter.js'),
 
   
   // Layout components
@@ -105,6 +110,11 @@ export function registerAllComponents() {
     'article-header',
     'article-summarization',
     'notebook-progressive-reveal', // Progressive reveal for notebook cells
+    
+    // OpenAPI components
+    'openapi-viewer',
+    'openapi-collapse', 
+    'endpoint-filter',
 
     'glossary',
     'chat-toc-toggle',

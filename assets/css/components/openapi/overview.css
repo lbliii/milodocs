@@ -1,0 +1,66 @@
+/* OpenAPI Overview */
+
+/* ==========================================================================
+   Overview Section
+   ========================================================================== */
+
+.openapi-overview {
+  padding: 2rem 0;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.overview-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 1rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover {
+  border-color: var(--color-brand);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.overview-card--primary {
+  background: linear-gradient(135deg, var(--color-brand), var(--color-accent));
+  color: var(--color-text-inverse);
+  border-color: transparent;
+}
+
+.overview-card__icon {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.5rem;
+  color: currentColor;
+}
+
+.overview-card__content {
+  text-align: left;
+}
+
+.overview-card__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: currentColor;
+}
+
+.overview-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: currentColor;
+}
+
+.overview-card__description {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin: 0;
+}

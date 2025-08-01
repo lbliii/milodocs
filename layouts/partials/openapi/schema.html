@@ -1,0 +1,261 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+{{- $maxLevel := 5 -}}
+
+<!-- Prevent infinite recursion -->
+{{ if gt $level $maxLevel }}
+  <div class="schema-truncated">
+    <span class="truncated-message">Schema too deeply nested...</span>
+  </div>
+  {{ return }}
+{{ end }}
+
+<div class="schema-container" data-level="{{ $level }}">
+  
+  <!-- Handle $ref -->
+  {{ if index $schema "$ref" }}
+    {{ $fullRef := index $schema "$ref" }}
+    {{ $parts := split $fullRef "/" }}
+    {{ $refPath := "" }}
+    {{ if gt (len $parts) 0 }}
+      {{ $refPath = index $parts (sub (len $parts) 1) }}
+    {{ else }}
+      {{ $refPath = $fullRef }}
+    {{ end }}
+    {{ $refSchema := "" }}
+    {{ if and $spec.components $spec.components.schemas }}
+      {{ $refSchema = index $spec.components.schemas $refPath }}
+    {{ end }}
+    {{ if not $refSchema }}
+      {{ warnf "Schema resolution failed: fullRef='%s' refPath='%s'" $fullRef $refPath }}
+      {{ warnf "Spec has components: %t" (isset $spec "components") }}
+      {{ if $spec.components }}
+        {{ warnf "Components has schemas: %t" (isset $spec.components "schemas") }}
+        {{ if $spec.components.schemas }}
+          {{ warnf "Total schemas available: %d" (len $spec.components.schemas) }}
+          {{ $availableSchemas := slice }}
+          {{ range $name, $schema := $spec.components.schemas }}
+            {{ if lt (len $availableSchemas) 10 }}
+              {{ $availableSchemas = $availableSchemas | append $name }}
+            {{ end }}
+          {{ end }}
+          {{ warnf "First 10 schemas: %s" (delimit $availableSchemas ", ") }}
+        {{ else }}
+          {{ warnf "No schemas found in spec.components" }}
+        {{ end }}
+      {{ else }}
+        {{ warnf "No components found in spec" }}
+      {{ end }}
+    {{ end }}
+    {{ if $refSchema }}
+      <div class="schema-ref">
+        <div class="ref-header">
+          <span class="ref-label">Reference:</span>
+          <code class="ref-name">{{ $refPath }}</code>
+        </div>
+        {{ partial "openapi/schema.html" (dict "schema" $refSchema "spec" $spec "level" (add $level 1)) }}
+      </div>
+    {{ else }}
+      <div class="schema-ref-error">
+        <span class="error-message">Unable to resolve reference: {{ $fullRef }}</span>
+        <div class="debug-info">
+          <p><strong>Debug Info:</strong></p>
+          <p>Full Reference: <code>{{ $fullRef }}</code></p>
+          <p>Looking for: <code>{{ $refPath }}</code></p>
+          <p>Available schemas: 
+          {{ if and $spec.components $spec.components.schemas }}
+            {{ $schemaNames := slice }}
+            {{ range $name, $schema := $spec.components.schemas }}
+              {{ $schemaNames = $schemaNames | append $name }}
+            {{ end }}
+            {{ delimit $schemaNames ", " }}
+          {{ else }}
+            None found
+          {{ end }}
+          </p>
+          <p>Spec components available: {{ if $spec.components }}YES{{ else }}NO{{ end }}</p>
+          <p>Spec type: {{ printf "%T" $spec }}</p>
+        </div>
+      </div>
+    {{ end }}
+    {{ return }}
+  {{ end }}
+  
+  <!-- Schema Header -->
+  <div class="schema-header">
+    {{ with $schema.title }}
+      <h6 class="schema-title">{{ . }}</h6>
+    {{ end }}
+    
+    <div class="schema-type-info">
+      {{ with $schema.type }}
+        <span class="type-badge type-badge--{{ . }}">{{ . }}</span>
+      {{ end }}
+      {{ with $schema.format }}
+        <span class="type-format">({{ . }})</span>
+      {{ end }}
+      {{ if $schema.nullable }}
+        <span class="type-nullable">nullable</span>
+      {{ end }}
+      {{ if $schema.readOnly }}
+        <span class="type-readonly">read-only</span>
+      {{ end }}
+      {{ if $schema.writeOnly }}
+        <span class="type-writeonly">write-only</span>
+      {{ end }}
+    </div>
+  </div>
+  
+  {{ with $schema.description }}
+    <div class="schema-description">{{ . | markdownify }}</div>
+  {{ end }}
+  
+  <!-- Schema Constraints -->
+  {{ if or $schema.enum $schema.minimum $schema.maximum $schema.minLength $schema.maxLength $schema.pattern $schema.default $schema.example }}
+    <div class="schema-constraints">
+      {{ with $schema.default }}
+        <div class="constraint">
+          <span class="constraint-label">Default:</span>
+          <code>{{ . }}</code>
+        </div>
+      {{ end }}
+      
+      {{ with $schema.example }}
+        <div class="constraint">
+          <span class="constraint-label">Example:</span>
+          <code>{{ . }}</code>
+        </div>
+      {{ end }}
+      
+      {{ with $schema.enum }}
+        <div class="constraint">
+          <span class="constraint-label">Allowed values:</span>
+          <div class="enum-values">
+            {{ range $val := . }}
+              <code class="enum-value">{{ $val }}</code>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+      
+      {{ if or $schema.minimum $schema.maximum }}
+        <div class="constraint">
+          <span class="constraint-label">Range:</span>
+          {{ with $schema.minimum }}<code>min: {{ . }}</code>{{ end }}
+          {{ with $schema.maximum }}<code>max: {{ . }}</code>{{ end }}
+        </div>
+      {{ end }}
+      
+      {{ if or $schema.minLength $schema.maxLength }}
+        <div class="constraint">
+          <span class="constraint-label">Length:</span>
+          {{ with $schema.minLength }}<code>min: {{ . }}</code>{{ end }}
+          {{ with $schema.maxLength }}<code>max: {{ . }}</code>{{ end }}
+        </div>
+      {{ end }}
+      
+      {{ with $schema.pattern }}
+        <div class="constraint">
+          <span class="constraint-label">Pattern:</span>
+          <code>{{ . }}</code>
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+  
+  <!-- Object Properties -->
+  {{ if eq $schema.type "object" }}
+    {{ with $schema.properties }}
+      <div class="schema-properties">
+        <h6>Properties</h6>
+        <div class="properties-list">
+          {{ range $propName, $propSchema := . }}
+            {{ $isRequired := in ($schema.required | default (slice)) $propName }}
+            <div class="property-item{{ if $isRequired }} property-item--required{{ end }}">
+              <div class="property-header">
+                <div class="property-name">
+                  <code>{{ $propName }}</code>
+                  {{ if $isRequired }}
+                    <span class="property-required">required</span>
+                  {{ end }}
+                </div>
+              </div>
+              <div class="property-schema">
+                {{ partial "openapi/schema.html" (dict "schema" $propSchema "spec" $spec "level" (add $level 1)) }}
+              </div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+    
+    {{ with $schema.additionalProperties }}
+      <div class="schema-additional-properties">
+        <h6>Additional Properties</h6>
+        {{ if eq . true }}
+          <div class="additional-properties-any">Any additional properties are allowed</div>
+        {{ else if eq . false }}
+          <div class="additional-properties-none">No additional properties are allowed</div>
+        {{ else }}
+          <div class="additional-properties-schema">
+            {{ partial "openapi/schema.html" (dict "schema" . "spec" $spec "level" (add $level 1)) }}
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+  
+  <!-- Array Items -->
+  {{ if eq $schema.type "array" }}
+    {{ with $schema.items }}
+      <div class="schema-array-items">
+        <h6>Array Items</h6>
+        {{ partial "openapi/schema.html" (dict "schema" . "spec" $spec "level" (add $level 1)) }}
+      </div>
+    {{ end }}
+  {{ end }}
+  
+  <!-- OneOf/AnyOf/AllOf -->
+  {{ with $schema.oneOf }}
+    <div class="schema-composition">
+      <h6>One Of</h6>
+      <div class="composition-list">
+        {{ range $index, $subSchema := . }}
+          <div class="composition-item">
+            <div class="composition-index">Option {{ add $index 1 }}</div>
+            {{ partial "openapi/schema.html" (dict "schema" $subSchema "spec" $spec "level" (add $level 1)) }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+  
+  {{ with $schema.anyOf }}
+    <div class="schema-composition">
+      <h6>Any Of</h6>
+      <div class="composition-list">
+        {{ range $index, $subSchema := . }}
+          <div class="composition-item">
+            <div class="composition-index">Option {{ add $index 1 }}</div>
+            {{ partial "openapi/schema.html" (dict "schema" $subSchema "spec" $spec "level" (add $level 1)) }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+  
+  {{ with $schema.allOf }}
+    <div class="schema-composition">
+      <h6>All Of</h6>
+      <div class="composition-list">
+        {{ range $index, $subSchema := . }}
+          <div class="composition-item">
+            <div class="composition-index">Schema {{ add $index 1 }}</div>
+            {{ partial "openapi/schema.html" (dict "schema" $subSchema "spec" $spec "level" (add $level 1)) }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+</div>

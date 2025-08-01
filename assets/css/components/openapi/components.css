@@ -1,0 +1,110 @@
+/* OpenAPI Components */
+
+/* ==========================================================================
+   Components Section
+   ========================================================================== */
+
+.openapi-components {
+  padding: 2rem 0;
+}
+
+.components-section {
+  margin-bottom: 3rem;
+}
+
+.components-section:last-child {
+  margin-bottom: 0;
+}
+
+.components-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+.components-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.component-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.component-item:hover {
+  border-color: var(--color-brand);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.1);
+}
+
+.component-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.component-header:hover {
+  background: var(--color-bg-secondary);
+}
+
+.component-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-brand);
+  flex-shrink: 0;
+}
+
+.component-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.component-name h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.component-type {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.component-toggle {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.component-toggle .chevron {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.component-header[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.component-details {
+  display: none;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.component-details.expanded {
+  display: block;
+}

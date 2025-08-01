@@ -1,0 +1,54 @@
+{{- $method := .method -}}
+{{- $path := .path -}}
+{{- $operation := .operation -}}
+{{- $endpointId := .endpointId -}}
+
+<div class="endpoint-header collapse__header" 
+     data-target="{{ $endpointId }}-details"
+     role="button"
+     tabindex="0"
+     aria-expanded="false"
+     aria-controls="{{ $endpointId }}-details">
+  
+  <div class="endpoint-header__method">
+    <span class="http-method http-method--{{ lower $method }}">{{ $method }}</span>
+  </div>
+  
+  <div class="endpoint-header__path">
+    <code class="endpoint-path">{{ $path }}</code>
+  </div>
+  
+  <div class="endpoint-header__summary">
+    {{ with $operation.summary }}
+      <div class="endpoint-summary">{{ . }}</div>
+    {{ end }}
+    {{ with $operation.operationId }}
+      <div class="endpoint-operation-id">
+        <span class="operation-id-label">Operation ID:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}
+  </div>
+  
+  <div class="endpoint-header__meta">
+    {{ with $operation.tags }}
+      <div class="endpoint-tags">
+        {{ range $tag := . }}
+          <span class="endpoint-tag">{{ $tag }}</span>
+        {{ end }}
+      </div>
+    {{ end }}
+    
+    {{ if $operation.deprecated }}
+      <div class="endpoint-deprecated">
+        <span class="deprecated-badge">Deprecated</span>
+      </div>
+    {{ end }}
+  </div>
+  
+  <div class="endpoint-header__toggle">
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 18l6-6-6-6"></path>
+    </svg>
+  </div>
+</div>

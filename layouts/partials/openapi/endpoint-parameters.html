@@ -1,0 +1,115 @@
+{{- $parameters := .parameters -}}
+{{- $spec := .spec -}}
+
+<div class="endpoint-section">
+  <h4>Parameters</h4>
+  
+  <!-- Group parameters by location -->
+  {{ $paramGroups := dict }}
+  {{ range $param := $parameters }}
+    {{ $location := $param.in | default "query" }}
+    {{ $existingParams := index $paramGroups $location | default (slice) }}
+    {{ $paramGroups = merge $paramGroups (dict $location ($existingParams | append $param)) }}
+  {{ end }}
+  
+  <div class="parameters-container">
+    {{ range $location, $params := $paramGroups }}
+      <div class="parameter-group">
+        <div class="parameter-group-header collapse__header"
+             data-target="params-{{ $location }}"
+             role="button"
+             tabindex="0"
+             aria-expanded="false"
+             aria-controls="params-{{ $location }}">
+          <h5 class="parameter-group-title">{{ title $location }} Parameters 
+            <span class="parameter-count">({{ len $params }})</span>
+          </h5>
+          <div class="parameter-group-toggle">
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"></path>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="parameter-list" id="params-{{ $location }}">
+          {{ range $param := $params }}
+            <div class="parameter-item{{ if $param.required }} parameter-item--required{{ end }}">
+              <div class="parameter-header">
+                <div class="parameter-name">
+                  <code>{{ $param.name }}</code>
+                  {{ if $param.required }}
+                    <span class="parameter-required">required</span>
+                  {{ end }}
+                </div>
+                <div class="parameter-type">
+                  {{ with $param.schema }}
+                    <span class="type-badge type-badge--{{ .type }}">{{ .type }}</span>
+                    {{ with .format }}<span class="type-format">({{ . }})</span>{{ end }}
+                  {{ end }}
+                </div>
+              </div>
+              
+              {{ with $param.description }}
+                <div class="parameter-description">{{ . | markdownify }}</div>
+              {{ end }}
+              
+              {{ with $param.schema }}
+                {{ if or .enum .minimum .maximum .minLength .maxLength .pattern .default .example }}
+                  <div class="parameter-constraints">
+                    {{ with .default }}
+                      <div class="constraint">
+                        <span class="constraint-label">Default:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}
+                    
+                    {{ with .example }}
+                      <div class="constraint">
+                        <span class="constraint-label">Example:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}
+                    
+                    {{ with .enum }}
+                      <div class="constraint">
+                        <span class="constraint-label">Allowed values:</span>
+                        <div class="enum-values">
+                          {{ range $val := . }}
+                            <code class="enum-value">{{ $val }}</code>
+                          {{ end }}
+                        </div>
+                      </div>
+                    {{ end }}
+                    
+                    {{ if or .minimum .maximum }}
+                      <div class="constraint">
+                        <span class="constraint-label">Range:</span>
+                        {{ with .minimum }}<code>min: {{ . }}</code>{{ end }}
+                        {{ with .maximum }}<code>max: {{ . }}</code>{{ end }}
+                      </div>
+                    {{ end }}
+                    
+                    {{ if or .minLength .maxLength }}
+                      <div class="constraint">
+                        <span class="constraint-label">Length:</span>
+                        {{ with .minLength }}<code>min: {{ . }}</code>{{ end }}
+                        {{ with .maxLength }}<code>max: {{ . }}</code>{{ end }}
+                      </div>
+                    {{ end }}
+                    
+                    {{ with .pattern }}
+                      <div class="constraint">
+                        <span class="constraint-label">Pattern:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</div>

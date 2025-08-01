@@ -1,0 +1,60 @@
+{{- $requestBody := .requestBody -}}
+{{- $spec := .spec -}}
+
+<div class="endpoint-section">
+  <h4>Request Body{{ if $requestBody.required }} <span class="required-indicator">required</span>{{ end }}</h4>
+  
+  {{ with $requestBody.description }}
+    <div class="request-body-description">{{ . | markdownify }}</div>
+  {{ end }}
+  
+  <div class="request-body-content">
+    {{ range $mediaType, $content := $requestBody.content }}
+      <div class="media-type-section">
+        <div class="media-type-header">
+          <h5>{{ $mediaType }}</h5>
+        </div>
+        
+        {{ with $content.schema }}
+          <div class="schema-section">
+            {{ if $content.schema.title }}
+              <h6>{{ $content.schema.title }}</h6>
+            {{ end }}
+            
+            {{ partial "openapi/schema.html" (dict "schema" . "spec" $spec "level" 0) }}
+          </div>
+        {{ end }}
+        
+        {{ with $content.examples }}
+          <div class="examples-section">
+            <h6>Examples</h6>
+            <div class="examples-container">
+              {{ range $name, $example := . }}
+                <div class="example-item">
+                  {{ if $example.summary }}
+                    <div class="example-summary">{{ $example.summary }}</div>
+                  {{ end }}
+                  {{ if $example.description }}
+                    <div class="example-description">{{ $example.description | markdownify }}</div>
+                  {{ end }}
+                  <div class="example-code">
+                    <pre><code class="language-json">{{ $example.value | jsonify (dict "indent" "  ") }}</code></pre>
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        {{ end }}
+        
+        {{ with $content.example }}
+          <div class="example-section">
+            <h6>Example</h6>
+            <div class="example-code">
+              <pre><code class="language-json">{{ . | jsonify (dict "indent" "  ") }}</code></pre>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</div>

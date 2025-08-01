@@ -1,0 +1,70 @@
+{{- $method := .method -}}
+{{- $path := .path -}}
+{{- $operation := .operation -}}
+{{- $spec := .spec -}}
+
+{{- /* Build the base URL from servers */ -}}
+{{- $baseUrl := "https://api.example.com" -}}
+{{- if $spec.servers -}}
+  {{- $baseUrl = (index $spec.servers 0).url -}}
+{{- end -}}
+
+package main
+
+import (
+    {{ if $operation.requestBody }}"bytes"
+    "encoding/json"{{ end }}
+    "fmt"
+    "io"
+    "net/http"
+    {{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}"net/url"{{ break }}{{ end }}{{ end }}{{ end }}
+)
+
+func main() {
+    {{ if $operation.requestBody }}// Request body
+    data := map[string]interface{}{
+{{ range $mediaType, $content := $operation.requestBody.content }}{{ if eq $mediaType "application/json" }}{{ with $content.example }}{{ . | jsonify (dict "indent" "        ") }}{{ else }}{{ with $content.schema }}{{ if eq .type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+    }
+    
+    jsonData, err := json.Marshal(data)
+    if err != nil {
+        fmt.Printf("Error marshaling JSON: %v\n", err)
+        return
+    }
+    
+    {{ end }}// Create URL{{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}
+    baseURL := "{{ $baseUrl }}{{ $path }}"
+    params := url.Values{}
+{{ if $param.example }}    params.Add("{{ $param.name }}", "{{ $param.example }}"){{ end }}
+    fullURL := baseURL + "?" + params.Encode(){{ break }}{{ end }}{{ end }}{{ else }}
+    url := "{{ $baseUrl }}{{ $path }}"{{ end }}
+    
+    // Create request
+    {{ if $operation.requestBody }}req, err := http.NewRequest("{{ $method }}", {{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}fullURL{{ break }}{{ else }}url{{ end }}{{ end }}{{ else }}url{{ end }}, bytes.NewBuffer(jsonData)){{ else }}req, err := http.NewRequest("{{ $method }}", {{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}fullURL{{ break }}{{ else }}url{{ end }}{{ end }}{{ else }}url{{ end }}, nil){{ end }}
+    if err != nil {
+        fmt.Printf("Error creating request: %v\n", err)
+        return
+    }
+    
+    // Set headers
+{{ if $operation.security }}    req.Header.Set("Authorization", "Bearer YOUR_TOKEN")
+{{ end }}{{ if $operation.requestBody }}    req.Header.Set("Content-Type", "application/json"){{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    req.Header.Set("Content-Type", "application/json"){{ end }}
+    
+    // Send request
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Printf("Error sending request: %v\n", err)
+        return
+    }
+    defer resp.Body.Close()
+    
+    // Read response
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        fmt.Printf("Error reading response: %v\n", err)
+        return
+    }
+    
+    fmt.Printf("Response: %s\n", string(body))
+}
