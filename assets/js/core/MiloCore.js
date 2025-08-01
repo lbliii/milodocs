@@ -376,6 +376,14 @@ export class MiloCore {
   setupComponentSystem() {
     // Register core components here
     // This will be expanded as we migrate components
+    
+    // 🚀 Enable reactive DOM discovery for dynamic content
+    const reactiveEnabled = ComponentManager.setupReactiveDiscovery();
+    if (reactiveEnabled) {
+      this.features.add('reactive-discovery');
+      log.debug('✅ Reactive DOM discovery enabled');
+    }
+    
     log.debug('Component system ready');
   }
 

@@ -1,9 +1,11 @@
 /**
  * Components index - Lazy loading and registration of all components
+ * Enhanced with modern vanilla JS performance optimizations
  */
 
 import { ComponentManager } from '../core/ComponentManager.js';
 import { logger } from '../utils/Logger.js';
+import { requestIdleTime, logFeatureSupport } from '../utils/FeatureDetection.js';
 
 const log = logger.component('ComponentLoader');
 
@@ -97,6 +99,7 @@ export async function loadComponents(names) {
 
 /**
  * Register all available components for discovery
+ * Enhanced with requestIdleCallback for optimal performance
  */
 export function registerAllComponents() {
   // Critical components that should be registered immediately
@@ -111,7 +114,7 @@ export function registerAllComponents() {
     'performance-optimizer'      // Performance enhancements
   ];
   
-  // Secondary components (loaded after critical ones)
+  // Secondary components (loaded during idle time)
   const secondary = [
     'article-toc',
     'article-chat', 
@@ -133,6 +136,11 @@ export function registerAllComponents() {
     'theme'                      // Base theme component
   ];
   
+  // Log feature support in debug mode
+  if (window.location.hostname === 'localhost') {
+    logFeatureSupport();
+  }
+  
   log.info(`Loading ${critical.length} critical components...`);
   
   // Register critical components first
@@ -143,18 +151,75 @@ export function registerAllComponents() {
     .then((criticalResults) => {
       const successfulCritical = criticalResults.filter(r => r).length;
       log.info(`Critical components loaded: ${successfulCritical}/${critical.length}`);
-      log.debug(`Loading ${secondary.length} secondary components...`);
       
-      // Load secondary components in background
-      const secondaryPromises = secondary.map(name => {
-        log.trace(`Loading secondary component: ${name}`);
-        return loadComponent(name);
-      });
+      // 🚀 MODERN ENHANCEMENT: Load secondary components during idle time
+      loadSecondaryComponentsInIdle(secondary);
       
-      return Promise.allSettled(secondaryPromises).then(results => {
-        const successful = results.filter(r => r.status === 'fulfilled' && r.value);
-        log.info(`Secondary components loaded: ${successful.length}/${secondary.length}`);
-        return [...criticalResults.filter(r => r), ...successful.map(r => r.value)];
-      });
+      // Return critical components immediately for faster perceived performance
+      return criticalResults.filter(r => r);
     });
+}
+
+/**
+ * 🚀 Load secondary components during browser idle time
+ * This dramatically improves perceived performance by prioritizing critical components
+ */
+function loadSecondaryComponentsInIdle(secondary) {
+  const startTime = performance.now();
+  
+  log.info(`Scheduling ${secondary.length} secondary components for idle loading...`);
+  
+  // Use requestIdleCallback for optimal performance
+  requestIdleTime(
+    async () => {
+      const idleStartTime = performance.now();
+      log.debug('Browser is idle, loading secondary components...');
+      
+      // Load secondary components in batches to avoid blocking
+      const batchSize = 3;
+      const batches = [];
+      
+      for (let i = 0; i < secondary.length; i += batchSize) {
+        batches.push(secondary.slice(i, i + batchSize));
+      }
+      
+      // Process batches with small delays between them
+      for (const [index, batch] of batches.entries()) {
+        if (index > 0) {
+          // Small delay between batches to keep the main thread responsive
+          await new Promise(resolve => setTimeout(resolve, 5));
+        }
+        
+        log.trace(`Loading batch ${index + 1}/${batches.length}:`, batch);
+        
+        const batchPromises = batch.map(name => {
+          log.trace(`Loading secondary component: ${name}`);
+          return loadComponent(name);
+        });
+        
+        const batchResults = await Promise.allSettled(batchPromises);
+        const batchSuccessful = batchResults.filter(r => r.status === 'fulfilled' && r.value);
+        
+        log.trace(`Batch ${index + 1} completed: ${batchSuccessful.length}/${batch.length} successful`);
+      }
+      
+      const totalTime = performance.now() - startTime;
+      const idleTime = performance.now() - idleStartTime;
+      
+      log.info(`Secondary components loaded in ${Math.round(idleTime)}ms (${Math.round(totalTime)}ms total)`);
+      
+      // Emit completion event for other components that might depend on this
+      import('../core/EventBus.js').then(({ eventBus }) => {
+        eventBus.emit('components:secondary-loaded', {
+          count: secondary.length,
+          loadTime: idleTime,
+          totalTime
+        });
+      });
+    },
+    { 
+      timeout: 3000,  // Maximum wait time
+      priority: 'low' // These are non-critical
+    }
+  );
 }

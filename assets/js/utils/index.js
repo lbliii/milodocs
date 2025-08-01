@@ -90,6 +90,16 @@ export {
   dismissAllNotifications
 } from './NotificationManager.js';
 
+// 🚀 Modern Feature Detection utilities
+export {
+  modernFeatures,
+  withFallback,
+  requestIdleTime,
+  deepClone,
+  logFeatureSupport,
+  initFeatureDetection
+} from './FeatureDetection.js';
+
 // Common utility patterns
 export const utils = {
   // Generate unique IDs

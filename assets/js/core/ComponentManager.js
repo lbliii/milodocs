@@ -6,6 +6,7 @@
 import { eventBus } from './EventBus.js';
 import { $ } from '../utils/dom.js';
 import { logger } from '../utils/Logger.js';
+import { modernFeatures, requestIdleTime } from '../utils/FeatureDetection.js';
 
 const log = logger.component('ComponentManager');
 
@@ -276,6 +277,8 @@ export class ComponentManager {
   static components = new Map();
   static instances = new Map();
   static autoDiscovery = true;
+  static reactiveObserver = null;
+  static isReactiveEnabled = false;
 
   /**
    * Register a component class
@@ -423,5 +426,165 @@ export class ComponentManager {
    */
   static setAutoDiscovery(enabled) {
     this.autoDiscovery = enabled;
+  }
+
+  /**
+   * 🚀 Setup reactive DOM discovery with MutationObserver
+   * Automatically enhances components added to DOM dynamically
+   * Perfect for Hugo shortcodes, API docs, and dynamic content
+   */
+  static setupReactiveDiscovery() {
+    if (!modernFeatures.mutationObserver) {
+      log.warn('MutationObserver not supported, reactive discovery disabled');
+      return false;
+    }
+
+    if (this.isReactiveEnabled) {
+      log.debug('Reactive discovery already enabled');
+      return true;
+    }
+
+    log.info('🚀 Enabling reactive DOM discovery...');
+
+    this.reactiveObserver = new MutationObserver((mutations) => {
+      // Use requestIdleCallback to avoid blocking the main thread
+      requestIdleTime(() => {
+        this.handleDOMMutations(mutations);
+      }, { priority: 'low' });
+    });
+
+    // Observe all DOM changes
+    this.reactiveObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-component', 'data-component-id']
+    });
+
+    this.isReactiveEnabled = true;
+    
+    // Emit event for other components
+    eventBus.emit('component-manager:reactive-enabled');
+    
+    log.info('✅ Reactive DOM discovery enabled');
+    return true;
+  }
+
+  /**
+   * 🚀 Handle DOM mutations for reactive enhancement
+   */
+  static handleDOMMutations(mutations) {
+    const enhancedElements = new Set();
+    let newComponentCount = 0;
+
+    mutations.forEach(mutation => {
+      // Handle added nodes
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) { // Element node
+            const enhanced = this.enhanceNewElements(node);
+            enhanced.forEach(el => enhancedElements.add(el));
+            newComponentCount += enhanced.length;
+          }
+        });
+      }
+      
+      // Handle attribute changes
+      if (mutation.type === 'attributes' && 
+          mutation.attributeName === 'data-component' &&
+          mutation.target.nodeType === 1) {
+        const enhanced = this.enhanceNewElements(mutation.target);
+        enhanced.forEach(el => enhancedElements.add(el));
+        newComponentCount += enhanced.length;
+      }
+    });
+
+    if (newComponentCount > 0) {
+      log.debug(`🔄 Reactively enhanced ${newComponentCount} new components`);
+      
+      // Emit event for tracking/debugging
+      eventBus.emit('component-manager:reactive-enhanced', {
+        count: newComponentCount,
+        elements: Array.from(enhancedElements)
+      });
+    }
+  }
+
+  /**
+   * 🚀 Enhance newly added elements and their children
+   * Returns array of enhanced elements
+   */
+  static enhanceNewElements(rootElement) {
+    const enhanced = [];
+
+    // Check if the root element itself needs enhancement
+    if (rootElement.hasAttribute && rootElement.hasAttribute('data-component')) {
+      const wasEnhanced = this.enhanceSingleElement(rootElement);
+      if (wasEnhanced) enhanced.push(rootElement);
+    }
+
+    // Find and enhance all child components
+    if (rootElement.querySelectorAll) {
+      const componentElements = rootElement.querySelectorAll('[data-component]');
+      componentElements.forEach(element => {
+        const wasEnhanced = this.enhanceSingleElement(element);
+        if (wasEnhanced) enhanced.push(element);
+      });
+    }
+
+    return enhanced;
+  }
+
+  /**
+   * 🚀 Enhance a single element if needed
+   * Returns true if element was enhanced, false if skipped
+   */
+  static enhanceSingleElement(element) {
+    const componentName = element.getAttribute('data-component');
+    const componentId = element.getAttribute('data-component-id');
+
+    // Skip if no component name
+    if (!componentName) return false;
+
+    // Skip if already initialized
+    if (componentId && this.getInstance(componentId)) {
+      log.trace(`Skipping ${componentName} - already initialized`);
+      return false;
+    }
+
+    // Skip if component not registered
+    if (!this.components.has(componentName)) {
+      log.trace(`Component "${componentName}" not registered yet, will retry later`);
+      return false;
+    }
+
+    log.trace(`🔄 Reactively enhancing component: ${componentName}`);
+
+    // Load the component asynchronously
+    this.load(componentName, { element })
+      .then(instance => {
+        if (instance) {
+          log.trace(`✅ Reactively enhanced: ${componentName}`);
+        }
+      })
+      .catch(error => {
+        log.warn(`Failed to reactively enhance ${componentName}:`, error);
+      });
+
+    return true;
+  }
+
+  /**
+   * Disable reactive discovery and cleanup
+   */
+  static disableReactiveDiscovery() {
+    if (this.reactiveObserver) {
+      this.reactiveObserver.disconnect();
+      this.reactiveObserver = null;
+    }
+    
+    this.isReactiveEnabled = false;
+    eventBus.emit('component-manager:reactive-disabled');
+    log.info('Reactive DOM discovery disabled');
   }
 }
