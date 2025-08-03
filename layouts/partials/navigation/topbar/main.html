@@ -27,7 +27,7 @@
             </button>
         </div>
         
-        <!-- Inline script to set correct state immediately, preventing any flicker -->
+        <!-- Inline script to set button state immediately, preventing flicker -->
         <script>
         (function() {
             try {
@@ -37,7 +37,7 @@
                     const chatBtn = toggle.querySelector('[data-mode="chat"]');
                     const tocBtn = toggle.querySelector('[data-mode="toc"]');
                     
-                    // Set button states
+                    // Set button states only - containers will be handled later
                     if (savedState === 'chat') {
                         chatBtn?.classList.add('chat-toc-toggle__option--active');
                         tocBtn?.classList.remove('chat-toc-toggle__option--active');
@@ -46,24 +46,7 @@
                         tocBtn?.classList.add('chat-toc-toggle__option--active');
                     }
                     
-                    // Handle container visibility if they exist
-                    const chatContainer = document.getElementById('chatContainer');
-                    const tocContainer = document.getElementById('tocContainer');
-                    if (chatContainer && tocContainer) {
-                        if (savedState === 'chat') {
-                            chatContainer.classList.remove('hidden');
-                            tocContainer.classList.add('hidden');
-                            chatContainer.setAttribute('aria-hidden', 'false');
-                            tocContainer.setAttribute('aria-hidden', 'true');
-                        } else {
-                            chatContainer.classList.add('hidden');
-                            tocContainer.classList.remove('hidden');
-                            chatContainer.setAttribute('aria-hidden', 'true');
-                            tocContainer.setAttribute('aria-hidden', 'false');
-                        }
-                    }
-                    
-                    // Show the component immediately with correct state
+                    // Show the component immediately with correct button state
                     toggle.classList.add('initialized');
                 }
             } catch (e) {

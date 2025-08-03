@@ -48,9 +48,25 @@ export class ChatTocToggle extends Component {
       this.setActiveMode(this.initialState, false);
       this.element.classList.add('initialized');
     } else {
-      // Inline script already set the state, just sync our internal state
+      // Inline script already set button state, ensure containers match
       const currentMode = this.getCurrentMode();
       console.log(`ChatTocToggle: Already initialized by inline script with mode: ${currentMode}`);
+      
+      // Apply container state if containers exist and aren't already set correctly
+      if (this.elements.chatContainer && this.elements.tocContainer) {
+        const chatHidden = this.elements.chatContainer.classList.contains('hidden');
+        const tocHidden = this.elements.tocContainer.classList.contains('hidden');
+        
+        // Check if containers need to be updated to match button state
+        const needsUpdate = 
+          (currentMode === 'chat' && chatHidden) || 
+          (currentMode === 'toc' && tocHidden);
+          
+        if (needsUpdate) {
+          console.log('ChatTocToggle: Syncing container state with button state');
+          this.setActiveMode(currentMode, false);
+        }
+      }
     }
     
     // Containers are optional - toggle will work without them
