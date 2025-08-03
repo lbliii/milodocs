@@ -1,0 +1,11 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="dashboard">
+<rect id="Rectangle" x="2" y="2" width="20" height="20" stroke="#e5e7eb" stroke-linejoin="round"/>
+<path id="Path 2" d="M11 7H17" stroke="#e5e7eb" stroke-linecap="round"/>
+<path id="Path 2_2" d="M11 12H17" stroke="#e5e7eb" stroke-linecap="round"/>
+<path id="Path 2_3" d="M11 17H17" stroke="#e5e7eb" stroke-linecap="round"/>
+<path id="Oval" fill-rule="evenodd" clip-rule="evenodd" d="M7 8C7.55228 8 8 7.55228 8 7C8 6.44772 7.55228 6 7 6C6.44772 6 6 6.44772 6 7C6 7.55228 6.44772 8 7 8Z" fill="#e5e7eb"/>
+<path id="Oval_2" fill-rule="evenodd" clip-rule="evenodd" d="M7 13C7.55228 13 8 12.5523 8 12C8 11.4477 7.55228 11 7 11C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13Z" fill="#e5e7eb"/>
+<path id="Oval_3" fill-rule="evenodd" clip-rule="evenodd" d="M7 18C7.55228 18 8 17.5523 8 17C8 16.4477 7.55228 16 7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18Z" fill="#e5e7eb"/>
+</g>
+</svg>
