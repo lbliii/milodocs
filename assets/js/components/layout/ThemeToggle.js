@@ -80,7 +80,7 @@ export class ThemeToggle extends Component {
    * Note: This may be redundant if the head script already applied the theme
    */
   applyStoredTheme() {
-    const savedTheme = localStorage.get(this.themeKey);
+    const savedTheme = localStorage.get(this.themeKey, this.defaultTheme);
     const isDarkMode = savedTheme === 'dark';
     
     // Only apply if theme isn't already set (avoid redundant work)
@@ -89,6 +89,28 @@ export class ThemeToggle extends Component {
       document.documentElement.classList.add('dark');
     } else if (!isDarkMode && currentlyDark) {
       document.documentElement.classList.remove('dark');
+    }
+    
+    // Ensure icons are updated after theme is applied
+    this.updateIconsImmediate();
+  }
+  
+  /**
+   * Update icons immediately (for early initialization)
+   */
+  updateIconsImmediate() {
+    const moon = document.getElementById('moon');
+    const sun = document.getElementById('sun');
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    
+    if (moon && sun) {
+      if (isDarkMode) {
+        moon.classList.remove('hidden');
+        sun.classList.add('hidden');
+      } else {
+        moon.classList.add('hidden');
+        sun.classList.remove('hidden');
+      }
     }
   }
 
