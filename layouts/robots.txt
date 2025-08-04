@@ -1,4 +1,4 @@
-Sitemap: /sitemap.xml
+Sitemap: {{ site.BaseURL | strings.TrimSuffix "/" }}/sitemap.xml
 
 # Default crawling rules
 User-agent: *

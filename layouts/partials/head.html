@@ -153,12 +153,21 @@
     {{- $robots = printf "%s,max-snippet:-1,max-image-preview:large" $robots -}}
   {{- end -}}
 {{- end -}}
-{{- if .Draft -}}
+
+{{/* Only apply noindex in specific cases to avoid blocking indexing */}}
+{{- if and .Draft (ne hugo.Environment "production") -}}
+  {{/* Only block drafts in non-production environments */}}
+  {{- $robots = "noindex,nofollow" -}}
+{{- else if .Params.noindex -}}
+  {{/* Allow explicit noindex via page params */}}
+  {{- $robots = "noindex,follow" -}}
+{{- else if and .ExpiryDate (.ExpiryDate.Before now) -}}
+  {{/* Block expired content */}}
+  {{- $robots = "noindex,follow" -}}
+{{- else if .Params.hidden -}}
+  {{/* Block pages marked as hidden */}}
   {{- $robots = "noindex,nofollow" -}}
 {{- end -}}
-{{- with .ExpiryDate -}}{{- if .Before now -}}
-  {{- $robots = "noindex,follow" -}}
-{{- end -}}{{- end -}}
 <meta name="robots" content="{{ $robots }}" />
 
 {{/* Language and Translation Links */}}
@@ -203,8 +212,12 @@
 {{ with .Params.image }}<meta name="twitter:image" content="{{ . | absURL }}" />{{ end }}
 {{ with site.Params.social.twitter }}<meta name="twitter:site" content="@{{ . }}" />{{ end }}
 
-{{/* Canonical URL */}}
-<link rel="canonical" href="{{ .Permalink }}" />
+{{/* Canonical URL - Ensure absolute URL */}}
+{{- $canonicalURL := .Permalink -}}
+{{- if not (strings.HasPrefix $canonicalURL "http") -}}
+  {{- $canonicalURL = printf "%s%s" (site.BaseURL | strings.TrimSuffix "/") .RelPermalink -}}
+{{- end -}}
+<link rel="canonical" href="{{ $canonicalURL }}" />
 
 {{/* JSON-LD Structured Data */}}
 <script type="application/ld+json">
