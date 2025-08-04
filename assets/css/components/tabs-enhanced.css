@@ -1,0 +1,177 @@
+/* Enhanced Tabs Component - Improved version of current implementation */
+
+/* ==========================================================================
+   Enhanced Tabs Styling
+   ========================================================================== */
+
+[data-component="tabs"] {
+  margin: 1.5rem 0;
+  border-radius: 1rem;
+  background: var(--color-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Tab buttons container styling */
+[data-component="tabs"] [data-tab-id] {
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+/* Individual tab buttons */
+[data-component="tabs"] button[data-tab-option] {
+  position: relative;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Default (inactive) button state */
+[data-component="tabs"] button[data-tab-option]:not(.bg-brand) {
+  background: var(--color-surface) !important;
+  color: var(--color-text-secondary) !important;
+  border-color: var(--color-border-primary);
+}
+
+/* Hover state */
+[data-component="tabs"] button[data-tab-option]:not(.bg-brand):hover {
+  background: rgba(var(--color-brand-rgb), 0.05) !important;
+  color: var(--color-text-primary) !important;
+  border-color: rgba(var(--color-brand-rgb), 0.2);
+  transform: translateY(-1px);
+}
+
+/* Active button state */
+[data-component="tabs"] button.bg-brand {
+  background: var(--color-brand) !important;
+  color: white !important;
+  border-color: var(--color-brand);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+  transform: translateY(-1px);
+}
+
+/* Focus state for accessibility */
+[data-component="tabs"] button[data-tab-option]:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Tab content container */
+[data-component="tabs"] .w-full {
+  min-height: 200px;
+  position: relative;
+}
+
+/* Tab content container with consistent height */
+[data-component="tabs"] .w-full {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tab content panels */
+[data-component="tabs"] [data-tabcontent] {
+  padding: 2rem;
+  background: var(--color-surface);
+  position: relative;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* Hide inactive content */
+[data-component="tabs"] [data-tabcontent].hidden {
+  display: none;
+}
+
+/* Enhanced content styling */
+[data-component="tabs"] [data-tabcontent] > *:first-child {
+  margin-top: 0;
+}
+
+[data-component="tabs"] [data-tabcontent] > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Smooth transitions for better performance */
+[data-component="tabs"] [data-tabcontent] * {
+  transition: none; /* Prevent child elements from interfering */
+}
+
+/* Subtle entrance animation fallback */
+[data-component="tabs"] [data-tabcontent]:not(.hidden) {
+  animation: tab-content-gentle-fade 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tab-content-gentle-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  [data-component="tabs"] [data-tab-id] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  [data-component="tabs"] button[data-tab-option] {
+    text-align: left;
+    justify-content: flex-start;
+  }
+  
+  [data-component="tabs"] [data-tabcontent] {
+    padding: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  [data-component="tabs"] [data-tab-id] {
+    display: none;
+  }
+  
+  [data-component="tabs"] [data-tabcontent] {
+    display: block !important;
+    page-break-inside: avoid;
+  }
+  
+  [data-component="tabs"] [data-tabcontent]:not(:first-of-type) {
+    margin-top: 2rem;
+    border-top: 1px solid var(--color-border-primary);
+    padding-top: 2rem;
+  }
+  
+  [data-component="tabs"] [data-tabcontent]::before {
+    content: "Tab: " attr(data-tabcontent);
+    display: block;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    text-transform: capitalize;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  [data-component="tabs"] {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  [data-component="tabs"] button.bg-brand {
+    box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.4);
+  }
+}

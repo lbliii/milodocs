@@ -9,7 +9,7 @@ export class ArticleTabs extends Component {
   constructor(config = {}) {
     super({
       name: 'article-tabs',
-      selector: config.selector || '[data-component="tabs"]',
+      selector: config.selector || '[data-component="tabs"], [data-component="article-tabs"]',
       ...config
     });
     
@@ -17,7 +17,14 @@ export class ArticleTabs extends Component {
   }
 
   async onInit() {
-    this.tabContainers = Array.from(document.querySelectorAll('[data-component="tabs"]'));
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      await new Promise(resolve => {
+        document.addEventListener('DOMContentLoaded', resolve, { once: true });
+      });
+    }
+    
+    this.tabContainers = Array.from(document.querySelectorAll('[data-component="tabs"], [data-component="article-tabs"]'));
     
     if (this.tabContainers.length === 0) {
       console.warn('ArticleTabs: No tab containers found');
@@ -174,20 +181,54 @@ export class ArticleTabs extends Component {
     // Convert to content identifier
     const convertedText = activeButtonOptions.join('/').toLowerCase();
     
-    // Show/hide content based on matching identifier
+    // Find content to show and hide
     let visibleContent = null;
+    const contentToHide = [];
+    const contentToShow = [];
+    
     optionContent.forEach(content => {
       const contentValue = content.getAttribute('data-tabcontent');
+      const isCurrentlyVisible = !content.classList.contains('hidden');
       
       if (contentValue === convertedText) {
-        content.classList.remove('hidden');
-        content.setAttribute('aria-hidden', 'false');
         visibleContent = content;
+        if (!isCurrentlyVisible) {
+          contentToShow.push(content);
+        }
       } else {
-        content.classList.add('hidden');
-        content.setAttribute('aria-hidden', 'true');
+        if (isCurrentlyVisible) {
+          contentToHide.push(content);
+        }
       }
     });
+    
+    // Smooth crossfade: hide old content first, then show new
+    if (contentToHide.length > 0 && contentToShow.length > 0) {
+      // Hide current content
+      contentToHide.forEach(content => {
+        this.hideContent(content);
+        content.setAttribute('aria-hidden', 'true');
+      });
+      
+      // Show new content after a brief delay for crossfade effect
+      setTimeout(() => {
+        contentToShow.forEach(content => {
+          this.showContent(content);
+          content.setAttribute('aria-hidden', 'false');
+        });
+      }, 100);
+    } else {
+      // Simple show/hide for initial load or when no crossfade needed
+      contentToHide.forEach(content => {
+        this.hideContent(content);
+        content.setAttribute('aria-hidden', 'true');
+      });
+      
+      contentToShow.forEach(content => {
+        this.showContent(content);
+        content.setAttribute('aria-hidden', 'false');
+      });
+    }
     
     this.emit('tabs:contentUpdated', { 
       container: tabContainer,
@@ -243,6 +284,47 @@ export class ArticleTabs extends Component {
     this.updateContent(tabContainer, allContent);
     
     this.emit('tabs:containerReset', { container: tabContainer });
+  }
+
+  /**
+   * Show content with smooth crossfade transition
+   */
+  showContent(element) {
+    // Remove hidden class and prepare for transition
+    element.classList.remove('hidden');
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(8px) scale(0.98)';
+    element.style.filter = 'blur(1px)';
+    element.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    // Force reflow to ensure initial state is applied
+    element.offsetHeight;
+    
+    // Animate to visible state
+    requestAnimationFrame(() => {
+      element.style.opacity = '1';
+      element.style.transform = 'translateY(0) scale(1)';
+      element.style.filter = 'blur(0px)';
+    });
+  }
+
+  /**
+   * Hide content with smooth fade out
+   */
+  hideContent(element) {
+    element.style.transition = 'all 0.25s cubic-bezier(0.4, 0, 0.6, 1)';
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(-4px) scale(1.02)';
+    element.style.filter = 'blur(0.5px)';
+    
+    setTimeout(() => {
+      element.classList.add('hidden');
+      // Clean up styles
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+      element.style.removeProperty('filter');
+      element.style.removeProperty('transition');
+    }, 250);
   }
 
   /**
