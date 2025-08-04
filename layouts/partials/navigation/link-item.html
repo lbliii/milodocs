@@ -18,10 +18,22 @@
         {{ end }}
         
         <span class="sidebar-item__text">
-            {{ if .page.Title }}
-                {{ .page.Title }}
+            {{/* Check if this is an API endpoint page */}}
+            {{ if .page.Params.endpoint }}
+                {{ $endpoint := .page.Params.endpoint }}
+                <div class="api-endpoint-item">
+                    <span class="http-method-badge http-method-badge--{{ lower $endpoint.method }}">
+                        {{ upper $endpoint.method }}
+                    </span>
+                    <span class="api-endpoint-path">{{ $endpoint.path }}</span>
+                </div>
             {{ else }}
-                {{ path.Base .page | humanize }}
+                {{/* Regular page title */}}
+                {{ if .page.Title }}
+                    {{ .page.Title }}
+                {{ else }}
+                    {{ path.Base .page | humanize }}
+                {{ end }}
             {{ end }}
         </span>
     </a>

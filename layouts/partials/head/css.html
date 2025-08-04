@@ -186,9 +186,30 @@
   {{- $cssBundle := $cssResources | resources.Concat $bundleName -}}
   
   {{- if hugo.IsProduction -}}
-    {{/* Production: Full optimization pipeline */}}
+    {{/* Production: Full optimization pipeline with critical CSS */}}
     {{- $cssOptimized := $cssBundle | minify | fingerprint "sha512" -}}
-    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
+    
+    {{/* Critical CSS inline for faster LCP */}}
+    <style>
+      /* Critical CSS - Above the fold styles */
+      .topbar, .topbar__logo, .topbar__logo-image { display: block; }
+      .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--color-background-primary, #fff); border-bottom: 1px solid var(--color-border-primary, #e5e5e5); }
+      .topbar__logo-image { height: 32px; width: auto; }
+      body { margin: 0; padding: 0; padding-top: 60px; font-family: system-ui, -apple-system, sans-serif; }
+      .content-wrapper { min-height: 100vh; }
+    </style>
+    
+    {{/* Load main CSS asynchronously to prevent render blocking */}}
+    <link rel="preload" href="{{ $cssOptimized.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous">
+    <noscript><link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous"></noscript>
+    
+    <script>
+      // CSS loading optimization
+      document.addEventListener('DOMContentLoaded', function() {
+        document.dispatchEvent(new CustomEvent('cssLoaded'));
+      });
+    </script>
+    
     {{- if eq hugo.Environment "development" -}}
       {{/* Development mode with production flag - add source map reference */}}
       <!-- CSS Source: {{ $cssBundle.RelPermalink }} -->

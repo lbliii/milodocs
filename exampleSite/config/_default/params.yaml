@@ -1,4 +1,4 @@
-logo: '/images/milo.png'
+logo: 'images/milo.png'
 topNav:
   globalLinks:
     display: true

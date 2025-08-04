@@ -4,12 +4,12 @@
 */}}
 
 {{/* Get OpenAPI specs from assets/api/ directory */}}
-{{ range $specFile := slice "basicApi.yaml" }}
+{{ range $specFile := slice "nmp-api.yaml" }}
   {{ $specPath := printf "api/%s" $specFile }}
   {{ with resources.Get $specPath }}
-    {{ $api := . | openapi3.Unmarshal }}
-    
-    {{ if $api }}
+    {{/* Try to unmarshal and only proceed if successful */}}
+    {{ with . | openapi3.Unmarshal }}
+      {{ $api := . }}
       {{ $apiTitle := $api.Info.Title | default "API" | urlize }}
       
       {{/* API Overview Page - let layout handle all content */}}
