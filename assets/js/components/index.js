@@ -20,6 +20,7 @@ export const componentRegistry = {
   'article-toc': () => import('./article/TOC.js'),
   'article-tiles': () => import('./article/Tiles.js'),
   'article-summarization': () => import('./article/Summarization.js'),
+  'copy-page': () => import('./article/CopyPage.js'),
   'notebook-viewer': () => import('./notebook/NotebookViewer.js'),
   'notebook-progressive-reveal': () => import('./article/NotebookProgressiveReveal.js'),
   'notebook-cell': () => import('./notebook/NotebookCell.js'),
@@ -122,6 +123,7 @@ export function registerAllComponents() {
     'article-tiles',
     'article-header',
     'article-summarization',
+    'copy-page',                   // Copy page functionality
     'notebook-progressive-reveal', // Progressive reveal for notebook cells
     
     // OpenAPI components

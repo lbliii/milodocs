@@ -6,20 +6,10 @@
     {{/* Pure breadcrumbs navigation */}}
     {{- partial "navigation/breadcrumbs.html" . -}}
     
-    {{/* Metadata toggle button - Only show if there's metadata */}}
-    {{- if $hasMetadata -}}
-    <button 
-      class="article-header__metadata-toggle" 
-      type="button"
-      aria-expanded="false"
-      aria-controls="article-metadata-panel"
-      data-metadata-toggle>
-      <span class="article-header__toggle-text">Article Info</span>
-      <svg class="article-header__toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-      </svg>
-    </button>
-    {{- end -}}
+    <div class="article-header__actions">
+      {{/* Copy Page Component */}}
+      {{- partial "article/copy-page.html" . -}}
+    </div>
   </div>
 
   {{/* Collapsible metadata panel */}}

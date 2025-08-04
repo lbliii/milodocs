@@ -34,6 +34,101 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
+/* Actions Container - holds copy page and metadata toggle */
+.article-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Copy Page Component Styles */
+.article-header__copy-page {
+  position: relative;
+}
+
+.article-header__copy-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.625rem;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-brand);
+}
+
+.article-header__copy-toggle:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.article-header__copy-toggle:focus {
+  outline: 2px solid rgba(var(--color-brand-rgb), 0.5);
+  outline-offset: 2px;
+}
+
+.article-header__copy-text {
+  white-space: nowrap;
+}
+
+.article-header__copy-icon,
+.article-header__copy-arrow {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.article-header__copy-toggle[aria-expanded="true"] .article-header__copy-arrow {
+  transform: rotate(180deg);
+}
+
+.article-header__copy-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.5rem;
+  width: 14rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.15),
+    0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.article-header__copy-dropdown .p-1 {
+  padding: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .article-header__actions {
+    gap: 0.5rem;
+  }
+  
+  .article-header__copy-text {
+    display: none;
+  }
+  
+  .article-header__copy-dropdown {
+    width: 12rem;
+    right: -2rem;
+  }
+}
+
 /* Metadata Toggle Button */
 .article-header__metadata-toggle {
   display: flex;

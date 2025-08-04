@@ -16,13 +16,28 @@
       </li>
     {{- end -}}
     
-    {{/* Current page */}}
+    {{/* Current page - clickable if metadata available */}}
+    {{- $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
     <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb__item">
-      <span class="breadcrumb__current" 
-            aria-current="page"
-            itemprop="item">
-        <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
-      </span>
+      {{- if $hasMetadata -}}
+        <button class="breadcrumb__current breadcrumb__current--clickable" 
+                aria-current="page"
+                aria-expanded="false"
+                aria-controls="article-metadata-panel"
+                data-metadata-toggle
+                itemprop="item">
+          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+          <svg class="breadcrumb__metadata-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      {{- else -}}
+        <span class="breadcrumb__current" 
+              aria-current="page"
+              itemprop="item">
+          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+        </span>
+      {{- end -}}
       <meta itemprop="position" content="{{ len $ancestors }}" />
     </li>
   </ol>
