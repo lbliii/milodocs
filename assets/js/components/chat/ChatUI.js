@@ -224,38 +224,29 @@ export class ChatUI {
   updateExpandButtonIcon(isExpanded) {
     if (!this.expandButton) return;
     
-    const icon = this.expandButton.querySelector('svg');
-    if (!icon) return;
+    const img = this.expandButton.querySelector('img');
+    if (!img) return;
     
-    // Add smooth rotation transition during state change
-    icon.style.transform = 'rotate(90deg) scale(0.8)';
+    // Add smooth scale transition during state change
+    img.style.transform = 'scale(0.8)';
     
-    // Update icon after a brief moment for smooth transition
+    // Update icon source after a brief moment for smooth transition
     setTimeout(() => {
-      // Update icon and aria-label based on state
       if (isExpanded) {
-        // Show collapse icon (minimize)
+        // Show collapse icon
         this.expandButton.setAttribute('aria-label', 'Collapse chat');
-        icon.innerHTML = `
-          <polyline points="9 21 3 21 3 15"></polyline>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="3" x2="10" y1="21" y2="14"></line>
-          <line x1="21" x2="14" y1="3" y2="10"></line>
-        `;
+        img.src = '/icons/light/collapse.svg';
+        img.alt = 'Collapse';
       } else {
-        // Show expand icon (maximize)
+        // Show expand icon
         this.expandButton.setAttribute('aria-label', 'Expand chat');
-        icon.innerHTML = `
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <polyline points="9 21 3 21 3 15"></polyline>
-          <line x1="21" x2="14" y1="3" y2="10"></line>
-          <line x1="3" x2="10" y1="21" y2="14"></line>
-        `;
+        img.src = '/icons/light/expand.svg';
+        img.alt = 'Expand';
       }
       
       // Reset transform for the new icon
-      icon.style.transform = 'rotate(0deg) scale(1)';
-    }, 150);
+      img.style.transform = 'scale(1)';
+    }, 100);
   }
 
   /**

@@ -3124,6 +3124,28 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
           backdrop-filter: blur(10px);
 }
 
+/* Chat header icon styling for proper dark mode */
+
+.chat-header__icon {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(15%) saturate(566%) hue-rotate(202deg) brightness(96%) contrast(87%);
+}
+
+.dark .chat-header__icon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(8%) saturate(593%) hue-rotate(202deg) brightness(91%) contrast(92%);
+}
+
+/* Danger button variant for delete action */
+
+.topbar__button--danger:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgb(239, 68, 68) !important;
+  color: rgb(239, 68, 68) !important;
+}
+
+.topbar__button--danger:hover img {
+  filter: brightness(0) saturate(100%) invert(35%) sepia(96%) saturate(2067%) hue-rotate(346deg) brightness(89%) contrast(94%) !important;
+}
+
 /* Chat Container */
 
 .dark #chatContainer {
@@ -3368,32 +3390,46 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Clear button (trash can) specific styling */
+/* Chat bubble improvements - tighter spacing and better hierarchy */
 
-#clearAll:hover {
-  background-color: rgba(239, 68, 68, 0.1) !important; /* Light red background */
+.chat-bubble {
+  position: relative;
+  max-width: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); /* Reduced padding from p-4 to p-3 */
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
+  white-space: pre-wrap;
+  line-height: 1.5; /* Slightly tighter line height */
+  font-family: var(--font-brand);
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Consistent rounded corners with tail */
 }
 
-#clearAll:hover svg {
-  color: rgb(239, 68, 68) !important; /* Red trash can on hover */
-  transform: scale(1.15) rotate(-2deg); /* Slight tilt for personality */
+.chat-bubble--user {
+  margin-left: 1.5rem; /* Reduced margin */
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  border-radius: 1rem 1rem 0.25rem 1rem; /* User tail on right */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-#clearAll:active {
-  background-color: rgba(239, 68, 68, 0.15) !important;
-}
-
-#clearAll:active svg {
-  transform: scale(1.05) rotate(0deg);
-  animation: shake 0.3s ease-in-out;
-}
-
-/* Subtle shake animation for delete action feedback */
-
-@keyframes shake {
-  0%, 100% { transform: scale(1.05) rotate(0deg); }
-  25% { transform: scale(1.05) rotate(-3deg); }
-  75% { transform: scale(1.05) rotate(3deg); }
+.chat-bubble--bot {
+  margin-right: 1.5rem; /* Reduced margin */
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Bot tail on left */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Enhanced Chat Messages */
@@ -3405,12 +3441,19 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 #chat-messages > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
-  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
 
 #chat-messages {
   padding: 1rem;
+}
+
+#chat-messages > * + * {
+  margin-top: 0.75rem;
+}
+
+#chat-messages {
   display: flex;
 }
 
@@ -3423,51 +3466,18 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   }
 }
 
-#chat-messages {
+.tile #chat-messages > * + * {
+  margin-top: 0.75rem;
+}
+
+#chat-messages { /* Tighter spacing */
   max-height: calc(100vh - 12rem);
   overflow-y: auto;
   scroll-behavior: smooth;
 }
 
-.chat-bubble {
-  position: relative;
-  max-width: none;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  word-wrap: break-word;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  -webkit-hyphens: auto;
-          hyphens: auto;
-  white-space: pre-wrap;
-  line-height: 1.6;
-  font-family: var(--font-brand);
-}
-
-.chat-bubble--user {
-  margin-left: 2rem;
-  background-color: var(--color-brand);
-  color: var(--color-text-inverse);
-  border-bottom-right-radius: 0.375rem;
-}
-
-.chat-bubble--bot {
-  margin-right: 2rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
-  border: 1px solid var(--color-border-primary);
-  color: var(--color-text-primary);
-  border-bottom-left-radius: 0.375rem;
-}
-
 .chat-bubble--error {
-  margin-right: 2rem;
+  margin-right: 1.5rem; /* Consistent with other bubbles */
   background: linear-gradient(
     135deg,
     rgba(239, 68, 68, 0.1) 0%,
@@ -3475,7 +3485,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   );
   border: 1px solid rgba(239, 68, 68, 0.2);
   color: var(--color-text-primary);
-  border-bottom-left-radius: 0.375rem;
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Consistent tail */
 }
 
 /* Chat message formatting */
@@ -3614,36 +3624,41 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   }
 }
 
-/* Chat pair container */
+/* Chat pair container - tighter spacing */
 
 .chat-pair > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
-  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+
+.chat-pair > * + * {
+  margin-top: 0.75rem;
 }
 
 .tile .chat-pair > * + * {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
-/* Delete button styling */
+.chat-pair { /* Slightly increased for better breathing room */
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Improved delete button styling aligned with design system */
 
 .chat-delete {
   position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  height: 1.5rem;
-  width: 1.5rem;
+  top: -0.25rem;
+  right: -0.25rem;
+  height: 1.25rem;
+  width: 1.25rem;
   justify-content: center;
   border-radius: 9999px;
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
   font-size: 0.875rem;
   line-height: 1.4;
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
   opacity: 0;
-  transition-property: opacity;
+  transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
   display: flex;
@@ -3684,27 +3699,53 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   }
 }
 
-.chat-delete:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
-}
-
 .chat-delete:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity, 1));
+  --tw-ring-offset-width: 1px;
 }
 
 .group:hover .chat-delete {
   opacity: 1;
 }
 
+.chat-delete {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+}
+
+.chat-delete:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgb(239, 68, 68);
+  color: rgb(239, 68, 68);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+.chat-delete:active {
+  transform: scale(0.95);
+  animation: delete-shake 0.3s ease-in-out;
+}
+
 .chat-pair:hover .chat-delete {
   opacity: 1;
+}
+
+/* Delete shake animation */
+
+@keyframes delete-shake {
+  0%, 100% { transform: scale(0.95) rotate(0deg); }
+  25% { transform: scale(0.95) rotate(-2deg); }
+  75% { transform: scale(0.95) rotate(2deg); }
 }
 
 /* Article Header Component - Parent container managing breadcrumbs and metadata */
@@ -11893,21 +11934,6 @@ button:focus-visible,
   display: none;
 }
 
-.size-3\.5 {
-  width: 0.875rem;
-  height: 0.875rem;
-}
-
-.size-5 {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.size-\[13px\] {
-  width: 13px;
-  height: 13px;
-}
-
 .h-1\.5 {
   height: 0.375rem;
 }
@@ -12551,10 +12577,6 @@ button:focus-visible,
   padding: 0.25rem;
 }
 
-.p-1\.5 {
-  padding: 0.375rem;
-}
-
 .p-2 {
   padding: 0.5rem;
 }
@@ -13178,11 +13200,6 @@ button:focus-visible,
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.group:hover .group-hover\:text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
-}
-
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }
@@ -13343,14 +13360,5 @@ button:focus-visible,
   .dark\:text-yellow-300 {
     --tw-text-opacity: 1;
     color: rgb(253 224 71 / var(--tw-text-opacity, 1));
-  }
-
-  .dark\:hover\:bg-white\/10:hover {
-    background-color: rgb(255 255 255 / 0.1);
-  }
-
-  .group:hover .dark\:group-hover\:text-gray-300 {
-    --tw-text-opacity: 1;
-    color: rgb(209 213 219 / var(--tw-text-opacity, 1));
   }
 }

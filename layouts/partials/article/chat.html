@@ -1,32 +1,16 @@
 <div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col" data-component="article-chat">
     <!-- Chat Header -->
     <div class="chat-header flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600/30 bg-background-light dark:bg-background-dark">
-        <div class="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" class="size-5 text-primary dark:text-primary-light">
-                <g fill="currentColor">
-                    <path d="M5.658,2.99l-1.263-.421-.421-1.263c-.137-.408-.812-.408-.949,0l-.421,1.263-1.263,.421c-.204,.068-.342,.259-.342,.474s.138,.406,.342,.474l1.263,.421,.421,1.263c.068,.204,.26,.342,.475,.342s.406-.138,.475-.342l.421-1.263,1.263-.421c.204-.068,.342-.259,.342-.474s-.138-.406-.342-.474Z" fill="currentColor" data-stroke="none" stroke="none"></path>
-                    <polygon points="9.5 2.75 11.412 7.587 16.25 9.5 11.412 11.413 9.5 16.25 7.587 11.413 2.75 9.5 7.587 7.587 9.5 2.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></polygon>
-                </g>
-            </svg>
+        <div class="flex items-center gap-3">
+            <img src="/icons/light/assistant.svg" alt="Assistant" class="w-5 h-5 icon chat-header__icon">
             <span class="font-semibold text-gray-900 dark:text-gray-100">Assistant</span>
         </div>
         <div class="flex items-center gap-1">
-            <button id="expandChat" aria-label="Expand chat" class="group hover:bg-gray-100 dark:hover:bg-white/10 p-1.5 rounded-lg transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-[13px] text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <polyline points="9 21 3 21 3 15"></polyline>
-                    <line x1="21" x2="14" y1="3" y2="10"></line>
-                    <line x1="3" x2="10" y1="21" y2="14"></line>
-                </svg>
+            <button id="expandChat" aria-label="Expand chat" class="topbar__button">
+                <img src="/icons/light/expand.svg" alt="Expand" class="icon">
             </button>
-            <button id="clearAll" aria-label="Delete all chat messages" class="group hover:bg-gray-100 dark:hover:bg-white/10 p-1.5 rounded-lg transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-                    <path d="M3 6h18"></path>
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                    <line x1="10" x2="10" y1="11" y2="17"></line>
-                    <line x1="14" x2="14" y1="11" y2="17"></line>
-                </svg>
+            <button id="clearAll" aria-label="Delete all chat messages" class="topbar__button topbar__button--danger">
+                <img src="/icons/light/delete.svg" alt="Delete" class="icon">
             </button>
         </div>
     </div>

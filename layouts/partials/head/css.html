@@ -70,13 +70,6 @@
 {{/* Load all component CSS files in dependency order */}}
 
 {{/* 1. Foundation Components - Base UI elements */}}
-{{- $debugCSS := resources.Get "css/components/debug.css" -}}
-{{- if $debugCSS -}}
-  {{- $cssResources = $cssResources | append $debugCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: debug.css not found" -}}
-{{- end -}}
-
 {{- $buttonsCSS := resources.Get "css/components/buttons.css" -}}
 {{- if $buttonsCSS -}}
   {{- $cssResources = $cssResources | append $buttonsCSS -}}

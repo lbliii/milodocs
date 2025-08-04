@@ -8,6 +8,26 @@
   backdrop-filter: blur(10px);
 }
 
+/* Chat header icon styling for proper dark mode */
+.chat-header__icon {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(15%) saturate(566%) hue-rotate(202deg) brightness(96%) contrast(87%);
+}
+
+.dark .chat-header__icon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(8%) saturate(593%) hue-rotate(202deg) brightness(91%) contrast(92%);
+}
+
+/* Danger button variant for delete action */
+.topbar__button--danger:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgb(239, 68, 68) !important;
+  color: rgb(239, 68, 68) !important;
+}
+
+.topbar__button--danger:hover img {
+  filter: brightness(0) saturate(100%) invert(35%) sepia(96%) saturate(2067%) hue-rotate(346deg) brightness(89%) contrast(94%) !important;
+}
+
 /* Chat Container */
 #chatContainer {
   @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg;
@@ -179,60 +199,29 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Clear button (trash can) specific styling */
-#clearAll:hover {
-  background-color: rgba(239, 68, 68, 0.1) !important; /* Light red background */
-}
-
-#clearAll:hover svg {
-  color: rgb(239, 68, 68) !important; /* Red trash can on hover */
-  transform: scale(1.15) rotate(-2deg); /* Slight tilt for personality */
-}
-
-#clearAll:active {
-  background-color: rgba(239, 68, 68, 0.15) !important;
-}
-
-#clearAll:active svg {
-  transform: scale(1.05) rotate(0deg);
-  animation: shake 0.3s ease-in-out;
-}
-
-/* Subtle shake animation for delete action feedback */
-@keyframes shake {
-  0%, 100% { transform: scale(1.05) rotate(0deg); }
-  25% { transform: scale(1.05) rotate(-3deg); }
-  75% { transform: scale(1.05) rotate(3deg); }
-}
-
-/* Enhanced Chat Messages */
-#chat-messages {
-  @apply flex flex-col space-y-4 p-4;
-  max-height: calc(100vh - 12rem);
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
-
+/* Chat bubble improvements - tighter spacing and better hierarchy */
 .chat-bubble {
-  @apply p-4 rounded-xl shadow-sm relative max-w-none;
+  @apply p-3 rounded-xl shadow-sm relative max-w-none; /* Reduced padding from p-4 to p-3 */
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   white-space: pre-wrap;
-  line-height: 1.6;
+  line-height: 1.5; /* Slightly tighter line height */
   font-family: var(--font-brand);
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Consistent rounded corners with tail */
 }
 
 .chat-bubble--user {
-  @apply ml-8;
+  @apply ml-6; /* Reduced margin */
   background-color: var(--color-brand);
   color: var(--color-text-inverse);
-  border-bottom-right-radius: 0.375rem;
+  border-radius: 1rem 1rem 0.25rem 1rem; /* User tail on right */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .chat-bubble--bot {
-  @apply mr-8;
+  @apply mr-6; /* Reduced margin */
   background: linear-gradient(
     135deg,
     var(--color-surface) 0%,
@@ -240,11 +229,20 @@
   );
   border: 1px solid var(--color-border-primary);
   color: var(--color-text-primary);
-  border-bottom-left-radius: 0.375rem;
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Bot tail on left */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Chat Messages */
+#chat-messages {
+  @apply flex flex-col space-y-3 p-4; /* Tighter spacing */
+  max-height: calc(100vh - 12rem);
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 .chat-bubble--error {
-  @apply mr-8;
+  @apply mr-6; /* Consistent with other bubbles */
   background: linear-gradient(
     135deg,
     rgba(239, 68, 68, 0.1) 0%,
@@ -252,7 +250,7 @@
   );
   border: 1px solid rgba(239, 68, 68, 0.2);
   color: var(--color-text-primary);
-  border-bottom-left-radius: 0.375rem;
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Consistent tail */
 }
 
 /* Chat message formatting */
@@ -342,19 +340,48 @@
   }
 }
 
-/* Chat pair container */
+/* Chat pair container - tighter spacing */
 .chat-pair {
-  @apply space-y-2;
+  @apply space-y-3; /* Slightly increased for better breathing room */
+  position: relative;
+  margin-bottom: 1rem;
 }
 
-/* Delete button styling */
+/* Improved delete button styling aligned with design system */
 .chat-delete {
-  @apply absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white 
+  @apply absolute -top-1 -right-1 w-5 h-5 
          rounded-full flex items-center justify-center text-xs
-         opacity-0 group-hover:opacity-100 transition-opacity duration-200
-         hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500;
+         opacity-0 group-hover:opacity-100 transition-all duration-200
+         focus:outline-none focus:ring-2 focus:ring-offset-1;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.chat-delete:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgb(239, 68, 68);
+  color: rgb(239, 68, 68);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+.chat-delete:active {
+  transform: scale(0.95);
+  animation: delete-shake 0.3s ease-in-out;
 }
 
 .chat-pair:hover .chat-delete {
   opacity: 1;
+}
+
+/* Delete shake animation */
+@keyframes delete-shake {
+  0%, 100% { transform: scale(0.95) rotate(0deg); }
+  25% { transform: scale(0.95) rotate(-2deg); }
+  75% { transform: scale(0.95) rotate(2deg); }
 }
