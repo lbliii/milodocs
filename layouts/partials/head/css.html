@@ -116,13 +116,19 @@
 {{- end -}}
 */}}
 
-{{- $chatCSS := resources.Get "css/components/chat.css" -}}
-{{- if $chatCSS -}}
-  {{- $cssResources = $cssResources | append $chatCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: chat.css not found" -}}
+{{/* SMART CONDITIONAL LOADING - Only load CSS for features used on this page */}}
+
+{{/* Chat CSS - only load if chat is enabled for this page */}}
+{{- if .Params.article.chat.display | default site.Params.article.chat.display -}}
+  {{- $chatCSS := resources.Get "css/components/chat.css" -}}
+  {{- if $chatCSS -}}
+    {{- $cssResources = $cssResources | append $chatCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: chat.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
+{{/* Collapse CSS - always needed for various components */}}
 {{- $collapseCSS := resources.Get "css/components/collapse.css" -}}
 {{- if $collapseCSS -}}
   {{- $cssResources = $cssResources | append $collapseCSS -}}
@@ -138,46 +144,93 @@
   {{- warnf "Component CSS: article-header.css not found" -}}
 {{- end -}}
 
-{{- $tilesCSS := resources.Get "css/components/tiles.css" -}}
-{{- if $tilesCSS -}}
-  {{- $cssResources = $cssResources | append $tilesCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: tiles.css not found" -}}
+{{/* Tiles CSS - only for list/section pages */}}
+{{- if or .IsSection .IsHome -}}
+  {{- $tilesCSS := resources.Get "css/components/tiles.css" -}}
+  {{- if $tilesCSS -}}
+    {{- $cssResources = $cssResources | append $tilesCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: tiles.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
-{{- $cardsCSS := resources.Get "css/components/cards.css" -}}
-{{- if $cardsCSS -}}
-  {{- $cssResources = $cssResources | append $cardsCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: cards.css not found" -}}
+{{/* Cards CSS - only for list/section pages */}}
+{{- if or .IsSection .IsHome -}}
+  {{- $cardsCSS := resources.Get "css/components/cards.css" -}}
+  {{- if $cardsCSS -}}
+    {{- $cssResources = $cssResources | append $cardsCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: cards.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
-{{- $glossaryCSS := resources.Get "css/components/glossary.css" -}}
-{{- if $glossaryCSS -}}
-  {{- $cssResources = $cssResources | append $glossaryCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: glossary.css not found" -}}
+{{/* Glossary CSS - only for glossary pages */}}
+{{- if or (eq .Section "glossary") (eq .Type "glossary") (in .RelPermalink "/glossary/") -}}
+  {{- $glossaryCSS := resources.Get "css/components/glossary.css" -}}
+  {{- if $glossaryCSS -}}
+    {{- $cssResources = $cssResources | append $glossaryCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: glossary.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
-{{- $quicklinksCSS := resources.Get "css/components/quicklinks.css" -}}
-{{- if $quicklinksCSS -}}
-  {{- $cssResources = $cssResources | append $quicklinksCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: quicklinks.css not found" -}}
+{{/* Quicklinks CSS - only for home and section pages */}}
+{{- if or .IsHome .IsSection -}}
+  {{- $quicklinksCSS := resources.Get "css/components/quicklinks.css" -}}
+  {{- if $quicklinksCSS -}}
+    {{- $cssResources = $cssResources | append $quicklinksCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: quicklinks.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
-{{- $nextPrevCSS := resources.Get "css/components/next-prev.css" -}}
-{{- if $nextPrevCSS -}}
-  {{- $cssResources = $cssResources | append $nextPrevCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: next-prev.css not found" -}}
+{{/* Next/Prev CSS - only for regular content pages */}}
+{{- if and (not .IsSection) (not .IsHome) -}}
+  {{- $nextPrevCSS := resources.Get "css/components/next-prev.css" -}}
+  {{- if $nextPrevCSS -}}
+    {{- $cssResources = $cssResources | append $nextPrevCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: next-prev.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
-{{- $tutorialCSS := resources.Get "css/components/tutorial.css" -}}
-{{- if $tutorialCSS -}}
-  {{- $cssResources = $cssResources | append $tutorialCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: tutorial.css not found" -}}
+{{/* Tutorial CSS - only for tutorial pages */}}
+{{- if or (eq .Section "tutorial") (eq .Type "tutorial") (in .RelPermalink "/tutorial/") -}}
+  {{- $tutorialCSS := resources.Get "css/components/tutorial.css" -}}
+  {{- if $tutorialCSS -}}
+    {{- $cssResources = $cssResources | append $tutorialCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: tutorial.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* PAGE-SPECIFIC CSS - Load heavy feature CSS only when needed */}}
+
+{{/* OpenAPI CSS - only for API documentation pages */}}
+{{- if or .Params.reference (eq .Layout "api-overview") (eq .Type "openapi") (in .RelPermalink "/api/") -}}
+  {{- $openapiCSS := resources.Get "css/components/openapi/index.css" -}}
+  {{- if $openapiCSS -}}
+    {{- $cssResources = $cssResources | append $openapiCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: openapi/index.css not found" -}}
+  {{- end -}}
+  
+  {{- $navigationAPICSS := resources.Get "css/components/navigation-api.css" -}}
+  {{- if $navigationAPICSS -}}
+    {{- $cssResources = $cssResources | append $navigationAPICSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: navigation-api.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Notebook CSS - only for notebook pages */}}
+{{- if or .Params.notebook_path (eq .Type "notebook") (eq .Layout "notebook") -}}
+  {{- $notebookCSS := resources.Get "css/components/notebook.css" -}}
+  {{- if $notebookCSS -}}
+    {{- $cssResources = $cssResources | append $notebookCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: notebook.css not found" -}}
+  {{- end -}}
 {{- end -}}
 
 {{/* Advanced CSS bundling with environment-specific optimization */}}
