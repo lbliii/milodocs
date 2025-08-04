@@ -5,25 +5,25 @@
 
 {{- /* Build the base URL from servers */ -}}
 {{- $baseUrl := "https://api.example.com" -}}
-{{- if $spec.servers -}}
-  {{- $baseUrl = (index $spec.servers 0).url -}}
+{{- if $spec.Servers -}}
+  {{- $baseUrl = (index $spec.Servers 0).URL -}}
 {{- end -}}
 
 package main
 
 import (
-    {{ if $operation.requestBody }}"bytes"
+    {{ if $operation.RequestBody }}"bytes"
     "encoding/json"{{ end }}
     "fmt"
     "io"
     "net/http"
-    {{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}"net/url"{{ break }}{{ end }}{{ end }}{{ end }}
+    {{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}"net/url"{{ break }}{{ end }}{{ end }}{{ end }}
 )
 
 func main() {
-    {{ if $operation.requestBody }}// Request body
+    {{ if $operation.RequestBody }}// Request body
     data := map[string]interface{}{
-{{ range $mediaType, $content := $operation.requestBody.content }}{{ if eq $mediaType "application/json" }}{{ with $content.example }}{{ . | jsonify (dict "indent" "        ") }}{{ else }}{{ with $content.schema }}{{ if eq .type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+{{ range $mediaType, $content := $operation.RequestBody.Content }}{{ if eq $mediaType "application/json" }}{{ with $content.Example }}{{ . | jsonify (dict "indent" "        ") }}{{ else }}{{ with $content.Schema }}{{ if eq .Type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
     }
     
     jsonData, err := json.Marshal(data)
@@ -32,23 +32,23 @@ func main() {
         return
     }
     
-    {{ end }}// Create URL{{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}
+    {{ end }}// Create URL{{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}
     baseURL := "{{ $baseUrl }}{{ $path }}"
     params := url.Values{}
-{{ if $param.example }}    params.Add("{{ $param.name }}", "{{ $param.example }}"){{ end }}
+{{ if $param.Example }}    params.Add("{{ $param.Name }}", "{{ $param.Example }}"){{ end }}
     fullURL := baseURL + "?" + params.Encode(){{ break }}{{ end }}{{ end }}{{ else }}
     url := "{{ $baseUrl }}{{ $path }}"{{ end }}
     
     // Create request
-    {{ if $operation.requestBody }}req, err := http.NewRequest("{{ $method }}", {{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}fullURL{{ break }}{{ else }}url{{ end }}{{ end }}{{ else }}url{{ end }}, bytes.NewBuffer(jsonData)){{ else }}req, err := http.NewRequest("{{ $method }}", {{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}fullURL{{ break }}{{ else }}url{{ end }}{{ end }}{{ else }}url{{ end }}, nil){{ end }}
+    {{ if $operation.RequestBody }}req, err := http.NewRequest("{{ $method }}", {{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}fullURL{{ break }}{{ else }}url{{ end }}{{ end }}{{ else }}url{{ end }}, bytes.NewBuffer(jsonData)){{ else }}req, err := http.NewRequest("{{ $method }}", {{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}fullURL{{ break }}{{ else }}url{{ end }}{{ end }}{{ else }}url{{ end }}, nil){{ end }}
     if err != nil {
         fmt.Printf("Error creating request: %v\n", err)
         return
     }
     
     // Set headers
-{{ if $operation.security }}    req.Header.Set("Authorization", "Bearer YOUR_TOKEN")
-{{ end }}{{ if $operation.requestBody }}    req.Header.Set("Content-Type", "application/json"){{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    req.Header.Set("Content-Type", "application/json"){{ end }}
+{{ if $operation.Security }}    req.Header.Set("Authorization", "Bearer YOUR_TOKEN")
+{{ end }}{{ if $operation.RequestBody }}    req.Header.Set("Content-Type", "application/json"){{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    req.Header.Set("Content-Type", "application/json"){{ end }}
     
     // Send request
     client := &http.Client{}

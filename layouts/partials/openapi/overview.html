@@ -18,57 +18,63 @@
       </div>
       <div class="overview-card__content">
         <h3 class="overview-card__title">Version</h3>
-        <div class="overview-card__value">{{ $info.version }}</div>
+        <div class="overview-card__value">{{ $info.Version }}</div>
         <div class="overview-card__description">Current API version</div>
       </div>
     </div>
     
-    {{ with index $info "x-api-type" }}
-      <div class="overview-card overview-card--secondary">
-        <div class="overview-card__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
+    {{ with $info.Extensions }}
+      {{ with index . "x-api-type" }}
+        <div class="overview-card overview-card--secondary">
+          <div class="overview-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+          </div>
+          <div class="overview-card__content">
+            <h3 class="overview-card__title">API Type</h3>
+            <div class="overview-card__value">{{ . }}</div>
+            <div class="overview-card__description">Architecture type</div>
+          </div>
         </div>
-        <div class="overview-card__content">
-          <h3 class="overview-card__title">API Type</h3>
-          <div class="overview-card__value">{{ . }}</div>
-          <div class="overview-card__description">Architecture type</div>
-        </div>
-      </div>
+      {{ end }}
     {{ end }}
     
-    {{ with index $info "x-maturity" }}
-      <div class="overview-card overview-card--accent">
-        <div class="overview-card__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-            <circle cx="6" cy="11" r="4"></circle>
-            <path d="M6 21V9"></path>
-          </svg>
+    {{ with $info.Extensions }}
+      {{ with index . "x-maturity" }}
+        <div class="overview-card overview-card--accent">
+          <div class="overview-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <circle cx="6" cy="11" r="4"></circle>
+              <path d="M6 21V9"></path>
+            </svg>
+          </div>
+          <div class="overview-card__content">
+            <h3 class="overview-card__title">Maturity</h3>
+            <div class="overview-card__value">{{ . }}</div>
+            <div class="overview-card__description">Development stage</div>
+          </div>
         </div>
-        <div class="overview-card__content">
-          <h3 class="overview-card__title">Maturity</h3>
-          <div class="overview-card__value">{{ . }}</div>
-          <div class="overview-card__description">Development stage</div>
-        </div>
-      </div>
+      {{ end }}
     {{ end }}
   </div>
   
-  {{ with index $info "x-documentation" }}
-    <div class="overview-documentation">
-      <h3>Additional Documentation</h3>
-      <div class="documentation-links">
-        {{ range $doc := . }}
-          <a href="{{ $doc.url }}" class="documentation-link" target="_blank" rel="noopener">
-            <div class="documentation-link__title">{{ $doc.name }}</div>
-            <div class="documentation-link__description">{{ $doc.description }}</div>
-          </a>
-        {{ end }}
+  {{ with $info.Extensions }}
+    {{ with index . "x-documentation" }}
+      <div class="overview-documentation">
+        <h3>Additional Documentation</h3>
+        <div class="documentation-links">
+          {{ range $doc := . }}
+            <a href="{{ $doc.url }}" class="documentation-link" target="_blank" rel="noopener">
+              <div class="documentation-link__title">{{ $doc.name }}</div>
+              <div class="documentation-link__description">{{ $doc.description }}</div>
+            </a>
+          {{ end }}
+        </div>
       </div>
-    </div>
+    {{ end }}
   {{ end }}
 </section>

@@ -1,0 +1,157 @@
+ObjectModel:
+  Description: |
+    Description and control of your inference service is accomplished via two primary objects: **Packaged Model** and **Deployment**. 
+    Additionally, when referencing a Package Model via an external hosting method such as S3 bucket, or huggingface.co registry, you may need to configure a **Registry** to enable that access.
+  Objects:
+    PackagedModel:
+      Description: | 
+        The *Packaged Model* object identifies the model and code that make up your inference service.
+        The code may be provided via a container image, or via an external hosting method (S3 or huggingface.co registry). 
+        The Packaged Model object has the following attributes:
+      Inputs:
+        - name: name
+          description: "The name of the model."
+        - name: description
+          description: "A text description of the model."
+        - name: modelFormat
+          description: "Model format for downloaded models (e.g. from `S3`, `http`, etc.)."
+          options:
+            - custom: "The packaged model is provided in a container image."
+            - bento-archive: "The packaged model is a bento archive file (`.bento)`. It will be downloaded, expanded, and then will be served using the bentolm serve command in a provided bentoml serving container."
+            - openllm: "The packaged model will be served using the openllm serve command in a provided openllm serving container."
+            - nim: "The packaged model will be served using the specified NVIDIA NIM microservices container image."
+        - name: registry
+          description: "The name or `id` of a registry object. If the model data is not provided via a container image, this must be specified."
+        - name: url
+          description: "Reference to the Bento or model to be served."
+          options:
+            - openllm: "An OpenLLM model name from [huggingface.co](https://hugginface.co) dynamically loaded and executed with a VLLM backend."
+            - s3: "An OpenLLM model path which will be dynamically downloaded from an associated S3 registry bucket."
+            - ngc: "An NVIDIA NGC model will be dynamically downloaded from the associated ngc registry bucket and executed with the specified NVIDIA NIM microservices container image."
+        - name: resources
+          description: "The resource requirements for running the service (requests/limits) for cpu/memory/gpu."
+        - name: image
+          description: "The containerized bento where the inference service is to be deployed."
+        - name: environment
+          description: "Environment variables to be provided to the container image when started. See [Packaged Model Environment Variables](/) for a list of default options."
+        - name: arguments
+          description: "Arguments to be passed to the container image when started."
+      AioliManaged:
+        - name: id
+          description: "A unique identifier to identify this particular model version."
+        - name: version
+          description: "An automatically incrementing integer version of the model as you make changes."
+
+    Registry:
+      Description: | 
+        The Registry object provides the metadata that describes *how* to download a [**Packaged Model**](/) for deployment.
+      Inputs:
+        - name: name
+          description: "The name of service to enable access to it via the REST interface or CLI."
+        - name: description
+          description: "A text description of the service."
+        - name: type
+          description: "The type of this model registry."
+          options:
+            - s3: "Configuration to enable access to an S3 bucket."
+            - openllm: "Configuration to enable direct download of openllm models from [huggingface.co](https://hugginface.co). Provide your access token in the secretKey field."
+            - ngc: "Configuration to enable direct download from the NGC: AI Development Catalog."
+        - name: endpointUrl
+          description: "The registry endpoint (host)."
+          options:
+            - s3: "The S3 registry endpoint for the associated S3 region. Required."
+            - openllm: "The [huggingface.co](https://hugginface.co)-compatible endpoint (default `https://huggingface.co`)."
+            - ngc: "The NVIDIA NGC-compatible api endpoint (default `https://api.ngc.nvidia.com`)."
+        - name: bucket
+          description: "The bucket or organization name, depending on which of the following values is selected as the model registry type."
+          options:
+            - s3: "The required S3 bucket name."
+            - ngc: "The required NGC org name."
+        - name: accessKey
+          description: "The access key, username or team name for the registry."
+          options:
+            - s3: "The access key/username."
+            - ngc: "The optional NGC team name."
+        - name: secretKey
+          description: "The secret key is the password, secret key, or access token for the registry."
+          options:
+            - s3: "The `secretKey` provides a secret key for the S3 bucket."
+            - openllm: "The `secretKey` is the access token for [huggingface.co](https://hugginface.co) and is supplied to the launched container via the `HF_TOKEN` environment variable."
+            - ngc: "The NVIDIA NGC `apikey`."
+        - name: insecureHttps
+          description: "For `https` endpoints, the server certificate will be accepted without validation."
+      AioliManaged:
+        - name: id
+          description: "A unique identifier to identify this service."
+
+    Deployment:
+      Description: | 
+        The *Deployment* object controls when a [**Packaged Model**](/) is deployed.
+        The Deployment object has the following attributes:
+      Inputs:
+        - name: name
+          description: "The name of the deployment to enable access to it via the REST interface or CLI. This is the name used in the associated KServe inference service that will be created."
+        - name: namespace
+          description: "The Kubernetes namespace into which the service is deployed. It must already exist."
+        - name: model
+          description: "The name (or `id`) of the packaged model to be deployed."
+        - name: security
+          description: "Encapsulates the security option (authenticationRequired) for the deployed service."
+        - name: autoScaling
+          description: "Controls the scaling limits minReplicas/maxReplicas, metric to control scaling, and the target value."
+        - name: canaryTrafficPercent
+          description: "The percentage of traffic to route to this particular model version. The default is `100`."
+        - name: goalStatus
+          description: "Specifies the intended status to be achieved by the deployment. The default is `Ready`."
+          options:
+            - Ready: "The inference service will be deployed to enable inference calls."
+            - Paused: "The inference service will be stopped and no longer accept calls."
+        - name: environment
+          description: "Environment variables to be provided to the container image when started."
+        - name: arguments
+          description: "Arguments to be passed to the container image when started. These are in addition to any configured on the packaged model."
+      AioliManaged:
+        - name: id
+          description: "A unique identifier to identify this service."
+        - name: status
+          description: "Summary status of the deployed service."
+          options:
+            - Deploying: "Service configuration is in progress."
+            - Failed: "The service configuration failed."
+            - Ready: "The service has been successfully configured and is serving."
+            - Updating: "A new service revision is being rolled out."
+            - UpdateFailed: "The current service revision failed to roll out due to an error. The prior version is still serving requests."
+            - Deleting: "The deployed service is being removed."
+            - Paused: "The deployed service has been stopped by the user or an external action."
+            - Unknown: "Unable to determine the status."
+            - Canceled: "The deployed service has been canceled."
+        - name: state
+          description: "State details of the current service configuration requested. See the [DeploymentStateDetails](/) component for details."
+        - name: secondaryState
+          description: "State details of a prior service configuration until the currently requested configuration has been fully rolled out."
+  Components:
+    DeploymentStateDetails:
+      Description: "The state details of an inference service [**Deployment**](/) are described with the following attributes:"
+      Attributes:
+        - name: endpoint
+          description: "The endpoint `uri` used to access the inference service."
+        - name: nativeAppName
+          description: "The name of the Kubernetes application for the specific service version. Use this name to match the app value in Grafana/Prometheus to obtain logs and metrics for this deployed service version."
+        - name: status
+          description: "The status of a particular inference service revision."
+          options:
+            - Deploying: "The service configuration is in progress."
+            - Failed: "The service configuration failed."
+            - Ready: "The service has been successfully configured and is serving."
+            - Updating: "A new service revision is being rolled out."
+            - UpdateFailed: "The current service revision failed to rollout due to an error. The prior version is still serving requests."
+            - Deleting:  "The service is being removed."
+            - Paused: "The service has been stopped by the user or an external action."
+            - Unknown: "Unable to determined the service's status."
+            - Canceled: "The specified model version of the deployment was canceled by the user."
+        - name: trafficPercentage
+          description: Percent of traffic being processed by this service/model version.
+        - name: failureInfo
+          description: A list of any failures associated with the deployment of this service/model version.
+        - name: modelId
+          description: The `id` of the deployed packaged model associated with this state.

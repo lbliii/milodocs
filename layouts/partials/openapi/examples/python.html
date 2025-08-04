@@ -5,30 +5,30 @@
 
 {{- /* Build the base URL from servers */ -}}
 {{- $baseUrl := "https://api.example.com" -}}
-{{- if $spec.servers -}}
-  {{- $baseUrl = (index $spec.servers 0).url -}}
+{{- if $spec.Servers -}}
+  {{- $baseUrl = (index $spec.Servers 0).URL -}}
 {{- end -}}
 
 import requests
-{{ if $operation.requestBody }}import json
+{{ if $operation.RequestBody }}import json
 {{ end }}
 url = "{{ $baseUrl }}{{ $path }}"
 
-{{ if $operation.parameters }}{{ $hasQuery := false }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}{{ if not $hasQuery }}params = {
-{{ $hasQuery = true }}{{ end }}{{ if $param.example }}    "{{ $param.name }}": "{{ $param.example }}",
+{{ if $operation.Parameters }}{{ $hasQuery := false }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}{{ if not $hasQuery }}params = {
+{{ $hasQuery = true }}{{ end }}{{ if $param.Example }}    "{{ $param.Name }}": "{{ $param.Example }}",
 {{ end }}{{ end }}{{ end }}{{ if $hasQuery }}}
 
 {{ end }}{{ end }}headers = {
-{{ if $operation.security }}    "Authorization": "Bearer YOUR_TOKEN",
-{{ end }}{{ if $operation.requestBody }}    "Content-Type": "application/json"{{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    "Content-Type": "application/json"{{ end }}
+{{ if $operation.Security }}    "Authorization": "Bearer YOUR_TOKEN",
+{{ end }}{{ if $operation.RequestBody }}    "Content-Type": "application/json"{{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    "Content-Type": "application/json"{{ end }}
 }
 
-{{ if $operation.requestBody }}data = {
-{{ range $mediaType, $content := $operation.requestBody.content }}{{ if eq $mediaType "application/json" }}{{ with $content.example }}{{ . | jsonify (dict "indent" "    ") }}{{ else }}{{ with $content.schema }}{{ if eq .type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+{{ if $operation.RequestBody }}data = {
+{{ range $mediaType, $content := $operation.RequestBody.Content }}{{ if eq $mediaType "application/json" }}{{ with $content.Example }}{{ . | jsonify (dict "indent" "    ") }}{{ else }}{{ with $content.Schema }}{{ if eq .Type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
 }
 
 {{ end }}try:
-    response = requests.{{ lower $method }}(url{{ if $operation.parameters }}{{ range $param := $operation.parameters }}{{ if eq $param.in "query" }}, params=params{{ break }}{{ end }}{{ end }}{{ end }}, headers=headers{{ if $operation.requestBody }}, json=data{{ end }})
+    response = requests.{{ lower $method }}(url{{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}, params=params{{ break }}{{ end }}{{ end }}{{ end }}, headers=headers{{ if $operation.RequestBody }}, json=data{{ end }})
     response.raise_for_status()
     print(response.json())
 except requests.exceptions.RequestException as error:

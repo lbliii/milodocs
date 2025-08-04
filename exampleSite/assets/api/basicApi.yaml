@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Pets API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      responses:
+        '200':
+          description: A paged array of pets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pets'
+          x-pagination:  # Custom extension to document pagination support
+            description: This endpoint supports pagination via query parameters.
+            params:
+              page:
+                type: integer
+                description: Specifies the page of results to retrieve.
+              limit:
+                type: integer
+                description: Specifies the number of results per page.
+        'default':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Pets:
+      type: array
+      items:
+        $ref: '#/components/schemas/Pet'
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: The pet unique identifier.
+        name:
+          type: string
+          description: The name given to the pet.
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+        message:
+          type: string
+          description: Error message.

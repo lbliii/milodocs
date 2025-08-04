@@ -8,7 +8,7 @@
   </div>
   
   <!-- Schemas -->
-  {{ with $components.schemas }}
+  {{ with $components.Schemas }}
     <div class="components-section">
       <h3 class="components-section-title">Schemas</h3>
       <div class="components-list">
@@ -32,10 +32,15 @@
               </div>
               <div class="component-name">
                 <h4>{{ $schemaName }}</h4>
-                {{ with $schema.title }}
+                {{/* Handle SchemaRef vs direct Schema */}}
+                {{ $actualSchema := $schema }}
+                {{ if $schema.Value }}
+                  {{ $actualSchema = $schema.Value }}
+                {{ end }}
+                {{ with $actualSchema.Title }}
                   <div class="component-title">{{ . }}</div>
                 {{ end }}
-                {{ with $schema.type }}
+                {{ with $actualSchema.Type }}
                   <div class="component-type">
                     <span class="type-badge type-badge--{{ . }}">{{ . }}</span>
                   </div>
@@ -58,7 +63,7 @@
   {{ end }}
   
   <!-- Security Schemes -->
-  {{ with $components.securitySchemes }}
+  {{ with $components.SecuritySchemes }}
     <div class="components-section">
       <h3 class="components-section-title">Security Schemes</h3>
       <div class="components-list">
@@ -183,7 +188,7 @@
   {{ end }}
   
   <!-- Response Objects -->
-  {{ with $components.responses }}
+  {{ with $components.Responses }}
     <div class="components-section">
       <h3 class="components-section-title">Response Objects</h3>
       <div class="components-list">
@@ -224,7 +229,7 @@
   {{ end }}
   
   <!-- Parameters -->
-  {{ with $components.parameters }}
+  {{ with $components.Parameters }}
     <div class="components-section">
       <h3 class="components-section-title">Parameters</h3>
       <div class="components-list">

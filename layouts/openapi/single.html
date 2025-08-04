@@ -8,65 +8,86 @@
 
 {{- define "content" -}}
 <article id="articleContent" 
-         class="openapi-spec"
+         class="openapi-spec api-endpoint"
          data-component="openapi-viewer">
   
-  {{- $apiPath := .Params.api_spec -}}
-  {{- $apiKeyName := replace (replace $apiPath ".yaml" "") ".yml" "" -}}
-  {{- $apiData := index .Site.Data $apiKeyName -}}
+  {{- $apiData := .Params.api_data -}}
+  {{- $currentMethod := .Params.endpoint.method -}}
+  {{- $currentPath := .Params.endpoint.path -}}
+  {{- $currentTag := .Params.endpoint.tag -}}
+  {{- $operationId := .Params.endpoint.operationId -}}
+  
+  {{/* Use operation data from front matter */}}
+  {{ $operation := .Params.endpoint.operation }}
   
   {{- if not $apiData -}}
-    {{- warnf "OpenAPI spec not found: %s" $apiPath -}}
     <div class="error-message">
-      <h2>OpenAPI Specification Not Found</h2>
-      <p>Could not load API spec: <code>{{ $apiPath }}</code></p>
-      <p>Please check that the file exists in the <code>data/</code> directory.</p>
+      <h2>API Data Not Found</h2>
+      <p>Could not load API data from page front matter.</p>
     </div>
     {{ return }}
   {{- end -}}
-
-  <!-- API Header -->
-  {{ partial "openapi/header.html" (dict "spec" $apiData "page" .) }}
   
-  <!-- Main API Content -->
-  <div class="openapi-content">
+  <!-- Endpoint Header -->
+  <header class="api-endpoint-header">
+    <div class="api-endpoint-breadcrumb">
+      <a href="../../">{{ $apiData.Info.Title }}</a> / 
+      <a href="../">{{ $currentTag }}</a> / 
+      {{ .Title }}
+    </div>
     
-    <!-- Overview Section -->
-    {{ with $apiData.info }}
-      {{ partial "openapi/overview.html" (dict "info" . "page" $.Page) }}
-    {{ end }}
+    <div class="endpoint-title-section">
+      <div class="endpoint-method-path">
+        <span class="method-badge method-badge--{{ lower $currentMethod }}">
+          {{ upper $currentMethod }}
+        </span>
+        <code class="endpoint-path">{{ $currentPath }}</code>
+      </div>
+      <h1>{{ $operation.Summary | default .Title }}</h1>
+      {{ with $operation.Description }}
+        <p class="endpoint-description">{{ . | markdownify }}</p>
+      {{ end }}
+    </div>
+  </header>
+  
+  <!-- Endpoint Details -->
+  <div class="api-endpoint-content">
+    {{ $endpointId := printf "%s-%s" (upper $currentMethod) ($currentPath | replace "/" "-" | replace "{" "" | replace "}" "" | urlize) }}
     
-    <!-- Server Information -->
-    {{ with $apiData.servers }}
-      {{ partial "openapi/servers.html" (dict "servers" . "page" $.Page) }}
-    {{ end }}
-    
-    <!-- Paths/Endpoints Section -->
-    {{ with $apiData.paths }}
-      {{ partial "openapi/endpoints.html" (dict "paths" . "spec" $apiData "page" $.Page) }}
-    {{ end }}
-    
-    <!-- Components Section -->
-    {{ with $apiData.components }}
-      {{ partial "openapi/components.html" (dict "components" . "page" $.Page) }}
-    {{ end }}
-    
-    <!-- Security Section -->
-    {{ with $apiData.security }}
-      {{ partial "openapi/security.html" (dict "security" . "components" $apiData.components "page" $.Page) }}
-    {{ end }}
+    <div class="endpoint-item" id="{{ $endpointId }}" data-method="{{ upper $currentMethod }}" data-path="{{ $currentPath }}">
+      
+      <!-- Endpoint Details -->
+      <div class="endpoint-details" id="{{ $endpointId }}-details">
+        
+        <!-- Parameters -->
+        {{ with $operation.Parameters }}
+          {{ partial "openapi/endpoint-parameters.html" (dict "parameters" . "spec" $apiData) }}
+        {{ end }}
+        
+        <!-- Request Body -->
+        {{ with $operation.RequestBody }}
+          {{ partial "openapi/endpoint-request-body.html" (dict "requestBody" . "spec" $apiData) }}
+        {{ end }}
+        
+        <!-- Responses -->
+        {{ with $operation.Responses }}
+          {{ partial "openapi/endpoint-responses.html" (dict "responses" . "spec" $apiData) }}
+        {{ end }}
+        
+        <!-- Security -->
+        {{ with $operation.Security }}
+          {{ partial "openapi/endpoint-security.html" (dict "security" . "spec" $apiData) }}
+        {{ end }}
+        
+        <!-- Code Examples -->
+        {{ partial "openapi/endpoint-examples.html" (dict 
+            "method" (upper $currentMethod)
+            "path" $currentPath
+            "operation" $operation
+            "spec" $apiData) }}
+      </div>
+    </div>
   </div>
-  
-  <!-- API Metadata for JavaScript -->
-  <script type="application/json" id="openapi-metadata">
-  {
-    "title": {{ $apiData.info.title | jsonify }},
-    "version": {{ $apiData.info.version | jsonify }},
-    "totalPaths": {{ if $apiData.paths }}{{ len $apiData.paths }}{{ else }}0{{ end }},
-    "hasComponents": {{ if $apiData.components }}true{{ else }}false{{ end }},
-    "hasSecurity": {{ if $apiData.security }}true{{ else }}false{{ end }}
-  }
-  </script>
 
 </article>
 {{- end -}}

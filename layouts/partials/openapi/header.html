@@ -4,49 +4,47 @@
 <header class="openapi-header">
   <div class="openapi-header__meta">
     <div class="openapi-header__badge">
-      <span class="openapi-version">OpenAPI {{ $spec.openapi }}</span>
+      <span class="openapi-version">OpenAPI {{ $spec.OpenAPI }}</span>
     </div>
-    {{ if $spec.info.version }}
+    {{ if $spec.Info.Version }}
       <div class="openapi-header__version">
-        <span class="api-version">v{{ $spec.info.version }}</span>
+        <span class="api-version">v{{ $spec.Info.Version }}</span>
       </div>
     {{ end }}
   </div>
   
-  <h1 class="openapi-header__title">{{ $spec.info.title }}</h1>
+  <h1 class="openapi-header__title">{{ $spec.Info.Title }}</h1>
   
-  {{ with $spec.info.summary }}
-    <div class="openapi-header__summary">{{ . | markdownify }}</div>
-  {{ end }}
+  {{/* OpenAPI Info doesn't have Summary field, skip this section */}}
   
-  {{ with $spec.info.description }}
+  {{ with $spec.Info.Description }}
     <div class="openapi-header__description">{{ . | markdownify }}</div>
   {{ end }}
   
   <div class="openapi-header__info">
-    {{ with $spec.info.contact }}
+    {{ with $spec.Info.Contact }}
       <div class="openapi-contact">
         <h3>Contact</h3>
-        {{ with .name }}<div class="contact-name">{{ . }}</div>{{ end }}
-        {{ with .email }}<div class="contact-email"><a href="mailto:{{ . }}">{{ . }}</a></div>{{ end }}
-        {{ with .url }}<div class="contact-url"><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></div>{{ end }}
+        {{ with .Name }}<div class="contact-name">{{ . }}</div>{{ end }}
+        {{ with .Email }}<div class="contact-email"><a href="mailto:{{ . }}">{{ . }}</a></div>{{ end }}
+        {{ with .URL }}<div class="contact-url"><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></div>{{ end }}
       </div>
     {{ end }}
     
-    {{ with $spec.info.license }}
+    {{ with $spec.Info.License }}
       <div class="openapi-license">
         <h3>License</h3>
         <div class="license-name">
-          {{ if .url }}
-            <a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a>
+          {{ if .URL }}
+            <a href="{{ .URL }}" target="_blank" rel="noopener">{{ .Name }}</a>
           {{ else }}
-            {{ .name }}
+            {{ .Name }}
           {{ end }}
         </div>
       </div>
     {{ end }}
     
-    {{ with $spec.info.termsOfService }}
+    {{ with $spec.Info.TermsOfService }}
       <div class="openapi-terms">
         <h3>Terms of Service</h3>
         <div class="terms-link"><a href="{{ . }}" target="_blank" rel="noopener">View Terms</a></div>

@@ -5,7 +5,7 @@
   <h4>Responses</h4>
   
   <div class="responses-container">
-    {{ range $statusCode, $response := $responses }}
+    {{ range $statusCode, $response := $responses.Map }}
       <div class="response-item">
         <div class="response-header collapse__header"
              data-target="response-{{ $statusCode }}"
@@ -15,7 +15,7 @@
              aria-controls="response-{{ $statusCode }}">
           <div class="response-status">
             <span class="status-code status-code--{{ substr $statusCode 0 1 }}xx">{{ $statusCode }}</span>
-            <div class="response-description">{{ $response.description | markdownify }}</div>
+            <div class="response-description">{{ $response.Value.Description | markdownify }}</div>
           </div>
           <div class="response-toggle">
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -26,7 +26,7 @@
         
         <div class="response-details" id="response-{{ $statusCode }}">
           <!-- Response Headers -->
-          {{ with $response.headers }}
+          {{ with $response.Value.Headers }}
             <div class="response-headers">
               <h6>Headers</h6>
               <div class="headers-list">
@@ -54,20 +54,20 @@
           {{ end }}
           
           <!-- Response Content -->
-        {{ with $response.content }}
+        {{ with $response.Value.Content }}
           <div class="response-content">
             <h6>Content</h6>
             {{ range $mediaType, $content := . }}
               <div class="response-media-type">
                 <div class="media-type-label">{{ $mediaType }}</div>
                 
-                {{ with $content.schema }}
+                {{ with $content.Schema }}
                   <div class="response-schema">
                     {{ partial "openapi/schema.html" (dict "schema" . "spec" $spec "level" 0) }}
                   </div>
                 {{ end }}
                 
-                {{ with $content.examples }}
+                {{ with $content.Examples }}
                   <div class="response-examples">
                     <div class="examples-header">Examples</div>
                     <div class="examples-container">
@@ -88,7 +88,7 @@
                   </div>
                 {{ end }}
                 
-                {{ with $content.example }}
+                {{ with $content.Example }}
                   <div class="response-example">
                     <div class="example-header">Example</div>
                     <div class="example-code">

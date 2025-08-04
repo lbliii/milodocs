@@ -1,0 +1,76 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  {{- partial "navigation/openapi-sidebar.html" . -}}
+{{- end -}}
+
+{{- define "content" -}}
+<article id="articleContent" 
+         class="openapi-spec api-tag"
+         data-component="openapi-viewer">
+  
+  {{- $apiData := .Params.api_data -}}
+  {{- $currentTag := .Params.tag -}}
+  
+  {{- if not $apiData -}}
+    <div class="error-message">
+      <h2>API Data Not Found</h2>
+      <p>Could not load API data from page front matter.</p>
+    </div>
+    {{ return }}
+  {{- end -}}
+
+  <!-- Tag Header -->
+  <header class="api-tag-header">
+    <div class="api-tag-breadcrumb">
+      <a href="../">{{ $apiData.Info.Title }}</a> / {{ .Title }}
+    </div>
+    <h1>{{ .Title }}</h1>
+    <p class="api-tag-description">{{ .Description }}</p>
+  </header>
+  
+  <!-- Tag Endpoints List -->
+  <div class="api-tag-content">
+    <section class="tag-endpoints" id="endpoints">
+      <h2>Endpoints</h2>
+      
+      <div class="endpoints-list">
+        {{/* Get all child endpoint pages */}}
+        {{ range .Pages }}
+          <div class="endpoint-summary-card">
+            <div class="endpoint-summary-header">
+              <span class="method-badge method-badge--{{ lower .Params.endpoint.method }}">
+                {{ upper .Params.endpoint.method }}
+              </span>
+              <div class="endpoint-summary-info">
+                <h3><a href="{{ .RelPermalink }}">{{ .Params.endpoint.path }}</a></h3>
+                <p class="endpoint-summary-description">{{ .Params.endpoint.operation.Summary | default .Description }}</p>
+              </div>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+    </section>
+    
+    <!-- Page Content (from markdown) -->
+    <div class="page-content">
+      {{ .Content }}
+    </div>
+  </div>
+  
+  <!-- API Metadata for JavaScript -->
+  <script type="application/json" id="openapi-metadata">
+  {
+    "title": {{ $apiData.Info.Title | jsonify }},
+    "tag": {{ $currentTag | jsonify }},
+    "type": "tag"
+  }
+  </script>
+</article>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+  {{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}}

@@ -1,0 +1,243 @@
+{{/*
+  Minimal Content Adapter
+  Just creates page structure and passes source data to layouts
+*/}}
+
+{{/* Get OpenAPI specs from assets/api/ directory */}}
+{{ range $specFile := slice "basicApi.yaml" }}
+  {{ $specPath := printf "api/%s" $specFile }}
+  {{ with resources.Get $specPath }}
+    {{ $api := . | openapi3.Unmarshal }}
+    
+    {{ if $api }}
+      {{ $apiTitle := $api.Info.Title | default "API" | urlize }}
+      
+      {{/* API Overview Page - let layout handle all content */}}
+      {{ $overviewPage := dict
+        "content" (dict "mediaType" "text/markdown" "value" "")
+        "kind" "section"
+        "path" $apiTitle
+        "title" $api.Info.Title
+        "type" "openapi"
+        "layout" "section"
+        "params" (dict "api_data" $api "api_spec" $specFile)
+      }}
+      {{ $.AddPage $overviewPage }}
+
+      {{/* Group endpoints by tags */}}
+      {{ $allTags := slice }}
+      {{ range $path, $pathItem := $api.Paths.Map }}
+        {{ with $pathItem.Get }}
+          {{ if .Tags }}
+            {{ $tag := index .Tags 0 }}
+            {{ if not (in $allTags $tag) }}
+              {{ $allTags = $allTags | append $tag }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+        {{ with $pathItem.Post }}
+          {{ if .Tags }}
+            {{ $tag := index .Tags 0 }}
+            {{ if not (in $allTags $tag) }}
+              {{ $allTags = $allTags | append $tag }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+        {{ with $pathItem.Put }}
+          {{ if .Tags }}
+            {{ $tag := index .Tags 0 }}
+            {{ if not (in $allTags $tag) }}
+              {{ $allTags = $allTags | append $tag }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+        {{ with $pathItem.Delete }}
+          {{ if .Tags }}
+            {{ $tag := index .Tags 0 }}
+            {{ if not (in $allTags $tag) }}
+              {{ $allTags = $allTags | append $tag }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+        {{ with $pathItem.Patch }}
+          {{ if .Tags }}
+            {{ $tag := index .Tags 0 }}
+            {{ if not (in $allTags $tag) }}
+              {{ $allTags = $allTags | append $tag }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+
+      {{/* Tag Pages - let layout handle all content */}}
+      {{ range $tag := $allTags }}
+        {{ $tagPath := printf "%s/%s" $apiTitle ($tag | urlize) }}
+        
+        {{ $tagPage := dict
+          "content" (dict "mediaType" "text/markdown" "value" "")
+          "kind" "section"
+          "path" $tagPath
+          "title" (printf "%s Endpoints" $tag)
+          "type" "openapi"
+          "layout" "list"
+          "params" (dict "api_data" $api "api_spec" $specFile "tag" $tag)
+        }}
+        {{ $.AddPage $tagPage }}
+
+        {{/* Individual Endpoint Pages - let layout handle all content */}}
+        {{ range $path, $pathItem := $api.Paths.Map }}
+          {{ with $pathItem.Get }}
+            {{ if .Tags }}
+              {{ $operationTag := index .Tags 0 }}
+              {{ if eq $operationTag $tag }}
+                {{ $operationId := .OperationID | default (printf "get-%s" ($path | replace "/" "-" | replace "{" "" | replace "}" "")) }}
+                {{ $endpointPath := printf "%s/%s/%s" $apiTitle ($tag | urlize) ($operationId | urlize) }}
+                
+                {{ $endpointPage := dict
+                  "content" (dict "mediaType" "text/markdown" "value" "")
+                  "kind" "page"
+                  "path" $endpointPath
+                  "title" (printf "GET %s" $path)
+                  "type" "openapi"
+                  "layout" "single"
+                  "params" (dict 
+                    "api_data" $api
+                    "api_spec" $specFile
+                    "endpoint" (dict
+                      "operationId" $operationId
+                      "method" "get"
+                      "path" $path
+                      "tag" $tag
+                      "operation" .
+                    )
+                  )
+                }}
+                {{ $.AddPage $endpointPage }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          {{ with $pathItem.Post }}
+            {{ if .Tags }}
+              {{ $operationTag := index .Tags 0 }}
+              {{ if eq $operationTag $tag }}
+                {{ $operationId := .OperationID | default (printf "post-%s" ($path | replace "/" "-" | replace "{" "" | replace "}" "")) }}
+                {{ $endpointPath := printf "%s/%s/%s" $apiTitle ($tag | urlize) ($operationId | urlize) }}
+                
+                {{ $endpointPage := dict
+                  "content" (dict "mediaType" "text/markdown" "value" "")
+                  "kind" "page"
+                  "path" $endpointPath
+                  "title" (printf "POST %s" $path)
+                  "type" "openapi"
+                  "layout" "single"
+                  "params" (dict 
+                    "api_data" $api
+                    "api_spec" $specFile
+                    "endpoint" (dict
+                      "operationId" $operationId
+                      "method" "post"
+                      "path" $path
+                      "tag" $tag
+                      "operation" .
+                    )
+                  )
+                }}
+                {{ $.AddPage $endpointPage }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          {{ with $pathItem.Put }}
+            {{ if .Tags }}
+              {{ $operationTag := index .Tags 0 }}
+              {{ if eq $operationTag $tag }}
+                {{ $operationId := .OperationID | default (printf "put-%s" ($path | replace "/" "-" | replace "{" "" | replace "}" "")) }}
+                {{ $endpointPath := printf "%s/%s/%s" $apiTitle ($tag | urlize) ($operationId | urlize) }}
+                
+                {{ $endpointPage := dict
+                  "content" (dict "mediaType" "text/markdown" "value" "")
+                  "kind" "page"
+                  "path" $endpointPath
+                  "title" (printf "PUT %s" $path)
+                  "type" "openapi"
+                  "layout" "single"
+                  "params" (dict 
+                    "api_data" $api
+                    "api_spec" $specFile
+                    "endpoint" (dict
+                      "operationId" $operationId
+                      "method" "put"
+                      "path" $path
+                      "tag" $tag
+                      "operation" .
+                    )
+                  )
+                }}
+                {{ $.AddPage $endpointPage }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          {{ with $pathItem.Delete }}
+            {{ if .Tags }}
+              {{ $operationTag := index .Tags 0 }}
+              {{ if eq $operationTag $tag }}
+                {{ $operationId := .OperationID | default (printf "delete-%s" ($path | replace "/" "-" | replace "{" "" | replace "}" "")) }}
+                {{ $endpointPath := printf "%s/%s/%s" $apiTitle ($tag | urlize) ($operationId | urlize) }}
+                
+                {{ $endpointPage := dict
+                  "content" (dict "mediaType" "text/markdown" "value" "")
+                  "kind" "page"
+                  "path" $endpointPath
+                  "title" (printf "DELETE %s" $path)
+                  "type" "openapi"
+                  "layout" "single"
+                  "params" (dict 
+                    "api_data" $api
+                    "api_spec" $specFile
+                    "endpoint" (dict
+                      "operationId" $operationId
+                      "method" "delete"
+                      "path" $path
+                      "tag" $tag
+                      "operation" .
+                    )
+                  )
+                }}
+                {{ $.AddPage $endpointPage }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          {{ with $pathItem.Patch }}
+            {{ if .Tags }}
+              {{ $operationTag := index .Tags 0 }}
+              {{ if eq $operationTag $tag }}
+                {{ $operationId := .OperationID | default (printf "patch-%s" ($path | replace "/" "-" | replace "{" "" | replace "}" "")) }}
+                {{ $endpointPath := printf "%s/%s/%s" $apiTitle ($tag | urlize) ($operationId | urlize) }}
+                
+                {{ $endpointPage := dict
+                  "content" (dict "mediaType" "text/markdown" "value" "")
+                  "kind" "page"
+                  "path" $endpointPath
+                  "title" (printf "PATCH %s" $path)
+                  "type" "openapi"
+                  "layout" "single"
+                  "params" (dict 
+                    "api_data" $api
+                    "api_spec" $specFile
+                    "endpoint" (dict
+                      "operationId" $operationId
+                      "method" "patch"
+                      "path" $path
+                      "tag" $tag
+                      "operation" .
+                    )
+                  )
+                }}
+                {{ $.AddPage $endpointPage }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
