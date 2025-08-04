@@ -116,6 +116,375 @@
   }
 }
 
+/* Enhanced Related Content Styles */
+.related-content {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border-radius: 0.875rem;
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(10px);
+  padding: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.related-header {
+  border-bottom: 1px solid var(--color-border-primary);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.related-header h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* View Toggle Buttons */
+.view-toggle-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+}
+
+.view-toggle-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-secondary);
+  transform: translateY(-1px);
+}
+
+.view-toggle-btn.active {
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  border-color: var(--color-brand);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+}
+
+.view-toggle-btn:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.collapse-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+}
+
+.collapse-toggle:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-secondary);
+  transform: translateY(-1px);
+}
+
+.collapse-toggle[data-collapsed="true"] svg {
+  transform: rotate(180deg);
+}
+
+.collapse-toggle:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.related-content-container[data-collapsed="true"] {
+  display: none;
+}
+
+/* Compact View Styles */
+.compact-view .compact-item {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.compact-view .compact-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.compact-view .compact-item:hover {
+  border-color: var(--color-brand);
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 8px rgba(var(--color-brand-rgb), 0.1);
+}
+
+.compact-view .compact-item:hover::before {
+  opacity: 1;
+}
+
+.compact-view .compact-item a {
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.compact-view .compact-item a:hover {
+  text-decoration: none;
+}
+
+.compact-view .compact-item .font-medium {
+  color: var(--color-text-primary);
+  transition: color 0.2s ease;
+}
+
+.compact-view .compact-item:hover .font-medium {
+  color: var(--color-brand);
+}
+
+/* Enhanced Card View Styles */
+.resource-card-compact {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.resource-card-compact::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.08) 0%,
+    transparent 50%,
+    rgba(var(--color-brand-rgb), 0.03) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.resource-card-compact:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-brand);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.12),
+    0 0 15px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.resource-card-compact:hover::before {
+  opacity: 1;
+}
+
+.resource-card-compact:focus-within {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  transform: translateY(-2px);
+}
+
+.resource-card-compact a {
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.resource-card-compact a:hover {
+  text-decoration: none;
+}
+
+.resource-card-compact .text-base {
+  color: var(--color-text-primary);
+  transition: color 0.2s ease;
+}
+
+.resource-card-compact:hover .text-base {
+  color: var(--color-brand);
+}
+
+.resource-card-compact .text-gray-600 {
+  color: var(--color-text-secondary);
+}
+
+.resource-card-compact .text-gray-500 {
+  color: var(--color-text-tertiary);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Dark mode enhancements */
+.dark .related-content {
+  border-color: var(--color-border-secondary);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .view-toggle-btn,
+.dark .collapse-toggle {
+  border-color: var(--color-border-secondary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .view-toggle-btn:hover,
+.dark .collapse-toggle:hover {
+  border-color: var(--color-border-primary);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dark .compact-view .compact-item {
+  border-color: var(--color-border-secondary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.dark .compact-view .compact-item:hover {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 0 8px rgba(var(--color-brand-rgb), 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dark .resource-card-compact {
+  border-color: var(--color-border-secondary);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .resource-card-compact:hover {
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(var(--color-brand-rgb), 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Improved responsive behavior */
+@media (max-width: 768px) {
+  .related-content {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .related-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  
+  .compact-view .compact-item {
+    padding: 0.75rem;
+  }
+  
+  .compact-view .compact-item time {
+    display: none;
+  }
+  
+  .resource-card-compact {
+    padding: 1rem;
+  }
+  
+  /* Single column on mobile for cards */
+  .card-view .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Reduce transforms on mobile for better performance */
+  .compact-view .compact-item:hover,
+  .resource-card-compact:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .related-content {
+    border-width: 2px;
+  }
+  
+  .view-toggle-btn,
+  .collapse-toggle {
+    border-width: 2px;
+  }
+  
+  .compact-view .compact-item {
+    border-width: 2px;
+  }
+  
+  .resource-card-compact {
+    border-width: 2px;
+  }
+}
+
+/* Animation for view transitions */
+.compact-view, .card-view {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Print styles for better documentation printing */
 @media print {
   .toc {

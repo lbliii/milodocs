@@ -20,6 +20,7 @@ export const componentRegistry = {
   'article-toc': () => import('./article/TOC.js'),
   'article-tiles': () => import('./article/Tiles.js'),
   'article-summarization': () => import('./article/Summarization.js'),
+  'article-related-content': () => import('./article/RelatedContent.js'),
   'copy-page': () => import('./article/CopyPage.js'),
   'notebook-viewer': () => import('./notebook/NotebookViewer.js'),
   'notebook-progressive-reveal': () => import('./article/NotebookProgressiveReveal.js'),
@@ -123,6 +124,7 @@ export function registerAllComponents() {
     'article-tiles',
     'article-header',
     'article-summarization',
+    'article-related-content',     // Enhanced related content with view toggling
     'copy-page',                   // Copy page functionality
     'notebook-progressive-reveal', // Progressive reveal for notebook cells
     

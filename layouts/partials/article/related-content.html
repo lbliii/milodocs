@@ -3,37 +3,106 @@
   {{- $relatedPages := .RegularPages | first 6 -}}
   {{- $relatedPages = $relatedPages | complement (slice $.Page) -}}
   {{- if $relatedPages -}}
-    <aside class="content-metadata mt-12 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
-      <div class="toc-header">
-        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
-        </svg>
-        <h2 class="text-xl font-bold">Related in {{ .Title }}</h2>
+    <aside class="related-content mt-8 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
+      <div class="related-header flex items-center justify-between mb-4">
+        <div class="flex items-center">
+          <svg class="w-4 h-4 mr-2" style="color: var(--color-text-secondary);" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
+          </svg>
+          <h2 class="text-lg font-semibold">Related in {{ .Title }}</h2>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <button class="view-toggle-btn active" data-view="compact" title="Compact view">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
+            </svg>
+          </button>
+          <button class="view-toggle-btn" data-view="cards" title="Card view">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+            </svg>
+          </button>
+          <button class="collapse-toggle" data-collapsed="false" title="Collapse section">
+            <svg class="w-4 h-4 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {{- range $relatedPages -}}
-          <div class="resource-card p-6 space-y-3" 
-               data-related-article="{{ .RelPermalink }}" 
-               data-article-title="{{ .LinkTitle | urlize }}">
-            <a href="{{ .RelPermalink }}" class="space-y-3 block" aria-describedby="{{ .RelPermalink | anchorize }}-summary">
-              <div class="text-xl font-brand font-semibold" style="color: var(--color-text-primary);">{{ .LinkTitle }}</div>
-              {{- with .Summary -}}
-                <p id="{{ $.RelPermalink | anchorize }}-summary" class="text-zinc-900 text-sm font-thin">
-                  {{ . | plainify | truncate 100 }}
-                </p>
-              {{- end -}}
-              {{- if .Date -}}
-                <time class="text-xs text-zinc-600 flex items-center" datetime="{{ .Date.Format "2006-01-02" }}">
-                  <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                  </svg>
-                  {{ .Date.Format "Jan 2, 2006" }}
-                </time>
-              {{- end -}}
-            </a>
+      <div class="related-content-container">
+        <!-- Compact List View (default) -->
+        <div class="compact-view" data-view="compact">
+          <div class="space-y-2">
+            {{- range $relatedPages -}}
+              <div class="compact-item group flex items-center justify-between p-3 rounded-lg transition-all duration-200" 
+                   data-related-article="{{ .RelPermalink }}" 
+                   data-article-title="{{ .LinkTitle | urlize }}">
+                <a href="{{ .RelPermalink }}" class="flex-1 min-w-0 flex items-center space-x-3 text-decoration-none">
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate transition-colors">{{ .LinkTitle }}</div>
+                    {{- with .Summary -}}
+                      <p class="text-sm truncate mt-1" style="color: var(--color-text-secondary);">{{ . | plainify | truncate 80 }}</p>
+                    {{- end -}}
+                  </div>
+                  {{- if .Date -}}
+                    <time class="flex-shrink-0 text-xs" style="color: var(--color-text-tertiary);" datetime="{{ .Date.Format "2006-01-02" }}">
+                      {{ .Date.Format "Jan 2" }}
+                    </time>
+                  {{- end -}}
+                </a>
+                <svg class="w-4 h-4 ml-2 transition-colors opacity-60 group-hover:opacity-100" style="color: var(--color-text-tertiary);" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
+                  <path d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002 2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"></path>
+                </svg>
+              </div>
+            {{- end -}}
           </div>
-        {{- end -}}
+        </div>
+
+        <!-- Card Grid View -->
+        <div class="card-view hidden" data-view="cards">
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {{- range $relatedPages -}}
+              <article class="resource-card-compact p-5" 
+                       data-related-article="{{ .RelPermalink }}" 
+                       data-article-title="{{ .LinkTitle | urlize }}">
+                <a href="{{ .RelPermalink }}" class="space-y-3 block" aria-describedby="{{ .RelPermalink | anchorize }}-card-summary">
+                  <header class="space-y-2">
+                    <h3 class="text-base font-semibold line-clamp-2 leading-tight">{{ .LinkTitle }}</h3>
+                    {{- with .Summary -}}
+                      <p id="{{ $.RelPermalink | anchorize }}-card-summary" class="text-sm line-clamp-3 leading-relaxed">
+                        {{ . | plainify | truncate 150 }}
+                      </p>
+                    {{- end -}}
+                  </header>
+                  
+                  <footer class="flex items-center justify-between pt-2 border-t border-opacity-20" style="border-color: var(--color-border-primary);">
+                    {{- if .Date -}}
+                      <time class="text-xs flex items-center space-x-1" style="color: var(--color-text-tertiary);" datetime="{{ .Date.Format "2006-01-02" }}">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+                      </time>
+                    {{- else -}}
+                      <span></span>
+                    {{- end -}}
+                    
+                    <div class="flex items-center space-x-1 text-xs" style="color: var(--color-text-tertiary);">
+                      <span>Read</span>
+                      <svg class="w-3 h-3 opacity-60" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
+                        <path d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"></path>
+                      </svg>
+                    </div>
+                  </footer>
+                </a>
+              </article>
+            {{- end -}}
+          </div>
+        </div>
       </div>
     </aside>
   {{- end -}}
