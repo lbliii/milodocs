@@ -27,6 +27,9 @@ export const componentRegistry = {
   'notebook-cell': () => import('./notebook/NotebookCell.js'),
   'notebook-navigation': () => import('./notebook/NotebookNavigation.js'),
   'notebook-state': () => import('./notebook/NotebookState.js'),
+  'notebook-density': () => import('./notebook/NotebookDensity.js'),
+  'notebook-launch': () => import('./notebook/NotebookLaunch.js'),
+
   
   // OpenAPI components
   'openapi-viewer': () => import('./article/OpenAPIViewer.js'),
@@ -72,6 +75,8 @@ export async function loadComponent(name) {
     const module = await loader();
     log.trace(`Component module loaded: ${name}`, module);
     
+
+    
     // Component should be auto-registered when module loads
     const instance = ComponentManager.create(name);
     if (instance) {
@@ -114,6 +119,7 @@ export function registerAllComponents() {
     'navigation-mobile-toggle',  // Mobile navigation
     'article-clipboard',         // Code copying
     'article-collapse',          // Content collapsing
+    'notebook-progressive-reveal', // Progressive reveal for notebook cells (must be first)
     'performance-optimizer'      // Performance enhancements
   ];
   
@@ -127,7 +133,10 @@ export function registerAllComponents() {
     'article-summarization',
     'article-related-content',     // Enhanced related content with view toggling
     'copy-page',                   // Copy page functionality
-    'notebook-progressive-reveal', // Progressive reveal for notebook cells
+    
+    // Notebook components
+    'notebook-density',            // Notebook density toggle controls
+    'notebook-launch',             // Notebook platform launcher dropdown
     
     // OpenAPI components
     'openapi-viewer',

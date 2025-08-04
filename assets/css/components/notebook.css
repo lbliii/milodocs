@@ -116,6 +116,17 @@
   contain: layout style;
 }
 
+/* Density variants based on data-view attribute */
+[data-view="compact"] .notebook__cells {
+  gap: 0.25rem;       /* Much tighter cell spacing */
+  padding: 0.25rem;   /* Minimal container padding */
+}
+
+[data-view="comfortable"] .notebook__cells {
+  gap: 2rem;          /* More spacious cell spacing */
+  padding: 2rem;      /* Generous container padding */
+}
+
 /* Reduce space for first cell */
 .notebook__cells > .notebook-cell-wrapper:first-child .notebook-cell.collapse {
   margin-top: 0;
@@ -138,6 +149,15 @@
 .notebook-cell__header.collapse__header {
   /* Notebook-specific header styling */
   padding: 1rem 1.5rem;
+}
+
+/* Compact cell headers */
+[data-view="compact"] .notebook-cell__header.collapse__header {
+  padding: 0.375rem 0.75rem;  /* Much more compact header padding */
+}
+
+[data-view="comfortable"] .notebook-cell__header.collapse__header {
+  padding: 1.5rem 2.5rem;     /* More generous header padding */
 }
 
 .notebook-cell__type {
@@ -168,12 +188,77 @@
   margin-left: 0.5rem;
 }
 
+/* Cell numbering - Jupyter style */
+.notebook-cell__number {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  font-family: theme('fontFamily.mono');
+  background: var(--color-bg-secondary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border-secondary);
+  min-width: 2rem;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notebook-cell--code .notebook-cell__number {
+  background: rgba(var(--color-brand-3-rgb, 59, 130, 246), 0.1);
+  color: var(--color-brand-3);
+  border-color: rgba(var(--color-brand-3-rgb, 59, 130, 246), 0.2);
+}
+
+.notebook-cell--markdown .notebook-cell__number {
+  background: rgba(134, 239, 172, 0.1);
+  color: theme('colors.green.600');
+  border-color: rgba(134, 239, 172, 0.2);
+}
+
+/* Execution status indicators */
+.notebook-cell__status {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: theme('fontFamily.mono');
+}
+
+.notebook-cell__status--executed {
+  background: rgba(34, 197, 94, 0.1);
+  color: theme('colors.green.600');
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.notebook-cell__status--pending {
+  background: rgba(251, 191, 36, 0.1);
+  color: theme('colors.amber.600');
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.notebook-cell__status--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: theme('colors.red.600');
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 /* ========================================
    Cell Content (extends existing collapse body)
    ======================================== */
 
 .notebook-cell .collapse__body-content {
   padding: 1.5rem;
+}
+
+/* Compact cell content */
+[data-view="compact"] .notebook-cell .collapse__body-content {
+  padding: 0.5rem;       /* Much more compact cell content */
+}
+
+[data-view="comfortable"] .notebook-cell .collapse__body-content {
+  padding: 2.5rem;       /* More generous cell content padding */
 }
 
 /* ========================================
@@ -294,6 +379,17 @@
   gap: 0.75rem;
 }
 
+/* Compact output spacing */
+[data-view="compact"] .notebook-cell__outputs {
+  margin-top: 0.5rem;
+  gap: 0.375rem;
+}
+
+[data-view="comfortable"] .notebook-cell__outputs {
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
 .notebook-cell__output {
   border-radius: theme('borderRadius.lg');
   overflow: hidden;
@@ -392,6 +488,67 @@
   margin: 0.25rem 0;
 }
 
+/* Collapsible outputs for long content */
+.notebook-cell__output--collapsible {
+  position: relative;
+}
+
+.notebook-cell__output-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.notebook-cell__output-toggle:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.notebook-cell__output-toggle-icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.notebook-cell__output--collapsed .notebook-cell__output-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.notebook-cell__output-content {
+  transition: all 0.3s ease;
+}
+
+.notebook-cell__output--collapsed .notebook-cell__output-content {
+  display: none;
+}
+
+.notebook-cell__output-preview {
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-family: theme('fontFamily.mono');
+  border-bottom: 1px solid var(--color-border-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Output size indicators */
+.notebook-cell__output-size {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin-left: auto;
+}
+
 /* ========================================
    Raw Cells
    ======================================== */
@@ -420,6 +577,146 @@
   background: transparent;
   padding: 0;
   color: var(--color-text-primary);
+}
+
+/* ========================================
+   Density Toggle and Navigation
+   ======================================== */
+
+.notebook__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-primary);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.notebook__density-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid var(--color-border-primary);
+}
+
+.notebook__density-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 4rem;
+  text-align: center;
+}
+
+.notebook__density-btn:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.notebook__density-btn--active {
+  background: var(--color-brand);
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.notebook__cell-counter {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-family: theme('fontFamily.mono');
+}
+
+.notebook__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notebook__nav-btn {
+  padding: 0.5rem;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notebook__nav-btn:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-secondary);
+}
+
+.notebook__nav-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Cell outline/navigation */
+.notebook__outline {
+  position: fixed;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 60vh;
+  overflow-y: auto;
+  width: 200px;
+  z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.notebook__outline--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.notebook__outline-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.notebook__outline-item:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.notebook__outline-item--active {
+  background: var(--color-brand);
+  color: white;
+}
+
+.notebook__outline-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* ========================================
@@ -573,10 +870,36 @@
     padding: 1rem;
   }
   
+  /* Compact mode on mobile should be even more compact */
+  [data-view="compact"] .notebook__cells {
+    padding: 0.25rem;
+    gap: 0.25rem;
+  }
+  
+  [data-view="compact"] .notebook-cell .collapse__body-content {
+    padding: 0.5rem;
+  }
+  
   /* Mobile code block styling handled by .code-block-enhanced */
   
   .notebook__performance-notice {
     margin: 0 1rem 1.5rem;
+  }
+  
+  /* Hide outline on mobile */
+  .notebook__outline {
+    display: none;
+  }
+  
+  /* Stack toolbar on mobile */
+  .notebook__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .notebook__actions {
+    justify-content: center;
   }
 }
 

@@ -6,30 +6,4 @@
     {{partial "article/chat.html" . }}
   {{end}}
   
-  <!-- Apply saved chat/TOC state after containers are rendered -->
-  <script>
-  (function() {
-      try {
-          const savedState = localStorage.getItem('chatTocSettings') || 'chat';
-          const chatContainer = document.getElementById('chatContainer');
-          const tocContainer = document.getElementById('tocContainer');
-          
-          if (chatContainer && tocContainer) {
-              if (savedState === 'chat') {
-                  chatContainer.classList.remove('hidden');
-                  tocContainer.classList.add('hidden');
-                  chatContainer.setAttribute('aria-hidden', 'false');
-                  tocContainer.setAttribute('aria-hidden', 'true');
-              } else {
-                  chatContainer.classList.add('hidden');
-                  tocContainer.classList.remove('hidden');
-                  chatContainer.setAttribute('aria-hidden', 'true');
-                  tocContainer.setAttribute('aria-hidden', 'false');
-              }
-          }
-      } catch (e) {
-          console.warn('ChatTocToggle: Could not apply saved container state:', e);
-      }
-  })();
-  </script>
 </aside>

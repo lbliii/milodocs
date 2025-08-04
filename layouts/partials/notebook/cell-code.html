@@ -38,17 +38,18 @@
     
     <div class="collapse__content-wrapper">
       <div class="notebook-cell__type">
+        <span class="notebook-cell__number">{{ add $index 1 }}</span>
         <span class="notebook-cell__type-icon" aria-hidden="true">
           <svg viewBox="0 0 16 16" fill="currentColor">
             <path d="M4.72 9.47L1.25 6l3.47-3.47a.75.75 0 00-1.06-1.06L.19 4.94a1.25 1.25 0 000 1.76l3.47 3.47a.75.75 0 101.06-1.06zm6.56 0L14.75 6l-3.47-3.47a.75.75 0 111.06-1.06l3.47 3.47a1.25 1.25 0 010 1.76l-3.47 3.47a.75.75 0 01-1.06-1.06z"/>
           </svg>
         </span>
-        <h3 class="notebook-cell__type-text">
-          Code Cell
-          {{ with $cell.execution_count }}
-            <span class="notebook-cell__execution-indicator">In [{{ . }}]</span>
-          {{ end }}
-        </h3>
+        <h3 class="notebook-cell__type-text">Code Cell</h3>
+        {{ if $cell.execution_count }}
+          <span class="notebook-cell__status notebook-cell__status--executed">In [{{ $cell.execution_count }}]</span>
+        {{ else }}
+          <span class="notebook-cell__status notebook-cell__status--pending">In [ ]</span>
+        {{ end }}
       </div>
     </div>
   </div>
