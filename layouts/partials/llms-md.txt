@@ -54,8 +54,9 @@
 ## Pages in This Section
 
 {{- range .RegularPages }}
+{{- $page := . }}
 {{- with .OutputFormats.Get "txt" }}
-- [{{ $.Title }}]({{ .RelPermalink }}): {{ if $.Description }}{{ $.Description | htmlUnescape }}{{ else if $.Summary }}{{ $.Summary | plainify | htmlUnescape | strings.Truncate 120 }}{{ else if $.Plain }}{{ $.Plain | htmlUnescape | strings.Truncate 100 | strings.FirstUpper }}{{ else }}{{ $.Title }} documentation{{ end }}
+- [{{ $page.Title }}]({{ .RelPermalink }}): {{ if $page.Description }}{{ $page.Description | htmlUnescape }}{{ else if $page.Summary }}{{ $page.Summary | plainify | htmlUnescape | strings.Truncate 120 }}{{ else if $page.Plain }}{{ $page.Plain | htmlUnescape | strings.Truncate 100 | strings.FirstUpper }}{{ else }}{{ $page.Title }} documentation{{ end }}
 {{- end }}
 {{- end }}
 {{- end }}
