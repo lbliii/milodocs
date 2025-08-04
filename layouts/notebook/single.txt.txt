@@ -1,0 +1,70 @@
+# {{ .Title }}
+
+{{- with .Description }}
+> {{ . }}
+{{- end }}
+
+## Notebook Information
+
+- **Type**: Jupyter Notebook
+{{- with .Params.notebook.nbformat }}
+- **Format**: nbformat {{ . }}{{ with .Params.notebook.nbformat_minor }}.{{ . }}{{ end }}
+{{- end }}
+{{- with .Date }}
+- **Date**: {{ .Format "2006-01-02" }}
+{{- end }}
+
+## Content
+
+{{- with .Plain }}
+{{ . | htmlUnescape }}
+{{- end }}
+
+{{- if .Params.notebook.cells }}
+
+## Notebook Cells
+
+{{- range $index, $cell := .Params.notebook.cells }}
+
+### Cell {{ add $index 1 }} ({{ $cell.cell_type }})
+
+{{- if eq $cell.cell_type "markdown" }}
+{{- range $cell.source }}
+{{ . }}
+{{- end }}
+{{- else if eq $cell.cell_type "code" }}
+```{{ with $.Params.notebook.metadata.kernelspec.language }}{{ . }}{{ else }}python{{ end }}
+{{- range $cell.source }}
+{{ . }}
+{{- end }}
+```
+{{- if $cell.outputs }}
+
+**Output:**
+{{- range $cell.outputs }}
+{{- if .text }}
+```
+{{- range .text }}
+{{ . }}
+{{- end }}
+```
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+
+## Navigation
+
+{{- with .CurrentSection }}
+{{- with .OutputFormats.Get "txt" }}
+- **Section**: [{{ $.Title }}]({{ .RelPermalink }})
+{{- end }}
+{{- end }}
+{{- with .Parent }}
+{{- with .OutputFormats.Get "txt" }}
+- **Parent**: [{{ $.Title }}]({{ .RelPermalink }})
+{{- end }}
+{{- end }}
