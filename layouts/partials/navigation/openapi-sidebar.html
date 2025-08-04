@@ -1,6 +1,4 @@
-{{- $apiPath := .Params.api_spec -}}
-{{- $apiKeyName := replace (replace $apiPath ".yaml" "") ".yml" "" -}}
-{{- $apiData := index .Site.Data $apiKeyName -}}
+{{- $apiData := .Params.api_data -}}
 
 {{- if not $apiData -}}
   <!-- Fallback to regular sidebar if no API data -->
@@ -33,12 +31,12 @@
         <!-- API Info Section -->
         <div class="openapi-sidebar-section">
             <div class="openapi-sidebar-header">
-                <h3 class="openapi-sidebar-title">{{ $apiData.info.title | default "API Reference" }}</h3>
-                {{ with $apiData.info.version }}
+                <h3 class="openapi-sidebar-title">{{ $apiData.Info.Title | default "API Reference" }}</h3>
+                {{ with $apiData.Info.Version }}
                 <span class="openapi-sidebar-version">v{{ . }}</span>
                 {{ end }}
             </div>
-            {{ with $apiData.info.description }}
+            {{ with $apiData.Info.Description }}
             <p class="openapi-sidebar-description">{{ . }}</p>
             {{ end }}
         </div>
@@ -46,7 +44,7 @@
         <!-- Quick Links -->
         <div class="openapi-sidebar-section">
             <ul class="openapi-sidebar-nav">
-                {{ if $apiData.info }}
+                {{ if $apiData.Info }}
                 <li class="openapi-sidebar-nav-item">
                     <a href="#overview" class="openapi-sidebar-link" data-scroll-target="overview">
                         <span class="openapi-sidebar-link-text">Overview</span>
@@ -54,7 +52,7 @@
                 </li>
                 {{ end }}
                 
-                {{ if $apiData.servers }}
+                {{ if $apiData.Servers }}
                 <li class="openapi-sidebar-nav-item">
                     <a href="#servers" class="openapi-sidebar-link" data-scroll-target="servers">
                         <span class="openapi-sidebar-link-text">Servers</span>
@@ -62,15 +60,15 @@
                 </li>
                 {{ end }}
                 
-                {{ if $apiData.paths }}
+                {{ if $apiData.Paths }}
                 <li class="openapi-sidebar-nav-item">
-                    <a href="#endpoints" class="openapi-sidebar-link" data-scroll-target="endpoints">
-                        <span class="openapi-sidebar-link-text">Endpoints</span>
+                    <a href="#endpoint-groups" class="openapi-sidebar-link" data-scroll-target="endpoint-groups">
+                        <span class="openapi-sidebar-link-text">Endpoint Groups</span>
                     </a>
                 </li>
                 {{ end }}
                 
-                {{ if $apiData.components }}
+                {{ if $apiData.Components }}
                 <li class="openapi-sidebar-nav-item">
                     <a href="#components" class="openapi-sidebar-link" data-scroll-target="components">
                         <span class="openapi-sidebar-link-text">Components</span>
@@ -78,7 +76,7 @@
                 </li>
                 {{ end }}
                 
-                {{ if $apiData.security }}
+                {{ if $apiData.Security }}
                 <li class="openapi-sidebar-nav-item">
                     <a href="#security" class="openapi-sidebar-link" data-scroll-target="security">
                         <span class="openapi-sidebar-link-text">Security</span>
@@ -88,126 +86,53 @@
             </ul>
         </div>
 
-        <!-- Endpoints by Tag -->
-        {{ with $apiData.paths }}
+        <!-- Hugo Generated Pages Navigation -->
+        {{ if .Pages }}
         <div class="openapi-sidebar-section">
             <div class="openapi-sidebar-section-header">
                 <h4>API Endpoints</h4>
             </div>
             
-            {{/* Group endpoints by tags */}}
-            {{ $endpointsByTag := dict }}
-            {{ $untaggedEndpoints := slice }}
-            
-            {{ range $path, $methods := . }}
-                {{ range $method, $operation := $methods }}
-                    {{ $endpoint := dict "path" $path "method" $method "operation" $operation }}
-                    {{ if $operation.tags }}
-                        {{ $primaryTag := index $operation.tags 0 }}
-                        {{ $existingEndpoints := index $endpointsByTag $primaryTag | default (slice) }}
-                        {{ $endpointsByTag = merge $endpointsByTag (dict $primaryTag ($existingEndpoints | append $endpoint)) }}
-                    {{ else }}
-                        {{ $untaggedEndpoints = $untaggedEndpoints | append $endpoint }}
-                    {{ end }}
-                {{ end }}
-            {{ end }}
-            
-            {{/* Get sorted tag list */}}
-            {{ $tags := slice }}
-            {{ range $path, $pathMethods := . }}
-                {{ range $method, $operation := $pathMethods }}
-                    {{ range $tag := $operation.tags }}
-                        {{ if not (in $tags $tag) }}
-                            {{ $tags = $tags | append $tag }}
-                        {{ end }}
-                    {{ end }}
-                {{ end }}
-            {{ end }}
-            
             <ul class="openapi-sidebar-endpoints">
-                {{/* Render each tag group */}}
-                {{ range $tag := $tags }}
-                    {{ $tagEndpoints := index $endpointsByTag $tag }}
-                    {{ if $tagEndpoints }}
+                {{/* Iterate through generated tag section pages */}}
+                {{ range .Pages.ByTitle }}
+                    {{ if eq .Kind "section" }}
                     <li class="openapi-sidebar-tag-group">
                         <div class="openapi-sidebar-tag-header">
                             <button class="openapi-sidebar-tag-toggle" 
-                                    data-target="tag-{{ $tag | urlize }}-sidebar"
+                                    data-target="tag-{{ .File.BaseFileName | urlize }}-sidebar"
                                     aria-expanded="true"
-                                    aria-controls="tag-{{ $tag | urlize }}-sidebar">
+                                    aria-controls="tag-{{ .File.BaseFileName | urlize }}-sidebar">
                                 <svg class="openapi-sidebar-chevron" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                                 </svg>
                             </button>
-                            <span class="openapi-sidebar-tag-name">{{ $tag }}</span>
+                            <a href="{{ .RelPermalink }}" class="openapi-sidebar-tag-name">{{ .Title }}</a>
                         </div>
                         
-                        <ul class="openapi-sidebar-endpoints-list" id="tag-{{ $tag | urlize }}-sidebar">
-                            {{ range $endpoint := $tagEndpoints }}
-                                {{ $methodUpper := upper $endpoint.method }}
-                                {{ $sanitizedPath := $endpoint.path | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
-                                {{ if eq $sanitizedPath "" }}{{ $sanitizedPath = "root" }}{{ end }}
-                                {{ $endpointId := printf "%s-%s" $methodUpper $sanitizedPath }}
-                                
+                        <ul class="openapi-sidebar-endpoints-list" id="tag-{{ .File.BaseFileName | urlize }}-sidebar">
+                            {{/* Show individual endpoint pages within this tag */}}
+                            {{ range .Pages.ByTitle }}
+                                {{ if eq .Kind "page" }}
+                                {{ $endpointData := .Params.endpoint }}
                                 <li class="openapi-sidebar-endpoint">
-                                    <a href="#{{ $endpointId }}" 
+                                    <a href="{{ .RelPermalink }}" 
                                        class="openapi-sidebar-endpoint-link" 
-                                       data-scroll-target="{{ $endpointId }}"
-                                       data-method="{{ $methodUpper }}">
-                                        <span class="openapi-sidebar-method openapi-sidebar-method--{{ lower $endpoint.method }}">
-                                            {{ $methodUpper }}
+                                       data-method="{{ upper $endpointData.method }}">
+                                        <span class="openapi-sidebar-method openapi-sidebar-method--{{ lower $endpointData.method }}">
+                                            {{ upper $endpointData.method }}
                                         </span>
-                                        <span class="openapi-sidebar-endpoint-path">{{ $endpoint.path }}</span>
-                                        {{ with $endpoint.operation.summary }}
+                                        <span class="openapi-sidebar-endpoint-path">{{ $endpointData.path }}</span>
+                                        {{ with $endpointData.operation.Summary }}
                                         <span class="openapi-sidebar-endpoint-summary">{{ . }}</span>
                                         {{ end }}
                                     </a>
                                 </li>
+                                {{ end }}
                             {{ end }}
                         </ul>
                     </li>
                     {{ end }}
-                {{ end }}
-                
-                {{/* Render untagged endpoints if any */}}
-                {{ if $untaggedEndpoints }}
-                <li class="openapi-sidebar-tag-group">
-                    <div class="openapi-sidebar-tag-header">
-                        <button class="openapi-sidebar-tag-toggle" 
-                                data-target="tag-untagged-sidebar"
-                                aria-expanded="true"
-                                aria-controls="tag-untagged-sidebar">
-                            <svg class="openapi-sidebar-chevron" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        <span class="openapi-sidebar-tag-name">Other</span>
-                    </div>
-                    
-                    <ul class="openapi-sidebar-endpoints-list" id="tag-untagged-sidebar">
-                        {{ range $endpoint := $untaggedEndpoints }}
-                            {{ $methodUpper := upper $endpoint.method }}
-                            {{ $sanitizedPath := $endpoint.path | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
-                            {{ if eq $sanitizedPath "" }}{{ $sanitizedPath = "root" }}{{ end }}
-                            {{ $endpointId := printf "%s-%s" $methodUpper $sanitizedPath }}
-                            
-                            <li class="openapi-sidebar-endpoint">
-                                <a href="#{{ $endpointId }}" 
-                                   class="openapi-sidebar-endpoint-link" 
-                                   data-scroll-target="{{ $endpointId }}"
-                                   data-method="{{ $methodUpper }}">
-                                    <span class="openapi-sidebar-method openapi-sidebar-method--{{ lower $endpoint.method }}">
-                                        {{ $methodUpper }}
-                                    </span>
-                                    <span class="openapi-sidebar-endpoint-path">{{ $endpoint.path }}</span>
-                                    {{ with $endpoint.operation.summary }}
-                                    <span class="openapi-sidebar-endpoint-summary">{{ . }}</span>
-                                    {{ end }}
-                                </a>
-                            </li>
-                        {{ end }}
-                    </ul>
-                </li>
                 {{ end }}
             </ul>
         </div>
