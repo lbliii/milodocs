@@ -14,7 +14,7 @@ export class ThemeToggle extends Component {
       ...config
     });
     
-    this.themeKey = 'theme-mode';
+    this.themeKey = 'theme.mode';
     this.defaultTheme = 'light';
     this.elements = {
       toggle: null,

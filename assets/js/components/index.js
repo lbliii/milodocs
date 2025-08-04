@@ -135,8 +135,8 @@ export function registerAllComponents() {
 
     'glossary',
     'chat-toc-toggle',
-    'tutorial-manager',
-    'theme'                      // Base theme component
+    'tutorial-manager'
+    // 'theme' component removed - conflicts with 'theme-toggle' loaded above
   ];
   
   // Log feature support in debug mode

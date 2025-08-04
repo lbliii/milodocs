@@ -30,31 +30,9 @@
                 {{ end }}
             </a>
             
-            {{if eq .BundleType "branch"}}
-                <ul class="flex flex-wrap list-none p-0 gap-2 mt-4">
-                    {{ range first $count .Pages }}
-                        {{ if not .Params.hidden }}
-                            <li>
-                                <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" 
-                                   class="inline-block text-xs px-3 py-1 rounded-full transition-all duration-200 border"
-                                   style="color: var(--color-text-secondary); background-color: var(--color-bg-secondary); border-color: var(--color-border-primary);"
-                                   onmouseover="this.style.color='var(--color-brand)'; this.style.borderColor='var(--color-brand)'; this.style.backgroundColor='var(--color-hover)';"
-                                   onmouseout="this.style.color='var(--color-text-secondary)'; this.style.borderColor='var(--color-border-primary)'; this.style.backgroundColor='var(--color-bg-secondary)';">
-                                    {{if eq .Parent.Title "Run Commands"}}
-                                        {{ with replace .Title "pachctl " "" }}{{ . }}{{ end }}
-                                    {{else}}
-                                        {{if .Params.linkTitle}}
-                                            {{.Params.linkTitle}}
-                                        {{else}}
-                                            {{ .Title | truncate 22 }}
-                                        {{end}}
-                                    {{end}}
-                                </a>
-                            </li>
-                        {{end}}
-                    {{ end }}
-                </ul>
-            {{end}}
+            
+            {{/* Use the dedicated child links component */}}
+            {{- partial "article/child-links.html" (dict "page" . "count" $count) -}}
         </div>
         {{end}}
     {{ end }}

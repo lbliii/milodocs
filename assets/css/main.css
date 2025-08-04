@@ -3443,6 +3443,17 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   margin-top: 0.75rem;
 }
 
+.grid .tile #chat-messages {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.grid .tile #chat-messages > p {
+  /* Description takes only the space it needs */
+  flex: 0 0 auto;
+}
+
 #chat-messages { /* Tighter spacing */
   max-height: calc(100vh - 12rem);
   overflow-y: auto;
@@ -3611,6 +3622,17 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 .tile .chat-pair > * + * {
   margin-top: 0.75rem;
+}
+
+.grid .tile .chat-pair {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.grid .tile .chat-pair > p {
+  /* Description takes only the space it needs */
+  flex: 0 0 auto;
 }
 
 .chat-pair { /* Slightly increased for better breathing room */
@@ -4305,18 +4327,11 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   }
 }
 
-/* Grid layout enhancements */
+/* Grid layout enhancements - simplified for child links component */
 
 .grid .tile {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.grid .tile a {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  /* Layout handled by child-links.css when child links present */
 }
 
 /* Dark mode enhancements */
@@ -4366,6 +4381,149 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 .grid .tile:nth-child(5) { animation-delay: 0.4s; }
 
 .grid .tile:nth-child(6) { animation-delay: 0.5s; }
+
+/* Child Links Component - Flexbox layout approach */
+
+.child-links-container {
+  /* Position directly beneath description with consistent spacing */
+  margin-top: 0.75rem;
+  padding-top: 0;
+}
+
+.child-links-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.child-link-item {
+  margin: 0;
+  padding: 0;
+}
+
+.child-link-pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.child-link-pill:hover {
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+  background-color: var(--color-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.child-link-pill:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Simplest approach: Main link fills most space, child links follow naturally */
+
+.grid .tile {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.grid .tile > a {
+  /* Main link fills available space for maximum clickability */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem; /* Space for child links */
+}
+
+.grid .tile .space-y-3 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.grid .tile .space-y-3 > p {
+  /* Description takes only the space it needs */
+  flex: 0 0 auto;
+}
+
+/* Child links sit naturally after main content area */
+
+.grid .tile .child-links-container {
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Dark mode support */
+
+.dark .child-link-pill {
+  border-color: var(--color-border-secondary);
+  background-color: var(--color-surface);
+}
+
+.dark .child-link-pill:hover {
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+  .child-links-container {
+    padding-top: 0.5rem;
+  }
+  
+  .child-link-pill {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
+}
+
+/* Animation for child links appearance */
+
+.child-link-item {
+  animation: child-link-appear 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.child-link-item:nth-child(1) { animation-delay: 0.1s; }
+
+.child-link-item:nth-child(2) { animation-delay: 0.15s; }
+
+.child-link-item:nth-child(3) { animation-delay: 0.2s; }
+
+.child-link-item:nth-child(4) { animation-delay: 0.25s; }
+
+.child-link-item:nth-child(5) { animation-delay: 0.3s; }
+
+.child-link-item:nth-child(6) { animation-delay: 0.35s; }
+
+.child-link-item:nth-child(7) { animation-delay: 0.4s; }
+
+@keyframes child-link-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 /* Cards Component - Resource cards, content metadata, and generic card styles */
 
@@ -12544,10 +12702,6 @@ button:focus-visible,
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
-}
-
-.p-0 {
-  padding: 0px;
 }
 
 .p-1 {

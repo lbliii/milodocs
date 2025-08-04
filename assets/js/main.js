@@ -316,7 +316,7 @@ function initializeBasicFunctionality() {
     darkModeToggle.addEventListener('click', () => {
       document.documentElement.classList.toggle('dark');
       const isDark = document.documentElement.classList.contains('dark');
-      localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+              localStorage.setItem('theme.mode', isDark ? 'dark' : 'light');
     });
   }
 }

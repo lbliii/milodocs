@@ -144,18 +144,13 @@
   }
 }
 
-/* Grid layout enhancements */
+/* Grid layout enhancements - simplified for child links component */
 .grid .tile {
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  /* Layout handled by child-links.css when child links present */
 }
 
-.grid .tile a {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+
 
 /* Dark mode enhancements */
 .dark .tile {
