@@ -41,6 +41,7 @@ export const componentRegistry = {
   // Layout components
   'theme': () => import('./layout/Theme.js'),
   'theme-toggle': () => import('./layout/ThemeToggle.js'),
+  'openapi-sidebar': () => import('./layout/OpenAPISidebar.js'),
   'navigation-mobile-toggle': () => import('./layout/MobileNav.js'),
   'navigation-sidebar-left': () => import('./layout/Sidebar.js'),
 

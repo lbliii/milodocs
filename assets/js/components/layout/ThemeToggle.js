@@ -4,7 +4,7 @@
  */
 
 import { Component, ComponentManager } from '../../core/ComponentManager.js';
-import { localStorage } from '../../utils/storage.js';
+import { localStorage, createNamespacedStorage } from '../../utils/storage.js';
 
 export class ThemeToggle extends Component {
   constructor(config = {}) {
@@ -14,7 +14,9 @@ export class ThemeToggle extends Component {
       ...config
     });
     
-    this.themeKey = 'theme.mode';
+    // Initialize storage using the same approach as Theme.js
+    this.storage = createNamespacedStorage('theme');
+    this.themeKey = 'mode'; // Use 'mode' as the key since we're using namespaced storage
     this.defaultTheme = 'light';
     this.elements = {
       toggle: null,
@@ -80,7 +82,7 @@ export class ThemeToggle extends Component {
    * Note: This may be redundant if the head script already applied the theme
    */
   applyStoredTheme() {
-    const savedTheme = localStorage.get(this.themeKey, this.defaultTheme);
+    const savedTheme = this.storage.get(this.themeKey, this.defaultTheme);
     const isDarkMode = savedTheme === 'dark';
     
     // Only apply if theme isn't already set (avoid redundant work)
