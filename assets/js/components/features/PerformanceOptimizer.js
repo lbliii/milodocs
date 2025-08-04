@@ -103,7 +103,7 @@ export class PerformanceOptimizer extends Component {
    */
   async loadLazyComponent(componentName, element) {
     const componentMap = {
-      'chat': () => import('../article/Chat.js')
+      'chat': () => import('../chat/index.js')
       // 'search': temporarily disabled
     };
     

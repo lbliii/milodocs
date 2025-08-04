@@ -14,7 +14,7 @@ export const componentRegistry = {
   // Article components
   'article-clipboard': () => import('./article/Clipboard.js'),
   'article-collapse': () => import('./article/Collapse.js'),
-  'article-chat': () => import('./article/Chat.js'),
+  'article-chat': () => import('./chat/index.js'),
   'article-header': () => import('./article/Header.js'),
   'article-tabs': () => import('./article/Tabs.js'),
   'article-toc': () => import('./article/TOC.js'),
@@ -52,7 +52,7 @@ export const componentRegistry = {
   
   // Feature components
   'tutorial-manager': () => import('./features/TutorialManager.js'),
-  'debug-tray': () => import('./features/DebugTray.js'),
+
   'performance-optimizer': () => import('./features/PerformanceOptimizer.js')
 };
 
@@ -136,7 +136,6 @@ export function registerAllComponents() {
     'glossary',
     'chat-toc-toggle',
     'tutorial-manager',
-    'debug-tray',
     'theme'                      // Base theme component
   ];
   

@@ -1,17 +1,72 @@
-<div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col justify-end" data-component="article-chat">
-    <div id="chat-messages">
-    </div>
-    <div id="chat-controls" class="chat-controls">
-        <form id="chat-form" class="chat-form">
-            <input id="question" type="text" aria-label="Question Input" placeholder="Ask the docs..." class="chat-input" />
-            <button id="sendButton" aria-label="Send" class="btn btn--primary btn--sm">
-                <img src="/icons/light/send.svg" alt="Send" class="icon btn__icon">
-                Send
+<div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col" data-component="article-chat">
+    <!-- Chat Header -->
+    <div class="chat-header flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600/30 bg-background-light dark:bg-background-dark">
+        <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" class="size-5 text-primary dark:text-primary-light">
+                <g fill="currentColor">
+                    <path d="M5.658,2.99l-1.263-.421-.421-1.263c-.137-.408-.812-.408-.949,0l-.421,1.263-1.263,.421c-.204,.068-.342,.259-.342,.474s.138,.406,.342,.474l1.263,.421,.421,1.263c.068,.204,.26,.342,.475,.342s.406-.138,.475-.342l.421-1.263,1.263-.421c.204-.068,.342-.259,.342-.474s-.138-.406-.342-.474Z" fill="currentColor" data-stroke="none" stroke="none"></path>
+                    <polygon points="9.5 2.75 11.412 7.587 16.25 9.5 11.412 11.413 9.5 16.25 7.587 11.413 2.75 9.5 7.587 7.587 9.5 2.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></polygon>
+                </g>
+            </svg>
+            <span class="font-semibold text-gray-900 dark:text-gray-100">Assistant</span>
+        </div>
+        <div class="flex items-center gap-1">
+            <button id="expandChat" aria-label="Expand chat" class="group hover:bg-gray-100 dark:hover:bg-white/10 p-1.5 rounded-lg transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-[13px] text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" x2="14" y1="3" y2="10"></line>
+                    <line x1="3" x2="10" y1="21" y2="14"></line>
+                </svg>
             </button>
+            <button id="clearAll" aria-label="Delete all chat messages" class="group hover:bg-gray-100 dark:hover:bg-white/10 p-1.5 rounded-lg transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    <line x1="10" x2="10" y1="11" y2="17"></line>
+                    <line x1="14" x2="14" y1="11" y2="17"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chat-messages" class="flex-1 overflow-y-auto relative">
+        <div class="mt-4 flex flex-col items-center text-sm justify-between">
+            <div class="mx-8 text-center text-gray-400 dark:text-gray-600 text-xs chat-assistant-disclaimer-text">
+                Responses are generated using AI and may contain mistakes.
+            </div>
+            <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-200"></div>
+        </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-controls p-4">
+        <form id="chat-form" class="chat-form">
+            <div class="relative flex items-end gap-2">
+                <textarea 
+                    id="question" 
+                    autocomplete="off" 
+                    placeholder="Ask a question..." 
+                    class="chat-input grow w-full px-3.5 pr-12 py-2.5 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-600/30 rounded-2xl shadow-sm focus:outline-none focus:border-primary dark:focus:border-primary-light text-gray-900 dark:text-gray-100 text-sm resize-none transition-all duration-200"
+                    style="height: 42px !important; min-height: 42px; max-height: 120px;"
+                    rows="1"
+                    aria-label="Ask a question about the documentation"
+                ></textarea>
+                <button 
+                    id="sendButton" 
+                    type="submit"
+                    class="absolute right-2.5 bottom-[9px] flex justify-center items-center p-1 w-6 h-6 rounded-lg bg-primary/30 dark:bg-primary-dark/30 hover:bg-primary/50 dark:hover:bg-primary-dark/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    aria-label="Send message" 
+                    disabled
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-white dark:text-white">
+                        <path d="m5 12 7-7 7 7"></path>
+                        <path d="M12 19V5"></path>
+                    </svg>
+                </button>
+            </div>
         </form>
-        <button id="clearAll" aria-label="Delete All" class="btn btn--secondary btn--sm">
-            <img src="/icons/light/delete.svg" alt="Delete" class="icon btn__icon">
-            Clear
-        </button>
     </div>
 </div>

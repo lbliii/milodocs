@@ -53,12 +53,73 @@
       }
     }
     
-    // Re-enable transitions after a short delay
-    setTimeout(function() {
-      document.documentElement.classList.remove('no-transitions');
-    }, 100);
+    // Wait for CSS to be fully loaded before re-enabling transitions
+    let transitionsEnabled = false;
+    function enableTransitions() {
+      if (!transitionsEnabled) {
+        transitionsEnabled = true;
+        document.documentElement.classList.remove('no-transitions');
+      }
+    }
+    
+    // Listen for the CSS loaded event (most reliable)
+    document.addEventListener('cssLoaded', enableTransitions);
+    
+    // Multiple fallback strategies to ensure CSS is loaded
+    if (document.readyState === 'loading') {
+      // If document is still loading, wait for DOM content and then some extra time for CSS
+      document.addEventListener('DOMContentLoaded', function() {
+        // Wait additional time for CSS to parse, especially on slower connections
+        setTimeout(enableTransitions, 250);
+      });
+    } else {
+      // Document already loaded, wait for next frame + buffer for CSS parsing
+      requestAnimationFrame(function() {
+        setTimeout(enableTransitions, 150);
+      });
+    }
+    
+    // Final fallback: always enable after maximum wait time to prevent indefinite disabled transitions
+    setTimeout(enableTransitions, 1000);
   })();
 </script>
+
+{{/* Critical inline CSS to prevent flicker during navigation */}}
+<style>
+  /* Prevent transitions during initialization */
+  html.no-transitions,
+  html.no-transitions * {
+    transition: none !important;
+  }
+  
+  /* Critical theme variables to prevent flicker */
+  :root {
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f9fafb;
+    --color-surface: #ffffff;
+  }
+  
+  .dark {
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-bg-primary: #111827;
+    --color-bg-secondary: #1f2937;
+    --color-surface: #1f2937;
+  }
+  
+  /* Critical base styles to prevent layout shift */
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  html.no-transitions body {
+    transition: none !important;
+  }
+</style>
 
 {{/* Enhanced Keywords - combining page keywords with automatic extraction */}}
 {{- $keywords := slice -}}

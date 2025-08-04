@@ -1,8 +1,0 @@
-{{/* Debug Tray - Unified debug interface with config and template info */}}
-{{ if and site.Params.debug (not hugo.IsProduction) }}
-
-{{/* Include both debug components */}}
-{{- partial "debug/config-params.html" . -}}
-{{- partial "debug/template-info.html" . -}}
-
-{{ end }}

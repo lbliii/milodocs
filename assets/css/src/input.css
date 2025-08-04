@@ -1,5 +1,5 @@
 /* Import component CSS files - MUST be first! */
-@import "../components/debug.css";
+
 @import "../components/buttons.css";
 @import "../components/tables.css";
 @import "../components/notice.css";

@@ -195,14 +195,14 @@
   {{- if hugo.IsProduction -}}
     {{/* Production: Full optimization pipeline */}}
     {{- $cssOptimized := $cssBundle | minify | fingerprint "sha512" -}}
-    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
     {{- if eq hugo.Environment "development" -}}
       {{/* Development mode with production flag - add source map reference */}}
       <!-- CSS Source: {{ $cssBundle.RelPermalink }} -->
     {{- end -}}
   {{- else -}}
     {{/* Development: Fast rebuilds with debugging info */}}
-    <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}">
+    <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
     {{- if site.Params.debug -}}
       <!-- CSS Debug: Bundle contains {{ len $cssResources }} files for {{ hugo.Environment }} environment -->
     {{- end -}}

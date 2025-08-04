@@ -1,9 +1,16 @@
-/* Chat Component - Enhanced chat interface with NVIDIA styling */
+/* Chat Component - Enhanced chat interface with premium styling */
 
-/* Enhanced Chat Interface */
-.chat-controls {
-  @apply flex flex-col space-y-3 p-4 rounded-xl;
-  background-color: var(--color-surface);
+/* Chat Header */
+.chat-header {
+  @apply bg-white dark:bg-gray-800;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+}
+
+/* Chat Container */
+#chatContainer {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg;
   border: 1px solid var(--color-border-primary);
   backdrop-filter: blur(10px);
   box-shadow: 
@@ -11,42 +18,191 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+/* Enhanced Chat Interface */
+.chat-controls {
+  @apply border-t border-gray-200 dark:border-gray-600/30;
+  background-color: var(--color-surface);
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
 .chat-form {
-  @apply flex space-x-3;
+  @apply w-full;
 }
 
 .chat-input {
-  @apply flex-grow px-4 py-3 rounded-lg border-2 
-         transition-all duration-200 focus:outline-none focus:ring-2;
-  background-color: var(--color-bg-primary);
-  border-color: var(--color-border-primary);
-  color: var(--color-text-primary);
+  @apply transition-all duration-200 focus:outline-none;
   font-family: var(--font-brand);
-  --tw-ring-color: var(--color-brand);
+  line-height: 1.4;
 }
 
 .chat-input:hover {
   border-color: var(--color-brand);
-  background-color: var(--color-surface-hover);
-  transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .chat-input:focus {
   border-color: var(--color-brand);
-  background-color: var(--color-bg-primary);
-  transform: translateY(-1px);
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.1),
-    0 0 30px rgba(var(--color-brand-rgb), 0.4),
-    0 0 60px rgba(var(--color-brand-rgb), 0.2),
-    0 0 100px rgba(var(--color-brand-rgb), 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2); /* Enhanced multi-layered glow like search */
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.1);
 }
 
 .chat-input::placeholder {
   color: var(--color-text-tertiary);
-  font-style: italic;
+}
+
+/* Send Button Styling */
+#sendButton {
+  @apply transition-all duration-200;
+}
+
+#sendButton:not(:disabled):hover {
+  @apply scale-105;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#sendButton:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Smooth transitions for chat container */
+#chatContainer {
+  transition: 
+    width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    max-width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-radius 0.3s ease;
+  transform-origin: top right;
+  will-change: width, transform, box-shadow;
+}
+
+/* Expanded Chat State with premium animations */
+.chat-expanded {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.12),
+    0 8px 30px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px) saturate(1.1);
+  border-radius: 12px;
+  transform: scale(1.02) translateY(-2px); /* Subtle lift and scale */
+}
+
+/* Enhanced input styling for expanded state */
+.chat-expanded .chat-input {
+  @apply text-base;
+  font-size: 15px; /* Slightly larger for better UX */
+  line-height: 1.5;
+}
+
+/* Micro-interaction for expand button */
+.chat-header button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chat-header button:hover {
+  transform: scale(1.1);
+  background-color: var(--color-surface-hover);
+}
+
+.chat-header button:active {
+  transform: scale(0.95);
+}
+
+/* Enhanced focus states */
+.chat-expanded .chat-input:focus {
+  box-shadow: 
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.12),
+    0 4px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-brand);
+}
+
+/* Subtle animation for chat messages in expanded state */
+.chat-expanded #chat-messages {
+  animation: subtle-fade-in 0.3s ease-out 0.1s both;
+}
+
+@keyframes subtle-fade-in {
+  from {
+    opacity: 0.8;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Expansion anticipation hint */
+#chatContainer:not(.chat-expanded):hover {
+  transform: scale(1.005) translateX(-2px); /* Subtle hint of leftward growth */
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Auto-resize textarea styling */
+.chat-input {
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: all 0.2s ease;
+}
+
+.chat-input::-webkit-scrollbar {
+  display: none;
+}
+
+/* Enhanced send button animations */
+#sendButton {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#sendButton:not(:disabled):hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#sendButton:not(:disabled):active {
+  transform: scale(0.95) rotate(0deg);
+}
+
+/* Header button hover effects with enhanced micro-interactions */
+.chat-header button:hover svg {
+  transform: scale(1.15) rotate(2deg);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth state transitions for expand button icon */
+.chat-header button svg {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Clear button (trash can) specific styling */
+#clearAll:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important; /* Light red background */
+}
+
+#clearAll:hover svg {
+  color: rgb(239, 68, 68) !important; /* Red trash can on hover */
+  transform: scale(1.15) rotate(-2deg); /* Slight tilt for personality */
+}
+
+#clearAll:active {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+}
+
+#clearAll:active svg {
+  transform: scale(1.05) rotate(0deg);
+  animation: shake 0.3s ease-in-out;
+}
+
+/* Subtle shake animation for delete action feedback */
+@keyframes shake {
+  0%, 100% { transform: scale(1.05) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(-3deg); }
+  75% { transform: scale(1.05) rotate(3deg); }
 }
 
 /* Enhanced Chat Messages */
