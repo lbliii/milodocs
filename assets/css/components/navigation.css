@@ -216,7 +216,7 @@
 /* Desktop linkTree padding adjustment */
 @media (min-width: 768px) {
   #linkTree {
-    padding-left: 0;
+    padding-left: 4px; /* Add space for focus ring to prevent clipping */
     padding-right: 0;
   }
 }

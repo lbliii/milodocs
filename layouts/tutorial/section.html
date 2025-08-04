@@ -20,7 +20,12 @@
     <!-- Enhanced Hero Section -->
     <div class="tutorial-overview-hero">
         <div class="max-w-4xl mx-auto text-center p-8">
-            <h1 class="text-4xl lg:text-5xl font-black text-black mb-6">{{.Title}}</h1>
+            {{/* Only show frontmatter title if content doesn't start with H1 */}}
+            {{- $rawContent := .RawContent -}}
+            {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
+            {{- if not $startsWithH1 -}}
+              <h1 class="text-4xl lg:text-5xl font-black text-black mb-6">{{.Title}}</h1>
+            {{- end -}}
             <p class="text-xl text-black/80 mb-8 max-w-3xl mx-auto leading-relaxed">{{.Description}}</p>
             
             <!-- Tutorial Overview Stats -->

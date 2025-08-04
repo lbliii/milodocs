@@ -1,6 +1,6 @@
 
 txt:
-  mediaType: text/llm-markdown
+  mediaType: text/plain
   isPlainText: true
   isHTML: false
   noUgly: true

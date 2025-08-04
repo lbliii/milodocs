@@ -1,9 +1,9 @@
 <div id="chatContainer" class="hidden sticky top-16 h-[calc(100vh-5rem)] flex flex-col" data-component="article-chat">
     <!-- Chat Header -->
-    <div class="chat-header flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600/30 bg-background-light dark:bg-background-dark">
+    <div class="chat-header flex items-center justify-between p-4" style="background-color: var(--color-surface);">
         <div class="flex items-center gap-3">
             <img src="/icons/light/assistant.svg" alt="Assistant" class="w-5 h-5 icon chat-header__icon">
-            <span class="font-semibold text-gray-900 dark:text-gray-100">Assistant</span>
+            <span class="font-semibold" style="color: var(--color-text-primary);">Assistant</span>
         </div>
         <div class="flex items-center gap-1">
             <button id="expandChat" aria-label="Expand chat" class="topbar__button">
@@ -18,10 +18,10 @@
     <!-- Chat Messages -->
     <div id="chat-messages" class="flex-1 overflow-y-auto relative">
         <div class="mt-4 flex flex-col items-center text-sm justify-between">
-            <div class="mx-8 text-center text-gray-400 dark:text-gray-600 text-xs chat-assistant-disclaimer-text">
+            <div class="mx-8 text-center text-xs chat-assistant-disclaimer-text" style="color: var(--color-text-tertiary);">
                 Responses are generated using AI and may contain mistakes.
             </div>
-            <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-200"></div>
+            <div class="flex flex-col gap-4" style="color: var(--color-text-primary);"></div>
         </div>
     </div>
 
@@ -33,19 +33,20 @@
                     id="question" 
                     autocomplete="off" 
                     placeholder="Ask a question..." 
-                    class="chat-input grow w-full px-3.5 pr-12 py-2.5 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-600/30 rounded-2xl shadow-sm focus:outline-none focus:border-primary dark:focus:border-primary-light text-gray-900 dark:text-gray-100 text-sm resize-none transition-all duration-200"
-                    style="height: 42px !important; min-height: 42px; max-height: 120px;"
+                    class="chat-input grow w-full px-3.5 pr-12 py-2.5 rounded-2xl shadow-sm focus:outline-none text-sm resize-none transition-all duration-200"
+                    style="color: var(--color-text-primary); background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); height: 42px !important; min-height: 42px; max-height: 120px;"
                     rows="1"
                     aria-label="Ask a question about the documentation"
                 ></textarea>
                 <button 
                     id="sendButton" 
                     type="submit"
-                    class="absolute right-2.5 bottom-[9px] flex justify-center items-center p-1 w-6 h-6 rounded-lg bg-primary/30 dark:bg-primary-dark/30 hover:bg-primary/50 dark:hover:bg-primary-dark/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    class="absolute right-2.5 bottom-[9px] flex justify-center items-center p-1.5 w-7 h-7 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    style="background-color: var(--color-brand); color: var(--color-text-inverse);"
                     aria-label="Send message" 
                     disabled
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-white dark:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
                         <path d="m5 12 7-7 7 7"></path>
                         <path d="M12 19V5"></path>
                     </svg>
