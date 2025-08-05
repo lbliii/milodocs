@@ -178,6 +178,43 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* :has() Chat Interface Enhancements */
+
+/* Chat container responds to input focus */
+#chatContainer:has(.chat-input:focus) {
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: var(--color-brand);
+}
+
+/* Enhanced expanded state with input focus */
+.chat-expanded:has(.chat-input:focus) {
+  border-left-width: 4px;
+  border-color: var(--color-brand);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Chat form with content gets enhanced styling */
+#chatContainer:has(.chat-input:not(:placeholder-shown)) .chat-header {
+  background: linear-gradient(135deg, 
+    rgba(var(--color-brand-rgb), 0.1) 0%, 
+    rgba(var(--color-brand-rgb), 0.05) 100%);
+  border-bottom: 1px solid rgba(var(--color-brand-rgb), 0.2);
+}
+
+/* Send button activation based on input content */
+#chatContainer:has(.chat-input:not(:placeholder-shown)) #sendButton {
+  background-color: var(--color-brand) !important;
+  color: var(--color-text-inverse) !important;
+  transform: scale(1.05);
+  box-shadow: 
+    0 4px 12px rgba(var(--color-brand-rgb), 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 #sendButton:not(:disabled) {
   background-color: var(--color-brand) !important;
   color: var(--color-text-inverse) !important;

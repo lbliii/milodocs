@@ -276,3 +276,32 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
 }
+
+/* :has() Notice Component Enhancements */
+
+/* Notices with titles get enhanced spacing */
+.notice:has(.notice__title) {
+  padding-top: 1.5rem;
+}
+
+.notice:has(.notice__title) .notice__content {
+  margin-top: 0.75rem;
+}
+
+/* Notices with icons get enhanced layout */
+.notice:has(.notice__icon) .notice__content {
+  margin-left: 2.5rem;
+}
+
+.notice:has(.notice__icon) .notice__title {
+  margin-left: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Interactive notices with links */
+.notice:has(a:hover) {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(var(--color-brand-rgb), 0.1);
+}

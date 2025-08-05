@@ -726,6 +726,38 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
   }
 }
 
+/* :has() Notice Component Enhancements */
+
+/* Notices with titles get enhanced spacing */
+
+.notice:has(.notice__title) {
+  padding-top: 1.5rem;
+}
+
+.notice:has(.notice__title) .notice__content {
+  margin-top: 0.75rem;
+}
+
+/* Notices with icons get enhanced layout */
+
+.notice:has(.notice__icon) .notice__content {
+  margin-left: 2.5rem;
+}
+
+.notice:has(.notice__icon) .notice__title {
+  margin-left: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Interactive notices with links */
+
+.notice:has(a:hover) {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(var(--color-brand-rgb), 0.1);
+}
+
 /* Navigation Component - Topbar, dropdown, and sidebar navigation with NVIDIA styling */
 
 /* Chat/TOC Toggle Component */
@@ -1921,6 +1953,43 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+/* :has() Navigation Enhancements */
+
+/* TOC sidebar responds to link interactions */
+
+.toc-sidebar:has(.toc-link:hover) {
+  transform: translateX(4px);
+  background: rgba(var(--color-brand-rgb), 0.02);
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-sidebar:has(.toc-link:focus) {
+  background: rgba(var(--color-brand-rgb), 0.05);
+  box-shadow: 0 0 0 2px rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Enhanced active state context */
+
+.toc-sidebar:has(.toc-link.active) nav::before {
+  opacity: 1;
+  transform: scaleY(1.1);
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.5) 50%,
+    transparent 100%
+  );
+}
+
+/* Sidebar container awareness */
+
+.sidebar-container:has(.sidebar-item:hover) {
+  background: rgba(var(--color-surface), 0.3);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 /* Navigation API Endpoint Styling */
@@ -3547,6 +3616,63 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* :has() Chat Interface Enhancements */
+
+/* Chat container responds to input focus */
+
+#chatContainer:has(.chat-input:focus) {
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: var(--color-brand);
+}
+
+/* Enhanced expanded state with input focus */
+
+.chat-expanded:has(.chat-input:focus) {
+  border-left-width: 4px;
+  border-color: var(--color-brand);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Chat form with content gets enhanced styling */
+
+#chatContainer:has(.chat-input:not(:-moz-placeholder)) .chat-header {
+  background: linear-gradient(135deg, 
+    rgba(var(--color-brand-rgb), 0.1) 0%, 
+    rgba(var(--color-brand-rgb), 0.05) 100%);
+  border-bottom: 1px solid rgba(var(--color-brand-rgb), 0.2);
+}
+
+#chatContainer:has(.chat-input:not(:placeholder-shown)) .chat-header {
+  background: linear-gradient(135deg, 
+    rgba(var(--color-brand-rgb), 0.1) 0%, 
+    rgba(var(--color-brand-rgb), 0.05) 100%);
+  border-bottom: 1px solid rgba(var(--color-brand-rgb), 0.2);
+}
+
+/* Send button activation based on input content */
+
+#chatContainer:has(.chat-input:not(:-moz-placeholder)) #sendButton {
+  background-color: var(--color-brand) !important;
+  color: var(--color-text-inverse) !important;
+  transform: scale(1.05);
+  box-shadow: 
+    0 4px 12px rgba(var(--color-brand-rgb), 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#chatContainer:has(.chat-input:not(:placeholder-shown)) #sendButton {
+  background-color: var(--color-brand) !important;
+  color: var(--color-text-inverse) !important;
+  transform: scale(1.05);
+  box-shadow: 
+    0 4px 12px rgba(var(--color-brand-rgb), 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 #sendButton:not(:disabled) {
   background-color: var(--color-brand) !important;
   color: var(--color-text-inverse) !important;
@@ -4415,6 +4541,29 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   display: none;
 }
 
+/* :has() Article Header Enhancements */
+
+/* Breadcrumb navigation with interactive states */
+
+.article-header:has(.breadcrumb__current[aria-expanded="true"]) .article-header__navigation {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    var(--color-surface) 100%
+  );
+  border-color: rgba(var(--color-brand-rgb), 0.2);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Enhanced metadata panel visibility */
+
+.article-header:has(.article-header__metadata-panel[aria-hidden="false"]) {
+  margin-bottom: 2.5rem;
+}
+
 /* Tiles Component - Interactive content cards with enhanced UX */
 
 /* Base Tile Styles */
@@ -4927,6 +5076,39 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 
 .card-grid .resource-card:nth-child(4) { animation-delay: 0.3s; }
 
+.resource-card:has(.card__image) {
+  padding-top: 0;
+}
+
+.resource-card:has(.card__image) .card__content {
+  padding-top: 1.5rem;
+}
+
+.resource-card:has(.card__icon) .card__title {
+  margin-left: 3rem;
+  position: relative;
+}
+
+.resource-card:has(.card__icon) .card__content {
+  padding-left: 1rem;
+}
+
+.resource-card:has(.card__actions) {
+  padding-bottom: 1rem;
+}
+
+.resource-card:has(.card__actions) .card__content {
+  padding-bottom: 2rem;
+}
+
+.resource-card:has(a:hover) {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(var(--color-brand-rgb), 0.3);
+}
+
 .resource-card {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -5137,6 +5319,39 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 
 .card-grid .article-card:nth-child(4) { animation-delay: 0.3s; }
 
+.article-card:has(.card__image) {
+  padding-top: 0;
+}
+
+.article-card:has(.card__image) .card__content {
+  padding-top: 1.5rem;
+}
+
+.article-card:has(.card__icon) .card__title {
+  margin-left: 3rem;
+  position: relative;
+}
+
+.article-card:has(.card__icon) .card__content {
+  padding-left: 1rem;
+}
+
+.article-card:has(.card__actions) {
+  padding-bottom: 1rem;
+}
+
+.article-card:has(.card__actions) .card__content {
+  padding-bottom: 2rem;
+}
+
+.article-card:has(a:hover) {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(var(--color-brand-rgb), 0.3);
+}
+
 .article-card {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -5315,6 +5530,61 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 .card-grid .card:nth-child(4),
 .card-grid .resource-card:nth-child(4),
 .card-grid .article-card:nth-child(4) { animation-delay: 0.3s; }
+
+/* :has() Content-Aware Card Layouts */
+
+/* Cards with images get different padding */
+
+.card:has(.card__image) {
+  padding-top: 0;
+}
+
+.card:has(.card__image) .card__content {
+  padding-top: 1.5rem;
+}
+
+/* Cards with icons get enhanced layout */
+
+.card:has(.card__icon) .card__title {
+  margin-left: 3rem;
+  position: relative;
+}
+
+.card:has(.card__icon) .card__content {
+  padding-left: 1rem;
+}
+
+/* Resource cards with descriptions get enhanced spacing */
+
+.resource-card:has(.card__description) {
+  min-height: 180px;
+}
+
+.resource-card:has(.card__description) .card__footer {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1rem;
+}
+
+/* Cards with actions get enhanced bottom padding */
+
+.card:has(.card__actions) {
+  padding-bottom: 1rem;
+}
+
+.card:has(.card__actions) .card__content {
+  padding-bottom: 2rem;
+}
+
+/* Interactive card states based on content */
+
+.card:has(a:hover) {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(var(--color-brand-rgb), 0.3);
+}
 
 /* Glossary Component - Enhanced UX for glossary entries and navigation */
 
@@ -12965,6 +13235,24 @@ button:focus-visible,
     outline: 2px solid var(--color-brand);
     outline-offset: 2px;
     border-radius: 0.25rem;
+  }
+
+/* :has() Form & Input Enhancements */
+
+/* Form groups with valid inputs */
+
+/* Form groups with invalid inputs */
+
+/* Search containers with content */
+
+.search-container:has(input:not(:-moz-placeholder)) .search-icon {
+    color: var(--color-brand);
+    transform: scale(1.1);
+  }
+
+.search-container:has(input:not(:placeholder-shown)) .search-icon {
+    color: var(--color-brand);
+    transform: scale(1.1);
   }
 
 /* Notification styles */

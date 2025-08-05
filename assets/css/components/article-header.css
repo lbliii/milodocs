@@ -414,3 +414,24 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id] {
 body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   display: none;
 }
+
+/* :has() Article Header Enhancements */
+
+/* Breadcrumb navigation with interactive states */
+.article-header:has(.breadcrumb__current[aria-expanded="true"]) .article-header__navigation {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    var(--color-surface) 100%
+  );
+  border-color: rgba(var(--color-brand-rgb), 0.2);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Enhanced metadata panel visibility */
+.article-header:has(.article-header__metadata-panel[aria-hidden="false"]) {
+  margin-bottom: 2.5rem;
+}

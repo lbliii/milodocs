@@ -413,6 +413,44 @@
     @apply rounded;
   }
 
+  /* :has() Form & Input Enhancements */
+  
+  /* Form groups with valid inputs */
+  .form-group:has(input:valid:not(:placeholder-shown)) label {
+    color: var(--color-success);
+    font-weight: 500;
+  }
+  
+  .form-group:has(input:valid:not(:placeholder-shown)) {
+    border-left: 3px solid var(--color-success);
+    padding-left: 1rem;
+    background: rgba(var(--color-success-rgb, 34, 197, 94), 0.05);
+  }
+  
+  /* Form groups with invalid inputs */
+  .form-group:has(input:invalid:not(:placeholder-shown)) label {
+    color: var(--color-danger);
+    font-weight: 500;
+  }
+  
+  .form-group:has(input:invalid:not(:placeholder-shown)) {
+    border-left: 3px solid var(--color-danger);
+    padding-left: 1rem;
+    background: rgba(var(--color-danger-rgb, 239, 68, 68), 0.05);
+  }
+  
+  /* Search containers with content */
+  .search-container:has(input:not(:placeholder-shown)) {
+    background: rgba(var(--color-brand-rgb), 0.05);
+    border-color: var(--color-brand);
+    transform: scale(1.02);
+  }
+  
+  .search-container:has(input:not(:placeholder-shown)) .search-icon {
+    color: var(--color-brand);
+    transform: scale(1.1);
+  }
+
   /* Notification styles */
   .notification {
     @apply fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300;

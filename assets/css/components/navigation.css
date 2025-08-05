@@ -880,3 +880,37 @@
   border: none !important;
   box-shadow: none !important;
 }
+
+/* :has() Navigation Enhancements */
+
+/* TOC sidebar responds to link interactions */
+.toc-sidebar:has(.toc-link:hover) {
+  transform: translateX(4px);
+  background: rgba(var(--color-brand-rgb), 0.02);
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-sidebar:has(.toc-link:focus) {
+  background: rgba(var(--color-brand-rgb), 0.05);
+  box-shadow: 0 0 0 2px rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Enhanced active state context */
+.toc-sidebar:has(.toc-link.active) nav::before {
+  opacity: 1;
+  transform: scaleY(1.1);
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.5) 50%,
+    transparent 100%
+  );
+}
+
+/* Sidebar container awareness */
+.sidebar-container:has(.sidebar-item:hover) {
+  background: rgba(var(--color-surface), 0.3);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}

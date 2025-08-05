@@ -326,3 +326,53 @@
 .card-grid .card:nth-child(4),
 .card-grid .resource-card:nth-child(4),
 .card-grid .article-card:nth-child(4) { animation-delay: 0.3s; }
+
+/* :has() Content-Aware Card Layouts */
+
+/* Cards with images get different padding */
+.card:has(.card__image) {
+  padding-top: 0;
+}
+
+.card:has(.card__image) .card__content {
+  padding-top: 1.5rem;
+}
+
+/* Cards with icons get enhanced layout */
+.card:has(.card__icon) .card__title {
+  margin-left: 3rem;
+  position: relative;
+}
+
+.card:has(.card__icon) .card__content {
+  padding-left: 1rem;
+}
+
+/* Resource cards with descriptions get enhanced spacing */
+.resource-card:has(.card__description) {
+  min-height: 180px;
+}
+
+.resource-card:has(.card__description) .card__footer {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1rem;
+}
+
+/* Cards with actions get enhanced bottom padding */
+.card:has(.card__actions) {
+  padding-bottom: 1rem;
+}
+
+.card:has(.card__actions) .card__content {
+  padding-bottom: 2rem;
+}
+
+/* Interactive card states based on content */
+.card:has(a:hover) {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(var(--color-brand-rgb), 0.3);
+}
