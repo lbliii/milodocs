@@ -1,0 +1,30 @@
+{{- $tag := .tag -}}
+{{- $tagEndpoints := .tagEndpoints -}}
+{{- $spec := .spec -}}
+{{- $customTitle := .customTitle | default $tag -}}
+{{- $dataTag := .dataTag | default ($tag | urlize) -}}
+
+<div class="endpoint-group" data-tag="{{ $dataTag }}">
+  <div class="endpoint-group-header collapse__header" 
+       data-target="tag-{{ $dataTag }}-endpoints"
+       role="button"
+       tabindex="0"
+       aria-expanded="false"
+       aria-controls="tag-{{ $dataTag }}-endpoints">
+    <div class="endpoint-group-title">
+      <h3>{{ $customTitle }}</h3>
+      <span class="endpoint-count">({{ len $tagEndpoints }} endpoint{{ if ne (len $tagEndpoints) 1 }}s{{ end }})</span>
+    </div>
+    <div class="endpoint-group-toggle">
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6"></path>
+      </svg>
+    </div>
+  </div>
+  
+  <div class="endpoint-group-content" id="tag-{{ $dataTag }}-endpoints">
+    {{ range $endpoint := $tagEndpoints }}
+      {{ partial "openapi/endpoints/item.html" (dict "endpoint" $endpoint "spec" $spec "tag" $tag) }}
+    {{ end }}
+  </div>
+</div>

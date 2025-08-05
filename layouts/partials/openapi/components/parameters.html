@@ -1,0 +1,58 @@
+{{- $parameters := .parameters -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+{{ with $parameters }}
+  <div class="components-section" 
+       data-component="components-parameters" 
+       data-section-type="parameters"
+       data-item-count="{{ len . }}">
+    <h3 class="components-section-title">Parameters</h3>
+    <div class="components-list">
+      {{ range $paramName, $param := . }}
+        {{ $sanitizedParamName := $paramName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
+        {{ if eq $sanitizedParamName "" }}{{ $sanitizedParamName = "unnamed" }}{{ end }}
+        <div class="component-item" 
+             id="parameter-{{ $sanitizedParamName }}"
+             data-component="component-parameter"
+             data-param-name="{{ $paramName }}"
+             data-param-in="{{ $param.In }}"
+             data-param-required="{{ if $param.Required }}true{{ else }}false{{ end }}"
+             data-has-description="{{ if $param.Description }}true{{ else }}false{{ end }}"
+             data-has-schema="{{ if $param.Schema }}true{{ else }}false{{ end }}"
+             {{- if and $param.Schema $param.Schema.Value }}data-param-type="{{ $param.Schema.Value.Type }}"{{ end }}>
+          <div class="component-header collapse__header" 
+               data-target="parameter-{{ $sanitizedParamName }}-details"
+               role="button"
+               tabindex="0"
+               aria-expanded="false">
+            <div class="component-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 7h.01"></path>
+                <path d="M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-7 7a1.994 1.994 0 0 1-1.414.586H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+              </svg>
+            </div>
+            <div class="component-name">
+              <h4>{{ $paramName }}</h4>
+              <div class="component-meta">
+                <span class="param-location">{{ $param.In }}</span>
+                {{ if $param.Required }}
+                  <span class="param-required">required</span>
+                {{ end }}
+              </div>
+            </div>
+            <div class="component-toggle">
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="component-details" id="parameter-{{ $sanitizedParamName }}-details">
+            {{ partial "openapi/endpoint-parameters.html" (dict "parameters" (slice $param) "spec" $spec) }}
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

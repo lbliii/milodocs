@@ -1,0 +1,72 @@
+{{- $schemas := .schemas -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+{{ with $schemas }}
+  <div class="components-section" 
+       data-component="components-schemas" 
+       data-section-type="schemas"
+       data-item-count="{{ len . }}">
+    <h3 class="components-section-title">Schemas</h3>
+    <div class="components-list">
+      {{ range $schemaName, $schema := . }}
+        {{ $sanitizedSchemaName := $schemaName | urlize }}
+        {{ if or (eq $sanitizedSchemaName "") (eq (len $sanitizedSchemaName) 0) }}{{ $sanitizedSchemaName = "unnamed" }}{{ end }}
+
+        <div class="component-item" 
+             id="schema-{{ $sanitizedSchemaName }}"
+             data-component="component-schema"
+             data-schema-name="{{ $schemaName }}"
+             data-schema-type="{{ if $schema.Value }}{{ $schema.Value.Type | default "object" }}{{ else }}object{{ end }}"
+             data-has-description="{{ if and $schema.Value $schema.Value.Description }}true{{ else }}false{{ end }}"
+             data-has-properties="{{ if and $schema.Value $schema.Value.Properties }}true{{ else }}false{{ end }}"
+             data-has-required="{{ if and $schema.Value $schema.Value.Required }}true{{ else }}false{{ end }}"
+             data-property-count="{{ if and $schema.Value $schema.Value.Properties }}{{ len $schema.Value.Properties }}{{ else }}0{{ end }}"
+             data-required-count="{{ if and $schema.Value $schema.Value.Required }}{{ len $schema.Value.Required }}{{ else }}0{{ end }}">
+          <div class="component-header collapse__header" 
+               data-target="schema-{{ $sanitizedSchemaName }}-details"
+               role="button"
+               tabindex="0"
+               aria-expanded="false">
+            <div class="component-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <path d="M14 2v6h6"></path>
+                <path d="M16 13H8"></path>
+                <path d="M16 17H8"></path>
+                <path d="M10 9H8"></path>
+              </svg>
+            </div>
+            <div class="component-name">
+              <h4>{{ $schemaName }}</h4>
+              {{/* Handle SchemaRef vs direct Schema */}}
+              {{ $actualSchema := $schema }}
+              {{ if $schema.Value }}
+                {{ $actualSchema = $schema.Value }}
+              {{ end }}
+              {{ with $actualSchema.Title }}
+                <div class="component-title">{{ . }}</div>
+              {{ end }}
+              {{ with $actualSchema.Type }}
+                <div class="component-type">
+                  <span class="type-badge type-badge--{{ . }}">{{ . }}</span>
+                </div>
+              {{ end }}
+            </div>
+            <div class="component-toggle">
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="component-details collapse__body" id="schema-{{ $sanitizedSchemaName }}-details">
+            <div class="collapse__body-content">
+              {{ partial "openapi/schema.html" (dict "schema" $schema "spec" $spec "level" 0) }}
+            </div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

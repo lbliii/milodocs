@@ -1,0 +1,127 @@
+{{- $securitySchemes := .securitySchemes -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+{{ with $securitySchemes }}
+  <div class="components-section">
+    <h3 class="components-section-title">Security Schemes</h3>
+    <div class="components-list">
+      {{ range $schemeName, $scheme := . }}
+        {{ $sanitizedSchemeName := $schemeName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
+        {{ if eq $sanitizedSchemeName "" }}{{ $sanitizedSchemeName = "unnamed" }}{{ end }}
+        <div class="component-item" id="security-{{ $sanitizedSchemeName }}">
+          <div class="component-header collapse__header" 
+               data-target="security-{{ $sanitizedSchemeName }}-details"
+               role="button"
+               tabindex="0"
+               aria-expanded="false">
+            <div class="component-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div class="component-name">
+              <h4>{{ $schemeName }}</h4>
+              <div class="component-type">
+                <span class="type-badge type-badge--security">{{ $scheme.type }}</span>
+              </div>
+            </div>
+            <div class="component-toggle">
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="component-details" id="security-{{ $sanitizedSchemeName }}-details">
+            {{ with $scheme.description }}
+              <div class="security-description">{{ . | markdownify }}</div>
+            {{ end }}
+            
+            <div class="security-details">
+              <div class="security-detail">
+                <span class="detail-label">Type:</span>
+                <code>{{ $scheme.type }}</code>
+              </div>
+              
+              {{ if eq $scheme.type "http" }}
+                <div class="security-detail">
+                  <span class="detail-label">Scheme:</span>
+                  <code>{{ $scheme.scheme }}</code>
+                </div>
+                {{ with $scheme.bearerFormat }}
+                  <div class="security-detail">
+                    <span class="detail-label">Bearer Format:</span>
+                    <code>{{ . }}</code>
+                  </div>
+                {{ end }}
+              {{ end }}
+              
+              {{ if eq $scheme.type "apiKey" }}
+                <div class="security-detail">
+                  <span class="detail-label">Parameter Name:</span>
+                  <code>{{ $scheme.name }}</code>
+                </div>
+                <div class="security-detail">
+                  <span class="detail-label">Location:</span>
+                  <code>{{ $scheme.in }}</code>
+                </div>
+              {{ end }}
+              
+              {{ if eq $scheme.type "openIdConnect" }}
+                <div class="security-detail">
+                  <span class="detail-label">OpenID Connect URL:</span>
+                  <a href="{{ $scheme.openIdConnectUrl }}" target="_blank" rel="noopener">{{ $scheme.openIdConnectUrl }}</a>
+                </div>
+              {{ end }}
+              
+              {{ if eq $scheme.type "oauth2" }}
+                {{ with $scheme.flows }}
+                  <div class="oauth-flows">
+                    <h5>OAuth2 Flows</h5>
+                    {{ range $flowType, $flow := . }}
+                      <div class="oauth-flow">
+                        <div class="flow-header">{{ title $flowType }} Flow</div>
+                        {{ with $flow.authorizationUrl }}
+                          <div class="security-detail">
+                            <span class="detail-label">Authorization URL:</span>
+                            <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                          </div>
+                        {{ end }}
+                        {{ with $flow.tokenUrl }}
+                          <div class="security-detail">
+                            <span class="detail-label">Token URL:</span>
+                            <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                          </div>
+                        {{ end }}
+                        {{ with $flow.refreshUrl }}
+                          <div class="security-detail">
+                            <span class="detail-label">Refresh URL:</span>
+                            <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                          </div>
+                        {{ end }}
+                        {{ with $flow.scopes }}
+                          <div class="oauth-scopes">
+                            <div class="detail-label">Available Scopes:</div>
+                            <div class="scopes-list">
+                              {{ range $scope, $description := . }}
+                                <div class="scope-item">
+                                  <code>{{ $scope }}</code>
+                                  <span class="scope-description">{{ $description }}</span>
+                                </div>
+                              {{ end }}
+                            </div>
+                          </div>
+                        {{ end }}
+                      </div>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

@@ -14,317 +14,34 @@
          data-schema-count="{{ if $components.Schemas }}{{ len $components.Schemas }}{{ else }}0{{ end }}"
          data-response-count="{{ if $components.Responses }}{{ len $components.Responses }}{{ else }}0{{ end }}"
          data-parameter-count="{{ if $components.Parameters }}{{ len $components.Parameters }}{{ else }}0{{ end }}">
+  
   <!-- Schemas -->
-  {{ with $components.Schemas }}
-    <div class="components-section" 
-         data-component="components-schemas" 
-         data-section-type="schemas"
-         data-item-count="{{ len . }}">
-      <h3 class="components-section-title">Schemas</h3>
-      <div class="components-list">
-        {{ range $schemaName, $schema := . }}
-          {{ $sanitizedSchemaName := $schemaName | urlize }}
-          {{ if or (eq $sanitizedSchemaName "") (eq (len $sanitizedSchemaName) 0) }}{{ $sanitizedSchemaName = "unnamed" }}{{ end }}
-
-          <div class="component-item" 
-               id="schema-{{ $sanitizedSchemaName }}"
-               data-component="component-schema"
-               data-schema-name="{{ $schemaName }}"
-               data-schema-type="{{ if $schema.Value }}{{ $schema.Value.Type | default "object" }}{{ else }}object{{ end }}"
-               data-has-description="{{ if and $schema.Value $schema.Value.Description }}true{{ else }}false{{ end }}"
-               data-has-properties="{{ if and $schema.Value $schema.Value.Properties }}true{{ else }}false{{ end }}"
-               data-has-required="{{ if and $schema.Value $schema.Value.Required }}true{{ else }}false{{ end }}"
-               data-property-count="{{ if and $schema.Value $schema.Value.Properties }}{{ len $schema.Value.Properties }}{{ else }}0{{ end }}"
-               data-required-count="{{ if and $schema.Value $schema.Value.Required }}{{ len $schema.Value.Required }}{{ else }}0{{ end }}">
-            <div class="component-header collapse__header" 
-                 data-target="schema-{{ $sanitizedSchemaName }}-details"
-                 role="button"
-                 tabindex="0"
-                 aria-expanded="false">
-              <div class="component-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <path d="M14 2v6h6"></path>
-                  <path d="M16 13H8"></path>
-                  <path d="M16 17H8"></path>
-                  <path d="M10 9H8"></path>
-                </svg>
-              </div>
-              <div class="component-name">
-                <h4>{{ $schemaName }}</h4>
-                {{/* Handle SchemaRef vs direct Schema */}}
-                {{ $actualSchema := $schema }}
-                {{ if $schema.Value }}
-                  {{ $actualSchema = $schema.Value }}
-                {{ end }}
-                {{ with $actualSchema.Title }}
-                  <div class="component-title">{{ . }}</div>
-                {{ end }}
-                {{ with $actualSchema.Type }}
-                  <div class="component-type">
-                    <span class="type-badge type-badge--{{ . }}">{{ . }}</span>
-                  </div>
-                {{ end }}
-              </div>
-              <div class="component-toggle">
-                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 18l6-6-6-6"></path>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="component-details collapse__body" id="schema-{{ $sanitizedSchemaName }}-details">
-              <div class="collapse__body-content">
-                {{ partial "openapi/schema.html" (dict "schema" $schema "spec" $.spec "level" 0) }}
-              </div>
-            </div>
-          </div>
-        {{ end }}
-      </div>
-    </div>
-  {{ end }}
+  {{ partial "openapi/components/schemas.html" (dict "schemas" $components.Schemas "spec" $.spec "page" $page) }}
   
   <!-- Security Schemes -->
-  {{ with $components.SecuritySchemes }}
-    <div class="components-section">
-      <h3 class="components-section-title">Security Schemes</h3>
-      <div class="components-list">
-        {{ range $schemeName, $scheme := . }}
-          {{ $sanitizedSchemeName := $schemeName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
-          {{ if eq $sanitizedSchemeName "" }}{{ $sanitizedSchemeName = "unnamed" }}{{ end }}
-          <div class="component-item" id="security-{{ $sanitizedSchemeName }}">
-            <div class="component-header collapse__header" 
-                 data-target="security-{{ $sanitizedSchemeName }}-details"
-                 role="button"
-                 tabindex="0"
-                 aria-expanded="false">
-              <div class="component-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-              </div>
-              <div class="component-name">
-                <h4>{{ $schemeName }}</h4>
-                <div class="component-type">
-                  <span class="type-badge type-badge--security">{{ $scheme.type }}</span>
-                </div>
-              </div>
-              <div class="component-toggle">
-                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 18l6-6-6-6"></path>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="component-details" id="security-{{ $sanitizedSchemeName }}-details">
-              {{ with $scheme.description }}
-                <div class="security-description">{{ . | markdownify }}</div>
-              {{ end }}
-              
-              <div class="security-details">
-                <div class="security-detail">
-                  <span class="detail-label">Type:</span>
-                  <code>{{ $scheme.type }}</code>
-                </div>
-                
-                {{ if eq $scheme.type "http" }}
-                  <div class="security-detail">
-                    <span class="detail-label">Scheme:</span>
-                    <code>{{ $scheme.scheme }}</code>
-                  </div>
-                  {{ with $scheme.bearerFormat }}
-                    <div class="security-detail">
-                      <span class="detail-label">Bearer Format:</span>
-                      <code>{{ . }}</code>
-                    </div>
-                  {{ end }}
-                {{ end }}
-                
-                {{ if eq $scheme.type "apiKey" }}
-                  <div class="security-detail">
-                    <span class="detail-label">Parameter Name:</span>
-                    <code>{{ $scheme.name }}</code>
-                  </div>
-                  <div class="security-detail">
-                    <span class="detail-label">Location:</span>
-                    <code>{{ $scheme.in }}</code>
-                  </div>
-                {{ end }}
-                
-                {{ if eq $scheme.type "openIdConnect" }}
-                  <div class="security-detail">
-                    <span class="detail-label">OpenID Connect URL:</span>
-                    <a href="{{ $scheme.openIdConnectUrl }}" target="_blank" rel="noopener">{{ $scheme.openIdConnectUrl }}</a>
-                  </div>
-                {{ end }}
-                
-                {{ if eq $scheme.type "oauth2" }}
-                  {{ with $scheme.flows }}
-                    <div class="oauth-flows">
-                      <h5>OAuth2 Flows</h5>
-                      {{ range $flowType, $flow := . }}
-                        <div class="oauth-flow">
-                          <div class="flow-header">{{ title $flowType }} Flow</div>
-                          {{ with $flow.authorizationUrl }}
-                            <div class="security-detail">
-                              <span class="detail-label">Authorization URL:</span>
-                              <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
-                            </div>
-                          {{ end }}
-                          {{ with $flow.tokenUrl }}
-                            <div class="security-detail">
-                              <span class="detail-label">Token URL:</span>
-                              <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
-                            </div>
-                          {{ end }}
-                          {{ with $flow.refreshUrl }}
-                            <div class="security-detail">
-                              <span class="detail-label">Refresh URL:</span>
-                              <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
-                            </div>
-                          {{ end }}
-                          {{ with $flow.scopes }}
-                            <div class="oauth-scopes">
-                              <div class="detail-label">Available Scopes:</div>
-                              <div class="scopes-list">
-                                {{ range $scope, $description := . }}
-                                  <div class="scope-item">
-                                    <code>{{ $scope }}</code>
-                                    <span class="scope-description">{{ $description }}</span>
-                                  </div>
-                                {{ end }}
-                              </div>
-                            </div>
-                          {{ end }}
-                        </div>
-                      {{ end }}
-                    </div>
-                  {{ end }}
-                {{ end }}
-              </div>
-            </div>
-          </div>
-        {{ end }}
-      </div>
-    </div>
-  {{ end }}
+  {{ partial "openapi/components/security-schemes.html" (dict "securitySchemes" $components.SecuritySchemes "spec" $.spec "page" $page) }}
   
   <!-- Response Objects -->
-  {{ with $components.Responses }}
-    <div class="components-section">
-      <h3 class="components-section-title">Response Objects</h3>
-      <div class="components-list">
-        {{ range $responseName, $response := . }}
-          {{ $sanitizedResponseName := $responseName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
-          {{ if eq $sanitizedResponseName "" }}{{ $sanitizedResponseName = "unnamed" }}{{ end }}
-          <div class="component-item" id="response-{{ $sanitizedResponseName }}">
-            <div class="component-header collapse__header" 
-                 data-target="response-{{ $sanitizedResponseName }}-details"
-                 role="button"
-                 tabindex="0"
-                 aria-expanded="false">
-              <div class="component-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <path d="M7 10l5 5 5-5"></path>
-                  <path d="M12 15V3"></path>
-                </svg>
-              </div>
-              <div class="component-name">
-                <h4>{{ $responseName }}</h4>
-                <div class="component-description">{{ $response.description }}</div>
-              </div>
-              <div class="component-toggle">
-                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 18l6-6-6-6"></path>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="component-details" id="response-{{ $sanitizedResponseName }}-details">
-              {{ partial "openapi/endpoint-responses.html" (dict "responses" (dict "200" $response) "spec" $.spec) }}
-            </div>
-          </div>
-        {{ end }}
-      </div>
-    </div>
-  {{ end }}
+  {{ partial "openapi/components/responses.html" (dict "responses" $components.Responses "spec" $.spec "page" $page) }}
   
   <!-- Parameters -->
-  {{ with $components.Parameters }}
-    <div class="components-section" 
-         data-component="components-parameters" 
-         data-section-type="parameters"
-         data-item-count="{{ len . }}">
-      <h3 class="components-section-title">Parameters</h3>
-      <div class="components-list">
-        {{ range $paramName, $param := . }}
-          {{ $sanitizedParamName := $paramName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
-          {{ if eq $sanitizedParamName "" }}{{ $sanitizedParamName = "unnamed" }}{{ end }}
-          <div class="component-item" 
-               id="parameter-{{ $sanitizedParamName }}"
-               data-component="component-parameter"
-               data-param-name="{{ $paramName }}"
-               data-param-in="{{ $param.In }}"
-               data-param-required="{{ if $param.Required }}true{{ else }}false{{ end }}"
-               data-has-description="{{ if $param.Description }}true{{ else }}false{{ end }}"
-               data-has-schema="{{ if $param.Schema }}true{{ else }}false{{ end }}"
-               {{- if and $param.Schema $param.Schema.Value }}data-param-type="{{ $param.Schema.Value.Type }}"{{ end }}>
-            <div class="component-header collapse__header" 
-                 data-target="parameter-{{ $sanitizedParamName }}-details"
-                 role="button"
-                 tabindex="0"
-                 aria-expanded="false">
-              <div class="component-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M7 7h.01"></path>
-                  <path d="M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-7 7a1.994 1.994 0 0 1-1.414.586H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-                </svg>
-              </div>
-              <div class="component-name">
-                <h4>{{ $paramName }}</h4>
-                <div class="component-meta">
-                  <span class="param-location">{{ $param.In }}</span>
-                  {{ if $param.Required }}
-                    <span class="param-required">required</span>
-                  {{ end }}
-                </div>
-              </div>
-              <div class="component-toggle">
-                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 18l6-6-6-6"></path>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="component-details" id="parameter-{{ $sanitizedParamName }}-details">
-              {{ partial "openapi/endpoint-parameters.html" (dict "parameters" (slice $param) "spec" $.spec) }}
-            </div>
-          </div>
-        {{ end }}
-      </div>
-    </div>
-  {{ end }}
+  {{ partial "openapi/components/parameters.html" (dict "parameters" $components.Parameters "spec" $.spec "page" $page) }}
+
 </section>
 
 <!-- Initialize component collapse manually since it might not be inside .openapi-spec -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Find all component collapse headers that aren't already handled
   const componentHeaders = document.querySelectorAll('.openapi-components .collapse__header:not([data-openapi-collapse])');
-  
   componentHeaders.forEach(header => {
     header.addEventListener('click', function(e) {
       e.preventDefault();
-      
       const target = header.getAttribute('data-target');
       const targetElement = document.getElementById(target);
       const isExpanded = header.getAttribute('aria-expanded') === 'true';
       
-      // Toggle aria-expanded
       header.setAttribute('aria-expanded', !isExpanded);
       
-      // Toggle expanded class on target
       if (targetElement) {
         if (isExpanded) {
           targetElement.classList.remove('expanded');

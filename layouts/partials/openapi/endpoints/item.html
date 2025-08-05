@@ -1,0 +1,61 @@
+{{- $endpoint := .endpoint -}}
+{{- $spec := .spec -}}
+{{- $tag := .tag -}}
+
+{{ $methodUpper := upper $endpoint.method }}
+{{ $sanitizedPath := $endpoint.path | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
+{{ if eq $sanitizedPath "" }}{{ $sanitizedPath = "root" }}{{ end }}
+{{ $endpointId := printf "%s-%s" $methodUpper $sanitizedPath }}
+{{ $tagClasses := printf "endpoint-tag-%s" ($tag | urlize) }}
+
+<div class="endpoint-item {{ $tagClasses }}" 
+     id="{{ $endpointId }}"
+     data-method="{{ $methodUpper }}"
+     data-path="{{ $endpoint.path }}">
+  
+  <!-- Endpoint Header -->
+  {{ partial "openapi/endpoint-header.html" (dict 
+      "method" $methodUpper 
+      "path" $endpoint.path 
+      "operation" $endpoint.operation 
+      "endpointId" $endpointId) }}
+
+  <!-- Endpoint Details (Collapsible) -->
+  <div class="endpoint-details" id="{{ $endpointId }}-details">
+
+    <!-- Description -->
+    {{ with $endpoint.operation.description }}
+      <div class="endpoint-section">
+        <h4>Description</h4>
+        <div class="endpoint-description">{{ . | markdownify }}</div>
+      </div>
+    {{ end }}
+    
+    <!-- Parameters -->
+    {{ with $endpoint.operation.parameters }}
+      {{ partial "openapi/endpoint-parameters.html" (dict "parameters" . "spec" $spec) }}
+    {{ end }}
+    
+    <!-- Request Body -->
+    {{ with $endpoint.operation.requestBody }}
+      {{ partial "openapi/endpoint-request-body.html" (dict "requestBody" . "spec" $spec) }}
+    {{ end }}
+    
+    <!-- Responses -->
+    {{ with $endpoint.operation.responses }}
+      {{ partial "openapi/endpoint-responses.html" (dict "responses" . "spec" $spec) }}
+    {{ end }}
+    
+    <!-- Security -->
+    {{ with $endpoint.operation.security }}
+      {{ partial "openapi/endpoint-security.html" (dict "security" . "spec" $spec) }}
+    {{ end }}
+
+    <!-- Code Examples -->
+    {{ partial "openapi/endpoint-examples.html" (dict 
+        "method" $methodUpper 
+        "path" $endpoint.path 
+        "operation" $endpoint.operation 
+        "spec" $spec) }}
+  </div>
+</div>
