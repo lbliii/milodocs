@@ -24,11 +24,16 @@
       {{- $rawContent := .RawContent -}}
       {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
       {{- if not $startsWithH1 -}}
-        <h1 class="text-3xl font-bold text-black mb-4">{{ .Title }}</h1>
+        <h1 class="text-3xl font-bold mb-4" style="color: var(--color-text-primary);">{{ .Title }}</h1>
       {{- end -}}
       
       {{- with .Description -}}
-        <p class="text-lg text-gray-700 leading-relaxed">{{ . }}</p>
+        <div class="article-description not-prose mb-8 flex items-center gap-6">
+          <div class="w-1 h-16 rounded-full flex-shrink-0" style="background-color: var(--color-brand); opacity: 0.3;"></div>
+          <div class="flex-1">
+            <p class="text-xl font-light leading-relaxed" style="color: var(--color-text-secondary); font-weight: 300;">{{ . }}</p>
+          </div>
+        </div>
       {{- end -}}
     </header>
 
@@ -45,7 +50,7 @@
       <footer class="mt-8 pt-6 border-t not-prose">
         <div class="flex flex-wrap gap-2">
           {{- range . -}}
-            <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+            <span class="inline-block px-3 py-1 rounded-full text-sm" style="background-color: var(--color-bg-tertiary); color: var(--color-text-secondary);">
               {{ . }}
             </span>
           {{- end -}}

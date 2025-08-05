@@ -175,14 +175,9 @@ setupElements() {
    */
   openDropdown() {
     this.isOpen = true;
-    this.dropdown.classList.remove('hidden');
+    this.dropdown.setAttribute('data-state', 'visible');
     this.toggle.setAttribute('aria-expanded', 'true');
     
-    // Rotate arrow
-    if (this.dropdownArrow) {
-      this.dropdownArrow.style.transform = 'rotate(180deg)';
-    }
-
     // Focus first item in dropdown
     const firstItem = this.dropdown.querySelector('button, a');
     if (firstItem) {
@@ -208,18 +203,13 @@ setupElements() {
   closeDropdown() {
     this.isOpen = false;
     this.toggle.setAttribute('aria-expanded', 'false');
-    
-    // Rotate arrow back
-    if (this.dropdownArrow) {
-      this.dropdownArrow.style.transform = 'rotate(0deg)';
-    }
 
     // Animate out
     this.dropdown.style.opacity = '0';
     this.dropdown.style.transform = 'translateY(-10px)';
     
     setTimeout(() => {
-      this.dropdown.classList.add('hidden');
+      this.dropdown.setAttribute('data-state', 'hidden');
       this.dropdown.style.transition = '';
       this.dropdown.style.opacity = '';
       this.dropdown.style.transform = '';
@@ -237,7 +227,7 @@ setupElements() {
     // Update button text temporarily
     const originalText = button.textContent;
     button.textContent = '✓ Copied!';
-    button.classList.add('text-green-600');
+    button.classList.add('success');
 
     // Announce to screen readers
     announceToScreenReader(message);
@@ -245,7 +235,7 @@ setupElements() {
     // Reset after delay
     setTimeout(() => {
       button.textContent = originalText;
-      button.classList.remove('text-green-600');
+      button.classList.remove('success');
     }, this.options.copySuccessDuration);
 
     log.debug('Copy success feedback shown');
@@ -260,7 +250,7 @@ setupElements() {
     // Update button text temporarily
     const originalText = button.textContent;
     button.textContent = '✗ Failed';
-    button.classList.add('text-red-600');
+    button.classList.add('error');
 
     // Announce to screen readers
     announceToScreenReader(message);
@@ -268,7 +258,7 @@ setupElements() {
     // Reset after delay
     setTimeout(() => {
       button.textContent = originalText;
-      button.classList.remove('text-red-600');
+      button.classList.remove('error');
     }, this.options.copySuccessDuration);
 
     log.error('Copy error feedback shown');
