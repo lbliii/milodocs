@@ -145,6 +145,10 @@ export class ArticleCollapse extends Component {
     
     const { content, chevron, ariaController, isExpanded } = toggleData;
     
+    // 🚀 NEW: Enhanced state management with visual feedback
+    this.updateComponentState(isExpanded ? 'collapsing' : 'expanding');
+    this.setLoadingState(true);
+    
     // Update state
     toggleData.isExpanded = !isExpanded;
     
@@ -154,6 +158,10 @@ export class ArticleCollapse extends Component {
       } else {
         await this.collapse(toggle, toggleData);
       }
+      
+      // 🚀 NEW: Animation complete - update states
+      this.setLoadingState(false);
+      this.updateComponentState(toggleData.isExpanded ? 'expanded' : 'collapsed');
       
       // Save state if enabled
       if (this.options.storeState) {
@@ -169,6 +177,9 @@ export class ArticleCollapse extends Component {
       
     } catch (error) {
       console.error('Toggle animation failed:', error);
+      // 🚀 NEW: Error handling with state reset
+      this.setLoadingState(false);
+      this.updateComponentState('error');
       // Revert state on error
       toggleData.isExpanded = !toggleData.isExpanded;
     }

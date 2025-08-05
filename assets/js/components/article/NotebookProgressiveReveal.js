@@ -41,6 +41,10 @@ export class NotebookProgressiveReveal extends Component {
       return;
     }
 
+    // 🚀 NEW: Enhanced initialization with loading states
+    this.setLoadingState(true);
+    this.updateComponentState('initializing');
+
     console.log('📓 NotebookProgressiveReveal: Starting initialization...');
     
     this.loadMetadata();
@@ -50,6 +54,10 @@ export class NotebookProgressiveReveal extends Component {
     
     // Count initially visible cells
     this.visibleCount = this.allCells.filter(cell => !cell.classList.contains('notebook-cell--hidden')).length;
+    
+    // 🚀 NEW: Initialization complete
+    this.setLoadingState(false);
+    this.updateComponentState('ready');
     
     console.log(`📓 Progressive reveal initialized: ${this.visibleCount}/${this.allCells.length} cells visible`);
     

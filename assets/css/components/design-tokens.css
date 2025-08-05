@@ -1,17 +1,124 @@
-/* Design Token System - Pure CSS Enhancement
- * This file enhances your existing CSS custom properties with better organization
- * Zero dependencies - builds on what you already have
+/* Professional Design Token System - Enterprise Grade
+ * Comprehensive token system for next-level vanilla JS/CSS architecture
+ * Zero dependencies - pure CSS custom properties
  */
 
 /* ========================================
-   Enhanced Design Tokens
+   FOUNDATION TOKENS - Raw Values
    ======================================== */
 
 :root {
+  /* ============================================================================
+     TIMING & ANIMATION TOKENS - Professional Motion Design
+     ============================================================================ */
+  
+  /* Micro-interactions (button presses, hover feedback) */
+  --timing-micro: 0.1s;
+  --timing-fast: 0.15s;
+  
+  /* Standard interactions (dropdowns, tooltips, state changes) */
+  --timing-standard: 0.2s;
+  --timing-medium: 0.3s;
+  
+  /* Complex animations (modals, page transitions, reveals) */
+  --timing-slow: 0.5s;
+  --timing-extra-slow: 0.8s;
+  --timing-dramatic: 1.2s;
+  
+  /* Professional Easing Functions */
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+  
+  /* Material Design Easing */
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --easing-decelerated: cubic-bezier(0, 0, 0.2, 1);
+  --easing-accelerated: cubic-bezier(0.4, 0, 1, 1);
+  
+  /* Custom Easing for Personality */
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --easing-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --easing-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* ============================================================================
+     COMPONENT-SPECIFIC TOKENS - Usage-Based
+     ============================================================================ */
+
+  /* COLLAPSE COMPONENT TOKENS */
+  --collapse-height-start: 0;
+  --collapse-height-end: auto;
+  --collapse-timing: var(--timing-medium);
+  --collapse-easing: var(--easing-emphasized);
+  --collapse-opacity-start: 0;
+  --collapse-opacity-end: 1;
+  --collapse-transform-start: translateY(-8px);
+  --collapse-transform-end: translateY(0);
+  
+  /* TAB COMPONENT TOKENS */
+  --tab-indicator-width: 100%;
+  --tab-indicator-height: 2px;
+  --tab-border-active: 2px solid var(--color-brand);
+  --tab-background-hover: var(--color-hover);
+  --tab-background-active: rgba(var(--color-brand-rgb), 0.1);
+  --tab-transition: var(--timing-standard) var(--easing-standard);
+  --tab-content-slide: translateX(20px);
+  
+  /* CARD & TILE TOKENS */
+  --card-shadow-rest: 0 1px 3px rgba(0,0,0,0.1);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+  --card-shadow-active: 0 8px 25px rgba(0,0,0,0.15);
+  --card-transform-hover: translateY(-2px);
+  --card-transform-active: translateY(-1px) scale(0.98);
+  --card-border-radius: 0.5rem;
+  --card-transition: var(--timing-standard) var(--easing-smooth);
+  
+  /* LOADING STATE TOKENS */
+  --loading-opacity: 0.6;
+  --loading-blur: blur(1px);
+  --loading-skeleton-bg: linear-gradient(90deg, 
+    rgba(var(--color-brand-rgb), 0.1) 25%, 
+    rgba(var(--color-brand-rgb), 0.2) 50%, 
+    rgba(var(--color-brand-rgb), 0.1) 75%);
+  --loading-skeleton-size: 200% 100%;
+  --loading-spinner-size: 20px;
+  --loading-spinner-border: 2px;
+  
+  /* FEEDBACK & NOTIFICATION TOKENS */
+  --feedback-success: var(--semantic-color-success, #10b981);
+  --feedback-warning: var(--semantic-color-warning, #f59e0b);
+  --feedback-error: var(--semantic-color-danger, #ef4444);
+  --feedback-info: var(--semantic-color-info, #3b82f6);
+  --feedback-timing: var(--timing-medium);
+  --feedback-slide-in: translateY(-10px);
+  --feedback-slide-out: translateY(-20px);
+  
+  /* PROGRESSIVE REVEAL TOKENS */
+  --reveal-stagger-delay: 0.05s;
+  --reveal-batch-delay: 0.15s;
+  --reveal-slide-distance: 20px;
+  --reveal-opacity-start: 0;
+  --reveal-opacity-end: 1;
+  --reveal-timing: var(--timing-medium);
+  --reveal-easing: var(--easing-emphasized);
+  
+  /* INTERACTION TOKENS */
+  --hover-scale: 1.02;
+  --active-scale: 0.98;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--semantic-state-focus);
+
+  /* ============================================================================
+     LEGACY COMPATIBILITY - Maintain existing tokens
+     ============================================================================ */
+  
   /* Performance tokens - for JS integration */
-  --component-transition-fast: 0.15s;
-  --component-transition-normal: 0.3s;
-  --component-transition-slow: 0.5s;
+  --component-transition-fast: var(--timing-fast);
+  --component-transition-normal: var(--timing-medium);
+  --component-transition-slow: var(--timing-slow);
   
   /* Component state tokens - updated by JavaScript */
   --component-state: "default";
@@ -36,8 +143,22 @@
   --semantic-state-disabled: rgba(128, 128, 128, 0.5);
 }
 
-/* Dark mode enhanced tokens */
+/* ========================================
+   DARK MODE ENHANCEMENTS
+   ======================================== */
+
 .dark {
   --semantic-state-focus: rgba(var(--color-brand-rgb), 0.3);
   --semantic-state-disabled: rgba(128, 128, 128, 0.3);
+  
+  /* Enhanced loading states for dark mode */
+  --loading-skeleton-bg: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.05) 25%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0.05) 75%);
+    
+  /* Enhanced shadows for dark mode */
+  --card-shadow-rest: 0 1px 3px rgba(0,0,0,0.3);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+  --card-shadow-active: 0 8px 25px rgba(0,0,0,0.5);
 }

@@ -17,6 +17,10 @@ export class ArticleTabs extends Component {
   }
 
   async onInit() {
+    // 🚀 NEW: Enhanced initialization with loading states
+    this.setLoadingState(true);
+    this.updateComponentState('initializing');
+    
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
       await new Promise(resolve => {
@@ -28,10 +32,16 @@ export class ArticleTabs extends Component {
     
     if (this.tabContainers.length === 0) {
       console.warn('ArticleTabs: No tab containers found');
+      this.setLoadingState(false);
+      this.updateComponentState('error');
       return;
     }
 
     this.initializeAllTabs();
+    
+    // 🚀 NEW: Initialization complete
+    this.setLoadingState(false);
+    this.updateComponentState('ready');
     
     console.log(`ArticleTabs: Initialized ${this.tabContainers.length} tab containers`);
   }
@@ -120,6 +130,10 @@ export class ArticleTabs extends Component {
     
     if (!parentOption) return;
     
+    // 🚀 NEW: Enhanced tab switching with visual feedback
+    this.updateComponentState('switching');
+    this.setCSSProperty('--tab-switching', 'true');
+    
     // Get all buttons in the same option group
     const siblingButtons = parentOption.querySelectorAll('button');
     
@@ -133,9 +147,15 @@ export class ArticleTabs extends Component {
     // Activate clicked button
     this.activateButton(clickedButton);
     
-    // Update content visibility
+    // Update content visibility with enhanced timing
     const optionContent = tabContainer.querySelectorAll('[data-tabcontent]');
     this.updateContent(tabContainer, optionContent);
+    
+    // 🚀 NEW: Switch complete after animation
+    setTimeout(() => {
+      this.updateComponentState('active');
+      this.setCSSProperty('--tab-switching', 'false');
+    }, 200); // Match CSS transition timing
     
     this.emit('tabs:buttonClicked', { 
       button: clickedButton, 

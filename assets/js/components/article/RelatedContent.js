@@ -104,23 +104,43 @@ export class ArticleRelatedContent extends Component {
     const prevView = this.currentView;
     this.currentView = view;
     
+    // 🚀 NEW: Enhanced view switching with loading states
+    this.updateComponentState('switching-view');
+    this.setLoadingState(true);
+    this.setCSSProperty('--view-switching', 'true');
+    
     // Update button states
     this.viewButtons.forEach((btn, btnView) => {
       btn.classList.toggle('active', btnView === view);
     });
 
-    // Hide all view containers first
+    // Hide all view containers first with fade-out
     const allViews = this.element.querySelectorAll('[data-view]');
     allViews.forEach(viewEl => {
       if (viewEl.classList.contains('view-toggle-btn')) return; // Skip buttons
-      viewEl.classList.add('hidden');
+      viewEl.style.opacity = '0';
+      setTimeout(() => {
+        viewEl.classList.add('hidden');
+      }, 150);
     });
 
-    // Show selected view with animation
+    // Show selected view with smooth fade-in
     const targetView = this.element.querySelector(`[data-view="${view}"]:not(.view-toggle-btn)`);
     if (targetView) {
-      targetView.classList.remove('hidden');
+      setTimeout(() => {
+        targetView.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          targetView.style.opacity = '1';
+        });
+      }, 150);
     }
+
+    // 🚀 NEW: View switch complete
+    setTimeout(() => {
+      this.setLoadingState(false);
+      this.updateComponentState('view-active');
+      this.setCSSProperty('--view-switching', 'false');
+    }, 300);
 
     // Save preference using existing storage utility
     this.savePreferences();

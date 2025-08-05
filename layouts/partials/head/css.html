@@ -89,6 +89,12 @@
   {{- $cssResources = $cssResources | append $enhancedAnimationsCSS -}}
 {{- end -}}
 
+{{/* Component-Specific Animations - Professional component transitions */}}
+{{- $componentAnimationsCSS := resources.Get "css/components/component-animations.css" -}}
+{{- if $componentAnimationsCSS -}}
+  {{- $cssResources = $cssResources | append $componentAnimationsCSS -}}
+{{- end -}}
+
 
 
 {{/* 1. Foundation Components - Base UI elements */}}
