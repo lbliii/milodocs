@@ -31,10 +31,10 @@ export class CopyPage extends Component {
     this.jsonUrl = '';
   }
 
-  /**
+    /**
    * Setup DOM elements
    */
-  setupElements() {
+setupElements() {
     super.setupElements();
 
     this.toggle = this.element.querySelector('[data-copy-page-toggle]');

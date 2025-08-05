@@ -405,3 +405,12 @@
     transform: none;
   }
 }
+
+/* Fix stacking context issues when dropdown is open */
+body:has(.article-header__copy-dropdown:not(.hidden)) h1[id] {
+  position: static;
+}
+
+body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
+  display: none;
+}
