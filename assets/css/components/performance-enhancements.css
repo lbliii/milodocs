@@ -1,0 +1,104 @@
+/* Performance Enhancement CSS - Native Browser Optimizations
+ * Uses native CSS features for optimal rendering performance
+ * Zero dependencies - pure CSS
+ */
+
+/* ========================================
+   CSS Containment - Native Performance
+   ======================================== */
+
+/* Isolate layout calculations for components */
+.component,
+.card,
+.tile,
+.notice,
+.notebook-cell {
+  contain: layout style;
+}
+
+/* Strict containment for complex components */
+.notebook-viewer,
+.openapi-spec,
+.search-container {
+  contain: layout style paint;
+}
+
+/* Size containment for fixed-size elements */
+.topbar__button,
+.theme-toggle,
+.chat-toc-toggle__option {
+  contain: size layout style;
+}
+
+/* ========================================
+   Content Visibility - Lazy Rendering
+   ======================================== */
+
+/* Automatically defer off-screen content rendering */
+.notebook-cell:not(.visible),
+.openapi-endpoint:not(.visible),
+.search-result:not(.visible) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px; /* Estimated size for layout stability */
+}
+
+/* ========================================
+   Enhanced :has() with Performance Hints
+   ======================================== */
+
+/* Your existing :has() patterns, optimized */
+.sidebar-container:has(.sidebar-item:hover),
+.toc-sidebar:has(.toc-link:hover) {
+  will-change: transform; /* Hint for GPU optimization */
+  contain: layout; /* Isolate layout changes */
+}
+
+.form-group:has(input:valid:not(:placeholder-shown)),
+.form-group:has(input:invalid:not(:placeholder-shown)) {
+  contain: style; /* Isolate validation styling */
+}
+
+/* ========================================
+   Dynamic Performance States (JS Integration)
+   ======================================== */
+
+/* Components can set performance hints via JavaScript */
+.component[data-component-state="loading"] {
+  opacity: var(--component-opacity, 0.6);
+  pointer-events: none;
+  contain: layout style;
+}
+
+.component[data-component-state="ready"] {
+  opacity: var(--component-opacity, 1);
+  contain: layout style;
+}
+
+.component[data-component-state="animating"] {
+  will-change: transform, opacity;
+  contain: layout;
+}
+
+/* Reset will-change after animations */
+.component:not([data-component-state="animating"]) {
+  will-change: auto;
+}
+
+/* ========================================
+   Mobile Performance Optimizations
+   ======================================== */
+
+@media (max-width: 768px) {
+  /* Reduce paint complexity on mobile */
+  .card,
+  .tile {
+    contain: layout style paint;
+    will-change: auto; /* Reduce GPU memory on mobile */
+  }
+  
+  /* Simplify shadows on mobile for performance */
+  .card:hover,
+  .tile:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Simpler shadow */
+  }
+}

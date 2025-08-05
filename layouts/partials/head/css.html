@@ -69,7 +69,30 @@
 {{/* ==== MODULAR COMPONENT CSS ARCHITECTURE ==== */}}
 {{/* Load all component CSS files in dependency order */}}
 
+{{/* 0. Foundation CSS - Load first for optimal performance */}}
+
+{{/* Design Tokens - Enhanced token system (load early) */}}
+{{- $designTokensCSS := resources.Get "css/components/design-tokens.css" -}}
+{{- if $designTokensCSS -}}
+  {{- $cssResources = $cssResources | append $designTokensCSS -}}
+{{- end -}}
+
+{{/* Performance Enhancements - Native browser optimizations */}}
+{{- $performanceCSS := resources.Get "css/components/performance-enhancements.css" -}}
+{{- if $performanceCSS -}}
+  {{- $cssResources = $cssResources | append $performanceCSS -}}
+{{- end -}}
+
+{{/* Enhanced Animations - State-driven animations */}}
+{{- $enhancedAnimationsCSS := resources.Get "css/components/enhanced-animations.css" -}}
+{{- if $enhancedAnimationsCSS -}}
+  {{- $cssResources = $cssResources | append $enhancedAnimationsCSS -}}
+{{- end -}}
+
+
+
 {{/* 1. Foundation Components - Base UI elements */}}
+
 {{- $buttonsCSS := resources.Get "css/components/buttons.css" -}}
 {{- if $buttonsCSS -}}
   {{- $cssResources = $cssResources | append $buttonsCSS -}}

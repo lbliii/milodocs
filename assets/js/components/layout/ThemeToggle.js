@@ -132,6 +132,10 @@ export class ThemeToggle extends Component {
     
     this.isToggling = true;
     
+    // NEW: Use CSS integration for visual feedback
+    this.setLoadingState(true);
+    this.updateComponentState('toggling'); // Adds data-component-state="toggling"
+    
     // Temporarily disable transitions for immediate feedback
     document.documentElement.classList.add('no-transitions');
     
@@ -153,6 +157,10 @@ export class ThemeToggle extends Component {
       setTimeout(() => {
         document.documentElement.classList.remove('no-transitions');
         this.isToggling = false;
+        
+        // NEW: Reset loading state
+        this.setLoadingState(false);
+        this.updateComponentState('ready'); // Back to ready state
       }, 50);
       
       // Emit events for other components

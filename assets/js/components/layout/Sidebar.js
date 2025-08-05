@@ -28,6 +28,10 @@ export class Sidebar extends Component {
       return;
     }
 
+    // 🚀 NEW: Enhanced initialization with loading states
+    this.setLoadingState(true);
+    this.updateComponentState('initializing');
+
     // Find the linkTree element within the sidebar
     this.linkTreeElement = this.findChild('#linkTree');
     if (!this.linkTreeElement) {
@@ -57,6 +61,10 @@ export class Sidebar extends Component {
     this.element.classList.add('initialized');
     this.linkTreeElement.classList.add('initialized');
     this.isInitialized = true;
+    
+    // 🚀 NEW: Initialization complete
+    this.setLoadingState(false);
+    this.updateComponentState('ready');
     
     console.log(`Sidebar: Initialized with ${this.toggles.length} toggles`);
   }
@@ -281,9 +289,17 @@ export class Sidebar extends Component {
   open() {
     if (this.isOpen) return;
     
+    // 🚀 NEW: Enhanced state management
+    this.updateComponentState('opening');
+    
     this.element.classList.remove('-translate-x-full');
     this.element.classList.add('translate-x-0');
     this.isOpen = true;
+    
+    // Set final state after animation
+    setTimeout(() => {
+      this.updateComponentState('open');
+    }, 300);
     
     this.emit('sidebar:opened');
     console.log('Sidebar: Mobile sidebar opened');
@@ -295,9 +311,17 @@ export class Sidebar extends Component {
   close() {
     if (!this.isOpen) return;
     
+    // 🚀 NEW: Enhanced state management
+    this.updateComponentState('closing');
+    
     this.element.classList.add('-translate-x-full');
     this.element.classList.remove('translate-x-0');
     this.isOpen = false;
+    
+    // Set final state after animation
+    setTimeout(() => {
+      this.updateComponentState('closed');
+    }, 300);
     
     this.emit('sidebar:closed');
     console.log('Sidebar: Mobile sidebar closed');

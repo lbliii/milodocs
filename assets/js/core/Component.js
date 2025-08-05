@@ -353,6 +353,60 @@ export class Component {
   }
 
   // ============================================================================
+  // CSS INTEGRATION (PURE VANILLA JS)
+  // ============================================================================
+
+  /**
+   * Set CSS custom property on the component element
+   * Enables dynamic styling from JavaScript
+   */
+  setCSSProperty(property, value) {
+    if (!this.element) return;
+    
+    const cssProperty = property.startsWith('--') ? property : `--component-${property}`;
+    this.element.style.setProperty(cssProperty, value);
+  }
+
+  /**
+   * Get CSS custom property value
+   */
+  getCSSProperty(property) {
+    if (!this.element) return null;
+    
+    const cssProperty = property.startsWith('--') ? property : `--component-${property}`;
+    return getComputedStyle(this.element).getPropertyValue(cssProperty).trim();
+  }
+
+  /**
+   * Update component state for CSS :has() patterns
+   * Leverages your existing :has() CSS automatically
+   */
+  updateComponentState(state) {
+    if (!this.element) return;
+    
+    this.element.dataset.componentState = state;
+    this.setCSSProperty('state', state);
+    this.emit('state-changed', { state });
+  }
+
+  /**
+   * Set component loading state with CSS
+   */
+  setLoadingState(isLoading) {
+    this.updateComponentState(isLoading ? 'loading' : 'ready');
+    this.setCSSProperty('opacity', isLoading ? '0.6' : '1');
+  }
+
+  /**
+   * Enable/disable component with CSS feedback
+   */
+  setEnabled(isEnabled) {
+    this.updateComponentState(isEnabled ? 'enabled' : 'disabled');
+    this.setCSSProperty('pointer-events', isEnabled ? 'auto' : 'none');
+    this.element.setAttribute('aria-disabled', (!isEnabled).toString());
+  }
+
+  // ============================================================================
   // EVENT SYSTEM
   // ============================================================================
 

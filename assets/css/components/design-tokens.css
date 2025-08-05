@@ -1,0 +1,43 @@
+/* Design Token System - Pure CSS Enhancement
+ * This file enhances your existing CSS custom properties with better organization
+ * Zero dependencies - builds on what you already have
+ */
+
+/* ========================================
+   Enhanced Design Tokens
+   ======================================== */
+
+:root {
+  /* Performance tokens - for JS integration */
+  --component-transition-fast: 0.15s;
+  --component-transition-normal: 0.3s;
+  --component-transition-slow: 0.5s;
+  
+  /* Component state tokens - updated by JavaScript */
+  --component-state: "default";
+  --component-scale: 1;
+  --component-opacity: 1;
+  
+  /* Enhanced spacing system */
+  --semantic-spacing-xs: 0.125rem;
+  --semantic-spacing-sm: 0.25rem;
+  --semantic-spacing-md: 0.5rem;
+  --semantic-spacing-lg: 1rem;
+  --semantic-spacing-xl: 2rem;
+  
+  /* Enhanced color system for better theming */
+  --semantic-color-success: #10b981;
+  --semantic-color-warning: #f59e0b;
+  --semantic-color-danger: #ef4444;
+  --semantic-color-info: #3b82f6;
+  
+  /* Interactive state enhancements */
+  --semantic-state-focus: rgba(var(--color-brand-rgb), 0.2);
+  --semantic-state-disabled: rgba(128, 128, 128, 0.5);
+}
+
+/* Dark mode enhanced tokens */
+.dark {
+  --semantic-state-focus: rgba(var(--color-brand-rgb), 0.3);
+  --semantic-state-disabled: rgba(128, 128, 128, 0.3);
+}

@@ -53,12 +53,20 @@ export class NotebookViewer extends Component {
       return;
     }
 
+    // 🚀 NEW: Show loading state during initialization
+    this.setLoadingState(true);
+    this.updateComponentState('initializing');
+
     await this.setupNotebook();
     this.cacheElements();
     this.setupEventListeners();
     this.loadStoredState();
     this.initializeAccessibility();
     this.setupAnimations();
+    
+    // 🚀 NEW: Initialization complete - remove loading and set ready
+    this.setLoadingState(false);
+    this.updateComponentState('ready');
     
     this.emit('notebook:initialized', { 
       cellCount: this.cells.size,
