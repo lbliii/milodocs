@@ -64,3 +64,45 @@
   opacity: 0.8;
   margin: 0;
 }
+
+/* ==========================================================================
+   :has() OpenAPI Overview Enhancements
+   ========================================================================== */
+
+/* Overview cards with icons get enhanced layout */
+.overview-card:has(.overview-card__icon) {
+  padding-top: 1.5rem;
+}
+
+.overview-card:has(.overview-card__icon) .overview-card__content {
+  padding-left: 0.5rem;
+}
+
+.overview-card:has(.overview-card__icon) .overview-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Cards with descriptions get enhanced spacing */
+.overview-card:has(.overview-card__description) .overview-card__value {
+  margin-bottom: 1rem;
+}
+
+.overview-card:has(.overview-card__description) {
+  padding-bottom: 2.5rem;
+}
+
+/* Interactive overview cards */
+.overview-grid:has(.overview-card:hover) .overview-card:not(:hover) {
+  opacity: 0.7;
+  transform: scale(0.98);
+  transition: all 0.3s ease;
+}
+
+/* Enhanced primary card when hovered */
+.overview-card--primary:has(:hover) {
+  box-shadow: 
+    0 12px 32px rgba(var(--color-brand-rgb), 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
