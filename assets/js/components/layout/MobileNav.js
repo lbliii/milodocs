@@ -3,7 +3,8 @@
  * Handles mobile navigation toggle with accessibility features
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 
 export class MobileNav extends Component {
   constructor(config = {}) {
@@ -25,39 +26,53 @@ export class MobileNav extends Component {
     }
 
     this.overlay = document.getElementById('mobileNavOverlay');
-    this.sidebarComponent = ComponentManager.getInstances('navigation-sidebar-left')[0];
     this.closeButton = document.getElementById('closeMobileNav');
     
-    if (!this.sidebarComponent) {
-      console.warn('MobileNav: Sidebar component instance not found, retrying...');
-      // Retry after a short delay in case components are still initializing
-      setTimeout(() => {
-        this.sidebarComponent = ComponentManager.getInstances('navigation-sidebar-left')[0];
-        if (this.sidebarComponent) {
-          console.log('MobileNav: Sidebar component found on retry');
-          this.setupEventListeners();
-        } else {
-          console.error('MobileNav: Sidebar component still not found after retry');
-        }
-      }, 100);
+    // Try to find sidebar component
+    this.findSidebarComponent();
+  }
+
+  findSidebarComponent() {
+    this.sidebarComponent = ComponentManager.getInstances('navigation-sidebar-left')[0];
+    
+    if (this.sidebarComponent) {
+      this.setupEventListeners();
       return;
     }
-
-    this.setupEventListeners();
+    
+    // Wait for sidebar component to be registered
+    let retryCount = 0;
+    const maxRetries = 10;
+    const retryInterval = 50;
+    
+    const checkForSidebar = () => {
+      this.sidebarComponent = ComponentManager.getInstances('navigation-sidebar-left')[0];
+      
+      if (this.sidebarComponent) {
+        this.setupEventListeners();
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(checkForSidebar, retryInterval);
+      } else {
+        console.warn('MobileNav: Sidebar component not found after maximum retries - mobile nav may not function properly');
+      }
+    };
+    
+    setTimeout(checkForSidebar, retryInterval);
   }
 
   setupEventListeners() {
-    this.addEventListener(this.element, 'click', () => this.openMobileNav());
+    this.addEventListenerSafe(this.element, 'click', () => this.openMobileNav());
     
     if (this.closeButton) {
-      this.addEventListener(this.closeButton, 'click', () => this.closeMobileNav());
+      this.addEventListenerSafe(this.closeButton, 'click', () => this.closeMobileNav());
     }
     
     if (this.overlay) {
-      this.addEventListener(this.overlay, 'click', () => this.closeMobileNav());
+      this.addEventListenerSafe(this.overlay, 'click', () => this.closeMobileNav());
     }
     
-    this.addEventListener(document, 'keydown', (e) => {
+    this.addEventListenerSafe(document, 'keydown', (e) => {
       if (e.key === 'Escape' && this.sidebarComponent && this.sidebarComponent.isOpen) {
         e.preventDefault();
         this.closeMobileNav();

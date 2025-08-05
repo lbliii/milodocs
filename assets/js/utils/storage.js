@@ -122,14 +122,7 @@ class SafeStorage {
 export const localStorage = new SafeStorage('localStorage');
 export const sessionStorage = new SafeStorage('sessionStorage');
 
-// Legacy API for backward compatibility
-export const Storage = {
-  isAvailable: () => isStorageAvailable('localStorage'),
-  get: (key, fallback) => localStorage.get(key, fallback),
-  set: (key, value) => localStorage.set(key, value),
-  remove: (key) => localStorage.remove(key),
-  clear: () => localStorage.clear()
-};
+
 
 // Utility functions
 export function createNamespacedStorage(namespace) {

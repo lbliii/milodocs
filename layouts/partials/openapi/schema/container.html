@@ -62,24 +62,7 @@
     {{ else }}
       <div class="schema-ref-error">
         <span class="error-message">Unable to resolve reference: {{ $fullRef }}</span>
-        <div class="debug-info">
-          <p><strong>Debug Info:</strong></p>
-          <p>Full Reference: <code>{{ $fullRef }}</code></p>
-          <p>Looking for: <code>{{ $refPath }}</code></p>
-          <p>Available schemas: 
-          {{ if and $spec.Components $spec.Components.Schemas }}
-            {{ $schemaNames := slice }}
-            {{ range $name, $schema := $spec.Components.Schemas }}
-              {{ $schemaNames = $schemaNames | append $name }}
-            {{ end }}
-            {{ delimit $schemaNames ", " }}
-          {{ else }}
-            None found
-          {{ end }}
-          </p>
-          <p>Spec components available: {{ if $spec.Components }}YES{{ else }}NO{{ end }}</p>
-          <p>Spec type: {{ printf "%T" $spec }}</p>
-        </div>
+
       </div>
     {{ end }}
     {{ return }}
@@ -94,6 +77,8 @@
   <!-- Schema Header -->
   {{ partial "openapi/schema/header.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
   
+
+  
   <!-- Schema Description -->
   {{ with $actualSchema.Description }}
     <div class="schema-description">{{ . | markdownify }}</div>
@@ -106,6 +91,7 @@
   {{ partial "openapi/schema/properties.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
   
   <!-- Array Information -->
+
   {{ partial "openapi/schema/array-info.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
   
   <!-- Schema Composition -->

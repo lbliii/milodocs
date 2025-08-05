@@ -3,7 +3,7 @@
  * Handles interactive glossary cards with mouse-following gradient effects
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 
 export class Glossary extends Component {
   constructor(config = {}) {
@@ -167,5 +167,5 @@ export class Glossary extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('glossary', Glossary);

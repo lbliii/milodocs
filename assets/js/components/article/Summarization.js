@@ -3,7 +3,7 @@
  * Handles AI-powered article summarization with keyboard shortcuts
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 
 export class ArticleSummarization extends Component {
   constructor(config = {}) {
@@ -39,7 +39,7 @@ export class ArticleSummarization extends Component {
    * Setup keyboard shortcuts
    */
   setupKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
+    this.addEventListenerSafe(document, 'keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.code === 'Slash') {
         e.preventDefault();
         this.toggleSummarization();
@@ -211,5 +211,5 @@ export class ArticleSummarization extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('article-summarization', ArticleSummarization);

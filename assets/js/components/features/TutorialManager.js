@@ -3,7 +3,7 @@
  * Enhanced tutorial system with progress tracking, step validation, and interactive elements
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { localStorage } from '../../utils/storage.js';
 import { debounce } from '../../utils/dom.js';
 
@@ -542,5 +542,5 @@ export class TutorialManager extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('tutorial-manager', TutorialManager);

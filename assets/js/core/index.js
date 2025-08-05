@@ -3,5 +3,6 @@
  */
 
 export { EventBus, eventBus } from './EventBus.js';
-export { Component, ComponentManager } from './ComponentManager.js';
+export { Component } from './Component.js';
+export { default as ComponentManager } from './ComponentManager.js';
 export { MiloCore, milo } from './MiloCore.js';

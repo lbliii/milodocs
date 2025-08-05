@@ -3,7 +3,7 @@
  * Handles individual cell management, setup, and rendering
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { CopyManager } from '../../utils/index.js';
 
 export class NotebookCell extends Component {
@@ -432,5 +432,5 @@ export class NotebookCell extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('notebook-cell', NotebookCell);

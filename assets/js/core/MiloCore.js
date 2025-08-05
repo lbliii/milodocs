@@ -4,7 +4,7 @@
  */
 
 import { eventBus } from './EventBus.js';
-import { ComponentManager } from './ComponentManager.js';
+import ComponentManager from './ComponentManager.js';
 import { ready } from '../utils/dom.js';
 import { logger } from '../utils/Logger.js';
 
@@ -378,7 +378,7 @@ export class MiloCore {
     // This will be expanded as we migrate components
     
     // 🚀 Enable reactive DOM discovery for dynamic content
-    const reactiveEnabled = ComponentManager.setupReactiveDiscovery();
+    const reactiveEnabled = ComponentManager.enableReactiveDiscovery();
     if (reactiveEnabled) {
       this.features.add('reactive-discovery');
       log.debug('✅ Reactive DOM discovery enabled');
@@ -403,9 +403,10 @@ export class MiloCore {
    * Auto-discover and load components
    */
   async discoverAndLoadComponents() {
-    const components = await ComponentManager.autoDiscover();
+    // ComponentManager.autoDiscover() handles discovery and loading internally
+    ComponentManager.autoDiscover();
     
-    log.debug(`Discovered ${components.length} components:`, components.map(c => c.name));
+    log.debug('Component auto-discovery initiated');
   }
 
   /**

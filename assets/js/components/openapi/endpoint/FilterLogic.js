@@ -3,7 +3,7 @@
  * Handles core filtering algorithms and visibility logic
  */
 
-import { Component } from '../../../core/ComponentManager.js';
+import { Component } from '../../../core/Component.js';
 
 export class FilterLogic extends Component {
   constructor(config = {}) {
@@ -339,5 +339,5 @@ export class FilterLogic extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../../core/ComponentManager.js';
+import ComponentManager from '../../../core/ComponentManager.js';
 ComponentManager.register('filter-logic', FilterLogic);

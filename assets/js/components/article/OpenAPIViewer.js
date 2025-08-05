@@ -3,7 +3,8 @@
  * Handles OpenAPI documentation rendering and interactions
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 import { $$, $, CopyManager, localStorage } from '../../utils/index.js';
 
 export class OpenAPIViewer extends Component {
@@ -121,7 +122,7 @@ export class OpenAPIViewer extends Component {
    */
   bindEvents() {
     // Endpoint header clicks
-    this.addEventListener(document, 'click', (e) => {
+    this.addEventListenerSafe(document, 'click', (e) => {
       const header = e.target.closest('.endpoint-header');
       if (header) {
         const endpoint = header.closest('.endpoint-item');
@@ -133,7 +134,7 @@ export class OpenAPIViewer extends Component {
     });
     
     // Keyboard support for endpoint headers
-    this.addEventListener(document, 'keydown', (e) => {
+    this.addEventListenerSafe(document, 'keydown', (e) => {
       const header = e.target.closest('.endpoint-header');
       if (header && (e.key === 'Enter' || e.key === ' ')) {
         const endpoint = header.closest('.endpoint-item');
@@ -145,7 +146,7 @@ export class OpenAPIViewer extends Component {
     });
     
     // Tag filter clicks
-    this.addEventListener(document, 'click', (e) => {
+    this.addEventListenerSafe(document, 'click', (e) => {
       const tagFilter = e.target.closest('.tag-filter');
       if (tagFilter) {
         e.preventDefault();
@@ -155,7 +156,7 @@ export class OpenAPIViewer extends Component {
     });
     
     // Copy button clicks
-    this.addEventListener(document, 'click', (e) => {
+    this.addEventListenerSafe(document, 'click', (e) => {
       const copyBtn = e.target.closest('.copy-button');
       if (copyBtn) {
         e.preventDefault();

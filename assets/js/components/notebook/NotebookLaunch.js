@@ -3,7 +3,7 @@
  * Provides quick access to launch notebooks in external platforms like Colab, Binder, etc.
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { announceToScreenReader } from '../../utils/accessibility.js';
 import { logger } from '../../utils/Logger.js';
 
@@ -47,23 +47,23 @@ export class NotebookLaunch extends Component {
    */
   bindEvents() {
     // Toggle dropdown
-    this.addEventListener(this.toggle, 'click', this.handleToggle.bind(this));
+    this.addEventListenerSafe(this.toggle, 'click', this.handleToggle.bind(this));
 
     // Close on outside click
-    this.addEventListener(document, 'click', this.handleOutsideClick.bind(this));
+    this.addEventListenerSafe(document, 'click', this.handleOutsideClick.bind(this));
 
     // Close on escape key
-    this.addEventListener(document, 'keydown', this.handleKeydown.bind(this));
+    this.addEventListenerSafe(document, 'keydown', this.handleKeydown.bind(this));
 
     // Prevent dropdown from closing when clicking inside
-    this.addEventListener(this.dropdown, 'click', (e) => {
+    this.addEventListenerSafe(this.dropdown, 'click', (e) => {
       e.stopPropagation();
     });
 
     // Track clicks on platform links for analytics
     const platformLinks = this.dropdown.querySelectorAll('a[href*="colab"], a[href*="binder"], a[href*="nbviewer"]');
     platformLinks.forEach(link => {
-      this.addEventListener(link, 'click', (e) => {
+              this.addEventListenerSafe(link, 'click', (e) => {
         const platform = this.getPlatformFromUrl(link.href);
         this.trackPlatformLaunch(platform);
         this.closeDropdown();
@@ -214,5 +214,5 @@ export class NotebookLaunch extends Component {
 }
 
 // Auto-register the component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('notebook-launch', NotebookLaunch);

@@ -66,21 +66,20 @@
   </div>
 {{ end }}
 
-{{ with $schema.AdditionalProperties }}
-  <div class="schema-additional-properties">
-    <h6>Additional Properties</h6>
-    {{ if eq . true }}
-      <div class="additional-properties-any">Any additional properties are allowed</div>
-    {{ else if eq . false }}
-      <div class="additional-properties-none">No additional properties are allowed</div>
-    {{ else }}
-      <div class="additional-properties-schema">
-        {{ if (reflect.IsMap .) }}
-          {{ partial "openapi/schema/container.html" (dict "schema" . "spec" $spec "level" (add $level 1)) }}
-        {{ else }}
-          <span class="additional-properties-type">Additional properties of type: {{ printf "%T" . }}</span>
-        {{ end }}
-      </div>
-    {{ end }}
-  </div>
+{{ if isset $schema "AdditionalProperties" }}
+  {{ $additionalProps := $schema.AdditionalProperties }}
+  {{ if or (eq $additionalProps true) (eq $additionalProps false) (reflect.IsMap $additionalProps) }}
+    <div class="schema-additional-properties">
+      <h6>Additional Properties</h6>
+      {{ if eq $additionalProps true }}
+        <div class="additional-properties-any">Any additional properties are allowed</div>
+      {{ else if eq $additionalProps false }}
+        <div class="additional-properties-none">No additional properties are allowed</div>
+      {{ else if (reflect.IsMap $additionalProps) }}
+        <div class="additional-properties-schema">
+          {{ partial "openapi/schema/container.html" (dict "schema" $additionalProps "spec" $spec "level" (add $level 1)) }}
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
 {{ end }}

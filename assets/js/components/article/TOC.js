@@ -3,7 +3,7 @@
  * Handles TOC highlighting based on scroll position and reading progress
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { throttle } from '../../utils/dom.js';
 
 export class ArticleTOC extends Component {
@@ -179,5 +179,5 @@ export class ArticleTOC extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('article-toc', ArticleTOC);

@@ -3,7 +3,8 @@
  * Handles sidebar navigation with expand/collapse functionality
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 
 export class Sidebar extends Component {
   constructor(config = {}) {

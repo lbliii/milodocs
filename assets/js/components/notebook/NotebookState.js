@@ -3,7 +3,7 @@
  * Handles state management and persistence for notebook viewer
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { localStorage } from '../../utils/index.js';
 import { announceToScreenReader } from '../../utils/accessibility.js';
 
@@ -317,5 +317,5 @@ export class NotebookState extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('notebook-state', NotebookState);

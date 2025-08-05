@@ -3,7 +3,7 @@
  * Handles user interface, animations, and visual updates for endpoint filtering
  */
 
-import { Component } from '../../../core/ComponentManager.js';
+import { Component } from '../../../core/Component.js';
 
 export class FilterUI extends Component {
   constructor(config = {}) {
@@ -408,5 +408,5 @@ export class FilterUI extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../../core/ComponentManager.js';
+import ComponentManager from '../../../core/ComponentManager.js';
 ComponentManager.register('filter-ui', FilterUI);

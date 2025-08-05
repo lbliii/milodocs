@@ -3,7 +3,8 @@
  * Handles dark/light theme switching with safe localStorage and icon updates
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 import { localStorage, createNamespacedStorage } from '../../utils/storage.js';
 
 export class ThemeToggle extends Component {
@@ -41,10 +42,19 @@ export class ThemeToggle extends Component {
       return;
     }
 
+    // Check if this element already has event listeners from another instance
+    if (this.element._themeToggleInitialized) {
+      console.warn('ThemeToggle: Button already has event listeners from another instance');
+      return;
+    }
+
     this.cacheElements();
     this.setupEventListeners();
     this.updateUI();
     this.updateIconSources();
+    
+    // Mark element as initialized to prevent duplicate event listeners
+    this.element._themeToggleInitialized = true;
     
     console.log('ThemeToggle: Initialized successfully');
   }
@@ -64,12 +74,12 @@ export class ThemeToggle extends Component {
    * Setup event listeners
    */
   setupEventListeners() {
-    this.elements.toggle.addEventListener('click', () => {
+    this.addEventListenerSafe(this.elements.toggle, 'click', () => {
       this.toggleTheme();
     });
 
     // Keyboard support
-    this.elements.toggle.addEventListener('keydown', (e) => {
+    this.addEventListenerSafe(this.elements.toggle, 'keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.toggleTheme();
@@ -153,7 +163,7 @@ export class ThemeToggle extends Component {
       // Emit events for other components
       this.emit('theme:changed', { isDarkMode, theme: isDarkMode ? 'dark' : 'light' });
       
-      // Dispatch global custom event for backward compatibility
+
       document.dispatchEvent(new CustomEvent('themeChanged', { 
         detail: { isDarkMode } 
       }));
@@ -280,13 +290,13 @@ export class ThemeToggle extends Component {
    * Component cleanup
    */
   onDestroy() {
+    // Clean up the initialization flag so the element can be reinitialized if needed
+    if (this.element && this.element._themeToggleInitialized) {
+      delete this.element._themeToggleInitialized;
+    }
     console.log('ThemeToggle: Component destroyed');
   }
 }
-
-// Initialize theme immediately (before component registration)
-const themeToggle = new ThemeToggle();
-themeToggle.applyStoredTheme();
 
 // Auto-register component
 ComponentManager.register('theme-toggle', ThemeToggle);

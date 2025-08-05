@@ -23,7 +23,6 @@ export {
 export {
   localStorage,
   sessionStorage,
-  Storage,
   createNamespacedStorage
 } from './storage.js';
 

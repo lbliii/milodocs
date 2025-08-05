@@ -3,7 +3,7 @@
 {{- $level := .level | default 0 -}}
 
 <!-- Array Items -->
-{{ if or (eq $schema.Type "array") (in $schema.Type "array") }}
+{{ if and $schema.Type $schema.Items (in $schema.Type "array") }}
   <div class="schema-array-info">
     <h6>Array Information</h6>
     <div class="array-constraints">

@@ -4,7 +4,7 @@
  * Split into focused components for better maintainability
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { localStorage } from '../../utils/index.js';
 import { NotebookCell } from './NotebookCell.js';
 import { NotebookNavigation } from './NotebookNavigation.js';
@@ -121,7 +121,7 @@ export class NotebookViewer extends Component {
   setupEventListeners() {
     // Copy button events
     this.copyButtons.forEach(btn => {
-      const cleanup = this.addEventListener(btn, 'click', (e) => {
+      const cleanup = this.addEventListenerSafe(btn, 'click', (e) => {
         e.stopPropagation();
         this.handleCopyClick(btn);
       });
@@ -130,7 +130,7 @@ export class NotebookViewer extends Component {
 
     // Toggle button events
     this.toggleButtons.forEach(btn => {
-      const cleanup = this.addEventListener(btn, 'click', (e) => {
+      const cleanup = this.addEventListenerSafe(btn, 'click', (e) => {
         e.stopPropagation();
         this.handleToggleClick(btn);
       });
@@ -139,7 +139,7 @@ export class NotebookViewer extends Component {
 
     // Header click events for collapsible cells
     this.cellHeaders.forEach(header => {
-      const cleanup = this.addEventListener(header, 'click', (e) => {
+      const cleanup = this.addEventListenerSafe(header, 'click', (e) => {
         if (e.target.closest('.notebook-cell__toggle, .notebook-cell__copy-btn')) {
           return; // Don't handle if clicking on buttons
         }
@@ -148,7 +148,7 @@ export class NotebookViewer extends Component {
       this.eventCleanups.push(cleanup);
 
       // Keyboard events for headers
-      const keyCleanup = this.addEventListener(header, 'keydown', (e) => {
+      const keyCleanup = this.addEventListenerSafe(header, 'keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           this.handleHeaderClick(header);
@@ -158,7 +158,7 @@ export class NotebookViewer extends Component {
     });
 
     // Global keyboard shortcuts
-    const globalKeyCleanup = this.addEventListener(document, 'keydown', (e) => {
+    const globalKeyCleanup = this.addEventListenerSafe(document, 'keydown', (e) => {
       if (this.element.contains(e.target)) {
         this.handleGlobalKeydown(e);
       }
@@ -166,7 +166,7 @@ export class NotebookViewer extends Component {
     this.eventCleanups.push(globalKeyCleanup);
 
     // Preference change listeners
-    const motionCleanup = this.addEventListener(
+    const motionCleanup = this.addEventListenerSafe(
       window.matchMedia('(prefers-reduced-motion: reduce)'),
       'change',
       (e) => {
@@ -310,7 +310,7 @@ export class NotebookViewer extends Component {
     const cleanups = NotebookNavigation.setupKeyboardNavigation(
       this.element,
       this.cells,
-      (element, event, handler) => this.addEventListener(element, event, handler)
+              (element, event, handler) => this.addEventListenerSafe(element, event, handler)
     );
     
     // Store cleanups if returned
@@ -384,5 +384,5 @@ export class NotebookViewer extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('notebook-viewer', NotebookViewer);

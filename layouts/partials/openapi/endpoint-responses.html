@@ -4,7 +4,7 @@
 <div class="endpoint-section">
   <h4>Responses</h4>
   
-  <div class="responses-container">
+  <div class="responses-container" data-component="openapi-collapse">
     {{ range $statusCode, $response := $responses.Map }}
       <div class="response-item">
         <div class="response-header collapse__header"
@@ -24,7 +24,7 @@
           </div>
         </div>
         
-        <div class="response-details" id="response-{{ $statusCode }}">
+        <div class="response-details collapse__body" id="response-{{ $statusCode }}">
           <!-- Response Headers -->
           {{ with $response.Value.Headers }}
             <div class="response-headers">

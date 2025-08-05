@@ -3,7 +3,7 @@
  * Handles interactive tiles with mouse-following gradient effects and staggered animations
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 
 export class ArticleTiles extends Component {
   constructor(config = {}) {
@@ -219,5 +219,5 @@ export class ArticleTiles extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('article-tiles', ArticleTiles);

@@ -3,7 +3,7 @@
  * Handles keyboard navigation and focus management for notebook cells
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { announceToScreenReader } from '../../utils/accessibility.js';
 
 export class NotebookNavigation extends Component {
@@ -237,5 +237,5 @@ export class NotebookNavigation extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('notebook-navigation', NotebookNavigation);

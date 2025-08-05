@@ -3,7 +3,7 @@
  * Handles tab switching with button state management and content visibility
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 
 export class ArticleTabs extends Component {
   constructor(config = {}) {
@@ -336,5 +336,5 @@ export class ArticleTabs extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('article-tabs', ArticleTabs);

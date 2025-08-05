@@ -4,7 +4,8 @@
  * Split into focused components for better maintainability
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 import { $$, $, localStorage } from '../../utils/index.js';
 import { EndpointData } from './endpoint/EndpointData.js';
 import { FilterLogic } from './endpoint/FilterLogic.js';
@@ -86,7 +87,7 @@ export class EndpointFilter extends Component {
     FilterUI.setupFilterButtons(
       this.tagFilters,
       this.methodFilters,
-      (element, event, handler) => this.addEventListener(element, event, handler),
+              (element, event, handler) => this.addEventListenerSafe(element, event, handler),
       {
         onTagFilter: (tag) => this.filterByTag(tag),
         onMethodFilter: (method) => this.filterByMethod(method)
@@ -96,7 +97,7 @@ export class EndpointFilter extends Component {
     // Setup search input
     FilterUI.setupSearchInput(
       this.searchInput,
-      (element, event, handler) => this.addEventListener(element, event, handler),
+              (element, event, handler) => this.addEventListenerSafe(element, event, handler),
       {
         onSearch: (query) => this.searchEndpoints(query)
       }
@@ -104,13 +105,13 @@ export class EndpointFilter extends Component {
     
     // Setup clear all button
     FilterUI.setupClearAllButton(
-      (element, event, handler) => this.addEventListener(element, event, handler),
+              (element, event, handler) => this.addEventListenerSafe(element, event, handler),
       () => this.clearAllFilters()
     );
     
     // Setup keyboard shortcuts
     FilterUI.setupKeyboardShortcuts(
-      (element, event, handler) => this.addEventListener(element, event, handler),
+              (element, event, handler) => this.addEventListenerSafe(element, event, handler),
       () => this.clearAllFilters()
     );
   }

@@ -1,0 +1,35 @@
+{{- $operation := .operation -}}
+{{- $currentMethod := .currentMethod -}}
+{{- $currentPath := .currentPath -}}
+{{- $apiData := .apiData -}}
+{{- $endpointId := .endpointId -}}
+
+<div class="endpoint-details" id="{{ $endpointId }}-details">
+  
+  <!-- Parameters -->
+  {{ with $operation.Parameters }}
+    {{ partial "openapi/endpoint-parameters.html" (dict "parameters" . "spec" $apiData) }}
+  {{ end }}
+  
+  <!-- Request Body -->
+  {{ with $operation.RequestBody }}
+    {{ partial "openapi/endpoint-request-body.html" (dict "requestBody" . "spec" $apiData) }}
+  {{ end }}
+  
+  <!-- Responses -->
+  {{ with $operation.Responses }}
+    {{ partial "openapi/endpoint-responses.html" (dict "responses" . "spec" $apiData) }}
+  {{ end }}
+  
+  <!-- Security -->
+  {{ with $operation.Security }}
+    {{ partial "openapi/endpoint-security.html" (dict "security" . "spec" $apiData) }}
+  {{ end }}
+  
+  <!-- Code Examples -->
+  {{ partial "openapi/endpoint-examples.html" (dict 
+      "method" (upper $currentMethod)
+      "path" $currentPath
+      "operation" $operation
+      "spec" $apiData) }}
+</div>

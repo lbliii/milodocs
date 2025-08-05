@@ -3,7 +3,7 @@
  * Manages collapsible metadata panel with progressive disclosure and animations
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { localStorage } from '../../utils/storage.js';
 
 export class ArticleHeader extends Component {
@@ -55,13 +55,13 @@ export class ArticleHeader extends Component {
    */
   setupEventListeners() {
     // Primary toggle interaction
-    this.toggleBtn.addEventListener('click', (e) => {
+    this.addEventListenerSafe(this.toggleBtn, 'click', (e) => {
       e.preventDefault();
       this.toggle();
     });
 
     // Keyboard support
-    this.toggleBtn.addEventListener('keydown', (e) => {
+    this.addEventListenerSafe(this.toggleBtn, 'keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.toggle();
@@ -69,14 +69,14 @@ export class ArticleHeader extends Component {
     });
 
     // Close on escape key when expanded
-    document.addEventListener('keydown', (e) => {
+    this.addEventListenerSafe(document, 'keydown', (e) => {
       if (e.key === 'Escape' && this.isExpanded && !this.isAnimating) {
         this.collapse();
       }
     });
 
     // Handle window resize
-    window.addEventListener('resize', () => {
+    this.addEventListenerSafe(window, 'resize', () => {
       if (this.isExpanded) {
         this.adjustPanelHeight();
       }
@@ -297,5 +297,5 @@ export class ArticleHeader extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('article-header', ArticleHeader);

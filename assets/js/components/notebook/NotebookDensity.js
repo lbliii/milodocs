@@ -4,7 +4,7 @@
  * Follows existing pattern from RelatedContent.js view switching
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { announceToScreenReader } from '../../utils/accessibility.js';
 import { logger } from '../../utils/Logger.js';
 
@@ -68,7 +68,7 @@ export class NotebookDensity extends Component {
         this.densityButtons.set(density, btn);
         
         // Use this.addEventListener for auto-cleanup
-        this.addEventListener(btn, 'click', () => {
+        this.addEventListenerSafe(btn, 'click', () => {
           this.switchDensity(density);
         });
       }
@@ -186,5 +186,5 @@ export class NotebookDensity extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('notebook-density', NotebookDensity);

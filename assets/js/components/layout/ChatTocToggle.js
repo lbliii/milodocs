@@ -3,7 +3,7 @@
  * Handles switching between chat and table of contents views
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { localStorage } from '../../utils/index.js';
 
 export class ChatTocToggle extends Component {
@@ -208,6 +208,6 @@ export class ChatTocToggle extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('chat-toc-toggle', ChatTocToggle);
 

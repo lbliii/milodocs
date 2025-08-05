@@ -3,7 +3,7 @@
  * Coordinates between UI, API, History, and Bubbles modules
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { ChatUI } from './ChatUI.js';
 import { ChatAPI } from './ChatAPI.js';
 import { ChatHistory } from './ChatHistory.js';
@@ -242,5 +242,5 @@ export class ChatManager extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('article-chat', ChatManager);

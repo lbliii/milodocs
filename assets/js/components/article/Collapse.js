@@ -4,7 +4,8 @@
  * Migrated and enhanced from article-collapse.js
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 import { $$, aria } from '../../utils/index.js';
 import { transitions } from '../../utils/animation.js';
 
@@ -115,7 +116,7 @@ export class ArticleCollapse extends Component {
    */
   bindEvents() {
     // Use event delegation for better performance
-    this.addEventListener(document, 'click', (e) => {
+    this.addEventListenerSafe(document, 'click', (e) => {
       const toggle = e.target.closest('.toggle-collapse');
       if (toggle && this.toggles.has(toggle)) {
         e.preventDefault();
@@ -124,7 +125,7 @@ export class ArticleCollapse extends Component {
     });
     
     // Keyboard support
-    this.addEventListener(document, 'keydown', (e) => {
+    this.addEventListenerSafe(document, 'keydown', (e) => {
       const toggle = e.target.closest('.toggle-collapse');
       if (toggle && this.toggles.has(toggle)) {
         if (e.key === 'Enter' || e.key === ' ') {

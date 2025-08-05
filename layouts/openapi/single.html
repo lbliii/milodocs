@@ -41,105 +41,66 @@
 {{- $currentPath := .Params.endpoint.path -}}
 {{- $currentTag := .Params.endpoint.tag -}}
 {{- $operationId := .Params.endpoint.operationId -}}
+{{- $operation := .Params.endpoint.operation -}}
 
-{{/* Use operation data from front matter */}}
-{{ $operation := .Params.endpoint.operation }}
+{{- if not $apiData -}}
+  <div class="error-message">
+    <h2>API Data Not Found</h2>
+    <p>Could not load API data from page front matter.</p>
+  </div>
+  {{ return }}
+{{- end -}}
+
+{{/* Generate metadata and data attributes */}}
+{{ $metadata := partial "openapi/single/metadata.html" (dict 
+    "operation" $operation 
+    "currentMethod" $currentMethod 
+    "currentPath" $currentPath 
+    "operationId" $operationId) }}
 
 <article id="articleContent" 
-         class="openapi-spec api-endpoint"
-         data-component="openapi-viewer"
-         data-viewer-type="endpoint"
-         data-method="{{ upper $currentMethod }}"
-         data-has-parameters="{{ if $operation.Parameters }}true{{ else }}false{{ end }}"
-         data-has-request-body="{{ if $operation.RequestBody }}true{{ else }}false{{ end }}"
-         data-has-responses="{{ if $operation.Responses }}true{{ else }}false{{ end }}"
-         data-has-security="{{ if $operation.Security }}true{{ else }}false{{ end }}"
-         data-parameter-count="{{ if $operation.Parameters }}{{ len $operation.Parameters }}{{ else }}0{{ end }}"
-         data-response-count="{{ if $operation.Responses }}{{ len $operation.Responses.Map }}{{ else }}0{{ end }}"
-         {{- with $operation.Summary }}data-has-summary="true"{{ else }}data-has-summary="false"{{ end }}
-         {{- with $operation.Description }}data-has-description="true"{{ else }}data-has-description="false"{{ end }}>
-  
-  {{- if not $apiData -}}
-    <div class="error-message">
-      <h2>API Data Not Found</h2>
-      <p>Could not load API data from page front matter.</p>
-    </div>
-    {{ return }}
-  {{- end -}}
+         class="{{ $metadata.articleData.class }}"
+         data-component="{{ $metadata.articleData.dataComponent }}"
+         data-viewer-type="{{ $metadata.articleData.dataViewerType }}"
+         data-method="{{ $metadata.articleData.dataMethod }}"
+         data-has-parameters="{{ $metadata.articleData.dataHasParameters }}"
+         data-has-request-body="{{ $metadata.articleData.dataHasRequestBody }}"
+         data-has-responses="{{ $metadata.articleData.dataHasResponses }}"
+         data-has-security="{{ $metadata.articleData.dataHasSecurity }}"
+         data-parameter-count="{{ $metadata.articleData.dataParameterCount }}"
+         data-response-count="{{ $metadata.articleData.dataResponseCount }}"
+         data-has-summary="{{ $metadata.articleData.dataHasSummary }}"
+         data-has-description="{{ $metadata.articleData.dataHasDescription }}">
   
   <!-- Endpoint Header -->
-  <header class="api-endpoint-header" 
-          data-component="api-endpoint-header"
-          data-method="{{ upper $currentMethod }}"
-          data-tag="{{ $currentTag }}"
-          {{- with $operation.Summary }}data-has-summary="true"{{ else }}data-has-summary="false"{{ end }}
-          {{- with $operation.Description }}data-has-description="true"{{ else }}data-has-description="false"{{ end }}>
-    <div class="api-endpoint-breadcrumb">
-      <a href="../../">{{ $apiData.Info.Title }}</a> / 
-      <a href="../">{{ $currentTag }}</a> / 
-      {{ .Title }}
-    </div>
-    
-    <div class="endpoint-title-section">
-      <div class="endpoint-method-path">
-        <span class="method-badge method-badge--{{ lower $currentMethod }}">
-          {{ upper $currentMethod }}
-        </span>
-        <code class="endpoint-path">{{ $currentPath }}</code>
-      </div>
-      <h1>{{ $operation.Summary | default .Title }}</h1>
-      {{ with $operation.Description }}
-        <p class="endpoint-description">{{ . | markdownify }}</p>
-      {{ end }}
-    </div>
-  </header>
+  {{ partial "openapi/single/header.html" (dict 
+      "operation" $operation
+      "currentMethod" $currentMethod 
+      "currentPath" $currentPath 
+      "currentTag" $currentTag 
+      "apiData" $apiData 
+      "page" .) }}
   
-  <!-- Endpoint Details -->
+  <!-- Endpoint Content -->
   <div class="api-endpoint-content">
-    {{ $endpointId := printf "%s-%s" (upper $currentMethod) ($currentPath | replace "/" "-" | replace "{" "" | replace "}" "" | urlize) }}
-    
     <div class="endpoint-item" 
-         id="{{ $endpointId }}" 
-         data-component="endpoint-item"
-         data-method="{{ upper $currentMethod }}" 
-         data-path="{{ $currentPath }}"
-         data-operation-id="{{ $operationId }}"
-         data-has-parameters="{{ if $operation.Parameters }}true{{ else }}false{{ end }}"
-         data-has-request-body="{{ if $operation.RequestBody }}true{{ else }}false{{ end }}"
-         data-has-responses="{{ if $operation.Responses }}true{{ else }}false{{ end }}"
-         data-has-security="{{ if $operation.Security }}true{{ else }}false{{ end }}"
-         data-has-examples="true">
+         id="{{ $metadata.endpointData.id }}"
+         data-component="{{ $metadata.endpointData.dataComponent }}"
+         data-method="{{ $metadata.endpointData.dataMethod }}"
+         data-path="{{ $metadata.endpointData.dataPath }}"
+         data-operation-id="{{ $metadata.endpointData.dataOperationId }}"
+         data-has-parameters="{{ $metadata.endpointData.dataHasParameters }}"
+         data-has-request-body="{{ $metadata.endpointData.dataHasRequestBody }}"
+         data-has-responses="{{ $metadata.endpointData.dataHasResponses }}"
+         data-has-security="{{ $metadata.endpointData.dataHasSecurity }}"
+         data-has-examples="{{ $metadata.endpointData.dataHasExamples }}">
       
-      <!-- Endpoint Details -->
-      <div class="endpoint-details" id="{{ $endpointId }}-details">
-        
-        <!-- Parameters -->
-        {{ with $operation.Parameters }}
-          {{ partial "openapi/endpoint-parameters.html" (dict "parameters" . "spec" $apiData) }}
-        {{ end }}
-        
-        <!-- Request Body -->
-        {{ with $operation.RequestBody }}
-          {{ partial "openapi/endpoint-request-body.html" (dict "requestBody" . "spec" $apiData) }}
-        {{ end }}
-        
-        <!-- Responses -->
-        {{ with $operation.Responses }}
-          {{ partial "openapi/endpoint-responses.html" (dict "responses" . "spec" $apiData) }}
-        {{ end }}
-        
-        <!-- Security -->
-        {{ with $operation.Security }}
-          {{ partial "openapi/endpoint-security.html" (dict "security" . "spec" $apiData) }}
-        {{ end }}
-        
-        <!-- Code Examples -->
-        {{ partial "openapi/endpoint-examples.html" (dict 
-            "method" (upper $currentMethod)
-            "path" $currentPath
-            "operation" $operation
-            "spec" $apiData) }}
-      </div>
+      {{ partial "openapi/single/content.html" (dict 
+          "operation" $operation
+          "currentMethod" $currentMethod 
+          "currentPath" $currentPath 
+          "apiData" $apiData 
+          "endpointId" $metadata.endpointId) }}
     </div>
   </div>
 

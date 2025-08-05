@@ -3,7 +3,7 @@
  * Handles endpoint data extraction, parsing, and statistics building
  */
 
-import { Component } from '../../../core/ComponentManager.js';
+import { Component } from '../../../core/Component.js';
 
 export class EndpointData extends Component {
   constructor(config = {}) {
@@ -286,5 +286,5 @@ export class EndpointData extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../../core/ComponentManager.js';
+import ComponentManager from '../../../core/ComponentManager.js';
 ComponentManager.register('endpoint-data', EndpointData);

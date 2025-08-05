@@ -5,7 +5,7 @@
 
 import { modernFeatures, requestIdleTime, deepClone } from '../utils/FeatureDetection.js';
 import { eventBus } from '../core/EventBus.js';
-import { ComponentManager } from '../core/ComponentManager.js';
+import ComponentManager from '../core/ComponentManager.js';
 import { logger } from '../utils/Logger.js';
 
 const log = logger.component('ModernFeaturesDemo');

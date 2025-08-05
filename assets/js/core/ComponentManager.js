@@ -1,377 +1,114 @@
 /**
- * ComponentManager - Base component system for MiloDocs
- * Provides standardized component lifecycle and management
+ * ComponentManager - Component lifecycle and registry management
+ * Handles component registration, instantiation, and discovery
  */
 
+import { Component } from './Component.js';
 import { eventBus } from './EventBus.js';
 import { $ } from '../utils/dom.js';
 import { logger } from '../utils/Logger.js';
 import { modernFeatures, requestIdleTime } from '../utils/FeatureDetection.js';
+import { waitForDOM, waitForElement, isElementVisible, scrollToElement } from './utils/DOMUtils.js';
 
 const log = logger.component('ComponentManager');
 
 /**
- * Base Component class that all components should extend
+ * ComponentManager - Singleton for managing component lifecycle
  */
-export class Component {
-  constructor(config = {}) {
-    this.name = config.name || this.constructor.name.toLowerCase();
-    this.selector = config.selector;
-    this.element = config.element || (config.selector ? $(config.selector) : null);
-    this.dependencies = config.dependencies || [];
-    this.options = config.options || {};
-    this.state = 'uninitialized';
-    this.eventListeners = new Set();
-    this.childComponents = new Map();
-    
-    // Auto-generate unique instance ID
-    this.id = `${this.name}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
-    
-    // Bind context for event handlers
-    this.handleDestroy = this.handleDestroy.bind(this);
-    
-    // Listen for global destruction events
-    eventBus.on('component:destroy-all', this.handleDestroy);
-  }
-
-  /**
-   * Initialize the component
-   */
-  async init() {
-    if (this.state !== 'uninitialized') {
-      log.warn(`Component ${this.name} already initialized`);
-      return this;
-    }
-
-    try {
-      this.state = 'initializing';
-      
-      // Check if element exists (for DOM-dependent components)
-      if (this.selector && !this.element) {
-        log.debug(`${this.name}: No elements found for selector "${this.selector}" - component will remain inactive`);
-        this.state = 'failed';
-        return null;
-      }
-
-      // Load dependencies first
-      await this.loadDependencies();
-      
-      // Setup DOM elements and state
-      this.setupElements();
-      
-      // Bind events
-      this.bindEvents();
-      
-      // Call custom initialization
-      await this.onInit();
-      
-      this.state = 'ready';
-      
-      // Emit ready event
-      eventBus.emit(`component:${this.name}:ready`, this);
-      eventBus.emit('component:ready', { component: this });
-      
-      log.debug(`Component ${this.name} initialized`);
-      return this;
-      
-    } catch (error) {
-      log.error(`Component ${this.name} initialization failed:`, error);
-      this.state = 'failed';
-      return null;
-    }
-  }
-
-  /**
-   * Load component dependencies
-   */
-  async loadDependencies() {
-    if (!this.dependencies.length) return;
-    
-    const loadPromises = this.dependencies.map(async dep => {
-      if (typeof dep === 'string') {
-        // Load by component name
-        return ComponentManager.load(dep);
-      } else if (typeof dep === 'function') {
-        // Load by async function
-        return await dep();
-      }
-      return dep;
-    });
-    
-    await Promise.all(loadPromises);
-  }
-
-  /**
-   * Setup DOM elements - override in subclasses
-   */
-  setupElements() {
-    // Default implementation - can be overridden
-    if (this.element) {
-      this.element.setAttribute('data-component', this.name);
-      this.element.setAttribute('data-component-id', this.id);
-    }
-  }
-
-  /**
-   * Find a child element within the component's element
-   * Useful for components that work with multiple related elements
-   */
-  findChild(selector) {
-    if (!this.element) return null;
-    return this.element.querySelector(selector);
-  }
-
-  /**
-   * Find multiple child elements within the component's element
-   */
-  findChildren(selector) {
-    if (!this.element) return [];
-    return Array.from(this.element.querySelectorAll(selector));
-  }
-
-  /**
-   * Bind event listeners - override in subclasses
-   */
-  bindEvents() {
-    // Default implementation - can be overridden
-  }
-
-  /**
-   * Custom initialization hook - override in subclasses
-   */
-  async onInit() {
-    // Override in subclasses for custom initialization
-  }
-
-  /**
-   * Add event listener with automatic cleanup
-   */
-  addEventListener(element, event, handler, options = {}) {
-    element.addEventListener(event, handler, options);
-    
-    const cleanup = () => element.removeEventListener(event, handler, options);
-    this.eventListeners.add(cleanup);
-    
-    return cleanup;
-  }
-
-  /**
-   * Remove specific event listener
-   */
-  removeEventListener(cleanup) {
-    if (this.eventListeners.has(cleanup)) {
-      cleanup();
-      this.eventListeners.delete(cleanup);
-    }
-  }
-
-  /**
-   * Register child component
-   */
-  addChild(name, component) {
-    this.childComponents.set(name, component);
-    return component;
-  }
-
-  /**
-   * Get child component
-   */
-  getChild(name) {
-    return this.childComponents.get(name);
-  }
-
-  /**
-   * Emit component-specific event
-   */
-  emit(event, data = null) {
-    const eventName = `component:${this.name}:${event}`;
-    return eventBus.emit(eventName, { ...data, component: this });
-  }
-
-  /**
-   * Listen to component events
-   */
-  on(event, handler, context = null) {
-    const eventName = event.includes(':') ? event : `component:${this.name}:${event}`;
-    return eventBus.on(eventName, handler, { context });
-  }
-
-  /**
-   * Update component options
-   */
-  updateOptions(newOptions) {
-    this.options = { ...this.options, ...newOptions };
-    this.emit('options-updated', { options: this.options });
-  }
-
-  /**
-   * Get current state
-   */
-  getState() {
-    return {
-      name: this.name,
-      id: this.id,
-      state: this.state,
-      hasElement: !!this.element,
-      childCount: this.childComponents.size
-    };
-  }
-
-  /**
-   * Destroy component and cleanup
-   */
-  destroy() {
-    if (this.state === 'destroyed') return;
-    
-    this.state = 'destroying';
-    
-    // Cleanup event listeners
-    this.eventListeners.forEach(cleanup => cleanup());
-    this.eventListeners.clear();
-    
-    // Destroy child components
-    this.childComponents.forEach(child => {
-      if (typeof child.destroy === 'function') {
-        child.destroy();
-      }
-    });
-    this.childComponents.clear();
-    
-    // Call custom cleanup
-    this.onDestroy();
-    
-    // Remove from DOM if needed
-    if (this.element && this.element.parentNode) {
-      this.element.removeAttribute('data-component');
-      this.element.removeAttribute('data-component-id');
-    }
-    
-    // Cleanup global listeners
-    eventBus.off('component:destroy-all', this.handleDestroy);
-    
-    this.state = 'destroyed';
-    this.emit('destroyed');
-    
-    log.debug(`Component ${this.name} destroyed`);
-  }
-
-  /**
-   * Custom destruction hook - override in subclasses
-   */
-  onDestroy() {
-    // Override in subclasses for custom cleanup
-  }
-
-  /**
-   * Handle global destroy event
-   */
-  handleDestroy() {
-    this.destroy();
-  }
-}
-
-/**
- * ComponentManager - Manages component registration and lifecycle
- */
-export class ComponentManager {
+class ComponentManager {
   static components = new Map();
   static instances = new Map();
   static autoDiscovery = true;
   static reactiveObserver = null;
   static isReactiveEnabled = false;
+  static lastActivity = Date.now();
 
   /**
    * Register a component class
    */
   static register(name, ComponentClass, options = {}) {
-    this.components.set(name, { ComponentClass, options });
-    log.trace(`Registered component: ${name}`);
+    if (this.components.has(name)) {
+      log.warn(`Component "${name}" is already registered. Overwriting...`);
+    }
+
+    this.components.set(name, {
+      ComponentClass,
+      options: {
+        autoInit: true,
+        lazy: false,
+        ...options
+      }
+    });
+
+    log.debug(`Registered component: ${name}`);
+    
+    // Don't trigger auto-discovery immediately to prevent infinite loops
+    // Auto-discovery will run from the main initialization process
   }
 
   /**
-   * Create component instance
+   * Create and initialize a component instance
    */
-  static create(name, config = {}) {
-    const registration = this.components.get(name);
-    if (!registration) {
+  static async create(name, config = {}) {
+    const componentData = this.components.get(name);
+    if (!componentData) {
       log.error(`Component "${name}" not registered`);
       return null;
     }
 
-    const { ComponentClass, options } = registration;
-    const mergedConfig = { ...options, ...config, name };
-    
     try {
-      const instance = new ComponentClass(mergedConfig);
+      const { ComponentClass } = componentData;
+      
+      // Create temporary instance to get selector info
+      const tempInstance = new ComponentClass({
+        name,
+        ...componentData.options,
+        ...config
+      });
+      
+      // Check for duplicate instances targeting the same DOM element
+      if (tempInstance.selector) {
+        const existingInstance = this.findInstanceBySelector(name, tempInstance.selector);
+        if (existingInstance) {
+          log.warn(`Component "${name}" instance already exists for selector "${tempInstance.selector}". Returning existing instance.`);
+          return existingInstance;
+        }
+      }
+      
+      // Use the temp instance as our actual instance
+      const instance = tempInstance;
+
+      // Store instance reference
       this.instances.set(instance.id, instance);
-      return instance;
+
+      // Initialize the component
+      const result = await instance.init();
+      
+      if (result) {
+        log.debug(`Component ${name} initialized`);
+        eventBus.emit('component:created', { name, instance });
+        this.lastActivity = Date.now();
+      }
+
+      return result;
     } catch (error) {
-      log.error(`Failed to create component "${name}":`, error);
+      log.error(`Failed to create instance for: ${name}`, error);
+      
       return null;
     }
   }
 
   /**
-   * Load and initialize component
+   * Load a component (register if needed, then create instance)
    */
   static async load(name, config = {}) {
-    const instance = this.create(name, config);
-    if (!instance) return null;
-    
-    return await instance.init();
-  }
-
-  /**
-   * Auto-discover and load components on page
-   */
-  static async autoDiscover() {
-    if (!this.autoDiscovery) return;
-    
-    const discoveredComponents = [];
-    
-    // Look for data-component attributes
-    document.querySelectorAll('[data-component]').forEach(element => {
-      const componentName = element.getAttribute('data-component');
-      const componentId = element.getAttribute('data-component-id');
-      
-      log.trace(`Found element with data-component="${componentName}":`, element);
-      
-      // Skip if already initialized
-      if (componentId && this.getInstance(componentId)) {
-        log.debug(`Skipping ${componentName} - already initialized`);
-        return;
-      }
-      
-      if (this.components.has(componentName)) {
-        discoveredComponents.push({
-          name: componentName,
-          element,
-          selector: null
-        });
-        log.trace(`Will load component: ${componentName}`);
-      } else {
-        log.warn(`Component "${componentName}" not registered`);
-      }
-    });
-    
-    log.debug(`Discovered ${discoveredComponents.length} components to load`);
-    
-    // Load discovered components
-    const loadPromises = discoveredComponents.map(({ name, element }) => {
-      log.trace(`Loading component: ${name}`);
-      return this.load(name, { element });
-    });
-    
-    const results = await Promise.allSettled(loadPromises);
-    const successful = results.filter(r => r.status === 'fulfilled' && r.value).map(r => r.value);
-    const failed = results.filter(r => r.status === 'rejected');
-    
-    if (failed.length > 0) {
-      log.warn(`${failed.length} components failed to load:`, failed.map(f => f.reason));
+    // Check if already registered
+    if (!this.components.has(name)) {
+      log.warn(`Component "${name}" not registered`);
+      return null;
     }
-    
-    log.info(`Auto-discovered and loaded ${successful.length} components`);
-    return successful;
+
+    return this.create(name, config);
   }
 
   /**
@@ -382,59 +119,104 @@ export class ComponentManager {
   }
 
   /**
-   * Get all instances of a component type
+   * Get all instances of a component by name
    */
-  static getInstances(name) {
+  static getInstancesByName(name) {
     return Array.from(this.instances.values()).filter(instance => instance.name === name);
   }
 
   /**
-   * Get all active instances
+   * Find an existing instance by component name and selector
    */
-  static getAllInstances() {
-    return Array.from(this.instances.values());
+  static findInstanceBySelector(name, selector) {
+    return Array.from(this.instances.values()).find(instance => 
+      instance.name === name && 
+      instance.selector === selector &&
+      instance.state !== 'failed'
+    );
   }
 
   /**
-   * Destroy component instance
+   * Destroy a component instance
    */
   static destroy(id) {
     const instance = this.instances.get(id);
     if (instance) {
       instance.destroy();
       this.instances.delete(id);
+      log.debug(`Destroyed component instance: ${id}`);
     }
   }
 
   /**
-   * Destroy all instances
+   * Destroy all instances of a component
+   */
+  static destroyByName(name) {
+    const instances = this.getInstancesByName(name);
+    instances.forEach(instance => this.destroy(instance.id));
+  }
+
+  /**
+   * Destroy all component instances
    */
   static destroyAll() {
+    log.info('Destroying all component instances');
     eventBus.emit('component:destroy-all');
+    
+    this.instances.forEach((instance, id) => {
+      try {
+        instance.destroy();
+      } catch (error) {
+        log.warn(`Error destroying component ${id}:`, error);
+      }
+    });
+    
     this.instances.clear();
   }
 
   /**
-   * Get registered components
+   * Auto-discover components in the DOM
    */
-  static getRegistered() {
-    return Array.from(this.components.keys());
+  static autoDiscover() {
+    if (!this.autoDiscovery) return;
+
+    // Use requestIdleCallback to avoid blocking the main thread
+    requestIdleTime(() => {
+      this.discoverAndLoadComponents();
+    }, { priority: 'low' });
   }
 
   /**
-   * Enable/disable auto-discovery
+   * Discover and load components from DOM
    */
-  static setAutoDiscovery(enabled) {
-    this.autoDiscovery = enabled;
+  static discoverAndLoadComponents() {
+    const elementsWithComponents = document.querySelectorAll('[data-component]');
+    const discoveredComponents = new Set();
+
+    elementsWithComponents.forEach(element => {
+      const componentName = element.getAttribute('data-component');
+      if (componentName && this.components.has(componentName)) {
+        discoveredComponents.add(componentName);
+      }
+    });
+
+    if (discoveredComponents.size > 0) {
+      log.info(`Discovered ${discoveredComponents.size} components: [${Array.from(discoveredComponents).join(', ')}]`);
+    }
+
+    // Load discovered components
+    Array.from(discoveredComponents).forEach(componentName => {
+      this.load(componentName);
+    });
+
+    log.info(`Auto-discovered and loaded ${discoveredComponents.size} components`);
   }
 
   /**
-   * 🚀 Setup reactive DOM discovery with MutationObserver
-   * Automatically enhances components added to DOM dynamically
-   * Perfect for Hugo shortcodes, API docs, and dynamic content
+   * Enable reactive DOM discovery
    */
-  static setupReactiveDiscovery() {
-    if (!modernFeatures.mutationObserver) {
+  static enableReactiveDiscovery() {
+    if (!window.MutationObserver) {
       log.warn('MutationObserver not supported, reactive discovery disabled');
       return false;
     }
@@ -471,105 +253,74 @@ export class ComponentManager {
   }
 
   /**
-   * 🚀 Handle DOM mutations for reactive enhancement
+   * Handle DOM mutations for reactive enhancement
    */
   static handleDOMMutations(mutations) {
     const enhancedElements = new Set();
     let newComponentCount = 0;
+
+    // Throttle mutation handling to prevent infinite loops
+    const now = Date.now();
+    if (now - this.lastActivity < 500) {
+      return; // Skip if too recent - increased to 500ms
+    }
 
     mutations.forEach(mutation => {
       // Handle added nodes
       if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach(node => {
           if (node.nodeType === 1) { // Element node
-            const enhanced = this.enhanceNewElements(node);
-            enhanced.forEach(el => enhancedElements.add(el));
-            newComponentCount += enhanced.length;
+            // Check if the node itself has a component
+            const componentName = node.getAttribute?.('data-component');
+            if (componentName && this.components.has(componentName) && 
+                !node.hasAttribute('data-component-id') && 
+                !node.hasAttribute('data-component-processing')) {
+              enhancedElements.add(node);
+              newComponentCount++;
+            }
+
+            // Check descendants for components
+            const descendants = node.querySelectorAll?.('[data-component]:not([data-component-id]):not([data-component-processing])');
+            descendants?.forEach(descendant => {
+              const descendantComponent = descendant.getAttribute('data-component');
+              if (descendantComponent && this.components.has(descendantComponent)) {
+                enhancedElements.add(descendant);
+                newComponentCount++;
+              }
+            });
           }
         });
       }
-      
+
       // Handle attribute changes
-      if (mutation.type === 'attributes' && 
-          mutation.attributeName === 'data-component' &&
-          mutation.target.nodeType === 1) {
-        const enhanced = this.enhanceNewElements(mutation.target);
-        enhanced.forEach(el => enhancedElements.add(el));
-        newComponentCount += enhanced.length;
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-component') {
+        const element = mutation.target;
+        const componentName = element.getAttribute('data-component');
+        
+        if (componentName && this.components.has(componentName) && 
+            !element.hasAttribute('data-component-id') && 
+            !element.hasAttribute('data-component-processing')) {
+          enhancedElements.add(element);
+          newComponentCount++;
+        }
       }
     });
 
     if (newComponentCount > 0) {
-      log.debug(`🔄 Reactively enhanced ${newComponentCount} new components`);
+      log.info(`Reactively enhanced ${newComponentCount} new components`);
       
-      // Emit event for tracking/debugging
-      eventBus.emit('component-manager:reactive-enhanced', {
-        count: newComponentCount,
-        elements: Array.from(enhancedElements)
+      // Load new components
+      enhancedElements.forEach(element => {
+        const componentName = element.getAttribute('data-component');
+        // Mark as processing immediately to prevent re-processing
+        element.setAttribute('data-component-processing', 'true');
+        this.load(componentName, { element }).then(() => {
+          element.removeAttribute('data-component-processing');
+        });
       });
+
+      this.lastActivity = Date.now();
     }
-  }
-
-  /**
-   * 🚀 Enhance newly added elements and their children
-   * Returns array of enhanced elements
-   */
-  static enhanceNewElements(rootElement) {
-    const enhanced = [];
-
-    // Check if the root element itself needs enhancement
-    if (rootElement.hasAttribute && rootElement.hasAttribute('data-component')) {
-      const wasEnhanced = this.enhanceSingleElement(rootElement);
-      if (wasEnhanced) enhanced.push(rootElement);
-    }
-
-    // Find and enhance all child components
-    if (rootElement.querySelectorAll) {
-      const componentElements = rootElement.querySelectorAll('[data-component]');
-      componentElements.forEach(element => {
-        const wasEnhanced = this.enhanceSingleElement(element);
-        if (wasEnhanced) enhanced.push(element);
-      });
-    }
-
-    return enhanced;
-  }
-
-  /**
-   * 🚀 Enhance a single element if needed
-   * Returns true if element was enhanced, false if skipped
-   */
-  static enhanceSingleElement(element) {
-    const componentName = element.getAttribute('data-component');
-    const componentId = element.getAttribute('data-component-id');
-
-    // Skip if no component name
-    if (!componentName) return false;
-
-    // Skip if already initialized
-    if (componentId && this.getInstance(componentId)) {
-      log.trace(`Skipping ${componentName} - already initialized`);
-      return false;
-    }
-
-    // Skip if component not registered
-    if (!this.components.has(componentName)) {
-      log.trace(`Component "${componentName}" not registered yet, will retry later`);
-      return false;
-    }
-
-    log.trace(`🔄 Reactively enhancing component: ${componentName}`);
-
-    // Load the component asynchronously
-    this.load(componentName, { element })
-      .then(instance => {
-        if (instance) {
-          log.trace(`✅ Reactively enhanced: ${componentName}`);
-        }
-      })
-      .catch(error => {
-        log.warn(`Failed to reactively enhance ${componentName}:`, error);
-      });
 
     return true;
   }
@@ -587,4 +338,64 @@ export class ComponentManager {
     eventBus.emit('component-manager:reactive-disabled');
     log.info('Reactive DOM discovery disabled');
   }
+
+  /**
+   * Get component statistics for debugging
+   */
+  static getStats() {
+    return {
+      registered: this.components.size,
+      instances: this.instances.size,
+      reactive: this.isReactiveEnabled,
+      lastActivity: this.lastActivity
+    };
+  }
+
+  /**
+   * Enable/disable auto-discovery
+   */
+  static setAutoDiscovery(enabled) {
+    this.autoDiscovery = enabled;
+    log.info(`Auto-discovery ${enabled ? 'enabled' : 'disabled'}`);
+    
+    if (enabled) {
+      this.autoDiscover();
+    }
+  }
+
+  /**
+   * Check if a component is registered
+   */
+  static isRegistered(name) {
+    return this.components.has(name);
+  }
+
+  /**
+   * Get list of registered component names
+   */
+  static getRegisteredNames() {
+    return Array.from(this.components.keys());
+  }
+
+  /**
+   * Get component instances by name
+   */
+  static getInstances(componentName) {
+    if (!this.instances.has(componentName)) {
+      return [];
+    }
+    return this.instances.get(componentName);
+  }
+
+  /**
+   * Utility methods re-exported for convenience
+   */
+  static waitForDOM = waitForDOM;
+  static waitForElement = waitForElement;
+  static isElementVisible = isElementVisible;
+  static scrollToElement = scrollToElement;
 }
+
+
+export { Component, ComponentManager };
+export default ComponentManager;

@@ -3,7 +3,7 @@
  * Handles saving and loading filter state to/from localStorage
  */
 
-import { Component } from '../../../core/ComponentManager.js';
+import { Component } from '../../../core/Component.js';
 import { localStorage } from '../../../utils/index.js';
 
 export class FilterPersistence extends Component {
@@ -351,5 +351,5 @@ export class FilterPersistence extends Component {
 }
 
 // Auto-register component
-import { ComponentManager } from '../../../core/ComponentManager.js';
+import ComponentManager from '../../../core/ComponentManager.js';
 ComponentManager.register('filter-persistence', FilterPersistence);

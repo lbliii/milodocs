@@ -4,7 +4,8 @@
  * All cells are rendered by Hugo, JavaScript just shows/hides them
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 
 export class NotebookProgressiveReveal extends Component {
   constructor(config = {}) {
@@ -247,7 +248,7 @@ export class NotebookProgressiveReveal extends Component {
       scrollTimeout = setTimeout(handleScroll, 100);
     };
 
-    this.addEventListener(window, 'scroll', throttledScroll);
+            this.addEventListenerSafe(window, 'scroll', throttledScroll);
   }
 
   /**

@@ -21,8 +21,7 @@ async function initializeMiloDocs() {
     // Register critical components
     await registerAllComponents();
     
-    // Initialize legacy compatibility layer
-    initializeLegacySupport();
+
     
     // Setup global utilities
     await setupGlobalUtilities();
@@ -35,121 +34,13 @@ async function initializeMiloDocs() {
     
   } catch (error) {
     log.error('MiloDocs initialization failed:', error);
-    
-    // Fallback to legacy system if new system fails
-    await initializeLegacyFallback();
+
+    throw error;
   }
 }
 
-/**
- * Setup legacy support for existing code
- */
-function initializeLegacySupport() {
-  const environment = milo.environment;
-  
-  // Maintain backward compatibility with existing global variables
-  window.HugoEnvironment = environment.hugo;
-  
-  // Legacy global functions that existing code might depend on
-  window.createRippleEffect = async (element, event) => {
-    const { createRipple } = await import('./utils/dom.js');
-    createRipple(element, event);
-  };
-  
-  // Navigation debug utilities
-  window.resetNavigation = () => {
-    const { ComponentManager } = milo.core;
-    const sidebar = ComponentManager.getInstances('navigation-sidebar-left')[0];
-    if (sidebar && sidebar.reset) {
-      sidebar.reset();
-      log.info('Navigation reset successfully');
-    } else {
-      log.warn('Sidebar component not found or reset method not available');
-    }
-  };
-  
-  // Enhanced debug utilities
-  window.debugSidebar = () => {
-    const { ComponentManager } = milo.core;
-    const sidebar = ComponentManager.getInstances('navigation-sidebar-left')[0];
-    const sidebarElement = document.getElementById('sidebar-left');
-    const overlay = document.getElementById('mobileNavOverlay');
-    const header = document.querySelector('.sidebar-header');
-    
-    console.group('🔍 Sidebar Debug Info');
-    console.log('Window width:', window.innerWidth);
-    console.log('Is mobile:', window.innerWidth < 768);
-    console.log('Sidebar component:', sidebar);
-    console.log('Sidebar isOpen:', sidebar?.isOpen);
-    console.log('Sidebar element:', sidebarElement);
-    console.log('Sidebar classes:', sidebarElement?.className);
-    console.log('Header element:', header);
-    console.log('Header display:', header ? getComputedStyle(header).display : 'not found');
-    console.log('Overlay element:', overlay);
-    console.log('Overlay classes:', overlay?.className);
-    console.log('Body overflow:', document.body.style.overflow);
-    console.groupEnd();
-    
-    // Auto-fix if needed
-    if (sidebar && sidebar.checkAndSetProperState) {
-      console.log('🔧 Auto-fixing sidebar state...');
-      sidebar.checkAndSetProperState();
-    }
-  };
-  
-  // Component registration debug utility
-  window.debugComponents = () => {
-    const { ComponentManager } = milo.core;
-    
-    console.group('📦 Component Registration Status');
-    console.log('Registered components:', Array.from(ComponentManager.components.keys()));
-    console.log('Active instances:', Array.from(ComponentManager.instances.keys()).map(id => {
-      const instance = ComponentManager.instances.get(id);
-      return {
-        id,
-        name: instance.name,
-        initialized: instance.isInitialized,
-        element: instance.element?.tagName || 'none'
-      };
-    }));
-    
-    // Check for unregistered components in DOM
-    const elementsWithComponents = document.querySelectorAll('[data-component]');
-    const unregistered = [];
-    elementsWithComponents.forEach(el => {
-      const componentName = el.getAttribute('data-component');
-      if (!ComponentManager.components.has(componentName)) {
-        unregistered.push(componentName);
-      }
-    });
-    
-    if (unregistered.length > 0) {
-      console.warn('⚠️ Unregistered components found:', [...new Set(unregistered)]);
-    } else {
-      console.log('✅ All DOM components are registered');
-    }
-    
-    console.groupEnd();
-  };
-  
-  // Legacy notification system
-  if (!window.MiloUX) {
-    window.MiloUX = {
-      showNotification: (message, type = 'info', duration = 3000) => {
-        log.debug(`Notification (${type}): ${message}`);
-        // This will be replaced with the proper notification system
-      }
-    };
-  }
-  
-  // Legacy announcer
-  if (!window.announceToScreenReader) {
-    window.announceToScreenReader = (message) => {
-      log.debug(`Screen Reader: ${message}`);
-      // This will be replaced with the proper accessibility system
-    };
-  }
-}
+
+
 
 /**
  * Setup global utilities and enhancements
@@ -283,43 +174,7 @@ async function setupScrollEnhancements() {
   window.addEventListener('scroll', updateScrollEffects, { passive: true });
 }
 
-/**
- * Fallback to legacy system if new system fails
- */
-async function initializeLegacyFallback() {
-  log.warn('Falling back to legacy initialization');
-  
-  try {
-    // Try to load and run the original main.js functionality
-    // This ensures the site still works even if the new system fails
-    const originalMain = await import('./main-legacy.js');
-    if (originalMain && typeof originalMain.init === 'function') {
-      await originalMain.init();
-    }
-  } catch (error) {
-    log.error('Legacy fallback also failed:', error);
-    
-    // Last resort: basic functionality only
-    initializeBasicFunctionality();
-  }
-}
 
-/**
- * Minimal functionality as last resort
- */
-function initializeBasicFunctionality() {
-  log.warn('Running in basic mode');
-  
-  // Ensure theme switching works at minimum
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  if (darkModeToggle) {
-    darkModeToggle.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      const isDark = document.documentElement.classList.contains('dark');
-              localStorage.setItem('theme.mode', isDark ? 'dark' : 'light');
-    });
-  }
-}
 
 /**
  * Start initialization when DOM is ready

@@ -3,7 +3,7 @@
  * Provides copy URL and quick sharing with popular AI assistants
  */
 
-import { Component } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
 import { copyToClipboard } from '../../utils/dom.js';
 import { announceToScreenReader } from '../../utils/accessibility.js';
 import { logger } from '../../utils/Logger.js';
@@ -63,26 +63,26 @@ setupElements() {
    */
   bindEvents() {
     // Toggle dropdown
-    this.addEventListener(this.toggle, 'click', this.handleToggle.bind(this));
+    this.addEventListenerSafe(this.toggle, 'click', this.handleToggle.bind(this));
 
     // Copy URL button
     if (this.copyUrlButton) {
-      this.addEventListener(this.copyUrlButton, 'click', this.handleCopyUrl.bind(this));
+      this.addEventListenerSafe(this.copyUrlButton, 'click', this.handleCopyUrl.bind(this));
     }
 
     // Copy content button
     if (this.copyContentButton) {
-      this.addEventListener(this.copyContentButton, 'click', this.handleCopyContent.bind(this));
+      this.addEventListenerSafe(this.copyContentButton, 'click', this.handleCopyContent.bind(this));
     }
 
     // Close on outside click
-    this.addEventListener(document, 'click', this.handleOutsideClick.bind(this));
+    this.addEventListenerSafe(document, 'click', this.handleOutsideClick.bind(this));
 
     // Close on escape key
-    this.addEventListener(document, 'keydown', this.handleKeydown.bind(this));
+    this.addEventListenerSafe(document, 'keydown', this.handleKeydown.bind(this));
 
     // Prevent dropdown from closing when clicking inside
-    this.addEventListener(this.dropdown, 'click', (e) => {
+    this.addEventListenerSafe(this.dropdown, 'click', (e) => {
       e.stopPropagation();
     });
   }
@@ -366,5 +366,5 @@ setupElements() {
 }
 
 // Auto-register the component
-import { ComponentManager } from '../../core/ComponentManager.js';
+import ComponentManager from '../../core/ComponentManager.js';
 ComponentManager.register('copy-page', CopyPage);

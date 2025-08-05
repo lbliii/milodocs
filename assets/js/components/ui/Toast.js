@@ -3,7 +3,8 @@
  * Dedicated, clean toast notification system
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 
 export class Toast extends Component {
   constructor(config = {}) {
@@ -26,7 +27,7 @@ export class Toast extends Component {
       };
     }
     
-    // Set up MiloUX global for backward compatibility
+  
     if (!window.MiloUX) {
       window.MiloUX = {};
     }

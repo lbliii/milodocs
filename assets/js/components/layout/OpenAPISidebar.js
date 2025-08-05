@@ -3,7 +3,8 @@
  * Handles OpenAPI-specific sidebar navigation with smooth scrolling and active states
  */
 
-import { Component, ComponentManager } from '../../core/ComponentManager.js';
+import { Component } from '../../core/Component.js';
+import ComponentManager from '../../core/ComponentManager.js';
 import { logger } from '../../utils/Logger.js';
 
 const log = logger.component('OpenAPISidebar');

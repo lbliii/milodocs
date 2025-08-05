@@ -1,0 +1,63 @@
+{{- $operation := .operation -}}
+{{- $currentMethod := .currentMethod -}}
+{{- $currentPath := .currentPath -}}
+{{- $operationId := .operationId -}}
+
+{{/* Generate endpoint ID for consistency */}}
+{{ $endpointId := printf "%s-%s" (upper $currentMethod) ($currentPath | replace "/" "-" | replace "{" "" | replace "}" "" | urlize) }}
+
+{{/* Pre-compute conditional values */}}
+{{ $hasParameters := "false" }}
+{{ if $operation.Parameters }}{{ $hasParameters = "true" }}{{ end }}
+
+{{ $hasRequestBody := "false" }}
+{{ if $operation.RequestBody }}{{ $hasRequestBody = "true" }}{{ end }}
+
+{{ $hasResponses := "false" }}
+{{ if $operation.Responses }}{{ $hasResponses = "true" }}{{ end }}
+
+{{ $hasSecurity := "false" }}
+{{ if $operation.Security }}{{ $hasSecurity = "true" }}{{ end }}
+
+{{ $hasSummary := "false" }}
+{{ if $operation.Summary }}{{ $hasSummary = "true" }}{{ end }}
+
+{{ $hasDescription := "false" }}
+{{ if $operation.Description }}{{ $hasDescription = "true" }}{{ end }}
+
+{{ $parameterCount := 0 }}
+{{ if $operation.Parameters }}{{ $parameterCount = len $operation.Parameters }}{{ end }}
+
+{{ $responseCount := 0 }}
+{{ if $operation.Responses }}{{ $responseCount = len $operation.Responses.Map }}{{ end }}
+
+{{/* Return data for use in templates */}}
+{{ return (dict 
+    "endpointId" $endpointId
+    "articleData" (dict
+        "class" "openapi-spec api-endpoint"
+        "dataComponent" "openapi-viewer"
+        "dataViewerType" "endpoint"
+        "dataMethod" (upper $currentMethod)
+        "dataHasParameters" $hasParameters
+        "dataHasRequestBody" $hasRequestBody
+        "dataHasResponses" $hasResponses
+        "dataHasSecurity" $hasSecurity
+        "dataParameterCount" $parameterCount
+        "dataResponseCount" $responseCount
+        "dataHasSummary" $hasSummary
+        "dataHasDescription" $hasDescription
+    )
+    "endpointData" (dict
+        "id" $endpointId
+        "dataComponent" "endpoint-item"
+        "dataMethod" (upper $currentMethod)
+        "dataPath" $currentPath
+        "dataOperationId" $operationId
+        "dataHasParameters" $hasParameters
+        "dataHasRequestBody" $hasRequestBody
+        "dataHasResponses" $hasResponses
+        "dataHasSecurity" $hasSecurity
+        "dataHasExamples" "true"
+    )
+) }}

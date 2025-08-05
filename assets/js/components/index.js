@@ -3,7 +3,7 @@
  * Enhanced with modern vanilla JS performance optimizations
  */
 
-import { ComponentManager } from '../core/ComponentManager.js';
+import ComponentManager from '../core/ComponentManager.js';
 import { logger } from '../utils/Logger.js';
 import { requestIdleTime, logFeatureSupport } from '../utils/FeatureDetection.js';
 
@@ -33,7 +33,7 @@ export const componentRegistry = {
   
   // OpenAPI components
   'openapi-viewer': () => import('./article/OpenAPIViewer.js'),
-  'openapi-collapse': () => import('./article/OpenAPICollapse.js'),
+  'openapi-collapse': () => import('./openapi/OpenAPICollapse.js'),
   'endpoint-filter': () => import('./openapi/EndpointFilter.js'),
   'endpoint-data': () => import('./openapi/endpoint/EndpointData.js'),
   'filter-logic': () => import('./openapi/endpoint/FilterLogic.js'),
@@ -42,7 +42,6 @@ export const componentRegistry = {
 
   
   // Layout components
-  'theme': () => import('./layout/Theme.js'),
   'theme-toggle': () => import('./layout/ThemeToggle.js'),
   'openapi-sidebar': () => import('./layout/OpenAPISidebar.js'),
   'navigation-mobile-toggle': () => import('./layout/MobileNav.js'),
@@ -78,17 +77,17 @@ export async function loadComponent(name) {
 
     
     // Component should be auto-registered when module loads
-    const instance = ComponentManager.create(name);
+    const instance = await ComponentManager.create(name);
     if (instance) {
-      log.trace(`Component instance created: ${name}`);
-      return await instance.init();
+      log.trace(`Component instance created and initialized: ${name}`);
+      return instance;
     } else {
       log.error(`Failed to create instance for: ${name}`);
       return null;
     }
   } catch (error) {
     log.error(`Failed to load component "${name}":`, error);
-    log.warn(`Falling back to legacy implementation for ${name}`);
+
     return null;
   }
 }
@@ -140,7 +139,7 @@ export function registerAllComponents() {
     
     // OpenAPI components
     'openapi-viewer',
-    'openapi-collapse', 
+    'openapi-collapse',
     'endpoint-filter',
 
     'glossary',

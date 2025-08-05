@@ -3,7 +3,7 @@
 
 <section class="openapi-components" 
          id="components"
-         data-component="openapi-components"
+         data-component="openapi-collapse"
          data-has-schemas="{{ if $components.Schemas }}true{{ else }}false{{ end }}"
          data-has-responses="{{ if $components.Responses }}true{{ else }}false{{ end }}"
          data-has-parameters="{{ if $components.Parameters }}true{{ else }}false{{ end }}"
@@ -28,32 +28,3 @@
   {{ partial "openapi/components/parameters.html" (dict "parameters" $components.Parameters "spec" $.spec "page" $page) }}
 
 </section>
-
-<!-- Initialize component collapse manually since it might not be inside .openapi-spec -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const componentHeaders = document.querySelectorAll('.openapi-components .collapse__header:not([data-openapi-collapse])');
-  componentHeaders.forEach(header => {
-    header.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = header.getAttribute('data-target');
-      const targetElement = document.getElementById(target);
-      const isExpanded = header.getAttribute('aria-expanded') === 'true';
-      
-      header.setAttribute('aria-expanded', !isExpanded);
-      
-      if (targetElement) {
-        if (isExpanded) {
-          targetElement.classList.remove('expanded');
-        } else {
-          targetElement.classList.add('expanded');
-        }
-      }
-      
-      console.log('Schema collapse:', { target, isExpanded: !isExpanded });
-    });
-  });
-  
-  console.log(`Initialized ${componentHeaders.length} component collapse headers`);
-});
-</script>

@@ -432,7 +432,7 @@ export class CopyManager {
   }
 }
 
-// Export utility functions for backwards compatibility
+
 export const copyText = (text, options) => CopyManager.copy(text, options);
 export const copyFromElement = (element, options) => CopyManager.copy(element, options);
 export const setupCopyButtons = (selector, options) => CopyManager.setupCopyButtons(selector, options);
