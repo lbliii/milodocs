@@ -11,100 +11,36 @@
 
 {{/* Only render overview section if we have version OR extended info */}}
 {{- if or $info.Version $hasExtendedInfo -}}
-<section class="openapi-overview" id="overview">
-  <div class="overview-header">
-    <h2 class="overview-title">API Overview</h2>
-    <p class="overview-subtitle">Essential information about this API</p>
-  </div>
-  
+<section class="openapi-overview" 
+         id="overview"
+         data-component="openapi-overview"
+         data-has-version="{{ if $info.Version }}true{{ else }}false{{ end }}"
+         data-has-extended-info="{{ $hasExtendedInfo }}"
+         {{- with $info.Extensions -}}
+           {{- with index . "x-api-type" -}}data-api-type="{{ . }}"{{- end -}}
+           {{- with index . "x-maturity" -}}data-maturity="{{ . }}"{{- end -}}
+           {{- with index . "x-stability" -}}data-stability="{{ . }}"{{- end -}}
+         {{- end -}}>
   <div class="overview-content">
-    {{/* Quick Stats Bar */}}
-    <div class="overview-stats">
-      {{- with $info.Version -}}
-      <div class="overview-stat overview-stat--primary">
-        <div class="overview-stat__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M8 12h8"></path>
-            <path d="M12 8v8"></path>
-          </svg>
-        </div>
-        <div class="overview-stat__content">
-          <span class="overview-stat__label">Version</span>
-          <span class="overview-stat__value">{{ . }}</span>
-        </div>
-      </div>
-      {{- end -}}
-      
-      {{- with $info.Extensions -}}
-        {{- with index . "x-api-type" -}}
-        <div class="overview-stat overview-stat--secondary">
-          <div class="overview-stat__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-              <path d="M2 17l10 5 10-5"></path>
-              <path d="M2 12l10 5 10-5"></path>
-            </svg>
-          </div>
-          <div class="overview-stat__content">
-            <span class="overview-stat__label">Type</span>
-            <span class="overview-stat__value">{{ . }}</span>
-          </div>
-        </div>
-        {{- end -}}
-      {{- end -}}
-      
-      {{- with $info.Extensions -}}
-        {{- with index . "x-maturity" -}}
-        <div class="overview-stat overview-stat--accent">
-          <div class="overview-stat__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-              <circle cx="6" cy="11" r="4"></circle>
-              <path d="M6 21V9"></path>
-            </svg>
-          </div>
-          <div class="overview-stat__content">
-            <span class="overview-stat__label">Maturity</span>
-            <span class="overview-stat__value">{{ . }}</span>
-          </div>
-        </div>
-        {{- end -}}
-      {{- end -}}
+    {{/* Stats moved to header as badges for more compact design */}}
 
-      {{- with $info.Extensions -}}
-        {{- with index . "x-stability" -}}
-        <div class="overview-stat overview-stat--warning">
-          <div class="overview-stat__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 12l2 2 4-4"></path>
-              <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.53 0 2.96.38 4.22 1.06"></path>
-            </svg>
-          </div>
-          <div class="overview-stat__content">
-            <span class="overview-stat__label">Stability</span>
-            <span class="overview-stat__value">{{ . }}</span>
-          </div>
-        </div>
-        {{- end -}}
-      {{- end -}}
-    </div>
 
-    {{/* Description if available */}}
-    {{- with $info.Description -}}
-    <div class="overview-description">
-      <p>{{ . }}</p>
-    </div>
-    {{- end -}}
     
     {{/* Additional Documentation section */}}
     {{- with $info.Extensions -}}
       {{- with index . "x-documentation" -}}
-        <div class="overview-documentation">
-          <h3 class="overview-documentation__title">Related Documentation</h3>
+        <div class="overview-documentation" 
+             data-component="overview-documentation" 
+             data-doc-count="{{ len . }}">
+          <h2>Related Documentation</h2>
           <div class="overview-documentation__grid">
-            {{- range $doc := . -}}
-              <a href="{{ $doc.url }}" class="overview-doc-link" target="_blank" rel="noopener">
+            {{- range $index, $doc := . -}}
+              <a href="{{ $doc.url }}" 
+                 class="overview-doc-link" 
+                 data-doc-index="{{ $index }}"
+                 data-doc-name="{{ $doc.name | urlize }}"
+                 target="_blank" 
+                 rel="noopener">
                 <div class="overview-doc-link__icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>

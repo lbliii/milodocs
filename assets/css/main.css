@@ -9632,8 +9632,8 @@ h1[id]::before {
   );
   border: 2px solid var(--color-border-primary);
   border-radius: 1.5rem;
-  padding: 3rem;
-  margin-bottom: 3rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
 }
@@ -9658,7 +9658,7 @@ h1[id]::before {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   position: relative;
 }
 
@@ -9666,12 +9666,74 @@ h1[id]::before {
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: rgba(var(--color-brand-rgb), 0.1);
-  border: 1px solid rgba(var(--color-brand-rgb), 0.2);
+  background: rgba(var(--color-brand-rgb, 59, 130, 246), 0.1);
+  border: 1px solid rgba(var(--color-brand-rgb, 59, 130, 246), 0.2);
   border-radius: 2rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-brand);
+  color: var(--color-brand, #3b82f6);
+  transition: all 0.2s ease;
+}
+
+.openapi-header__badge:hover {
+  background: rgba(var(--color-brand-rgb, 59, 130, 246), 0.15);
+  border-color: rgba(var(--color-brand-rgb, 59, 130, 246), 0.3);
+  transform: translateY(-1px);
+}
+
+/* Version Badge */
+
+.openapi-header__badge--version {
+  background: rgba(var(--color-accent-rgb, 139, 92, 246), 0.1);
+  border-color: rgba(var(--color-accent-rgb, 139, 92, 246), 0.2);
+  color: var(--color-accent, #8b5cf6);
+}
+
+.openapi-header__badge--version:hover {
+  background: rgba(var(--color-accent-rgb, 139, 92, 246), 0.15);
+  border-color: rgba(var(--color-accent-rgb, 139, 92, 246), 0.3);
+}
+
+/* API Type Badge */
+
+.openapi-header__badge--type[data-api-type="REST"] {
+  background: rgba(52, 152, 219, 0.1);
+  border-color: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.openapi-header__badge--type[data-api-type="GraphQL"] {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+/* Maturity Badge */
+
+.openapi-header__badge--maturity[data-maturity="stable"] {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.openapi-header__badge--maturity[data-maturity="beta"] {
+  background: rgba(241, 196, 15, 0.1);
+  border-color: rgba(241, 196, 15, 0.2);
+  color: #f1c40f;
+}
+
+.openapi-header__badge--maturity[data-maturity="alpha"] {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+/* Stability Badge */
+
+.openapi-header__badge--stability {
+  background: rgba(155, 89, 182, 0.1);
+  border-color: rgba(155, 89, 182, 0.2);
+  color: #9b59b6;
 }
 
 .openapi-version {
@@ -9694,11 +9756,23 @@ h1[id]::before {
   font-family: var(--font-family-mono);
 }
 
+.openapi-header__version-stat {
+  min-width: auto;
+  flex: none;
+  min-height: auto;
+  padding: 0.5rem 1rem;
+}
+
+.openapi-header__version-stat .overview-stat__value {
+  font-family: var(--font-family-mono);
+  font-size: 0.875rem;
+}
+
 .openapi-header__title {
   font-family: var(--font-family-brand);
   font-size: 3rem;
   font-weight: 800;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1rem 0;
   color: var(--color-text-primary);
   position: relative;
 }
@@ -9714,7 +9788,7 @@ h1[id]::before {
   font-size: 1rem;
   line-height: 1.6;
   color: var(--color-text-primary);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
 }
 
@@ -9768,6 +9842,98 @@ h1[id]::before {
   text-decoration: underline;
 }
 
+/* ==========================================================================
+   :has() Content-Aware Header Enhancements
+   ========================================================================== */
+
+/* Header with description gets enhanced layout */
+
+.openapi-header:has(.openapi-header__description) {
+  padding-bottom: 2.5rem;
+}
+
+.openapi-header:has(.openapi-header__description) .openapi-header__title {
+  margin-bottom: 1.25rem;
+}
+
+/* Header without info section is more compact */
+
+.openapi-header:not(:has(.openapi-header__info *)) .openapi-header__description {
+  margin-bottom: 0;
+}
+
+/* Meta section adapts based on version presence */
+
+.openapi-header__meta:has(.openapi-header__version-stat) {
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* Info section adapts to number of sections */
+
+.openapi-header__info:has(.openapi-contact:only-child) {
+  grid-template-columns: 1fr;
+  max-width: 400px;
+}
+
+.openapi-header__info:has(.openapi-contact + .openapi-license:not(+ *)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.openapi-header__info:has(.openapi-contact + .openapi-license + .openapi-terms) {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Enhanced contact styling based on available info */
+
+.openapi-contact:has(.contact-email):has(.contact-url) {
+  background: linear-gradient(135deg, rgba(var(--color-brand-rgb), 0.05), rgba(var(--color-accent-rgb), 0.05));
+  border-color: rgba(var(--color-brand-rgb), 0.15);
+}
+
+.openapi-contact:has(.contact-name) h3 {
+  color: var(--color-brand);
+}
+
+/* License with URL gets enhanced styling */
+
+.openapi-license:has(a) .license-name a {
+  color: var(--color-brand);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.openapi-license:has(a) .license-name a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* Header with full info gets enhanced spacing */
+
+.openapi-header:has(.openapi-contact):has(.openapi-license):has(.openapi-terms) {
+  padding: 2.5rem;
+}
+
+/* Responsive adaptations using :has() */
+
+@media (max-width: 768px) {
+  .openapi-header:has(.openapi-header__info) {
+    padding: 1.5rem;
+  }
+  
+  .openapi-header__info:has(.openapi-contact + .openapi-license + .openapi-terms) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .openapi-header__meta:has(.openapi-header__version-stat) {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+}
+
 /* OpenAPI Overview - Modern Info-Dense Layout */
 
 /* ==========================================================================
@@ -9792,10 +9958,18 @@ h1[id]::before {
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0 0 0.25rem 0;
-  background: linear-gradient(135deg, var(--color-brand), var(--color-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+}
+
+/* Enhanced gradient text with fallback */
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) or (-webkit-background-clip: text) {
+  .overview-title {
+    background: linear-gradient(135deg, var(--color-brand, #3b82f6), var(--color-accent, #8b5cf6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 .overview-subtitle {
@@ -9983,6 +10157,7 @@ h1[id]::before {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .overview-doc-link {
@@ -10133,6 +10308,87 @@ h1[id]::before {
     gap: 0.5rem;
     padding: 0.75rem;
   }
+}
+
+/* ==========================================================================
+   :has() Content-Aware Overview Enhancements
+   ========================================================================== */
+
+/* Overview with documentation gets enhanced layout */
+
+.openapi-overview:has(.overview-documentation) {
+  padding-bottom: 2rem;
+}
+
+.openapi-overview:has(.overview-documentation) .overview-stats {
+  margin-bottom: 2rem;
+}
+
+/* Stats container adapts based on number of stats */
+
+.overview-stats:has(.overview-stat:nth-child(4)) {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.overview-stats:has(.overview-stat:nth-child(3)) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.overview-stats:has(.overview-stat:nth-child(2)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Enhanced hover effects for overview with documentation */
+
+.openapi-overview:has(.overview-documentation) .overview-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Documentation section gets enhanced styling when stats are present */
+
+.openapi-overview:has(.overview-stats) .overview-documentation {
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Single stat gets special treatment */
+
+.overview-stats:has(.overview-stat:only-child) .overview-stat {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* API type specific enhancements */
+
+[data-api-type="REST"] .overview-stat--secondary {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(155, 89, 182, 0.1));
+  border-color: rgba(52, 152, 219, 0.2);
+}
+
+[data-api-type="GraphQL"] .overview-stat--secondary {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(230, 126, 34, 0.1));
+  border-color: rgba(231, 76, 60, 0.2);
+}
+
+/* Maturity-based styling */
+
+[data-maturity="stable"] .overview-stat--accent {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+  border-color: rgba(46, 204, 113, 0.2);
+}
+
+[data-maturity="beta"] .overview-stat--accent {
+  background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(243, 156, 18, 0.1));
+  border-color: rgba(241, 196, 15, 0.2);
+}
+
+[data-maturity="alpha"] .overview-stat--warning {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+  border-color: rgba(231, 76, 60, 0.2);
 }
 
 /* OpenAPI Servers */
@@ -11331,6 +11587,138 @@ html {
   transform: rotate(90deg);
 }
 
+/* ==========================================================================
+   :has() Content-Aware Endpoints Enhancements
+   ========================================================================== */
+
+/* API endpoint viewer adapts based on content type */
+
+.openapi-spec[data-viewer-type="endpoint"]:has([data-has-parameters="true"]) {
+  --has-params: true;
+}
+
+.openapi-spec[data-viewer-type="endpoint"]:has([data-has-request-body="true"]) {
+  --has-body: true;
+}
+
+.openapi-spec[data-viewer-type="endpoint"]:has([data-has-responses="true"]) {
+  --has-responses: true;
+}
+
+/* Method-specific styling enhancements */
+
+.openapi-spec[data-method="GET"]:has([data-has-parameters="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(52, 152, 219, 0.5);
+}
+
+.openapi-spec[data-method="POST"]:has([data-has-request-body="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(46, 204, 113, 0.5);
+}
+
+.openapi-spec[data-method="PUT"]:has([data-has-request-body="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(241, 196, 15, 0.5);
+}
+
+.openapi-spec[data-method="DELETE"]:has([data-has-responses="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(231, 76, 60, 0.5);
+}
+
+/* Enhanced endpoint header based on content */
+
+.api-endpoint-header:has([data-has-summary="true"]):has([data-has-description="true"]) {
+  padding: 2rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+}
+
+/* Endpoint item adapts based on available sections */
+
+.endpoint-item:has([data-has-parameters="true"]):has([data-has-request-body="true"]):has([data-has-responses="true"]) {
+  --sections: comprehensive;
+  border: 2px solid var(--color-border-primary);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.endpoint-item:has([data-has-security="true"]) {
+  border-left: 3px solid var(--color-accent);
+}
+
+.endpoint-item:has([data-has-examples="true"]) .endpoint-details {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+}
+
+/* Parameter count indicators */
+
+.endpoint-item[data-parameter-count]:not([data-parameter-count="0"])::before {
+  content: attr(data-parameter-count) " params";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(var(--color-brand-rgb), 0.1);
+  color: var(--color-brand);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+/* Response count indicators */
+
+.endpoint-item[data-response-count]:not([data-response-count="0"])::after {
+  content: attr(data-response-count) " responses";
+  position: absolute;
+  top: 2.5rem;
+  right: 0.5rem;
+  background: rgba(var(--color-accent-rgb), 0.1);
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+/* Endpoint group with many endpoints gets grid layout */
+
+.endpoint-group:has(.endpoint-item:nth-child(n+6)) .endpoint-group-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1rem;
+}
+
+/* Enhanced hover effects for content-rich endpoints */
+
+.endpoint-item:has([data-has-examples="true"]):hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adaptations for endpoints */
+
+@media (max-width: 768px) {
+  .endpoint-item:has([data-has-parameters="true"]):has([data-has-request-body="true"]):has([data-has-responses="true"]) {
+    border-radius: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .endpoint-item[data-parameter-count]:not([data-parameter-count="0"])::before,
+  .endpoint-item[data-response-count]:not([data-response-count="0"])::after {
+    position: static;
+    display: inline-block;
+    margin: 0.25rem;
+  }
+}
+
 /* OpenAPI Parameters */
 
 /* ==========================================================================
@@ -11802,6 +12190,8 @@ html {
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
 }
 
 .properties-list {
@@ -11818,11 +12208,12 @@ html {
   border: none;
   border-bottom: 1px solid var(--color-border-primary);
   border-radius: 0;
-  padding: 0.5rem 0.75rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 0.75rem;
-  align-items: start;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  transition: all 0.2s ease;
 }
 
 .property-item:last-child {
@@ -11831,6 +12222,7 @@ html {
 
 .property-item:hover {
   background: var(--color-bg-secondary);
+  transform: translateX(2px);
 }
 
 .property-item--required {
@@ -11871,6 +12263,291 @@ html {
 
 .property-schema {
   margin-left: 0;
+}
+
+/* Enhanced property information layout */
+
+.property-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.property-type {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.property-type .type-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.property-format {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+.property-description {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.property-constraints {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.property-constraint {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border-secondary);
+}
+
+/* Enhanced constraint styling */
+
+.constraint-modifier {
+  font-size: 0.7rem;
+  color: var(--color-warning);
+  font-style: italic;
+  margin-left: 0.25rem;
+}
+
+/* Array schema styling */
+
+.schema-array-info {
+  margin-bottom: 1.5rem;
+}
+
+.schema-array-info h6 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.array-constraints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.array-constraints .constraint {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  background: var(--color-bg-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border-secondary);
+}
+
+.array-item-schema {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Enhanced schema composition styling */
+
+.schema-composition {
+  margin-bottom: 1.5rem;
+}
+
+.schema-composition h6 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.composition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.composition-item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.composition-index {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-brand);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* ==========================================================================
+   :has() Content-Aware Schema Enhancements
+   ========================================================================== */
+
+/* Schema containers adapt based on content type and complexity */
+
+.schema-container:has(.schema-properties) {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.01) 100%
+  );
+  border-left: 3px solid rgba(var(--color-brand-rgb), 0.3);
+}
+
+.schema-container:has(.schema-array-info) {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-success-rgb), 0.01) 100%
+  );
+  border-left: 3px solid rgba(var(--color-success-rgb), 0.3);
+}
+
+.schema-container:has(.schema-composition) {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-accent-rgb), 0.01) 100%
+  );
+  border-left: 3px solid rgba(var(--color-accent-rgb), 0.3);
+}
+
+/* Schema properties section enhances based on property count */
+
+.schema-properties:has(.properties-list .property-item:nth-child(n+5)) {
+  border: 2px solid rgba(var(--color-brand-rgb), 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: rgba(var(--color-brand-rgb), 0.02);
+}
+
+.schema-properties:has(.properties-list .property-item:nth-child(n+10)) {
+  border-color: rgba(var(--color-accent-rgb), 0.2);
+  background: rgba(var(--color-accent-rgb), 0.03);
+}
+
+/* Properties adapt to required field density */
+
+.properties-list:has(.property-item--required:nth-child(n+3)) {
+  border-left: 4px solid var(--color-warning);
+  padding-left: 0.5rem;
+}
+
+/* Individual property items enhance based on content */
+
+.property-item:has(.property-constraints) {
+  border-left: 2px solid rgba(var(--color-info-rgb), 0.4);
+  background: rgba(var(--color-info-rgb), 0.02);
+}
+
+.property-item:has(.property-meta .property-format) {
+  border-left-color: rgba(var(--color-accent-rgb), 0.4);
+  background: rgba(var(--color-accent-rgb), 0.02);
+}
+
+/* Schema constraints section adapts to constraint complexity */
+
+.schema-constraints:has(.constraint:nth-child(n+3)) {
+  background: rgba(var(--color-bg-secondary-rgb), 0.5);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.schema-constraints:has(.constraint-modifier) {
+  border-left: 3px solid var(--color-warning);
+}
+
+/* Array info enhances based on constraints */
+
+.schema-array-info:has(.array-constraints .constraint:nth-child(n+2)) {
+  border: 1px solid rgba(var(--color-success-rgb), 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: rgba(var(--color-success-rgb), 0.02);
+}
+
+/* Schema composition gets enhanced styling */
+
+.schema-composition:has(.composition-item:nth-child(n+3)) {
+  border: 2px solid rgba(var(--color-accent-rgb), 0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  background: rgba(var(--color-accent-rgb), 0.02);
+}
+
+/* Nested schema containers get reduced visual weight */
+
+.schema-container[data-level="1"]:has(.schema-properties) {
+  background: rgba(var(--color-bg-secondary-rgb), 0.3);
+  border-left-width: 2px;
+}
+
+.schema-container[data-level="2"]:has(.schema-properties) {
+  background: rgba(var(--color-bg-secondary-rgb), 0.2);
+  border-left-width: 1px;
+}
+
+/* Type-specific enhancements */
+
+.schema-header:has(.type-badge--object) + .schema-constraints,
+.schema-header:has(.type-badge--object) + * .schema-constraints {
+  border-top: 2px solid rgba(var(--color-brand-rgb), 0.1);
+}
+
+.schema-header:has(.type-badge--array) + .schema-array-info {
+  border-top: 2px solid rgba(var(--color-success-rgb), 0.1);
+}
+
+.schema-header:has(.type-badge--string) + .schema-constraints {
+  border-top: 2px solid rgba(var(--color-info-rgb), 0.1);
+}
+
+/* Reference schemas get special styling */
+
+.schema-container:has(.schema-ref) {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-accent-rgb), 0.05) 0%,
+    var(--color-surface) 100%
+  );
+  border: 1px dashed rgba(var(--color-accent-rgb), 0.3);
+}
+
+/* Error and debug styling adaptations */
+
+.schema-container:has(.schema-ref-error) {
+  background: rgba(var(--color-danger-rgb), 0.05);
+  border: 1px solid rgba(var(--color-danger-rgb), 0.2);
 }
 
 /* Schema References */
@@ -12198,10 +12875,233 @@ html {
   display: none;
   padding: 0 1.5rem 1.5rem 1.5rem;
   border-top: 1px solid var(--color-border-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .component-details.expanded {
   display: block;
+  animation: schema-expand 0.3s ease-out;
+}
+
+/* Enhanced collapse body styling that works with existing JS */
+
+.component-details.collapse__body {
+  max-height: 0;
+  overflow: hidden;
+  display: block;
+  padding: 0 1.5rem;
+  opacity: 0;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease;
+}
+
+/* Support both .expanded and aria-expanded="true" for compatibility */
+
+.component-details.collapse__body.expanded,
+.component-header[aria-expanded="true"] + .component-details.collapse__body {
+  max-height: 2000px;
+  padding: 1.5rem 1.5rem;
+  opacity: 1;
+}
+
+@keyframes schema-expand {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   :has() Content-Aware Components Enhancements
+   ========================================================================== */
+
+/* Components section adapts based on content type and count */
+
+.openapi-components:has(.components-section[data-section-type="schemas"]) {
+  --primary-section: schemas;
+}
+
+.openapi-components:has(.components-section[data-section-type="parameters"]) {
+  --secondary-section: parameters;
+}
+
+/* Enhanced styling for sections with many items */
+
+.components-section:has([data-item-count^="1"]) .components-section-title::after,
+.components-section:has([data-item-count^="2"]) .components-section-title::after,
+.components-section:has([data-item-count^="3"]) .components-section-title::after {
+  content: " (" attr(data-item-count) ")";
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   Enhanced Schema Expansion States with :has()
+   ========================================================================== */
+
+/* Component items with expanded content */
+
+.component-item:has(.component-details.expanded) {
+  border-color: var(--color-brand);
+  box-shadow: 0 4px 16px rgba(var(--color-brand-rgb), 0.15);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+}
+
+.component-item:has(.component-details.expanded) .component-header {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+  border-bottom: 1px solid rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Enhanced chevron rotation for expanded state */
+
+.component-item:has(.component-details.expanded) .chevron {
+  transform: rotate(90deg);
+  color: var(--color-brand);
+}
+
+/* Schema-specific expanded state styling */
+
+.component-item[data-component="component-schema"]:has(.component-details.expanded) {
+  border-left: 4px solid var(--color-brand);
+}
+
+.component-item[data-component="component-schema"]:has(.component-details.expanded) .component-name h4 {
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+/* Complex schemas (with many properties) get enhanced styling when expanded */
+
+.component-item[data-property-count^="1"]:has(.component-details.expanded),
+.component-item[data-property-count^="2"]:has(.component-details.expanded),
+.component-item[data-property-count^="3"]:has(.component-details.expanded) {
+  border-left: 4px solid var(--color-accent);
+}
+
+.component-item[data-property-count^="1"]:has(.component-details.expanded) .component-name h4,
+.component-item[data-property-count^="2"]:has(.component-details.expanded) .component-name h4,
+.component-item[data-property-count^="3"]:has(.component-details.expanded) .component-name h4 {
+  color: var(--color-accent);
+}
+
+/* Required schemas get special highlighting when expanded */
+
+.component-item[data-has-required="true"]:has(.component-details.expanded) .component-header {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-warning-rgb), 0.08) 0%,
+    rgba(var(--color-warning-rgb), 0.03) 100%
+  );
+}
+
+/* Different schema types get unique expanded styling */
+
+.component-item[data-schema-type="array"]:has(.component-details.expanded) {
+  border-left-color: var(--color-success);
+}
+
+.component-item[data-schema-type="object"]:has(.component-details.expanded) {
+  border-left-color: var(--color-brand);
+}
+
+.component-item[data-schema-type="string"]:has(.component-details.expanded) {
+  border-left-color: var(--color-info);
+}
+
+/* Schema-specific enhancements */
+
+.component-item[data-component="component-schema"]:has([data-has-properties="true"]) {
+  border-left: 3px solid var(--color-brand);
+}
+
+.component-item[data-component="component-schema"]:has([data-has-required="true"]) .component-header {
+  background: rgba(var(--color-accent-rgb), 0.05);
+}
+
+.component-item[data-schema-type="object"]:has([data-property-count]) .component-name::after {
+  content: " (" attr(data-property-count) " properties)";
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.component-item[data-schema-type="array"] .component-header {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
+}
+
+.component-item[data-schema-type="string"] .component-icon {
+  color: var(--color-accent);
+}
+
+/* Parameter-specific enhancements */
+
+.component-item[data-component="component-parameter"][data-param-required="true"] {
+  border-left: 3px solid var(--color-accent);
+}
+
+.component-item[data-component="component-parameter"][data-param-required="true"] .component-header {
+  background: rgba(var(--color-accent-rgb), 0.08);
+}
+
+.component-item[data-param-in="path"] .component-header {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(192, 57, 43, 0.05));
+}
+
+.component-item[data-param-in="query"] .component-header {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.05));
+}
+
+.component-item[data-param-in="header"] .component-header {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(142, 68, 173, 0.05));
+}
+
+/* Enhanced hover effects based on content */
+
+.component-item:has([data-has-description="true"]):hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 12px rgba(var(--color-brand-rgb), 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adaptations */
+
+.components-section:has(.component-item:nth-child(n+10)) {
+  --large-section: true;
+}
+
+.components-section:has(.component-item:nth-child(n+10)) .components-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Section with only one item gets special treatment */
+
+.components-section:has(.component-item:only-child) .component-item {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Enhanced focus states for accessibility */
+
+.component-item:has(.component-header:focus-visible) {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
 }
 
 /* OpenAPI Security */
@@ -14306,6 +15206,10 @@ button:focus-visible,
   height: 3rem;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .h-3 {
   height: 0.75rem;
 }
@@ -14362,8 +15266,8 @@ button:focus-visible,
   height: 100vh;
 }
 
-.h-16 {
-  height: 4rem;
+.w-1 {
+  width: 0.25rem;
 }
 
 .w-1\/5 {
@@ -14424,10 +15328,6 @@ button:focus-visible,
 
 .w-full {
   width: 100%;
-}
-
-.w-1 {
-  width: 0.25rem;
 }
 
 .min-w-0 {
@@ -15075,10 +15975,6 @@ button:focus-visible,
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pl-6 {
-  padding-left: 1.5rem;
 }
 
 .text-left {

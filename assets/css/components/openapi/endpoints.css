@@ -249,3 +249,126 @@
 .endpoint-header[aria-expanded="true"] .chevron {
   transform: rotate(90deg);
 }
+
+/* ==========================================================================
+   :has() Content-Aware Endpoints Enhancements
+   ========================================================================== */
+
+/* API endpoint viewer adapts based on content type */
+.openapi-spec[data-viewer-type="endpoint"]:has([data-has-parameters="true"]) {
+  --has-params: true;
+}
+
+.openapi-spec[data-viewer-type="endpoint"]:has([data-has-request-body="true"]) {
+  --has-body: true;
+}
+
+.openapi-spec[data-viewer-type="endpoint"]:has([data-has-responses="true"]) {
+  --has-responses: true;
+}
+
+/* Method-specific styling enhancements */
+.openapi-spec[data-method="GET"]:has([data-has-parameters="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(52, 152, 219, 0.5);
+}
+
+.openapi-spec[data-method="POST"]:has([data-has-request-body="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(46, 204, 113, 0.5);
+}
+
+.openapi-spec[data-method="PUT"]:has([data-has-request-body="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(241, 196, 15, 0.5);
+}
+
+.openapi-spec[data-method="DELETE"]:has([data-has-responses="true"]) .api-endpoint-header {
+  border-left: 4px solid rgba(231, 76, 60, 0.5);
+}
+
+/* Enhanced endpoint header based on content */
+.api-endpoint-header:has([data-has-summary="true"]):has([data-has-description="true"]) {
+  padding: 2rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+}
+
+/* Endpoint item adapts based on available sections */
+.endpoint-item:has([data-has-parameters="true"]):has([data-has-request-body="true"]):has([data-has-responses="true"]) {
+  --sections: comprehensive;
+  border: 2px solid var(--color-border-primary);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.endpoint-item:has([data-has-security="true"]) {
+  border-left: 3px solid var(--color-accent);
+}
+
+.endpoint-item:has([data-has-examples="true"]) .endpoint-details {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+}
+
+/* Parameter count indicators */
+.endpoint-item[data-parameter-count]:not([data-parameter-count="0"])::before {
+  content: attr(data-parameter-count) " params";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(var(--color-brand-rgb), 0.1);
+  color: var(--color-brand);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+/* Response count indicators */
+.endpoint-item[data-response-count]:not([data-response-count="0"])::after {
+  content: attr(data-response-count) " responses";
+  position: absolute;
+  top: 2.5rem;
+  right: 0.5rem;
+  background: rgba(var(--color-accent-rgb), 0.1);
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+/* Endpoint group with many endpoints gets grid layout */
+.endpoint-group:has(.endpoint-item:nth-child(n+6)) .endpoint-group-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1rem;
+}
+
+/* Enhanced hover effects for content-rich endpoints */
+.endpoint-item:has([data-has-examples="true"]):hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adaptations for endpoints */
+@media (max-width: 768px) {
+  .endpoint-item:has([data-has-parameters="true"]):has([data-has-request-body="true"]):has([data-has-responses="true"]) {
+    border-radius: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .endpoint-item[data-parameter-count]:not([data-parameter-count="0"])::before,
+  .endpoint-item[data-response-count]:not([data-response-count="0"])::after {
+    position: static;
+    display: inline-block;
+    margin: 0.25rem;
+  }
+}

@@ -12,8 +12,8 @@
   );
   border: 2px solid var(--color-border-primary);
   border-radius: 1.5rem;
-  padding: 3rem;
-  margin-bottom: 3rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
 }
@@ -38,7 +38,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   position: relative;
 }
 
@@ -46,12 +46,70 @@
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: rgba(var(--color-brand-rgb), 0.1);
-  border: 1px solid rgba(var(--color-brand-rgb), 0.2);
+  background: rgba(var(--color-brand-rgb, 59, 130, 246), 0.1);
+  border: 1px solid rgba(var(--color-brand-rgb, 59, 130, 246), 0.2);
   border-radius: 2rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-brand);
+  color: var(--color-brand, #3b82f6);
+  transition: all 0.2s ease;
+}
+
+.openapi-header__badge:hover {
+  background: rgba(var(--color-brand-rgb, 59, 130, 246), 0.15);
+  border-color: rgba(var(--color-brand-rgb, 59, 130, 246), 0.3);
+  transform: translateY(-1px);
+}
+
+/* Version Badge */
+.openapi-header__badge--version {
+  background: rgba(var(--color-accent-rgb, 139, 92, 246), 0.1);
+  border-color: rgba(var(--color-accent-rgb, 139, 92, 246), 0.2);
+  color: var(--color-accent, #8b5cf6);
+}
+
+.openapi-header__badge--version:hover {
+  background: rgba(var(--color-accent-rgb, 139, 92, 246), 0.15);
+  border-color: rgba(var(--color-accent-rgb, 139, 92, 246), 0.3);
+}
+
+/* API Type Badge */
+.openapi-header__badge--type[data-api-type="REST"] {
+  background: rgba(52, 152, 219, 0.1);
+  border-color: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.openapi-header__badge--type[data-api-type="GraphQL"] {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+/* Maturity Badge */
+.openapi-header__badge--maturity[data-maturity="stable"] {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.openapi-header__badge--maturity[data-maturity="beta"] {
+  background: rgba(241, 196, 15, 0.1);
+  border-color: rgba(241, 196, 15, 0.2);
+  color: #f1c40f;
+}
+
+.openapi-header__badge--maturity[data-maturity="alpha"] {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+/* Stability Badge */
+.openapi-header__badge--stability {
+  background: rgba(155, 89, 182, 0.1);
+  border-color: rgba(155, 89, 182, 0.2);
+  color: #9b59b6;
 }
 
 .openapi-version {
@@ -74,11 +132,23 @@
   font-family: var(--font-family-mono);
 }
 
+.openapi-header__version-stat {
+  min-width: auto;
+  flex: none;
+  min-height: auto;
+  padding: 0.5rem 1rem;
+}
+
+.openapi-header__version-stat .overview-stat__value {
+  font-family: var(--font-family-mono);
+  font-size: 0.875rem;
+}
+
 .openapi-header__title {
   font-family: var(--font-family-brand);
   font-size: 3rem;
   font-weight: 800;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1rem 0;
   color: var(--color-text-primary);
   position: relative;
 }
@@ -94,7 +164,7 @@
   font-size: 1rem;
   line-height: 1.6;
   color: var(--color-text-primary);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
 }
 
@@ -146,4 +216,88 @@
 .terms-link a:hover {
   color: var(--color-accent);
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   :has() Content-Aware Header Enhancements
+   ========================================================================== */
+
+/* Header with description gets enhanced layout */
+.openapi-header:has(.openapi-header__description) {
+  padding-bottom: 2.5rem;
+}
+
+.openapi-header:has(.openapi-header__description) .openapi-header__title {
+  margin-bottom: 1.25rem;
+}
+
+/* Header without info section is more compact */
+.openapi-header:not(:has(.openapi-header__info *)) .openapi-header__description {
+  margin-bottom: 0;
+}
+
+/* Meta section adapts based on version presence */
+.openapi-header__meta:has(.openapi-header__version-stat) {
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* Info section adapts to number of sections */
+.openapi-header__info:has(.openapi-contact:only-child) {
+  grid-template-columns: 1fr;
+  max-width: 400px;
+}
+
+.openapi-header__info:has(.openapi-contact + .openapi-license:not(+ *)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.openapi-header__info:has(.openapi-contact + .openapi-license + .openapi-terms) {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Enhanced contact styling based on available info */
+.openapi-contact:has(.contact-email):has(.contact-url) {
+  background: linear-gradient(135deg, rgba(var(--color-brand-rgb), 0.05), rgba(var(--color-accent-rgb), 0.05));
+  border-color: rgba(var(--color-brand-rgb), 0.15);
+}
+
+.openapi-contact:has(.contact-name) h3 {
+  color: var(--color-brand);
+}
+
+/* License with URL gets enhanced styling */
+.openapi-license:has(a) .license-name a {
+  color: var(--color-brand);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.openapi-license:has(a) .license-name a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* Header with full info gets enhanced spacing */
+.openapi-header:has(.openapi-contact):has(.openapi-license):has(.openapi-terms) {
+  padding: 2.5rem;
+}
+
+/* Responsive adaptations using :has() */
+@media (max-width: 768px) {
+  .openapi-header:has(.openapi-header__info) {
+    padding: 1.5rem;
+  }
+  
+  .openapi-header__info:has(.openapi-contact + .openapi-license + .openapi-terms) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .openapi-header__meta:has(.openapi-header__version-stat) {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
 }

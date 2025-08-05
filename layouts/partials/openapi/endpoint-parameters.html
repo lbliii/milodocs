@@ -7,7 +7,7 @@
   <!-- Group parameters by location -->
   {{ $paramGroups := dict }}
   {{ range $param := $parameters }}
-    {{ $location := $param.in | default "query" }}
+            {{ $location := $param.In | default "query" }}
     {{ $existingParams := index $paramGroups $location | default (slice) }}
     {{ $paramGroups = merge $paramGroups (dict $location ($existingParams | append $param)) }}
   {{ end }}
@@ -33,44 +33,44 @@
         
         <div class="parameter-list" id="params-{{ $location }}">
           {{ range $param := $params }}
-            <div class="parameter-item{{ if $param.required }} parameter-item--required{{ end }}">
+            <div class="parameter-item{{ if $param.Required }} parameter-item--required{{ end }}">
               <div class="parameter-header">
                 <div class="parameter-name">
-                  <code>{{ $param.name }}</code>
-                  {{ if $param.required }}
+                  <code>{{ $param.Name }}</code>
+                  {{ if $param.Required }}
                     <span class="parameter-required">required</span>
                   {{ end }}
                 </div>
                 <div class="parameter-type">
-                  {{ with $param.schema }}
-                    <span class="type-badge type-badge--{{ .type }}">{{ .type }}</span>
-                    {{ with .format }}<span class="type-format">({{ . }})</span>{{ end }}
+                  {{ with $param.Schema }}
+                    <span class="type-badge type-badge--{{ if .Value }}{{ .Value.Type }}{{ else }}unknown{{ end }}">{{ if .Value }}{{ .Value.Type }}{{ else }}unknown{{ end }}</span>
+                    {{ if and .Value .Value.Format }}<span class="type-format">({{ .Value.Format }})</span>{{ end }}
                   {{ end }}
                 </div>
               </div>
               
-              {{ with $param.description }}
+              {{ with $param.Description }}
                 <div class="parameter-description">{{ . | markdownify }}</div>
               {{ end }}
               
-              {{ with $param.schema }}
-                {{ if or .enum .minimum .maximum .minLength .maxLength .pattern .default .example }}
+              {{ with $param.Schema }}
+                {{ if and .Value (or .Value.Enum .Value.Minimum .Value.Maximum .Value.MinLength .Value.MaxLength .Value.Pattern .Value.Default .Value.Example) }}
                   <div class="parameter-constraints">
-                    {{ with .default }}
+                    {{ if and .Value .Value.Default }}{{ with .Value.Default }}
                       <div class="constraint">
                         <span class="constraint-label">Default:</span>
                         <code>{{ . }}</code>
                       </div>
-                    {{ end }}
+                    {{ end }}{{ end }}
                     
-                    {{ with .example }}
+                    {{ if and .Value .Value.Example }}{{ with .Value.Example }}
                       <div class="constraint">
                         <span class="constraint-label">Example:</span>
                         <code>{{ . }}</code>
                       </div>
-                    {{ end }}
+                    {{ end }}{{ end }}
                     
-                    {{ with .enum }}
+                    {{ if and .Value .Value.Enum }}{{ with .Value.Enum }}
                       <div class="constraint">
                         <span class="constraint-label">Allowed values:</span>
                         <div class="enum-values">
@@ -79,30 +79,30 @@
                           {{ end }}
                         </div>
                       </div>
-                    {{ end }}
+                    {{ end }}{{ end }}
                     
-                    {{ if or .minimum .maximum }}
+                    {{ if and .Value (or .Value.Minimum .Value.Maximum) }}
                       <div class="constraint">
                         <span class="constraint-label">Range:</span>
-                        {{ with .minimum }}<code>min: {{ . }}</code>{{ end }}
-                        {{ with .maximum }}<code>max: {{ . }}</code>{{ end }}
+                        {{ if .Value.Minimum }}<code>min: {{ .Value.Minimum }}</code>{{ end }}
+                        {{ if .Value.Maximum }}<code>max: {{ .Value.Maximum }}</code>{{ end }}
                       </div>
                     {{ end }}
                     
-                    {{ if or .minLength .maxLength }}
+                    {{ if and .Value (or .Value.MinLength .Value.MaxLength) }}
                       <div class="constraint">
                         <span class="constraint-label">Length:</span>
-                        {{ with .minLength }}<code>min: {{ . }}</code>{{ end }}
-                        {{ with .maxLength }}<code>max: {{ . }}</code>{{ end }}
+                        {{ if .Value.MinLength }}<code>min: {{ .Value.MinLength }}</code>{{ end }}
+                        {{ if .Value.MaxLength }}<code>max: {{ .Value.MaxLength }}</code>{{ end }}
                       </div>
                     {{ end }}
                     
-                    {{ with .pattern }}
+                    {{ if and .Value .Value.Pattern }}{{ with .Value.Pattern }}
                       <div class="constraint">
                         <span class="constraint-label">Pattern:</span>
                         <code>{{ . }}</code>
                       </div>
-                    {{ end }}
+                    {{ end }}{{ end }}
                   </div>
                 {{ end }}
               {{ end }}

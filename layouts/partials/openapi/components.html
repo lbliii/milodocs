@@ -1,21 +1,41 @@
 {{- $components := .components -}}
 {{- $page := .page -}}
 
-<section class="openapi-components" id="components">
-  <div class="section-header">
-    <h2 class="section-title">Components</h2>
-    <div class="section-description">Reusable components used throughout the API</div>
-  </div>
-  
+<section class="openapi-components" 
+         id="components"
+         data-component="openapi-components"
+         data-has-schemas="{{ if $components.Schemas }}true{{ else }}false{{ end }}"
+         data-has-responses="{{ if $components.Responses }}true{{ else }}false{{ end }}"
+         data-has-parameters="{{ if $components.Parameters }}true{{ else }}false{{ end }}"
+         data-has-examples="{{ if $components.Examples }}true{{ else }}false{{ end }}"
+         data-has-headers="{{ if $components.Headers }}true{{ else }}false{{ end }}"
+         data-has-links="{{ if $components.Links }}true{{ else }}false{{ end }}"
+         data-has-callbacks="{{ if $components.Callbacks }}true{{ else }}false{{ end }}"
+         data-schema-count="{{ if $components.Schemas }}{{ len $components.Schemas }}{{ else }}0{{ end }}"
+         data-response-count="{{ if $components.Responses }}{{ len $components.Responses }}{{ else }}0{{ end }}"
+         data-parameter-count="{{ if $components.Parameters }}{{ len $components.Parameters }}{{ else }}0{{ end }}">
   <!-- Schemas -->
   {{ with $components.Schemas }}
-    <div class="components-section">
+    <div class="components-section" 
+         data-component="components-schemas" 
+         data-section-type="schemas"
+         data-item-count="{{ len . }}">
       <h3 class="components-section-title">Schemas</h3>
       <div class="components-list">
         {{ range $schemaName, $schema := . }}
-          {{ $sanitizedSchemaName := $schemaName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
-          {{ if eq $sanitizedSchemaName "" }}{{ $sanitizedSchemaName = "unnamed" }}{{ end }}
-          <div class="component-item" id="schema-{{ $sanitizedSchemaName }}">
+          {{ $sanitizedSchemaName := $schemaName | urlize }}
+          {{ if or (eq $sanitizedSchemaName "") (eq (len $sanitizedSchemaName) 0) }}{{ $sanitizedSchemaName = "unnamed" }}{{ end }}
+
+          <div class="component-item" 
+               id="schema-{{ $sanitizedSchemaName }}"
+               data-component="component-schema"
+               data-schema-name="{{ $schemaName }}"
+               data-schema-type="{{ if $schema.Value }}{{ $schema.Value.Type | default "object" }}{{ else }}object{{ end }}"
+               data-has-description="{{ if and $schema.Value $schema.Value.Description }}true{{ else }}false{{ end }}"
+               data-has-properties="{{ if and $schema.Value $schema.Value.Properties }}true{{ else }}false{{ end }}"
+               data-has-required="{{ if and $schema.Value $schema.Value.Required }}true{{ else }}false{{ end }}"
+               data-property-count="{{ if and $schema.Value $schema.Value.Properties }}{{ len $schema.Value.Properties }}{{ else }}0{{ end }}"
+               data-required-count="{{ if and $schema.Value $schema.Value.Required }}{{ len $schema.Value.Required }}{{ else }}0{{ end }}">
             <div class="component-header collapse__header" 
                  data-target="schema-{{ $sanitizedSchemaName }}-details"
                  role="button"
@@ -53,8 +73,10 @@
               </div>
             </div>
             
-            <div class="component-details" id="schema-{{ $sanitizedSchemaName }}-details">
-              {{ partial "openapi/schema.html" (dict "schema" $schema "spec" $.spec "level" 0) }}
+            <div class="component-details collapse__body" id="schema-{{ $sanitizedSchemaName }}-details">
+              <div class="collapse__body-content">
+                {{ partial "openapi/schema.html" (dict "schema" $schema "spec" $.spec "level" 0) }}
+              </div>
             </div>
           </div>
         {{ end }}
@@ -230,13 +252,24 @@
   
   <!-- Parameters -->
   {{ with $components.Parameters }}
-    <div class="components-section">
+    <div class="components-section" 
+         data-component="components-parameters" 
+         data-section-type="parameters"
+         data-item-count="{{ len . }}">
       <h3 class="components-section-title">Parameters</h3>
       <div class="components-list">
         {{ range $paramName, $param := . }}
           {{ $sanitizedParamName := $paramName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
           {{ if eq $sanitizedParamName "" }}{{ $sanitizedParamName = "unnamed" }}{{ end }}
-          <div class="component-item" id="parameter-{{ $sanitizedParamName }}">
+          <div class="component-item" 
+               id="parameter-{{ $sanitizedParamName }}"
+               data-component="component-parameter"
+               data-param-name="{{ $paramName }}"
+               data-param-in="{{ $param.In }}"
+               data-param-required="{{ if $param.Required }}true{{ else }}false{{ end }}"
+               data-has-description="{{ if $param.Description }}true{{ else }}false{{ end }}"
+               data-has-schema="{{ if $param.Schema }}true{{ else }}false{{ end }}"
+               {{- if and $param.Schema $param.Schema.Value }}data-param-type="{{ $param.Schema.Value.Type }}"{{ end }}>
             <div class="component-header collapse__header" 
                  data-target="parameter-{{ $sanitizedParamName }}-details"
                  role="button"
@@ -251,8 +284,8 @@
               <div class="component-name">
                 <h4>{{ $paramName }}</h4>
                 <div class="component-meta">
-                  <span class="param-location">{{ $param.in }}</span>
-                  {{ if $param.required }}
+                  <span class="param-location">{{ $param.In }}</span>
+                  {{ if $param.Required }}
                     <span class="param-required">required</span>
                   {{ end }}
                 </div>
@@ -273,3 +306,37 @@
     </div>
   {{ end }}
 </section>
+
+<!-- Initialize component collapse manually since it might not be inside .openapi-spec -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Find all component collapse headers that aren't already handled
+  const componentHeaders = document.querySelectorAll('.openapi-components .collapse__header:not([data-openapi-collapse])');
+  
+  componentHeaders.forEach(header => {
+    header.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const target = header.getAttribute('data-target');
+      const targetElement = document.getElementById(target);
+      const isExpanded = header.getAttribute('aria-expanded') === 'true';
+      
+      // Toggle aria-expanded
+      header.setAttribute('aria-expanded', !isExpanded);
+      
+      // Toggle expanded class on target
+      if (targetElement) {
+        if (isExpanded) {
+          targetElement.classList.remove('expanded');
+        } else {
+          targetElement.classList.add('expanded');
+        }
+      }
+      
+      console.log('Schema collapse:', { target, isExpanded: !isExpanded });
+    });
+  });
+  
+  console.log(`Initialized ${componentHeaders.length} component collapse headers`);
+});
+</script>

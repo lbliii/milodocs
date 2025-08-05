@@ -36,18 +36,28 @@
 {{- end -}}
 
 {{- define "content" -}}
+{{- $apiData := .Params.api_data -}}
+{{- $currentMethod := .Params.endpoint.method -}}
+{{- $currentPath := .Params.endpoint.path -}}
+{{- $currentTag := .Params.endpoint.tag -}}
+{{- $operationId := .Params.endpoint.operationId -}}
+
+{{/* Use operation data from front matter */}}
+{{ $operation := .Params.endpoint.operation }}
+
 <article id="articleContent" 
          class="openapi-spec api-endpoint"
-         data-component="openapi-viewer">
-  
-  {{- $apiData := .Params.api_data -}}
-  {{- $currentMethod := .Params.endpoint.method -}}
-  {{- $currentPath := .Params.endpoint.path -}}
-  {{- $currentTag := .Params.endpoint.tag -}}
-  {{- $operationId := .Params.endpoint.operationId -}}
-  
-  {{/* Use operation data from front matter */}}
-  {{ $operation := .Params.endpoint.operation }}
+         data-component="openapi-viewer"
+         data-viewer-type="endpoint"
+         data-method="{{ upper $currentMethod }}"
+         data-has-parameters="{{ if $operation.Parameters }}true{{ else }}false{{ end }}"
+         data-has-request-body="{{ if $operation.RequestBody }}true{{ else }}false{{ end }}"
+         data-has-responses="{{ if $operation.Responses }}true{{ else }}false{{ end }}"
+         data-has-security="{{ if $operation.Security }}true{{ else }}false{{ end }}"
+         data-parameter-count="{{ if $operation.Parameters }}{{ len $operation.Parameters }}{{ else }}0{{ end }}"
+         data-response-count="{{ if $operation.Responses }}{{ len $operation.Responses.Map }}{{ else }}0{{ end }}"
+         {{- with $operation.Summary }}data-has-summary="true"{{ else }}data-has-summary="false"{{ end }}
+         {{- with $operation.Description }}data-has-description="true"{{ else }}data-has-description="false"{{ end }}>
   
   {{- if not $apiData -}}
     <div class="error-message">
@@ -58,7 +68,12 @@
   {{- end -}}
   
   <!-- Endpoint Header -->
-  <header class="api-endpoint-header">
+  <header class="api-endpoint-header" 
+          data-component="api-endpoint-header"
+          data-method="{{ upper $currentMethod }}"
+          data-tag="{{ $currentTag }}"
+          {{- with $operation.Summary }}data-has-summary="true"{{ else }}data-has-summary="false"{{ end }}
+          {{- with $operation.Description }}data-has-description="true"{{ else }}data-has-description="false"{{ end }}>
     <div class="api-endpoint-breadcrumb">
       <a href="../../">{{ $apiData.Info.Title }}</a> / 
       <a href="../">{{ $currentTag }}</a> / 
@@ -83,7 +98,17 @@
   <div class="api-endpoint-content">
     {{ $endpointId := printf "%s-%s" (upper $currentMethod) ($currentPath | replace "/" "-" | replace "{" "" | replace "}" "" | urlize) }}
     
-    <div class="endpoint-item" id="{{ $endpointId }}" data-method="{{ upper $currentMethod }}" data-path="{{ $currentPath }}">
+    <div class="endpoint-item" 
+         id="{{ $endpointId }}" 
+         data-component="endpoint-item"
+         data-method="{{ upper $currentMethod }}" 
+         data-path="{{ $currentPath }}"
+         data-operation-id="{{ $operationId }}"
+         data-has-parameters="{{ if $operation.Parameters }}true{{ else }}false{{ end }}"
+         data-has-request-body="{{ if $operation.RequestBody }}true{{ else }}false{{ end }}"
+         data-has-responses="{{ if $operation.Responses }}true{{ else }}false{{ end }}"
+         data-has-security="{{ if $operation.Security }}true{{ else }}false{{ end }}"
+         data-has-examples="true">
       
       <!-- Endpoint Details -->
       <div class="endpoint-details" id="{{ $endpointId }}-details">

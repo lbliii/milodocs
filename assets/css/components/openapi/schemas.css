@@ -89,6 +89,8 @@
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
 }
 
 .properties-list {
@@ -105,11 +107,12 @@
   border: none;
   border-bottom: 1px solid var(--color-border-primary);
   border-radius: 0;
-  padding: 0.5rem 0.75rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 0.75rem;
-  align-items: start;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  transition: all 0.2s ease;
 }
 
 .property-item:last-child {
@@ -118,6 +121,7 @@
 
 .property-item:hover {
   background: var(--color-bg-secondary);
+  transform: translateX(2px);
 }
 
 .property-item--required {
@@ -158,6 +162,276 @@
 
 .property-schema {
   margin-left: 0;
+}
+
+/* Enhanced property information layout */
+.property-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.property-type {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.property-type .type-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.property-format {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+.property-description {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.property-constraints {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.property-constraint {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border-secondary);
+}
+
+/* Enhanced constraint styling */
+.constraint-modifier {
+  font-size: 0.7rem;
+  color: var(--color-warning);
+  font-style: italic;
+  margin-left: 0.25rem;
+}
+
+/* Array schema styling */
+.schema-array-info {
+  margin-bottom: 1.5rem;
+}
+
+.schema-array-info h6 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.array-constraints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.array-constraints .constraint {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  background: var(--color-bg-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border-secondary);
+}
+
+.array-item-schema {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Enhanced schema composition styling */
+.schema-composition {
+  margin-bottom: 1.5rem;
+}
+
+.schema-composition h6 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.composition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.composition-item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.composition-index {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-brand);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* ==========================================================================
+   :has() Content-Aware Schema Enhancements
+   ========================================================================== */
+
+/* Schema containers adapt based on content type and complexity */
+.schema-container:has(.schema-properties) {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.01) 100%
+  );
+  border-left: 3px solid rgba(var(--color-brand-rgb), 0.3);
+}
+
+.schema-container:has(.schema-array-info) {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-success-rgb), 0.01) 100%
+  );
+  border-left: 3px solid rgba(var(--color-success-rgb), 0.3);
+}
+
+.schema-container:has(.schema-composition) {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-accent-rgb), 0.01) 100%
+  );
+  border-left: 3px solid rgba(var(--color-accent-rgb), 0.3);
+}
+
+/* Schema properties section enhances based on property count */
+.schema-properties:has(.properties-list .property-item:nth-child(n+5)) {
+  border: 2px solid rgba(var(--color-brand-rgb), 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: rgba(var(--color-brand-rgb), 0.02);
+}
+
+.schema-properties:has(.properties-list .property-item:nth-child(n+10)) {
+  border-color: rgba(var(--color-accent-rgb), 0.2);
+  background: rgba(var(--color-accent-rgb), 0.03);
+}
+
+/* Properties adapt to required field density */
+.properties-list:has(.property-item--required:nth-child(n+3)) {
+  border-left: 4px solid var(--color-warning);
+  padding-left: 0.5rem;
+}
+
+/* Individual property items enhance based on content */
+.property-item:has(.property-constraints) {
+  border-left: 2px solid rgba(var(--color-info-rgb), 0.4);
+  background: rgba(var(--color-info-rgb), 0.02);
+}
+
+.property-item:has(.property-meta .property-format) {
+  border-left-color: rgba(var(--color-accent-rgb), 0.4);
+  background: rgba(var(--color-accent-rgb), 0.02);
+}
+
+/* Schema constraints section adapts to constraint complexity */
+.schema-constraints:has(.constraint:nth-child(n+3)) {
+  background: rgba(var(--color-bg-secondary-rgb), 0.5);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.schema-constraints:has(.constraint-modifier) {
+  border-left: 3px solid var(--color-warning);
+}
+
+/* Array info enhances based on constraints */
+.schema-array-info:has(.array-constraints .constraint:nth-child(n+2)) {
+  border: 1px solid rgba(var(--color-success-rgb), 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: rgba(var(--color-success-rgb), 0.02);
+}
+
+/* Schema composition gets enhanced styling */
+.schema-composition:has(.composition-item:nth-child(n+3)) {
+  border: 2px solid rgba(var(--color-accent-rgb), 0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  background: rgba(var(--color-accent-rgb), 0.02);
+}
+
+/* Nested schema containers get reduced visual weight */
+.schema-container[data-level="1"]:has(.schema-properties) {
+  background: rgba(var(--color-bg-secondary-rgb), 0.3);
+  border-left-width: 2px;
+}
+
+.schema-container[data-level="2"]:has(.schema-properties) {
+  background: rgba(var(--color-bg-secondary-rgb), 0.2);
+  border-left-width: 1px;
+}
+
+/* Type-specific enhancements */
+.schema-header:has(.type-badge--object) + .schema-constraints,
+.schema-header:has(.type-badge--object) + * .schema-constraints {
+  border-top: 2px solid rgba(var(--color-brand-rgb), 0.1);
+}
+
+.schema-header:has(.type-badge--array) + .schema-array-info {
+  border-top: 2px solid rgba(var(--color-success-rgb), 0.1);
+}
+
+.schema-header:has(.type-badge--string) + .schema-constraints {
+  border-top: 2px solid rgba(var(--color-info-rgb), 0.1);
+}
+
+/* Reference schemas get special styling */
+.schema-container:has(.schema-ref) {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-accent-rgb), 0.05) 0%,
+    var(--color-surface) 100%
+  );
+  border: 1px dashed rgba(var(--color-accent-rgb), 0.3);
+}
+
+/* Error and debug styling adaptations */
+.schema-container:has(.schema-ref-error) {
+  background: rgba(var(--color-danger-rgb), 0.05);
+  border: 1px solid rgba(var(--color-danger-rgb), 0.2);
 }
 
 /* Schema References */

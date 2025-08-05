@@ -83,6 +83,11 @@
       </div>
     </section>
     
+    <!-- Components Section -->
+    {{ with $apiData.Components }}
+      {{ partial "openapi/components.html" (dict "components" . "spec" $apiData "page" $.Page) }}
+    {{ end }}
+    
     <!-- Page Content (from markdown) -->
     <div class="page-content">
       {{ .Content }}

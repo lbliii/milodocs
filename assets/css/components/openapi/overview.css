@@ -21,10 +21,17 @@
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0 0 0.25rem 0;
-  background: linear-gradient(135deg, var(--color-brand), var(--color-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+}
+
+/* Enhanced gradient text with fallback */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .overview-title {
+    background: linear-gradient(135deg, var(--color-brand, #3b82f6), var(--color-accent, #8b5cf6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 .overview-subtitle {
@@ -207,6 +214,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .overview-doc-link {
@@ -355,4 +363,78 @@
     gap: 0.5rem;
     padding: 0.75rem;
   }
+}
+
+/* ==========================================================================
+   :has() Content-Aware Overview Enhancements
+   ========================================================================== */
+
+/* Overview with documentation gets enhanced layout */
+.openapi-overview:has(.overview-documentation) {
+  padding-bottom: 2rem;
+}
+
+.openapi-overview:has(.overview-documentation) .overview-stats {
+  margin-bottom: 2rem;
+}
+
+/* Stats container adapts based on number of stats */
+.overview-stats:has(.overview-stat:nth-child(4)) {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.overview-stats:has(.overview-stat:nth-child(3)) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.overview-stats:has(.overview-stat:nth-child(2)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Enhanced hover effects for overview with documentation */
+.openapi-overview:has(.overview-documentation) .overview-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Documentation section gets enhanced styling when stats are present */
+.openapi-overview:has(.overview-stats) .overview-documentation {
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Single stat gets special treatment */
+.overview-stats:has(.overview-stat:only-child) .overview-stat {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* API type specific enhancements */
+[data-api-type="REST"] .overview-stat--secondary {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(155, 89, 182, 0.1));
+  border-color: rgba(52, 152, 219, 0.2);
+}
+
+[data-api-type="GraphQL"] .overview-stat--secondary {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(230, 126, 34, 0.1));
+  border-color: rgba(231, 76, 60, 0.2);
+}
+
+/* Maturity-based styling */
+[data-maturity="stable"] .overview-stat--accent {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+  border-color: rgba(46, 204, 113, 0.2);
+}
+
+[data-maturity="beta"] .overview-stat--accent {
+  background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(243, 156, 18, 0.1));
+  border-color: rgba(241, 196, 15, 0.2);
+}
+
+[data-maturity="alpha"] .overview-stat--warning {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+  border-color: rgba(231, 76, 60, 0.2);
 }
