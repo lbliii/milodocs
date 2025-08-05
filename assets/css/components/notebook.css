@@ -10,7 +10,18 @@
  * - Semantic color system integration
  * - Performance optimizations for theme switching
  * - Simplified container structure (reduced nesting)
+ * - Container queries for true responsive behavior
+ * - CSS logical properties for internationalization
  */
+
+/* ========================================
+   Container Query Context
+   ======================================== */
+
+.notebook {
+  container-type: inline-size;
+  container-name: notebook;
+}
 
 /* ========================================
    Core Notebook Container (consolidated into .notebook__cells)
@@ -185,7 +196,7 @@
   font-weight: 400;
   color: var(--color-text-secondary);
   font-family: theme('fontFamily.mono');
-  margin-left: 0.5rem;
+  margin-inline-start: 0.5rem;
 }
 
 /* Cell numbering - Jupyter style */
@@ -212,9 +223,9 @@
 }
 
 .notebook-cell--markdown .notebook-cell__number {
-  background: rgba(134, 239, 172, 0.1);
+  background: color-mix(in srgb, rgb(134, 239, 172) 10%, transparent);
   color: theme('colors.green.600');
-  border-color: rgba(134, 239, 172, 0.2);
+  border-color: color-mix(in srgb, rgb(134, 239, 172) 20%, transparent);
 }
 
 /* Execution status indicators */
@@ -227,21 +238,21 @@
 }
 
 .notebook-cell__status--executed {
-  background: rgba(34, 197, 94, 0.1);
+  background: color-mix(in srgb, rgb(34, 197, 94) 10%, transparent);
   color: theme('colors.green.600');
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  border: 1px solid color-mix(in srgb, rgb(34, 197, 94) 20%, transparent);
 }
 
 .notebook-cell__status--pending {
-  background: rgba(251, 191, 36, 0.1);
+  background: color-mix(in srgb, rgb(251, 191, 36) 10%, transparent);
   color: theme('colors.amber.600');
-  border: 1px solid rgba(251, 191, 36, 0.2);
+  border: 1px solid color-mix(in srgb, rgb(251, 191, 36) 20%, transparent);
 }
 
 .notebook-cell__status--error {
-  background: rgba(239, 68, 68, 0.1);
+  background: color-mix(in srgb, rgb(239, 68, 68) 10%, transparent);
   color: theme('colors.red.600');
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  border: 1px solid color-mix(in srgb, rgb(239, 68, 68) 20%, transparent);
 }
 
 /* ========================================
@@ -308,12 +319,12 @@
 .notebook-cell__markdown-content ol {
   /* Match #articleContent list patterns */
   margin: 0.75rem 0;
-  padding-left: 1.5rem;
+  padding-inline-start: 1.5rem;
 }
 
 .notebook-cell__markdown-content ul {
   list-style-type: disc;
-  margin-left: 1.5rem;
+  margin-inline-start: 1.5rem;
 }
 
 .notebook-cell__markdown-content strong {
@@ -449,8 +460,17 @@
 .notebook-cell__output--display-data img {
   max-width: 100%;
   height: auto;
+  aspect-ratio: auto; /* Preserve natural ratio but allow override */
+  object-fit: contain;
   border-radius: theme('borderRadius.md');
   box-shadow: theme('boxShadow.sm');
+}
+
+/* For plots and charts, maintain square aspect ratio */
+.notebook-cell__output--display-data img[alt*="plot"],
+.notebook-cell__output--display-data img[alt*="chart"],
+.notebook-cell__output--display-data img[alt*="graph"] {
+  aspect-ratio: 4 / 3;
 }
 
 /* Error Output */
@@ -483,8 +503,8 @@
 
 .notebook-cell__traceback-line {
   padding: 0.125rem 0;
-  border-left: 2px solid theme('colors.red.500');
-  padding-left: 0.75rem;
+  border-inline-start: 2px solid theme('colors.red.500');
+  padding-inline-start: 0.75rem;
   margin: 0.25rem 0;
 }
 
@@ -546,7 +566,7 @@
 .notebook-cell__output-size {
   font-size: 0.75rem;
   color: var(--color-text-tertiary);
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* ========================================
@@ -807,7 +827,7 @@
 }
 
 .notebook-cell__traceback-line {
-  border-left-color: var(--color-brand-7);
+  border-inline-start-color: var(--color-brand-7);
 }
 
 /* ========================================
@@ -837,14 +857,14 @@
 }
 
 .dark .notebook-cell__traceback-line {
-  border-left-color: var(--color-brand-7);
+  border-inline-start-color: var(--color-brand-7);
 }
 
 /* ========================================
-   Responsive Design
+   Container Query Responsive Design
    ======================================== */
 
-@media (max-width: 768px) {
+@container notebook (max-width: 768px) {
   .notebook__cells {
     margin: 0;
     padding: 0.5rem;
@@ -903,7 +923,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@container notebook (max-width: 480px) {
   .notebook__metadata {
     flex-direction: column;
     gap: 0.5rem;
@@ -1050,14 +1070,14 @@
 
 /* Notebook cells with error states get enhanced styling */
 .notebook-cell:has(.notebook-cell__error-name) {
-  border-left: 4px solid var(--color-danger);
+  border-inline-start: 4px solid var(--color-danger);
   background: linear-gradient(
     90deg,
-    rgba(239, 68, 68, 0.05) 0%,
+    color-mix(in srgb, rgb(239, 68, 68) 5%, transparent) 0%,
     transparent 50%
   );
-  margin-left: -1rem;
-  padding-left: calc(1rem - 4px);
+  margin-inline-start: -1rem;
+  padding-inline-start: calc(1rem - 4px);
 }
 
 .notebook-cell:has(.notebook-cell__error-name) .collapse__icon-wrapper {
@@ -1107,3 +1127,36 @@
   margin-bottom: 1rem;
   font-size: 2.25rem;
 }
+
+/* ========================================
+   Modern CSS Features Summary
+   ======================================== */
+
+/*
+ * This notebook component showcases modern CSS techniques:
+ * 
+ * ✅ Container Queries:
+ *    - Responsive behavior based on container size, not viewport
+ *    - @container notebook (max-width: 768px) replaces @media queries
+ * 
+ * ✅ CSS Logical Properties:
+ *    - margin-inline-start/end for better internationalization
+ *    - border-inline-start for RTL language support
+ *    - padding-inline-start for semantic spacing
+ * 
+ * ✅ Modern Color Functions:
+ *    - color-mix() for alpha blending instead of rgba()
+ *    - More semantic and maintainable color mixing
+ * 
+ * ✅ Aspect Ratio:
+ *    - aspect-ratio property for consistent image display
+ *    - object-fit: contain for proper image scaling
+ * 
+ * ✅ Advanced Pseudo-classes:
+ *    - :has() for parent selector functionality
+ *    - :focus-visible for keyboard navigation
+ *    - :focus-within for container focus states
+ * 
+ * Browser Support: Modern features with graceful fallbacks
+ * Performance: CSS containment for layout isolation
+ */

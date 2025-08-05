@@ -2,6 +2,19 @@ openapi: 3.0.0
 info:
   title: Pets API
   version: 1.0.0
+  description: A comprehensive REST API for managing pet store operations, including pet inventory, adoptions, and owner management.
+  x-api-type: REST
+  x-maturity: stable
+  x-documentation:
+    - name: Getting Started Guide
+      description: Learn how to authenticate and make your first API calls
+      url: "/guides/getting-started"
+    - name: SDK Documentation
+      description: Official SDKs and client libraries
+      url: "/guides/sdks"
+    - name: Postman Collection
+      description: Import our API collection for testing
+      url: "https://documenter.getpostman.com/view/pets-api"
 paths:
   /pets:
     get:

@@ -4,7 +4,7 @@
 */}}
 
 {{/* Get OpenAPI specs from assets/api/ directory */}}
-{{ range $specFile := slice "nmp-api.yaml" }}
+{{ range $specFile := slice "basicApi.yaml" }}
   {{ $specPath := printf "api/%s" $specFile }}
   {{ with resources.Get $specPath }}
     {{/* Try to unmarshal and only proceed if successful */}}
