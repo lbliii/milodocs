@@ -66,7 +66,7 @@ export class Sidebar extends Component {
    */
   setupEventListeners() {
     this.toggles.forEach(toggle => {
-      toggle.addEventListener('click', (e) => {
+      this.addEventListener(toggle, 'click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         this.handleToggleClick(toggle);
@@ -157,7 +157,7 @@ export class Sidebar extends Component {
    */
   setupAccessibility() {
     // Keyboard navigation
-    this.linkTreeElement.addEventListener('keydown', (e) => {
+    this.addEventListener(this.linkTreeElement, 'keydown', (e) => {
       const focusedElement = document.activeElement;
       
       if (e.key === 'ArrowRight') {
@@ -230,7 +230,7 @@ export class Sidebar extends Component {
     this.checkAndSetProperState();
     
     // Listen for window resize to handle responsive behavior
-    window.addEventListener('resize', () => {
+    this.addEventListener(window, 'resize', () => {
       // Debounce resize events
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {

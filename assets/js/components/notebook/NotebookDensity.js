@@ -68,7 +68,7 @@ export class NotebookDensity extends Component {
         this.densityButtons.set(density, btn);
         
         // Use this.addEventListener for auto-cleanup
-        this.addEventListenerSafe(btn, 'click', () => {
+        this.addEventListener(btn, 'click', () => {
           this.switchDensity(density);
         });
       }

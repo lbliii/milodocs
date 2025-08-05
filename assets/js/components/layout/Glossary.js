@@ -38,11 +38,11 @@ export class Glossary extends Component {
    */
   setupEventListeners() {
     this.cards.forEach(card => {
-      card.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-      card.addEventListener('mouseover', (e) => this.handleMouseOver(e));
-      card.addEventListener('mouseout', (e) => this.handleMouseOut(e));
-      card.addEventListener('focus', (e) => this.handleFocus(e));
-      card.addEventListener('blur', (e) => this.handleBlur(e));
+      this.addEventListener(card, 'mousemove', (e) => this.handleMouseMove(e));
+      this.addEventListener(card, 'mouseover', (e) => this.handleMouseOver(e));
+      this.addEventListener(card, 'mouseout', (e) => this.handleMouseOut(e));
+      this.addEventListener(card, 'focus', (e) => this.handleFocus(e));
+      this.addEventListener(card, 'blur', (e) => this.handleBlur(e));
     });
   }
 

@@ -39,21 +39,21 @@ export class ArticleTiles extends Component {
    */
   setupEventListeners() {
     // Global mouse tracking for smooth gradient following
-    document.addEventListener('mousemove', (e) => {
+    this.addEventListener(document, 'mousemove', (e) => {
       this.globalPosition.x = e.clientX;
       this.globalPosition.y = e.clientY;
     }, { passive: true });
 
     // Setup individual tile hover effects
     this.tiles.forEach(tile => {
-      tile.addEventListener('mouseenter', (e) => this.handleTileHover(e));
-      tile.addEventListener('mouseleave', (e) => this.handleTileLeave(e));
-      tile.addEventListener('focus', (e) => this.handleTileHover(e));
-      tile.addEventListener('blur', (e) => this.handleTileLeave(e));
+      this.addEventListener(tile, 'mouseenter', (e) => this.handleTileHover(e));
+      this.addEventListener(tile, 'mouseleave', (e) => this.handleTileLeave(e));
+      this.addEventListener(tile, 'focus', (e) => this.handleTileHover(e));
+      this.addEventListener(tile, 'blur', (e) => this.handleTileLeave(e));
     });
 
     // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
+    this.addEventListener(window, 'beforeunload', () => {
       this.stopGradientAnimation();
     });
   }
@@ -189,10 +189,10 @@ export class ArticleTiles extends Component {
         this.tiles.push(tile);
         
         // Setup events for new tile
-        tile.addEventListener('mouseenter', (e) => this.handleTileHover(e));
-        tile.addEventListener('mouseleave', (e) => this.handleTileLeave(e));
-        tile.addEventListener('focus', (e) => this.handleTileHover(e));
-        tile.addEventListener('blur', (e) => this.handleTileLeave(e));
+        this.addEventListener(tile, 'mouseenter', (e) => this.handleTileHover(e));
+        this.addEventListener(tile, 'mouseleave', (e) => this.handleTileLeave(e));
+        this.addEventListener(tile, 'focus', (e) => this.handleTileHover(e));
+        this.addEventListener(tile, 'blur', (e) => this.handleTileLeave(e));
         
         // Animate in new tile
         tile.style.opacity = '0';

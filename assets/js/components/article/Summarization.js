@@ -39,7 +39,7 @@ export class ArticleSummarization extends Component {
    * Setup keyboard shortcuts
    */
   setupKeyboardShortcuts() {
-    this.addEventListenerSafe(document, 'keydown', (e) => {
+    this.addEventListener(document, 'keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.code === 'Slash') {
         e.preventDefault();
         this.toggleSummarization();

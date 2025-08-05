@@ -63,7 +63,7 @@ export class ArticleClipboard extends Component {
    */
   bindEvents() {
     // Use event delegation for better performance
-    this.addEventListenerSafe(document, 'click', (e) => {
+    this.addEventListener(document, 'click', (e) => {
       const button = e.target.closest('.copy-btn, .copy-code');
       if (button && this.buttons.has(button)) {
         e.preventDefault();

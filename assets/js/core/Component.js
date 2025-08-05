@@ -20,8 +20,11 @@ export class Component {
     this.dependencies = config.dependencies || [];
     this.options = config.options || {};
     this.state = 'uninitialized';
-    this.eventListeners = new Set();
     this.childComponents = new Map();
+    
+    // Modern event management with AbortController
+    this.abortController = new AbortController();
+    this.signal = this.abortController.signal;
     
     // Singleton behavior metadata
     this.isSingleton = config.isSingleton !== undefined ? config.isSingleton : this.detectSingletonBehavior();
@@ -238,47 +241,49 @@ export class Component {
   // EVENT UTILITIES
   // ============================================================================
 
+
+
   /**
-   * Safely add event listener with automatic cleanup
+   * 🚀 Modern event listener with AbortController
+   * 
+   * Benefits:
+   * - Automatic cleanup on component destruction (no manual tracking)
+   * - Better memory management (native browser optimization)
+   * - Simpler code (no cleanup functions to manage)
+   * - More reliable (AbortController is native and battle-tested)
+   * 
+   * @param {Element} element - Target element
+   * @param {string} event - Event name
+   * @param {Function} handler - Event handler
+   * @param {Object} options - Event options (passive, once, etc.)
+   * @returns {Object} - Object with remove() method for manual cleanup
    */
-  addEventListenerSafe(element, event, handler, options = {}) {
+  addEventListener(element, event, handler, options = {}) {
     if (!element || !event || !handler) return null;
     
-    const cleanup = () => {
-      element.removeEventListener(event, handler, options);
-    };
-    
-    element.addEventListener(event, handler, options);
-    this.eventListeners.add(cleanup);
-    
-    return cleanup;
-  }
-
-  /**
-   * Add multiple event listeners to an element
-   */
-  addEventListeners(element, events, handler, options = {}) {
-    if (!element || !events || !handler) return [];
-    
-    const cleanups = [];
-    const eventList = Array.isArray(events) ? events : [events];
-    
-    eventList.forEach(event => {
-      const cleanup = this.addEventListenerSafe(element, event, handler, options);
-      if (cleanup) cleanups.push(cleanup);
+    element.addEventListener(event, handler, {
+      ...options,
+      signal: this.signal
     });
     
-    return cleanups;
+    return {
+      remove: () => {
+        // AbortController handles cleanup automatically, but provide manual option
+        if (!this.signal.aborted) {
+          element.removeEventListener(event, handler, options);
+        }
+      }
+    };
   }
 
   /**
-   * Remove event listener
+   * Add multiple modern event listeners
    */
-  removeEventListener(cleanup) {
-    if (cleanup && typeof cleanup === 'function') {
-      cleanup();
-      this.eventListeners.delete(cleanup);
-    }
+  addMultipleEventListeners(element, events, handler, options = {}) {
+    if (!element || !events || !handler) return [];
+    
+    const eventList = Array.isArray(events) ? events : [events];
+    return eventList.map(event => this.addEventListener(element, event, handler, options));
   }
 
   // ============================================================================
@@ -417,15 +422,13 @@ export class Component {
   destroy() {
     if (this.state === 'destroyed') return;
     
-    // Cleanup event listeners
-    this.eventListeners.forEach(cleanup => {
-      try {
-        cleanup();
-      } catch (error) {
-        log.warn(`Failed to cleanup event listener in ${this.name}:`, error);
-      }
-    });
-    this.eventListeners.clear();
+    // Cleanup event listeners (AbortController)
+    try {
+      this.abortController.abort();
+      log.trace(`Aborted all event listeners for ${this.name}`);
+    } catch (error) {
+      log.warn(`Failed to abort event listeners in ${this.name}:`, error);
+    }
     
     // Destroy child components
     this.childComponents.forEach(child => {

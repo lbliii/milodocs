@@ -55,13 +55,13 @@ export class ArticleHeader extends Component {
    */
   setupEventListeners() {
     // Primary toggle interaction
-    this.addEventListenerSafe(this.toggleBtn, 'click', (e) => {
+    this.addEventListener(this.toggleBtn, 'click', (e) => {
       e.preventDefault();
       this.toggle();
     });
 
     // Keyboard support
-    this.addEventListenerSafe(this.toggleBtn, 'keydown', (e) => {
+    this.addEventListener(this.toggleBtn, 'keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.toggle();
@@ -69,14 +69,14 @@ export class ArticleHeader extends Component {
     });
 
     // Close on escape key when expanded
-    this.addEventListenerSafe(document, 'keydown', (e) => {
+    this.addEventListener(document, 'keydown', (e) => {
       if (e.key === 'Escape' && this.isExpanded && !this.isAnimating) {
         this.collapse();
       }
     });
 
     // Handle window resize
-    this.addEventListenerSafe(window, 'resize', () => {
+    this.addEventListener(window, 'resize', () => {
       if (this.isExpanded) {
         this.adjustPanelHeight();
       }

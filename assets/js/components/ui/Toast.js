@@ -124,7 +124,7 @@ export class Toast extends Component {
     
     // Add close button functionality
     const closeButton = toast.querySelector('.toast-notification__close');
-    closeButton.addEventListener('click', () => {
+          this.addEventListener(closeButton, 'click', () => {
       this.hide(toast);
     });
     

@@ -137,13 +137,13 @@ export class ArticleTOC extends Component {
   }
 
   /**
-   * Setup scroll event listeners
+   * Setup scroll event listeners using modern AbortController pattern
    */
   setupScrollListeners() {
-    window.addEventListener('scroll', this.throttledHighlighter, { passive: true });
+    this.addEventListener(window, 'scroll', this.throttledHighlighter, { passive: true });
     
     if (this.progressBar && this.progressText) {
-      window.addEventListener('scroll', this.throttledProgressUpdater, { passive: true });
+      this.addEventListener(window, 'scroll', this.throttledProgressUpdater, { passive: true });
     }
   }
 
@@ -169,12 +169,7 @@ export class ArticleTOC extends Component {
    * Component cleanup
    */
   onDestroy() {
-    if (this.throttledHighlighter) {
-      window.removeEventListener('scroll', this.throttledHighlighter);
-    }
-    if (this.throttledProgressUpdater) {
-      window.removeEventListener('scroll', this.throttledProgressUpdater);
-    }
+    // Event listeners automatically cleaned up by AbortController in base Component
   }
 }
 

@@ -60,7 +60,7 @@ export class ArticleRelatedContent extends Component {
   bindEvents() {
     // View toggle functionality - use this.addEventListener for auto-cleanup
     this.viewButtons.forEach((button, view) => {
-      this.addEventListenerSafe(button, 'click', (e) => {
+      this.addEventListener(button, 'click', (e) => {
         e.preventDefault();
         this.switchView(view);
       });
@@ -68,7 +68,7 @@ export class ArticleRelatedContent extends Component {
 
     // Collapse toggle functionality
     if (this.collapseButton) {
-      this.addEventListenerSafe(this.collapseButton, 'click', (e) => {
+      this.addEventListener(this.collapseButton, 'click', (e) => {
         e.preventDefault();
         this.toggleCollapse();
       });
@@ -218,7 +218,7 @@ export class ArticleRelatedContent extends Component {
     // Track clicks on related content items
     const items = this.element.querySelectorAll('[data-related-article]');
     items.forEach(item => {
-              this.addEventListenerSafe(item, 'click', (e) => {
+              this.addEventListener(item, 'click', (e) => {
         const articleUrl = item.getAttribute('data-related-article');
         const articleTitle = item.getAttribute('data-article-title');
         

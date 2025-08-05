@@ -62,20 +62,24 @@ export class ThemeToggle extends Component {
   }
 
   /**
-   * Setup event listeners
+   * Setup event listeners using modern AbortController pattern
    */
   setupEventListeners() {
-    this.addEventListenerSafe(this.elements.toggle, 'click', () => {
+    // Modern approach - automatically cleaned up on component destruction
+    this.addEventListener(this.elements.toggle, 'click', () => {
       this.toggleTheme();
     });
 
-    // Keyboard support
-    this.addEventListenerSafe(this.elements.toggle, 'keydown', (e) => {
+    // Keyboard support with modern pattern
+    this.addEventListener(this.elements.toggle, 'keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.toggleTheme();
       }
     });
+
+    // Example: Multiple events can be added easily
+    // this.addMultipleEventListeners(this.elements.toggle, ['focus', 'blur'], this.handleFocusChange);
   }
 
   /**

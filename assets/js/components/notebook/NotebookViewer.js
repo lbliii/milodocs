@@ -36,8 +36,7 @@ export class NotebookViewer extends Component {
       ...this.options
     };
 
-    // Storage for cleanup functions
-    this.eventCleanups = [];
+    // Event cleanup now handled automatically by AbortController
     
     // Child components
     this.cellManager = null;
@@ -121,59 +120,53 @@ export class NotebookViewer extends Component {
   setupEventListeners() {
     // Copy button events
     this.copyButtons.forEach(btn => {
-      const cleanup = this.addEventListenerSafe(btn, 'click', (e) => {
+      this.addEventListener(btn, 'click', (e) => {
         e.stopPropagation();
         this.handleCopyClick(btn);
       });
-      this.eventCleanups.push(cleanup);
     });
 
     // Toggle button events
     this.toggleButtons.forEach(btn => {
-      const cleanup = this.addEventListenerSafe(btn, 'click', (e) => {
+      this.addEventListener(btn, 'click', (e) => {
         e.stopPropagation();
         this.handleToggleClick(btn);
       });
-      this.eventCleanups.push(cleanup);
     });
 
     // Header click events for collapsible cells
     this.cellHeaders.forEach(header => {
-      const cleanup = this.addEventListenerSafe(header, 'click', (e) => {
+      this.addEventListener(header, 'click', (e) => {
         if (e.target.closest('.notebook-cell__toggle, .notebook-cell__copy-btn')) {
           return; // Don't handle if clicking on buttons
         }
         this.handleHeaderClick(header);
       });
-      this.eventCleanups.push(cleanup);
 
       // Keyboard events for headers
-      const keyCleanup = this.addEventListenerSafe(header, 'keydown', (e) => {
+      this.addEventListener(header, 'keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           this.handleHeaderClick(header);
         }
       });
-      this.eventCleanups.push(keyCleanup);
     });
 
     // Global keyboard shortcuts
-    const globalKeyCleanup = this.addEventListenerSafe(document, 'keydown', (e) => {
+    this.addEventListener(document, 'keydown', (e) => {
       if (this.element.contains(e.target)) {
         this.handleGlobalKeydown(e);
       }
     });
-    this.eventCleanups.push(globalKeyCleanup);
 
     // Preference change listeners
-    const motionCleanup = this.addEventListenerSafe(
+    this.addEventListener(
       window.matchMedia('(prefers-reduced-motion: reduce)'),
       'change',
       (e) => {
         this.preferences.animationsEnabled = !e.matches;
       }
     );
-    this.eventCleanups.push(motionCleanup);
   }
 
   /**
@@ -307,16 +300,12 @@ export class NotebookViewer extends Component {
    * Setup keyboard navigation using NotebookNavigation
    */
   setupKeyboardNavigation() {
-    const cleanups = NotebookNavigation.setupKeyboardNavigation(
+    NotebookNavigation.setupKeyboardNavigation(
       this.element,
       this.cells,
-              (element, event, handler) => this.addEventListenerSafe(element, event, handler)
+      (element, event, handler) => this.addEventListener(element, event, handler)
     );
-    
-    // Store cleanups if returned
-    if (cleanups && Array.isArray(cleanups)) {
-      this.eventCleanups.push(...cleanups);
-    }
+    // No cleanup needed - AbortController handles everything automatically
   }
 
   /**
@@ -371,9 +360,7 @@ export class NotebookViewer extends Component {
     // Save final state
     this.saveState();
     
-    // Clean up event listeners
-    this.eventCleanups.forEach(cleanup => cleanup());
-    this.eventCleanups = [];
+    // Event listeners automatically cleaned up by AbortController in base Component
     
     // Clear stored data
     this.cells.clear();

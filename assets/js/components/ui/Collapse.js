@@ -98,13 +98,13 @@ class Collapse extends Component {
    */
   bindCollapseEvents(header, collapseData) {
     // Use the enhanced event listener methods for automatic cleanup
-    this.addEventListenerSafe(header, 'click', (e) => {
+          this.addEventListener(header, 'click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       this.toggle(collapseData);
     });
 
-    this.addEventListenerSafe(header, 'keydown', (e) => {
+          this.addEventListener(header, 'keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.toggle(collapseData);

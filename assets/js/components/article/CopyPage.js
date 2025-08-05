@@ -63,26 +63,26 @@ setupElements() {
    */
   bindEvents() {
     // Toggle dropdown
-    this.addEventListenerSafe(this.toggle, 'click', this.handleToggle.bind(this));
+    this.addEventListener(this.toggle, 'click', this.handleToggle.bind(this));
 
     // Copy URL button
     if (this.copyUrlButton) {
-      this.addEventListenerSafe(this.copyUrlButton, 'click', this.handleCopyUrl.bind(this));
+      this.addEventListener(this.copyUrlButton, 'click', this.handleCopyUrl.bind(this));
     }
 
     // Copy content button
     if (this.copyContentButton) {
-      this.addEventListenerSafe(this.copyContentButton, 'click', this.handleCopyContent.bind(this));
+      this.addEventListener(this.copyContentButton, 'click', this.handleCopyContent.bind(this));
     }
 
     // Close on outside click
-    this.addEventListenerSafe(document, 'click', this.handleOutsideClick.bind(this));
+    this.addEventListener(document, 'click', this.handleOutsideClick.bind(this));
 
     // Close on escape key
-    this.addEventListenerSafe(document, 'keydown', this.handleKeydown.bind(this));
+    this.addEventListener(document, 'keydown', this.handleKeydown.bind(this));
 
     // Prevent dropdown from closing when clicking inside
-    this.addEventListenerSafe(this.dropdown, 'click', (e) => {
+    this.addEventListener(this.dropdown, 'click', (e) => {
       e.stopPropagation();
     });
   }

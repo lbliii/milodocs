@@ -122,7 +122,7 @@ export class OpenAPIViewer extends Component {
    */
   bindEvents() {
     // Endpoint header clicks
-    this.addEventListenerSafe(document, 'click', (e) => {
+    this.addEventListener(document, 'click', (e) => {
       const header = e.target.closest('.endpoint-header');
       if (header) {
         const endpoint = header.closest('.endpoint-item');
@@ -134,7 +134,7 @@ export class OpenAPIViewer extends Component {
     });
     
     // Keyboard support for endpoint headers
-    this.addEventListenerSafe(document, 'keydown', (e) => {
+    this.addEventListener(document, 'keydown', (e) => {
       const header = e.target.closest('.endpoint-header');
       if (header && (e.key === 'Enter' || e.key === ' ')) {
         const endpoint = header.closest('.endpoint-item');
@@ -146,7 +146,7 @@ export class OpenAPIViewer extends Component {
     });
     
     // Tag filter clicks
-    this.addEventListenerSafe(document, 'click', (e) => {
+    this.addEventListener(document, 'click', (e) => {
       const tagFilter = e.target.closest('.tag-filter');
       if (tagFilter) {
         e.preventDefault();
@@ -156,7 +156,7 @@ export class OpenAPIViewer extends Component {
     });
     
     // Copy button clicks
-    this.addEventListenerSafe(document, 'click', (e) => {
+    this.addEventListener(document, 'click', (e) => {
       const copyBtn = e.target.closest('.copy-button');
       if (copyBtn) {
         e.preventDefault();
@@ -304,7 +304,7 @@ export class OpenAPIViewer extends Component {
     const tabPanels = tabsContainer.querySelectorAll('.code-tab-panel');
     
     tabButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
+      this.addEventListener(button, 'click', (e) => {
         e.preventDefault();
         const targetTab = button.getAttribute('data-tab');
         

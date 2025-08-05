@@ -94,24 +94,24 @@ export class TutorialManager extends Component {
     // Save progress button
     const saveBtn = document.querySelector('[data-action="save-progress"]');
     if (saveBtn) {
-      saveBtn.addEventListener('click', () => this.saveProgress());
+      this.addEventListener(saveBtn, 'click', () => this.saveProgress());
     }
 
     // Reset progress button
     const resetBtn = document.querySelector('[data-action="reset-progress"]');
     if (resetBtn) {
-      resetBtn.addEventListener('click', () => this.resetProgress());
+      this.addEventListener(resetBtn, 'click', () => this.resetProgress());
     }
 
     // Step validation checkboxes
     document.querySelectorAll('.validation-checkbox').forEach(checkbox => {
-      checkbox.addEventListener('change', () => this.validateStep());
+      this.addEventListener(checkbox, 'change', () => this.validateStep());
     });
 
     // Step completion button
     const validateBtn = document.querySelector('.validate-step');
     if (validateBtn) {
-      validateBtn.addEventListener('click', () => this.completeStep());
+      this.addEventListener(validateBtn, 'click', () => this.completeStep());
     }
 
     // Copy code buttons are now handled by ArticleClipboard component
@@ -119,7 +119,7 @@ export class TutorialManager extends Component {
 
     // Collapsible sections
     document.querySelectorAll('[data-toggle="collapse"]').forEach(trigger => {
-      trigger.addEventListener('click', (e) => this.toggleCollapse(e));
+      this.addEventListener(trigger, 'click', (e) => this.toggleCollapse(e));
     });
   }
 
@@ -252,7 +252,7 @@ export class TutorialManager extends Component {
     }, 30000);
     
     // Save on page unload
-    window.addEventListener('beforeunload', () => {
+    this.addEventListener(window, 'beforeunload', () => {
       this.saveProgress();
     });
   }
@@ -401,7 +401,7 @@ export class TutorialManager extends Component {
    */
   initializeCodeBlocks() {
     // Listen for copy events from ArticleClipboard component
-    document.addEventListener('copy-success', (event) => {
+    this.addEventListener(document, 'copy-success', (event) => {
       this.emit('tutorial:codeCopied', { 
         codeText: event.detail.text.substring(0, 50) + '...' 
       });
@@ -480,7 +480,7 @@ export class TutorialManager extends Component {
    */
   setupSmoothScrolling() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+              this.addEventListener(anchor, 'click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {

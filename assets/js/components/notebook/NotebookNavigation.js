@@ -13,8 +13,7 @@ export class NotebookNavigation extends Component {
       selector: config.selector || '.notebook',
       ...config
     });
-    
-    this.eventCleanups = [];
+    // Event cleanup now handled automatically by AbortController
   }
 
   /**
@@ -28,11 +27,10 @@ export class NotebookNavigation extends Component {
       if (header) {
         header.setAttribute('tabindex', index === 0 ? '0' : '-1');
         
-        const cleanup = addEventListener(header, 'keydown', (e) => {
+        addEventListener(header, 'keydown', (e) => {
           NotebookNavigation.handleCellNavigation(e, index, cellElements);
         });
-        
-        return cleanup;
+        // No cleanup needed - AbortController handles everything automatically
       }
     });
   }
@@ -223,17 +221,7 @@ export class NotebookNavigation extends Component {
     }
   }
 
-  /**
-   * Cleanup navigation event listeners
-   */
-  static cleanup(eventCleanups) {
-    eventCleanups.forEach(cleanup => {
-      if (typeof cleanup === 'function') {
-        cleanup();
-      }
-    });
-    eventCleanups.length = 0;
-  }
+
 }
 
 // Auto-register component

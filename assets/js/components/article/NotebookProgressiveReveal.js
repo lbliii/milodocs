@@ -248,7 +248,7 @@ export class NotebookProgressiveReveal extends Component {
       scrollTimeout = setTimeout(handleScroll, 100);
     };
 
-            this.addEventListenerSafe(window, 'scroll', throttledScroll);
+            this.addEventListener(window, 'scroll', throttledScroll);
   }
 
   /**

@@ -62,17 +62,17 @@ export class MobileNav extends Component {
   }
 
   setupEventListeners() {
-    this.addEventListenerSafe(this.element, 'click', () => this.openMobileNav());
+    this.addEventListener(this.element, 'click', () => this.openMobileNav());
     
     if (this.closeButton) {
-      this.addEventListenerSafe(this.closeButton, 'click', () => this.closeMobileNav());
+      this.addEventListener(this.closeButton, 'click', () => this.closeMobileNav());
     }
     
     if (this.overlay) {
-      this.addEventListenerSafe(this.overlay, 'click', () => this.closeMobileNav());
+      this.addEventListener(this.overlay, 'click', () => this.closeMobileNav());
     }
     
-    this.addEventListenerSafe(document, 'keydown', (e) => {
+    this.addEventListener(document, 'keydown', (e) => {
       if (e.key === 'Escape' && this.sidebarComponent && this.sidebarComponent.isOpen) {
         e.preventDefault();
         this.closeMobileNav();

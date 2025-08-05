@@ -116,7 +116,7 @@ export class ArticleCollapse extends Component {
    */
   bindEvents() {
     // Use event delegation for better performance
-    this.addEventListenerSafe(document, 'click', (e) => {
+    this.addEventListener(document, 'click', (e) => {
       const toggle = e.target.closest('.toggle-collapse');
       if (toggle && this.toggles.has(toggle)) {
         e.preventDefault();
@@ -125,7 +125,7 @@ export class ArticleCollapse extends Component {
     });
     
     // Keyboard support
-    this.addEventListenerSafe(document, 'keydown', (e) => {
+    this.addEventListener(document, 'keydown', (e) => {
       const toggle = e.target.closest('.toggle-collapse');
       if (toggle && this.toggles.has(toggle)) {
         if (e.key === 'Enter' || e.key === ' ') {

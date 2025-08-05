@@ -96,12 +96,12 @@ export class ArticleTabs extends Component {
       const buttons = option.querySelectorAll('button');
       
       buttons.forEach(button => {
-        button.addEventListener('click', (e) => {
+        this.addEventListener(button, 'click', (e) => {
           this.handleButtonClick(e, tabContainer);
         });
         
         // Add keyboard support
-        button.addEventListener('keydown', (e) => {
+        this.addEventListener(button, 'keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             this.handleButtonClick(e, tabContainer);

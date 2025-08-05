@@ -47,23 +47,23 @@ export class NotebookLaunch extends Component {
    */
   bindEvents() {
     // Toggle dropdown
-    this.addEventListenerSafe(this.toggle, 'click', this.handleToggle.bind(this));
+    this.addEventListener(this.toggle, 'click', this.handleToggle.bind(this));
 
     // Close on outside click
-    this.addEventListenerSafe(document, 'click', this.handleOutsideClick.bind(this));
+    this.addEventListener(document, 'click', this.handleOutsideClick.bind(this));
 
     // Close on escape key
-    this.addEventListenerSafe(document, 'keydown', this.handleKeydown.bind(this));
+    this.addEventListener(document, 'keydown', this.handleKeydown.bind(this));
 
     // Prevent dropdown from closing when clicking inside
-    this.addEventListenerSafe(this.dropdown, 'click', (e) => {
+    this.addEventListener(this.dropdown, 'click', (e) => {
       e.stopPropagation();
     });
 
     // Track clicks on platform links for analytics
     const platformLinks = this.dropdown.querySelectorAll('a[href*="colab"], a[href*="binder"], a[href*="nbviewer"]');
     platformLinks.forEach(link => {
-              this.addEventListenerSafe(link, 'click', (e) => {
+              this.addEventListener(link, 'click', (e) => {
         const platform = this.getPlatformFromUrl(link.href);
         this.trackPlatformLaunch(platform);
         this.closeDropdown();
