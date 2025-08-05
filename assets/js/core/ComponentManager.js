@@ -66,12 +66,22 @@ class ComponentManager {
         ...config
       });
       
-      // Check for duplicate instances targeting the same DOM element
+      // Enhanced duplicate detection with singleton awareness
       if (tempInstance.selector) {
         const existingInstance = this.findInstanceBySelector(name, tempInstance.selector);
         if (existingInstance) {
-          log.warn(`Component "${name}" instance already exists for selector "${tempInstance.selector}". Returning existing instance.`);
+          const isSingleton = tempInstance.isSingleton || this.isSingletonSelector(tempInstance.selector);
+          const logLevel = isSingleton ? 'warn' : 'debug';
+          
+          log[logLevel](`Component "${name}" instance already exists for selector "${tempInstance.selector}". Returning existing instance.`);
           return existingInstance;
+        }
+        
+        // Check for DOM element conflicts (regardless of component name)
+        const elementConflict = this.findInstanceByElement(tempInstance.selector);
+        if (elementConflict && (tempInstance.isSingleton || this.isSingletonSelector(tempInstance.selector))) {
+          log.warn(`Singleton element "${tempInstance.selector}" already managed by component "${elementConflict.name}". Returning existing instance.`);
+          return elementConflict;
         }
       }
       
@@ -134,6 +144,38 @@ class ComponentManager {
       instance.selector === selector &&
       instance.state !== 'failed'
     );
+  }
+
+  /**
+   * Find an existing instance by DOM element selector (regardless of component name)
+   */
+  static findInstanceByElement(selector) {
+    return Array.from(this.instances.values()).find(instance => 
+      instance.selector === selector &&
+      instance.state !== 'failed'
+    );
+  }
+
+  /**
+   * Determine if a selector should be treated as singleton (one instance per DOM element)
+   */
+  static isSingletonSelector(selector) {
+    if (!selector) return false;
+    
+    // ID selectors are always singleton
+    if (selector.startsWith('#')) return true;
+    
+    // Specific singleton selectors for this app
+    const singletonSelectors = [
+      'body',
+      'html',
+      'head',
+      '[data-component="navigation-topbar"]',
+      '[data-component="navigation-sidebar-left"]',
+      '[data-component="performance-optimizer"]'
+    ];
+    
+    return singletonSelectors.includes(selector);
   }
 
   /**

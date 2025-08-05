@@ -42,19 +42,10 @@ export class ThemeToggle extends Component {
       return;
     }
 
-    // Check if this element already has event listeners from another instance
-    if (this.element._themeToggleInitialized) {
-      console.warn('ThemeToggle: Button already has event listeners from another instance');
-      return;
-    }
-
     this.cacheElements();
     this.setupEventListeners();
     this.updateUI();
     this.updateIconSources();
-    
-    // Mark element as initialized to prevent duplicate event listeners
-    this.element._themeToggleInitialized = true;
     
     console.log('ThemeToggle: Initialized successfully');
   }
@@ -290,10 +281,6 @@ export class ThemeToggle extends Component {
    * Component cleanup
    */
   onDestroy() {
-    // Clean up the initialization flag so the element can be reinitialized if needed
-    if (this.element && this.element._themeToggleInitialized) {
-      delete this.element._themeToggleInitialized;
-    }
     console.log('ThemeToggle: Component destroyed');
   }
 }

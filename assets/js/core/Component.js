@@ -23,6 +23,10 @@ export class Component {
     this.eventListeners = new Set();
     this.childComponents = new Map();
     
+    // Singleton behavior metadata
+    this.isSingleton = config.isSingleton !== undefined ? config.isSingleton : this.detectSingletonBehavior();
+    this.allowMultipleInstances = config.allowMultipleInstances || false;
+    
     // Auto-generate unique instance ID
     this.id = `${this.name}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
     
@@ -78,6 +82,28 @@ export class Component {
       this.state = 'failed';
       return null;
     }
+  }
+
+  /**
+   * Detect if this component should behave as a singleton
+   */
+  detectSingletonBehavior() {
+    // ID selectors typically indicate singleton behavior
+    if (this.selector && this.selector.startsWith('#')) {
+      return true;
+    }
+    
+    // Specific component patterns that should be singleton
+    const singletonPatterns = [
+      'theme-toggle',
+      'navigation-sidebar-left',
+      'navigation-mobile-toggle',
+      'chat-toc-toggle',
+      'performance-optimizer',
+      'search'
+    ];
+    
+    return singletonPatterns.includes(this.name);
   }
 
   /**
