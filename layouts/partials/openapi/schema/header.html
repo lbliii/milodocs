@@ -1,0 +1,27 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+
+<div class="schema-header">
+  {{ with $schema.Title }}
+    <h6 class="schema-title">{{ . }}</h6>
+  {{ end }}
+  
+  <div class="schema-type-info">
+    {{ with $schema.Type }}
+      <span class="type-badge type-badge--{{ . }}">{{ . }}</span>
+    {{ end }}
+    {{ with $schema.Format }}
+      <span class="type-format">({{ . }})</span>
+    {{ end }}
+    {{ if $schema.Nullable }}
+      <span class="type-nullable">nullable</span>
+    {{ end }}
+    {{ if $schema.ReadOnly }}
+      <span class="type-readonly">read-only</span>
+    {{ end }}
+    {{ if $schema.WriteOnly }}
+      <span class="type-writeonly">write-only</span>
+    {{ end }}
+  </div>
+</div>

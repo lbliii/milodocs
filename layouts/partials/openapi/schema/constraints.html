@@ -1,0 +1,83 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+
+<!-- Schema Constraints -->
+{{ if or $schema.Enum $schema.Default $schema.Example (and (isset $schema "Pattern") $schema.Pattern) (and (isset $schema "MinLength") $schema.MinLength) (and (isset $schema "MaxLength") $schema.MaxLength) (and (isset $schema "Minimum") $schema.Minimum) (and (isset $schema "Maximum") $schema.Maximum) (and (isset $schema "MultipleOf") $schema.MultipleOf) }}
+  <div class="schema-constraints">
+    {{ with $schema.Default }}
+      <div class="constraint">
+        <span class="constraint-label">Default:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}
+    
+    {{ with $schema.Example }}
+      <div class="constraint">
+        <span class="constraint-label">Example:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}
+    
+    {{ with $schema.Enum }}
+      <div class="constraint">
+        <span class="constraint-label">Allowed values:</span>
+        <div class="enum-values">
+          {{ range $val := . }}
+            <code class="enum-value">{{ $val }}</code>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+    
+    <!-- String constraints -->
+    {{ if isset $schema "Pattern" }}{{ with $schema.Pattern }}
+      <div class="constraint">
+        <span class="constraint-label">Pattern:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}{{ end }}
+    
+    {{ if isset $schema "MinLength" }}{{ with $schema.MinLength }}
+      <div class="constraint">
+        <span class="constraint-label">Min Length:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}{{ end }}
+    
+    {{ if isset $schema "MaxLength" }}{{ with $schema.MaxLength }}
+      <div class="constraint">
+        <span class="constraint-label">Max Length:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}{{ end }}
+    
+    <!-- Numeric constraints -->
+    {{ if isset $schema "Minimum" }}{{ with $schema.Minimum }}
+      <div class="constraint">
+        <span class="constraint-label">Minimum:</span>
+        <code>{{ . }}</code>
+        {{ if and (isset $schema "ExclusiveMinimum") $schema.ExclusiveMinimum }}
+          <span class="constraint-modifier">(exclusive)</span>
+        {{ end }}
+      </div>
+    {{ end }}{{ end }}
+    
+    {{ if isset $schema "Maximum" }}{{ with $schema.Maximum }}
+      <div class="constraint">
+        <span class="constraint-label">Maximum:</span>
+        <code>{{ . }}</code>
+        {{ if and (isset $schema "ExclusiveMaximum") $schema.ExclusiveMaximum }}
+          <span class="constraint-modifier">(exclusive)</span>
+        {{ end }}
+      </div>
+    {{ end }}{{ end }}
+    
+    {{ if isset $schema "MultipleOf" }}{{ with $schema.MultipleOf }}
+      <div class="constraint">
+        <span class="constraint-label">Multiple Of:</span>
+        <code>{{ . }}</code>
+      </div>
+    {{ end }}{{ end }}
+  </div>
+{{ end }}

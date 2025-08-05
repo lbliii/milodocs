@@ -1,0 +1,86 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+
+<!-- Object Properties -->
+{{ with $schema.Properties }}
+  <div class="schema-properties">
+    <h6>Properties</h6>
+    <div class="properties-list">
+      {{ range $propName, $propSchema := . }}
+        {{ $isRequired := in ($schema.Required | default (slice)) $propName }}
+        <div class="property-item{{ if $isRequired }} property-item--required{{ end }}">
+          <div class="property-header">
+            <div class="property-name">
+              <code>{{ $propName }}</code>
+              {{ if $isRequired }}
+                <span class="property-required">required</span>
+              {{ end }}
+            </div>
+          </div>
+          
+          {{/* Enhanced property display with better UX */}}
+          {{ $propActualSchema := $propSchema }}
+          {{ if $propSchema.Value }}
+            {{ $propActualSchema = $propSchema.Value }}
+          {{ end }}
+          
+          <div class="property-meta">
+            <div class="property-type">
+              {{ with $propActualSchema.Type }}
+                <span class="type-badge type-badge--{{ . }}">{{ . }}</span>
+              {{ end }}
+              {{ with $propActualSchema.Format }}
+                <span class="property-format">{{ . }}</span>
+              {{ end }}
+            </div>
+          </div>
+          
+          {{ with $propActualSchema.Description }}
+            <div class="property-description">{{ . | markdownify }}</div>
+          {{ end }}
+          
+          {{ if or $propActualSchema.Default $propActualSchema.Example $propActualSchema.Enum }}
+            <div class="property-constraints">
+              {{ with $propActualSchema.Default }}
+                <span class="property-constraint">Default: <code>{{ . }}</code></span>
+              {{ end }}
+              {{ with $propActualSchema.Example }}
+                <span class="property-constraint">Example: <code>{{ . }}</code></span>
+              {{ end }}
+              {{ with $propActualSchema.Enum }}
+                <span class="property-constraint">Values: {{ range $i, $val := . }}{{ if $i }}, {{ end }}<code>{{ $val }}</code>{{ end }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+          
+          {{/* For complex nested objects, still render recursively */}}
+          {{ if and (eq $propActualSchema.Type "object") $propActualSchema.Properties }}
+            <div class="property-schema">
+              {{ partial "openapi/schema/container.html" (dict "schema" $propSchema "spec" $spec "level" (add $level 1)) }}
+            </div>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}
+
+{{ with $schema.AdditionalProperties }}
+  <div class="schema-additional-properties">
+    <h6>Additional Properties</h6>
+    {{ if eq . true }}
+      <div class="additional-properties-any">Any additional properties are allowed</div>
+    {{ else if eq . false }}
+      <div class="additional-properties-none">No additional properties are allowed</div>
+    {{ else }}
+      <div class="additional-properties-schema">
+        {{ if (reflect.IsMap .) }}
+          {{ partial "openapi/schema/container.html" (dict "schema" . "spec" $spec "level" (add $level 1)) }}
+        {{ else }}
+          <span class="additional-properties-type">Additional properties of type: {{ printf "%T" . }}</span>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+{{ end }}
