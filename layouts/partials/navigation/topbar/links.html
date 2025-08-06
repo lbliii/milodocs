@@ -1,16 +1,43 @@
 
 {{if .Site.Params.topNav.globalLinks.display}}
 {{- range .Site.Params.topNav.globalLinks.links -}}
-<a href="{{ .url | relURL }}" aria-label="{{.title}}" class="nav-link">{{.title}}</a>
+  {{- $page := "" -}}
+  {{- if eq .url "/" -}}
+    {{- $page = .Site.Home -}}
+  {{- else -}}
+    {{- $page = .Site.GetPage .url -}}
+  {{- end -}}
+  {{- if $page -}}
+    <a href="{{ $page.RelPermalink }}" aria-label="{{.title}}" class="nav-link">{{.title}}</a>
+  {{- else -}}
+    {{/* Fallback to parameter URL if page not found */}}
+    <a href="{{ .url | relURL }}" aria-label="{{.title}}" class="nav-link">{{.title}}</a>
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{if .Site.Params.topNav.dropdown.display}}
 <div class="relative group z-50">
-    <a href="{{ .Site.Params.topNav.dropdown.url | relURL }}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="nav-link">{{.Site.Params.topNav.dropdown.name}}</a>
+    {{- $dropdownPage := "" -}}
+    {{- if eq .Site.Params.topNav.dropdown.url "/" -}}
+      {{- $dropdownPage = .Site.Home -}}
+    {{- else -}}
+      {{- $dropdownPage = .Site.GetPage .Site.Params.topNav.dropdown.url -}}
+    {{- end -}}
+    {{- if $dropdownPage -}}
+      <a href="{{ $dropdownPage.RelPermalink }}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="nav-link">{{.Site.Params.topNav.dropdown.name}}</a>
+    {{- else -}}
+      <a href="{{ .Site.Params.topNav.dropdown.url | relURL }}" aria-label="{{.Site.Params.topNav.dropdown.name}}" class="nav-link">{{.Site.Params.topNav.dropdown.name}}</a>
+    {{- end -}}
     <div class="dropdown">
         {{- range .Site.Params.topNav.dropdown.links -}}
-        <a href="{{ .url | relURL }}" aria-label="{{.name}}" class="dropdown-link">{{.name}}</a>
+          {{- $linkPage := .Site.GetPage .url -}}
+          {{- if $linkPage -}}
+            <a href="{{ $linkPage.RelPermalink }}" aria-label="{{.name}}" class="dropdown-link">{{.name}}</a>
+          {{- else -}}
+            {{/* Fallback to parameter URL if page not found */}}
+            <a href="{{ .url | relURL }}" aria-label="{{.name}}" class="dropdown-link">{{.name}}</a>
+          {{- end -}}
         {{- end -}}
     </div>
 </div>
