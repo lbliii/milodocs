@@ -152,9 +152,9 @@
 
 /* Sidebar Container Styling */
 .sidebar-container {
-  background-color: var(--color-surface);
+  background-color: transparent;
   color: var(--color-text-primary);
-  border-inline-end: 1px solid var(--color-border-primary);
+  border-inline-end: none;
 }
 
 /* Desktop sidebar styling */
@@ -190,8 +190,8 @@
 
 /* Mobile Header Styling - Force hide on desktop */
 .sidebar-header {
-  border-bottom: 1px solid var(--color-border-primary);
-  background-color: var(--color-surface);
+  border-bottom: none;
+  background-color: transparent;
   color: var(--color-text-primary);
   display: flex;
 }
@@ -338,22 +338,15 @@
 
 /* Enhanced TOC Styling */
 .toc {
-  @apply rounded-xl p-6 mb-8;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 12px color-mix(in srgb, black 5%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
+  @apply rounded-lg p-6 mb-8;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .toc-header {
-  @apply flex items-center mb-4 pb-3 border-b;
-  border-color: var(--color-border-primary);
+  @apply flex items-center mb-4 pb-3;
+  border: none;
   color: var(--color-text-primary);
 }
 
@@ -372,13 +365,8 @@
 /* Enhanced Right Sidebar TOC */
 .toc-sidebar {
   @apply p-6 text-sm;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  background: transparent;
   border-radius: 0.75rem;
-  backdrop-filter: blur(10px);
   color: var(--color-text-primary);
 }
 
@@ -917,16 +905,13 @@
 
 /* :has() Navigation Enhancements */
 
-/* TOC sidebar responds to link interactions */
+/* TOC sidebar responds to link interactions - backgrounds disabled for clean look */
 .toc-sidebar:has(.toc-link:hover) {
   transform: translateX(4px);
-  background: rgba(var(--color-brand-rgb), 0.02);
-  border-radius: 0.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toc-sidebar:has(.toc-link:focus) {
-  background: rgba(var(--color-brand-rgb), 0.05);
   box-shadow: 0 0 0 2px rgba(var(--color-brand-rgb), 0.1);
 }
 
@@ -942,9 +927,9 @@
   );
 }
 
-/* Sidebar container awareness */
-.sidebar-container:has(.sidebar-item:hover) {
+/* Sidebar container awareness - disabled to keep background transparent */
+/* .sidebar-container:has(.sidebar-item:hover) {
   background: color-mix(in srgb, var(--color-surface) 30%, transparent);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
-}
+} */

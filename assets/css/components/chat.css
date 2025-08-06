@@ -3,6 +3,7 @@
 /* Chat Header */
 .chat-header {
   backdrop-filter: blur(10px);
+  border-radius: 0.75rem 0.75rem 0 0; /* Top corners rounded to match design system */
 }
 
 /* Chat header icon styling for proper dark mode */
@@ -25,23 +26,21 @@
   filter: brightness(0) saturate(100%) invert(35%) sepia(96%) saturate(2067%) hue-rotate(346deg) brightness(89%) contrast(94%) !important;
 }
 
-/* Chat Container - Liquid Glass Effect */
+/* Chat Container - Clean transparent design */
 #chatContainer {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(1.2);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 2px solid var(--color-brand);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0.75rem; /* Add consistent border radius */
+  margin-right: 1.5rem; /* Align with page container padding */
+  margin-top: 1rem; /* Match the pageContainer's top padding to align with content start */
 }
 
-/* Enhanced Chat Interface - Liquid Glass */
+/* Enhanced Chat Interface - Clean transparent design */
 .chat-controls {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border: none;
+  border-radius: 0 0 0.75rem 0.75rem; /* Bottom corners rounded to match container */
 }
 
 .chat-form {

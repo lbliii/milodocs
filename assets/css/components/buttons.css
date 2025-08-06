@@ -104,7 +104,7 @@
 .topbar__button {
   position: relative;
   padding: 0.5rem;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   min-width: 2.25rem;
   min-height: 2.25rem;
   background-color: var(--color-surface);
@@ -165,7 +165,7 @@
 .toggle-btn {
   position: relative;
   padding: 0.5rem;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   min-width: 2.25rem;
   min-height: 2.25rem;
   background-color: var(--color-surface);
