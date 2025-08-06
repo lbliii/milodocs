@@ -229,6 +229,52 @@ class ComponentManager {
   }
 
   /**
+   * Re-initialize components after page restoration from cache
+   * This method specifically handles the case where the page was restored
+   * from browser cache and components may not be working properly
+   */
+  static reinitializeAfterCacheRestore() {
+    log.info('Reinitializing components after cache restoration...');
+    
+    // Find all failed or broken component instances
+    const brokenInstances = Array.from(this.instances.values()).filter(instance => {
+      // Check if the component's DOM element still exists and is functional
+      if (!instance.element || !document.contains(instance.element)) {
+        return true; // Element doesn't exist anymore
+      }
+      
+      // Check if component is in a failed state
+      if (instance.state === 'failed' || instance.state === 'destroyed') {
+        return true;
+      }
+      
+      // For sidebar components, check if event listeners are still working
+      if (instance.name === 'navigation-sidebar-left') {
+        // Check if toggles are still responsive
+        const toggles = instance.element.querySelectorAll('.expand-toggle');
+        if (toggles.length > 0 && !toggles[0].onclick && !toggles[0].addEventListener) {
+          return true; // Event listeners might be broken
+        }
+      }
+      
+      return false;
+    });
+    
+    // Destroy broken instances
+    brokenInstances.forEach(instance => {
+      log.debug(`Destroying broken component instance: ${instance.id}`);
+      this.destroy(instance.id);
+    });
+    
+    // Re-discover and load components
+    this.discoverAndLoadComponents();
+    
+    log.info(`Reinitialized ${brokenInstances.length} broken components`);
+    
+    return brokenInstances.length;
+  }
+
+  /**
    * Discover and load components from DOM
    */
   static discoverAndLoadComponents() {

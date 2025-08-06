@@ -382,7 +382,11 @@ export class TutorialManager extends Component {
    * Navigate to next step or completion
    */
   navigateToNextStep() {
-    const nextStepBtn = document.querySelector('.btn--primary[href*="/"]');
+    // Look for next step buttons with any href format (absolute, relative, etc.)
+    const nextStepBtn = document.querySelector('.btn--primary[href]') || 
+                       document.querySelector('a[href*="Next:"]') ||
+                       document.querySelector('a[href]:has-text("Next:")');
+    
     if (nextStepBtn && nextStepBtn.textContent.includes('Next:')) {
       window.location.href = nextStepBtn.href;
     } else {

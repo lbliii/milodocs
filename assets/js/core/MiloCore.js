@@ -410,6 +410,19 @@ export class MiloCore {
   }
 
   /**
+   * Reinitialize components after page cache restoration
+   * This method is exposed for external access and debugging
+   */
+  reinitializeComponents() {
+    if (!this.initialized) {
+      log.warn('Core system not initialized, cannot reinitialize components');
+      return 0;
+    }
+    
+    return ComponentManager.reinitializeAfterCacheRestore();
+  }
+
+  /**
    * Setup global events and shortcuts
    */
   setupGlobalEvents() {
@@ -423,7 +436,14 @@ export class MiloCore {
             break;
           case 'h':
             e.preventDefault();
-            window.location.href = '/';
+            // Navigate to home page using relative path that works in static deployments
+            const homeLink = document.querySelector('a[href="/"], a[href="./"], a[href="./index.html"], a[href="index.html"]');
+            if (homeLink) {
+              window.location.href = homeLink.href;
+            } else {
+              // Fallback to current directory
+              window.location.href = './';
+            }
             break;
         }
       }

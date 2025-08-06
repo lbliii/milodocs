@@ -8,6 +8,7 @@ import { ready } from './utils/dom.js';
 import { registerAllComponents } from './components/index.js';
 import { logger } from './utils/Logger.js';
 import { animationBridge } from './core/AnimationBridge.js';
+import ComponentManager from './core/ComponentManager.js';
 
 const log = logger.component('MiloDocs');
 
@@ -36,6 +37,7 @@ async function initializeMiloDocs() {
     log.debug('  - window.resetNavigation() - Reset sidebar state');
     log.debug('  - window.debugSidebar() - Debug sidebar info + auto-fix');
     log.debug('  - window.debugComponents() - Show all registered components');
+    log.debug('  - window.reinitializeComponents() - Reinitialize broken components (simulates cache restore)');
     
   } catch (error) {
     log.error('MiloDocs initialization failed:', error);
@@ -182,19 +184,58 @@ async function setupScrollEnhancements() {
 
 
 /**
- * Start initialization when DOM is ready
+ * Initialize MiloDocs and handle page restoration from cache
  */
-ready(() => {
+async function handlePageInitialization() {
   // Add environment class for styling
   const env = window.HugoEnvironment?.environment || 'development';
   document.body.classList.add(`env-${env}`);
   
   // Initialize the system
-  initializeMiloDocs();
+  await initializeMiloDocs();
   
   // System ready
   console.log('🚀 MiloDocs enhanced system ready!');
+}
+
+/**
+ * Start initialization when DOM is ready
+ */
+ready(() => {
+  handlePageInitialization();
 });
+
+/**
+ * Handle page restoration from browser cache (back/forward navigation)
+ * This fixes the issue where JavaScript doesn't work after navigating back from broken links
+ */
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    // Page was restored from bfcache (browser cache)
+    log.info('Page restored from cache, reinitializing components...');
+    
+    // Check if core system is still initialized
+    if (!milo.initialized) {
+      // Full reinitialization needed
+      handlePageInitialization();
+    } else {
+      // Use specialized method to reinitialize broken components
+      const reinitialized = ComponentManager.reinitializeAfterCacheRestore();
+      log.info(`Page cache restoration handled: ${reinitialized} components reinitialized`);
+    }
+  }
+});
+
+// Global debug utilities for testing
+if (typeof window !== 'undefined') {
+  // Add reinitialize function for debugging
+  window.reinitializeComponents = () => {
+    log.info('Manual component reinitialization triggered');
+    const count = milo.reinitializeComponents();
+    log.info(`Reinitialized ${count} components`);
+    return count;
+  };
+}
 
 // Export for external access
 export { milo, initializeMiloDocs };
