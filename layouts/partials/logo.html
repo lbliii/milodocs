@@ -1,6 +1,6 @@
 {{- $logo := .Site.Params.logo -}}
 {{- if $logo -}}
-<img src="{{$logo}}">
+<img src="{{ $logo | relURL }}">
 {{- else -}}
 <img id="lightModeHome" src="{{ "icons/light/home.svg" | relURL }}" alt="home" class="hidden" alt="Home"><img id="darkModeHome" src="{{ "icons/dark/home.svg" | relURL }}" alt="home" class="hidden" alt="Home">
 {{- end -}}

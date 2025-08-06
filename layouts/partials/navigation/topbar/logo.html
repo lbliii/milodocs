@@ -1,5 +1,5 @@
 {{- $logo := .Site.Params.logo -}}
-<a href="{{ "/" | relURL }}" class="topbar__logo-link">
+<a href="{{ .Site.Home.RelPermalink }}" class="topbar__logo-link">
 {{- if $logo -}}
   {{/* Try to get the logo as a page resource first, then as a global resource */}}
   {{- $logoResource := "" -}}
@@ -8,7 +8,7 @@
   {{- $logoResource = resources.Get $logoPath -}}
   {{- if not $logoResource -}}
     {{/* Fallback to static file with optimized delivery */}}
-    <img src="{{ $logo }}" 
+    <img src="{{ $logo | relURL }}" 
          alt="Home" 
          class="topbar__logo-image" 
          width="32" 

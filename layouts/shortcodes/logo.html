@@ -1,4 +1,4 @@
 {{$logo := .Site.Params.logo}}
 {{if $logo}}
-<img src="{{$logo}}">
+<img src="{{ $logo | relURL }}">
 {{end}}
