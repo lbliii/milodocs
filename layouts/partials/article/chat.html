@@ -2,15 +2,15 @@
     <!-- Chat Header -->
     <div class="chat-header flex items-center justify-between p-4" style="background-color: var(--color-surface);">
         <div class="flex items-center gap-3">
-            <img src="/icons/light/assistant.svg" alt="Assistant" class="w-5 h-5 icon chat-header__icon">
+            <img src="{{ "icons/light/assistant.svg" | relURL }}" alt="Assistant" class="w-5 h-5 icon chat-header__icon">
             <span class="font-semibold" style="color: var(--color-text-primary);">Assistant</span>
         </div>
         <div class="flex items-center gap-1">
             <button id="expandChat" aria-label="Expand chat" class="topbar__button">
-                <img src="/icons/light/expand.svg" alt="Expand" class="icon">
+                <img src="{{ "icons/light/expand.svg" | relURL }}" alt="Expand" class="icon">
             </button>
             <button id="clearAll" aria-label="Delete all chat messages" class="topbar__button topbar__button--danger">
-                <img src="/icons/light/delete.svg" alt="Delete" class="icon">
+                <img src="{{ "icons/light/delete.svg" | relURL }}" alt="Delete" class="icon">
             </button>
         </div>
     </div>

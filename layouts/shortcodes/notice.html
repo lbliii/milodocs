@@ -6,18 +6,18 @@
      aria-live="polite">
       <div class="notice__container">
     <div class="notice__icon-wrapper">
-           <img src="/icons/notice/
-            {{- with $type}}
-                {{- if eq . "danger" -}} danger
-                {{- else if eq . "warning" -}} warning
-                {{- else if eq . "security" -}} security
-                {{- else if eq . "info" -}} info
-                {{- else if eq . "note" -}} note
-                {{- else if eq . "tip" -}} tip 
-                {{- else if eq . "snack" -}} snack 
+           {{- $iconName := "" -}}
+            {{- with $type -}}
+                {{- if eq . "danger" -}}{{ $iconName = "danger" }}
+                {{- else if eq . "warning" -}}{{ $iconName = "warning" }}
+                {{- else if eq . "security" -}}{{ $iconName = "security" }}
+                {{- else if eq . "info" -}}{{ $iconName = "info" }}
+                {{- else if eq . "note" -}}{{ $iconName = "note" }}
+                {{- else if eq . "tip" -}}{{ $iconName = "tip" }}
+                {{- else if eq . "snack" -}}{{ $iconName = "snack" }}
                 {{- end -}}
             {{- end -}}
-           .svg" class="notice__icon" alt="{{ $type | title }} notice">
+           <img src="{{ printf "icons/notice/%s.svg" $iconName | relURL }}" class="notice__icon" alt="{{ $type | title }} notice">
         </div>
             <div class="notice__content">
       {{- if $title -}}

@@ -35,9 +35,16 @@
           <h2>Related Documentation</h2>
           <div class="overview-documentation__grid">
             {{- range $index, $doc := . -}}
-              <a href="{{ $doc.url }}" 
-                 class="overview-doc-link" 
-                 data-doc-index="{{ $index }}"
+              {{- $docPage := $.Site.GetPage $doc.url -}}
+              {{- if $docPage -}}
+                <a href="{{ $docPage.RelPermalink }}" 
+                   class="overview-doc-link" 
+                   data-doc-index="{{ $index }}"
+              {{- else -}}
+                <a href="{{ $doc.url | relURL }}" 
+                   class="overview-doc-link" 
+                   data-doc-index="{{ $index }}"
+              {{- end -}}
                  data-doc-name="{{ $doc.name | urlize }}"
                  target="_blank" 
                  rel="noopener">

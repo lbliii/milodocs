@@ -3,7 +3,7 @@
     <div class="quicklinks__grid">
         <div class="quicklinks__item">
             <div class="quicklinks__header">
-                <img src="/icons/light/star.svg" alt="" class="icon quicklinks__icon">
+                <img src="{{ "icons/light/star.svg" | relURL }}" alt="" class="icon quicklinks__icon">
                 <h3 class="quicklinks__title">Resources</h3>
             </div>
             <p class="quicklinks__description">Check out our repo or read the latest release notes.</p>
@@ -11,15 +11,22 @@
                 <a href="https://github.com/lbliii/milodocs" class="quicklinks__link">
                     GitHub Repo
                 </a> 
-                <a href="/release-notes" class="quicklinks__link">
-                    Release Notes
-                </a>
+                {{- $releaseNotesPage := .Site.GetPage "/release-notes" -}}
+                {{- if $releaseNotesPage -}}
+                  <a href="{{ $releaseNotesPage.RelPermalink }}" class="quicklinks__link">
+                      Release Notes
+                  </a>
+                {{- else -}}
+                  <a href="{{ "/release-notes" | relURL }}" class="quicklinks__link">
+                      Release Notes
+                  </a>
+                {{- end -}}
             </div>
         </div>
         
         <div class="quicklinks__item">
             <div class="quicklinks__header">
-                <img src="/icons/light/navigation.svg" alt="" class="icon quicklinks__icon">
+                <img src="{{ "icons/light/navigation.svg" | relURL }}" alt="" class="icon quicklinks__icon">
                 <h3 class="quicklinks__title">Example Tile</h3>
             </div>
             <p class="quicklinks__description">Put whatever you want here.</p>

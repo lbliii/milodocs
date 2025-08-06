@@ -12,7 +12,7 @@
             <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-3 block">
                 <div class="flex items-start space-x-3">
                     {{with .Params.icon}}
-                        <img src="/icons/light/{{.}}" alt="" class="w-6 h-6 icon flex-shrink-0 mt-1">
+                        <img src="{{ printf "icons/light/%s" . | relURL }}" alt="" class="w-6 h-6 icon flex-shrink-0 mt-1">
                     {{end}}
                     <div class="flex-grow">
                         <h3 class="text-xl font-brand font-semibold leading-tight" style="color: var(--color-text-primary);">
