@@ -10,7 +10,7 @@ class OpenAPICollapse extends Collapse {
   constructor(config = {}) {
     super({
       name: 'openapi-collapse',
-      selector: '.openapi-spec .collapse__header, .openapi-components .collapse__header, .responses-container .collapse__header, .endpoint-group .collapse__header, .component-header.collapse__header',
+      selector: '.openapi-spec .collapse__header, .openapi-components .collapse__header, .responses-container .collapse__header, .response-header.collapse__header, .endpoint-group .collapse__header, .component-header.collapse__header',
       ...config
     });
 
@@ -58,6 +58,16 @@ class OpenAPICollapse extends Collapse {
     collapseData.section = this.identifySection(header);
     collapseData.type = this.identifyType(header);
     collapseData.priority = this.calculatePriority(header);
+
+    // Debug logging for response elements
+    if (collapseData.type === 'response') {
+      console.log(`[OpenAPICollapse] Initialized response element: ${target}`, {
+        section: collapseData.section,
+        type: collapseData.type,
+        target: collapseData.target,
+        hasResponseDetailsClass: collapseData.target?.classList.contains('response-details')
+      });
+    }
 
     // Store enhanced data
     this.collapseElements.set(target, collapseData);
@@ -155,6 +165,11 @@ class OpenAPICollapse extends Collapse {
   expand(collapseData) {
     super.expand(collapseData);
 
+    // Special handling for response details
+    if (collapseData.type === 'response') {
+      this.handleResponseExpansion(collapseData);
+    }
+
     // Initialize any nested components in expanded content
     this.initializeExpandedContent(collapseData.target, collapseData.type);
 
@@ -164,6 +179,22 @@ class OpenAPICollapse extends Collapse {
       section: collapseData.section,
       type: collapseData.type
     });
+  }
+
+  /**
+   * Handle special response expansion logic
+   */
+  handleResponseExpansion(collapseData) {
+    const { target } = collapseData;
+    
+    // Ensure response details are visible with proper CSS classes
+    if (target && target.classList.contains('response-details')) {
+      target.style.display = 'block';
+      // Force a style recalculation to ensure visibility
+      target.offsetHeight;
+    }
+    
+    console.log(`[OpenAPICollapse] Response expanded: ${collapseData.targetId}`);
   }
 
   /**

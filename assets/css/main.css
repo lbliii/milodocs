@@ -12248,18 +12248,33 @@ html {
   transform: rotate(90deg);
 }
 
-.response-details {
+.response-details,
+.response-details.collapse__body {
   display: none;
   padding: 1rem;
   border-top: 1px solid var(--color-border-primary);
+  /* Override general collapse__body styles that conflict */
+  max-height: none;
+  opacity: 1;
+  overflow: visible;
+  transition: none;
+  background: transparent;
+  border-radius: 0;
 }
 
-/* Support both .expanded and aria-expanded="true" for compatibility */
+/* Support both .expanded and aria-expanded="true" for compatibility 
+   Need higher specificity to override general .collapse__body rules */
 
 .response-details.expanded,
 .response-details.collapse__body.expanded,
-.response-header[aria-expanded="true"] + .response-details.collapse__body {
-  display: block;
+.response-header[aria-expanded="true"] + .response-details.collapse__body,
+.response-header[aria-expanded="true"] + .response-details,
+.response-details[style*="display: block"],
+.responses-container .response-details.collapse__body.expanded {
+  display: block !important;
+  max-height: none !important;
+  opacity: 1 !important;
+  overflow: visible !important;
 }
 
 .response-description {
