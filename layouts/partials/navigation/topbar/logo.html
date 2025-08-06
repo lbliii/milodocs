@@ -1,5 +1,5 @@
 {{- $logo := .Site.Params.logo -}}
-<a href="/" class="topbar__logo-link">
+<a href="{{ "/" | relURL }}" class="topbar__logo-link">
 {{- if $logo -}}
   {{/* Try to get the logo as a page resource first, then as a global resource */}}
   {{- $logoResource := "" -}}
@@ -29,7 +29,7 @@
          decoding="async">
   {{- end -}}
 {{- else -}}
-<img id="lightModeHome" src="/icons/light/home.svg" alt="Home" class="topbar__logo-image hidden">
-<img id="darkModeHome" src="/icons/dark/home.svg" alt="Home" class="topbar__logo-image hidden">
+<img id="lightModeHome" src="{{ "icons/light/home.svg" | relURL }}" alt="Home" class="topbar__logo-image hidden">
+<img id="darkModeHome" src="{{ "icons/dark/home.svg" | relURL }}" alt="Home" class="topbar__logo-image hidden">
 {{- end -}}
 </a>

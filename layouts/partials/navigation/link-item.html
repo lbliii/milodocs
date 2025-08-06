@@ -14,7 +14,7 @@
         data-section="{{ .page.IsSection }}">
         
         {{ with .page.Params.icon }}
-            <img src="/icons/light/{{ . }}" alt="" class="icon sidebar-item__icon">
+            <img src="{{ printf "icons/light/%s" . | relURL }}" alt="" class="icon sidebar-item__icon">
         {{ end }}
         
         <span class="sidebar-item__text">

@@ -3,7 +3,7 @@
 {{ $path := index (.Params) 1 }} 
 {{ $title := index (.Params) 2}}
 
-{{ $baseurl := "/references/" }}
+{{ $baseurl := "references/" | relURL }}
 {{ $anchor := "" }}
 {{ $linkText := "" }}
 
