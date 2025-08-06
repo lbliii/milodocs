@@ -17,6 +17,7 @@
 {{- if eq $env "nvidia" -}}
   {{/* NVIDIA: Preload critical brand fonts for optimal performance */}}
   <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/var/NVIDIASansVF_W_Wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/NVIDIASans_W_Rg.woff2" as="font" type="font/woff2" crossorigin>
   
   {{- $envFonts := resources.Get "css/fonts-nvidia.css" -}}
   {{- if $envFonts -}}
@@ -305,7 +306,50 @@
       --hugo-build: "{{ cond hugo.IsProduction "production" "development" }}";
       --theme-version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}";
     }
+    
+    {{- if eq $env "nvidia" -}}
+    /* Prevent font loading flash by ensuring smooth transitions */
+    .fonts-loading body, .fonts-loading main {
+      visibility: hidden;
+    }
+    
+    .fonts-loaded body, .fonts-loaded main {
+      visibility: visible;
+    }
+    {{- end -}}
   </style>
+  
+  {{- if eq $env "nvidia" -}}
+  {{/* Font loading optimization script */}}
+  <script>
+    (function() {
+      document.documentElement.classList.add('fonts-loading');
+      
+      // Use FontFace API if available to detect font loading
+      if ('fonts' in document) {
+        Promise.all([
+          document.fonts.load('400 1rem NVIDIA'),
+          document.fonts.load('700 1rem NVIDIA')
+        ]).then(function() {
+          document.documentElement.classList.remove('fonts-loading');
+          document.documentElement.classList.add('fonts-loaded');
+        }).catch(function() {
+          // Fallback: remove loading class after timeout
+          setTimeout(function() {
+            document.documentElement.classList.remove('fonts-loading');
+            document.documentElement.classList.add('fonts-loaded');
+          }, 2000);
+        });
+      } else {
+        // Fallback for browsers without FontFace API
+        setTimeout(function() {
+          document.documentElement.classList.remove('fonts-loading');
+          document.documentElement.classList.add('fonts-loaded');
+        }, 1000);
+      }
+    })();
+  </script>
+  {{- end -}}
 {{- else -}}
   {{- errorf "CSS: No CSS resources found to bundle for environment '%s'" hugo.Environment -}}
 {{- end -}}

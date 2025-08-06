@@ -97,6 +97,18 @@
     @apply font-brand;
   }
   
+  /* Improve font loading consistency between dev and production */
+  html {
+    font-synthesis: none; /* Prevent synthetic font generation */
+  }
+  
+  /* Ensure consistent font metrics during font loading */
+  body, main {
+    font-optical-sizing: auto;
+    font-feature-settings: "kern" 1;
+    text-rendering: optimizeLegibility;
+  }
+  
   /* Enhanced Body Text Typography */
   body {
     font-size: clamp(1rem, 2.5vw, 1.125rem); /* Responsive 16px-18px */
