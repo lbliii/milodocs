@@ -25,7 +25,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   padding: 0.5rem 0.75rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: transparent;
@@ -94,7 +94,7 @@
 .breadcrumb__current {
   display: inline-flex;
   align-items: center;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   padding: 0.5rem 0.75rem;
   font-weight: 600;
   background-color: var(--color-brand);
@@ -268,7 +268,7 @@
     rgba(var(--color-brand-rgb), 0.05) 0%,
     transparent 100%
   );
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   margin: -0.25rem;
   padding: 0.25rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -295,7 +295,7 @@
 /* Hover context awareness */
 .breadcrumb:has(.breadcrumb__link:hover) {
   background: rgba(var(--color-surface), 0.5);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   transition: all 0.2s ease;
 }
 

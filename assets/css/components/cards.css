@@ -40,14 +40,9 @@
   pointer-events: none;
 }
 
-/* Enhanced hover states */
-.card:hover {
-  transform: var(--transform-lift-dramatic);
-  border-color: var(--color-brand);
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.12),
-    0 0 20px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+/* Enhanced hover states - Use architectural classes instead */
+.card {
+  /* Apply .interact-dramatic class to card elements in HTML instead of this CSS */
 }
 
 .card:hover::before {

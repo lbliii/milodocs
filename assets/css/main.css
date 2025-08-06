@@ -1911,7 +1911,7 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 .sidebar-close-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text-primary);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
 }
 
 .sidebar-close-btn:focus {
@@ -3043,7 +3043,7 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
   position: relative;
   display: inline-flex;
   align-items: center;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   padding: 0.5rem 0.75rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: transparent;
@@ -3112,7 +3112,7 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 .breadcrumb__current {
   display: inline-flex;
   align-items: center;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   padding: 0.5rem 0.75rem;
   font-weight: 600;
   background-color: var(--color-brand);
@@ -3292,7 +3292,7 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
     rgba(var(--color-brand-rgb), 0.05) 0%,
     transparent 100%
   );
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   margin: -0.25rem;
   padding: 0.25rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -3322,7 +3322,7 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 
 .breadcrumb:has(.breadcrumb__link:hover) {
   background: rgba(var(--color-surface), 0.5);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   transition: all 0.2s ease;
 }
 
@@ -5618,15 +5618,10 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   pointer-events: none;
 }
 
-/* Enhanced hover states */
+/* Enhanced hover states - Use architectural classes instead */
 
-.tile:hover {
-  transform: var(--transform-lift-dramatic);
-  border-color: var(--color-brand);
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.12),
-    0 0 20px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+.tile {
+  /* Apply .interact-dramatic class to tile elements in HTML instead of this CSS */
 }
 
 .tile:hover::before {
@@ -5983,15 +5978,10 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   pointer-events: none;
 }
 
-/* Enhanced hover states */
+/* Enhanced hover states - Use architectural classes instead */
 
-.card:hover {
-  transform: var(--transform-lift-dramatic);
-  border-color: var(--color-brand);
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.12),
-    0 0 20px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+.card {
+  /* Apply .interact-dramatic class to card elements in HTML instead of this CSS */
 }
 
 .card:hover::before {
@@ -6048,13 +6038,8 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   pointer-events: none;
 }
 
-.resource-card:hover {
-  transform: var(--transform-lift-dramatic);
-  border-color: var(--color-brand);
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.12),
-    0 0 20px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+.resource-card {
+  /* Apply .interact-dramatic class to card elements in HTML instead of this CSS */
 }
 
 .resource-card:hover::before {
@@ -6310,13 +6295,8 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   pointer-events: none;
 }
 
-.article-card:hover {
-  transform: var(--transform-lift-dramatic);
-  border-color: var(--color-brand);
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.12),
-    0 0 20px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+.article-card {
+  /* Apply .interact-dramatic class to card elements in HTML instead of this CSS */
 }
 
 .article-card:hover::before {

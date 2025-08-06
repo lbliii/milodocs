@@ -86,7 +86,7 @@
 .sidebar-close-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text-primary);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
 }
 
 .sidebar-close-btn:focus {
