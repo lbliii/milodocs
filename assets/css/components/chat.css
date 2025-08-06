@@ -1,0 +1,475 @@
+/* Chat Component - Enhanced chat interface with premium styling */
+
+/* Chat Header */
+.chat-header {
+  backdrop-filter: blur(10px);
+  border-radius: 0.75rem 0.75rem 0 0; /* Top corners rounded to match design system */
+}
+
+/* Chat header icon styling for proper dark mode */
+.chat-header__icon {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(15%) saturate(566%) hue-rotate(202deg) brightness(96%) contrast(87%);
+}
+
+.dark .chat-header__icon {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(8%) saturate(593%) hue-rotate(202deg) brightness(91%) contrast(92%);
+}
+
+/* Danger button variant for delete action */
+.topbar__button--danger:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgb(239, 68, 68) !important;
+  color: rgb(239, 68, 68) !important;
+}
+
+.topbar__button--danger:hover img {
+  filter: brightness(0) saturate(100%) invert(35%) sepia(96%) saturate(2067%) hue-rotate(346deg) brightness(89%) contrast(94%) !important;
+}
+
+/* Chat Container - Clean transparent design */
+#chatContainer {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0.75rem; /* Add consistent border radius */
+  margin-right: 1.5rem; /* Align with page container padding */
+  margin-top: 1rem; /* Match the pageContainer's top padding to align with content start */
+}
+
+/* Enhanced Chat Interface - Clean transparent design */
+.chat-controls {
+  background: transparent;
+  border: none;
+  border-radius: 0 0 0.75rem 0.75rem; /* Bottom corners rounded to match container */
+}
+
+.chat-form {
+  @apply w-full;
+}
+
+.chat-input {
+  @apply focus:outline-none;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    border-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard);
+  font-family: var(--font-brand);
+  line-height: 1.4;
+}
+
+.chat-input:hover {
+  border-color: var(--color-brand);
+  box-shadow: var(--elevation-4);
+}
+
+.chat-input:focus {
+  border-color: var(--color-brand);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Old styling moved to enhanced section below */
+
+/* Smooth transitions for chat container */
+#chatContainer {
+  /* ✅ FIXED: Use animation tokens for consistent timing */
+  transition: 
+    width var(--timing-medium) var(--easing-smooth),
+    max-width var(--timing-medium) var(--easing-smooth),
+    box-shadow var(--timing-medium) var(--easing-smooth),
+    transform var(--timing-medium) var(--easing-smooth),
+    border-radius var(--timing-medium) var(--easing-standard);
+  transform-origin: top right;
+  will-change: width, transform, box-shadow;
+}
+
+/* Expanded Chat State - Enhanced Liquid Glass */
+.chat-expanded {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(32px) saturate(1.4);
+  border-color: rgba(255, 255, 255, 0.18);
+  border-left-width: 3px;
+  box-shadow: 
+    0 24px 80px rgba(0, 0, 0, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  transform: var(--transform-lift-and-scale); /* Subtle lift */
+}
+
+/* Enhanced input styling for expanded state */
+.chat-expanded .chat-input {
+  @apply text-base;
+  font-size: 15px; /* Slightly larger for better UX */
+  line-height: 1.5;
+}
+
+/* Micro-interaction for expand button */
+.chat-header button {
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard);
+}
+
+.chat-header button:hover {
+  transform: scale(1.1);
+  background-color: var(--color-surface-hover);
+}
+
+.chat-header button:active {
+  transform: scale(0.95);
+}
+
+/* Enhanced focus states */
+.chat-expanded .chat-input:focus {
+  box-shadow: 
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.12),
+    0 4px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-brand);
+}
+
+/* Subtle animation for chat messages in expanded state */
+.chat-expanded #chat-messages {
+  /* ✅ FIXED: Use animation tokens */
+  animation: subtle-fade-in var(--timing-medium) var(--easing-standard) var(--reveal-stagger-delay) both;
+}
+
+@keyframes subtle-fade-in {
+  from {
+    opacity: 0.8;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Liquid Glass Hover Effect */
+#chatContainer:not(.chat-expanded):hover {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(1.3);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(-1px); /* Subtle hint of leftward growth */
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Auto-resize textarea styling with liquid glass focus */
+.chat-input {
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
+}
+
+.chat-input::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 
+    0 0 0 2px rgba(var(--color-brand-rgb), 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Enhanced send button styling */
+#sendButton {
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* :has() Chat Interface Enhancements */
+
+/* Chat container responds to input focus */
+#chatContainer:has(.chat-input:focus) {
+  transform: var(--transform-lift-and-scale);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: var(--color-brand);
+}
+
+/* Enhanced expanded state with input focus */
+.chat-expanded:has(.chat-input:focus) {
+  border-left-width: 4px;
+  border-color: var(--color-brand);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Chat form with content gets enhanced styling */
+#chatContainer:has(.chat-input:not(:placeholder-shown)) .chat-header {
+  background: linear-gradient(135deg, 
+    rgba(var(--color-brand-rgb), 0.1) 0%, 
+    rgba(var(--color-brand-rgb), 0.05) 100%);
+  border-bottom: 1px solid rgba(var(--color-brand-rgb), 0.2);
+}
+
+/* Send button activation based on input content */
+#chatContainer:has(.chat-input:not(:placeholder-shown)) #sendButton {
+  background-color: var(--color-brand) !important;
+  color: var(--color-text-inverse) !important;
+  transform: scale(1.05);
+  box-shadow: 
+    0 4px 12px rgba(var(--color-brand-rgb), 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#sendButton:not(:disabled) {
+  background-color: var(--color-brand) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+#sendButton:not(:disabled):hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+}
+
+#sendButton:not(:disabled):active {
+  transform: scale(0.95);
+  filter: brightness(0.9);
+}
+
+#sendButton:disabled {
+  background-color: var(--color-bg-secondary) !important;
+  color: var(--color-text-tertiary) !important;
+}
+
+/* Chat input improvements */
+.chat-input:focus {
+  box-shadow: 
+    0 0 0 3px rgba(var(--color-brand-rgb), 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-brand) !important;
+}
+
+.chat-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Header button hover effects with enhanced micro-interactions */
+.chat-header button:hover svg {
+  transform: scale(1.15) rotate(2deg);
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+/* Smooth state transitions for expand button icon */
+.chat-header button svg {
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: transform var(--timing-medium) var(--easing-standard);
+}
+
+/* Chat bubble improvements - tighter spacing and better hierarchy */
+.chat-bubble {
+  @apply p-3 rounded-xl shadow-sm relative max-w-none; /* Reduced padding from p-4 to p-3 */
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: pre-wrap;
+  line-height: 1.5; /* Slightly tighter line height */
+  font-family: var(--font-brand);
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Consistent rounded corners with tail */
+}
+
+.chat-bubble--user {
+  @apply ml-6; /* Reduced margin */
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  border-radius: 1rem 1rem 0.25rem 1rem; /* User tail on right */
+  box-shadow: var(--elevation-4);
+}
+
+.chat-bubble--bot {
+  @apply mr-6; /* Reduced margin */
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Bot tail on left */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Chat Messages */
+#chat-messages {
+  @apply flex flex-col space-y-3 p-4; /* Tighter spacing */
+  max-height: calc(100vh - 12rem);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.chat-bubble--error {
+  @apply mr-6; /* Consistent with other bubbles */
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(239, 68, 68, 0.05) 100%
+  );
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--color-text-primary);
+  border-radius: 1rem 1rem 1rem 0.25rem; /* Consistent tail */
+}
+
+/* Chat message formatting */
+.chat-bubble p {
+  @apply mb-3 last:mb-0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chat-bubble code {
+  @apply px-2 py-1 rounded text-sm;
+  background-color: rgba(var(--color-brand-rgb), 0.1);
+  color: var(--color-brand);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  word-break: break-all;
+}
+
+.chat-bubble pre {
+  @apply p-3 rounded-lg overflow-x-auto text-sm my-3;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-primary);
+}
+
+.chat-bubble pre code {
+  @apply p-0;
+  background: none;
+  color: var(--color-text-primary);
+}
+
+/* Chat message animations */
+.chat-bubble {
+  /* ✅ FIXED: Use animation tokens */
+  animation: chat-message-enter var(--timing-medium) var(--easing-standard);
+  animation-fill-mode: both;
+}
+
+@keyframes chat-message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced typing indicator */
+.typing-indicator {
+  @apply flex items-center space-x-2 p-4 rounded-xl mr-8;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+}
+
+.typing-indicator::after {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+  animation: typing-dot 1.4s infinite;
+}
+
+.typing-indicator::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+  /* ✅ FIXED: Use animation tokens for stagger */
+  animation: typing-dot 1.4s infinite var(--reveal-batch-delay);
+  margin-right: 4px;
+}
+
+@keyframes typing-dot {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Chat pair container - tighter spacing */
+.chat-pair {
+  @apply space-y-3; /* Slightly increased for better breathing room */
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Improved delete button styling aligned with design system */
+.chat-delete {
+  @apply absolute -top-1 -right-1 w-5 h-5 
+         rounded-full flex items-center justify-center text-xs
+         opacity-0 group-hover:opacity-100
+         focus:outline-none focus:ring-2 focus:ring-offset-1;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.chat-delete:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgb(239, 68, 68);
+  color: rgb(239, 68, 68);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+.chat-delete:active {
+  transform: scale(0.95);
+  /* ✅ FIXED: Use animation tokens */
+  animation: delete-shake var(--timing-medium) var(--easing-standard);
+}
+
+.chat-pair:hover .chat-delete {
+  opacity: 1;
+}
+
+/* Delete shake animation */
+@keyframes delete-shake {
+  0%, 100% { transform: scale(0.95) rotate(0deg); }
+  25% { transform: scale(0.95) rotate(-2deg); }
+  75% { transform: scale(0.95) rotate(2deg); }
+}

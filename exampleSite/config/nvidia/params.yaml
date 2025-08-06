@@ -1,0 +1,40 @@
+logo: '/images/nvidia.png'
+names:
+  organization: 'NVIDIA'
+  product: 'NVIDIA Developer Docs'
+version: 
+  major: 0
+  minor: 0
+  patch: 3
+article:
+  childArticles:
+    display: true
+    count: 7 
+    titleTrunc: 90
+    descTrunc: 90
+  nextPrev: 
+    display: true
+    trunc: 35
+  chat: 
+    display: true
+  # Sidebar TOC (right sidebar)
+  toc: 
+    display: true
+  # Inline components (within article content)
+  inlineToc:
+    display: false
+    showProgress: false
+  pageResources:
+    display: true
+  # Content status warnings (draft and expiry alerts)
+  statusWarnings:
+    display: true
+  # Enhanced metadata section (dates, author, reading time, word count)
+  metadata:
+    display: true
+  # Related content section (shows related pages in same section)
+  relatedContent:
+    display: true
+
+# Development & Debug Settings
+debug: true  # Enable debugging to see what parameters are loaded

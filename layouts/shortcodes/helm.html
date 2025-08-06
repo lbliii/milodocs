@@ -1,7 +1,10 @@
 {{- $filename := .Get 0 -}}
-{{- $path := printf "/data/helm/%s" $filename -}}
-{{- $content := readFile $path | safeHTML -}}
+{{- $resource := resources.Get (printf "data/helm/%s" $filename) -}}
+{{- if not $resource -}}
+    {{- errorf "Helm shortcode: File not found 'data/helm/%s' on page %s" $filename .Page.RelPermalink -}}
+{{- else -}}
 
 ```yaml
-{{ $content }}
+{{ $resource.Content }}
 ```
+{{- end -}}

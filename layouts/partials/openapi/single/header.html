@@ -1,0 +1,30 @@
+{{- $operation := .operation -}}
+{{- $currentMethod := .currentMethod -}}
+{{- $currentPath := .currentPath -}}
+{{- $currentTag := .currentTag -}}
+{{- $apiData := .apiData -}}
+{{- $page := .page -}}
+
+<header class="api-endpoint-header" 
+        data-component="api-endpoint-header"
+        data-method="{{ upper $currentMethod }}"
+        data-tag="{{ $currentTag }}"
+        {{- with $operation.Summary }}data-has-summary="true"{{ else }}data-has-summary="false"{{ end }}
+        {{- with $operation.Description }}data-has-description="true"{{ else }}data-has-description="false"{{ end }}>
+  
+  <!-- Breadcrumb -->
+  {{ partial "openapi/single/breadcrumb.html" (dict "apiData" $apiData "currentTag" $currentTag "page" $page) }}
+  
+  <div class="endpoint-title-section">
+    <div class="endpoint-method-path">
+      <span class="method-badge method-badge--{{ lower $currentMethod }}">
+        {{ upper $currentMethod }}
+      </span>
+      <code class="endpoint-path">{{ $currentPath }}</code>
+    </div>
+    <h1>{{ $operation.Summary | default $page.Title }}</h1>
+    {{ with $operation.Description }}
+      <p class="endpoint-description">{{ . | markdownify }}</p>
+    {{ end }}
+  </div>
+</header>

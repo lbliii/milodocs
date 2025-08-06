@@ -1,0 +1,9 @@
+{{- $apiData := .apiData -}}
+{{- $currentTag := .currentTag -}}
+{{- $page := .page -}}
+
+<div class="api-endpoint-breadcrumb">
+  <a href="../../">{{ $apiData.Info.Title }}</a> / 
+  <a href="../">{{ $currentTag }}</a> / 
+  {{ $page.Title }}
+</div>

@@ -6,16 +6,146 @@
     {{- $stepCount = $i -}}
 {{- end -}}
 {{- end -}}
+{{- $progressPercentage := 0 -}}
+{{- if gt $stepTotal 0 -}}
+    {{- $progressPercentage = div (mul $stepCount 100) $stepTotal -}}
+{{- end -}}
 
-<a class="flex flex-col justify-center items-center  text-3xl text-black font-brand-black bg-gradient-to-tl from-brand to-transparent px-2 py-4 " href="{{.Parent.RelPermalink}}">
-    {{- .Parent.Title }}: <br> {{with .Page.Params.stepTitle}}{{.}}{{else}}{{.Title}}{{end}}
-</a>
-{{/*  create a progress bar using flex; color the boxes that are =< stepcount  */}}
-<div id="tutorialProgress"class="flex justify-between mb-4 font-brand-regular">
-    {{- range $i, $step := .Parent.Pages -}}
-    <a href="{{$step.RelPermalink}}" class="flex flex-grow transition-all duration-300 ease-in-out text-black {{if le $i $stepCount}}bg-zinc-200{{else}}bg-zinc-100{{end}} p-2 hover:bg-zinc-100 hover:transition hover:duration-300"
-        {{if eq $i $stepCount}}aria-current="step"{{end}}>
-        <span class="flex flex-row space-x-2 {{if eq $i $stepCount}}font-brand-bold{{end}}">{{if lt $i $stepCount}}<img src="/icons/circle-ok.svg" class="w-5">{{else if eq $i $stepCount}}<img src="/icons/current-step.svg" class="w-5">{{else}}{{end}} <span>Step {{add $i 1}}</span></span>
-    </a>
-    {{- end -}}
+<!-- Compact Tutorial Progress Header -->
+<div class="tutorial-progress-compact" data-component="tutorial-progress-enhanced" data-tutorial-id="{{.Parent.File.BaseFileName}}" data-current-step="{{$stepCount}}" data-total-steps="{{$stepTotal}}">
+    
+    <!-- Compact header with tutorial info and progress -->
+    <div class="tutorial-compact-header">
+        <div class="tutorial-compact-info">
+            <div class="tutorial-compact-breadcrumb">
+                <a href="{{.Parent.RelPermalink}}" class="tutorial-parent-link">{{.Parent.Title}}</a>
+                <svg class="breadcrumb-separator" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <h1 class="current-step-title">{{with .Page.Params.stepTitle}}{{.}}{{else}}{{.Title}}{{end}}</h1>
+            </div>
+            
+            <div class="tutorial-compact-meta">
+                <span class="step-counter">Step {{add $stepCount 1}} of {{$stepTotal}}</span>
+                <div class="progress-percentage">{{$progressPercentage}}%</div>
+                {{with .Page.Params.estimatedTime}}
+                <span class="time-estimate">{{.}} min</span>
+                {{end}}
+            </div>
+        </div>
+        
+        <div class="tutorial-compact-actions">
+            <button class="btn-compact save-progress" data-action="save-progress" title="Save Progress">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+            </button>
+            <button class="btn-compact expand-progress" data-action="toggle-progress" title="Show Full Progress">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Compact progress bar -->
+    <div class="tutorial-progress-bar">
+        <div class="progress-track">
+            <div class="progress-fill" style="width: {{$progressPercentage}}%"></div>
+        </div>
+        <div class="step-dots">
+            {{- range $i, $step := .Parent.Pages -}}
+            {{- $stepNumber := add $i 1 -}}
+            {{- $isCompleted := lt $i $stepCount -}}
+            {{- $isCurrent := eq $i $stepCount -}}
+            {{- $isPending := gt $i $stepCount -}}
+            
+            <a href="{{if not $isPending}}{{$step.RelPermalink}}{{else}}#{{end}}" 
+               class="step-dot {{if $isCompleted}}completed{{else if $isCurrent}}current{{else}}pending{{end}} {{if $isPending}}disabled{{end}}"
+               title="{{with $step.Params.stepTitle}}{{.}}{{else}}{{$step.Title}}{{end}}"
+               data-step="{{$i}}">
+                {{if $isCompleted}}
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                {{else}}
+                    <span class="step-number">{{$stepNumber}}</span>
+                {{end}}
+            </a>
+            {{- end -}}
+        </div>
+    </div>
+    
+    <!-- Expandable detailed progress (hidden by default) -->
+    <div class="tutorial-progress-expanded" hidden>
+        <div class="tutorial-steps-list">
+            {{- range $i, $step := .Parent.Pages -}}
+            {{- $stepNumber := add $i 1 -}}
+            {{- $isCompleted := lt $i $stepCount -}}
+            {{- $isCurrent := eq $i $stepCount -}}
+            {{- $isPending := gt $i $stepCount -}}
+            
+            <div class="tutorial-step-item {{if $isCompleted}}completed{{else if $isCurrent}}current{{else}}pending{{end}}">
+                <div class="step-indicator-small">
+                    {{if $isCompleted}}
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                    {{else if $isCurrent}}
+                        <div class="current-indicator">{{$stepNumber}}</div>
+                    {{else}}
+                        <div class="pending-indicator">{{$stepNumber}}</div>
+                    {{end}}
+                </div>
+                <div class="step-info-small">
+                    {{if not $isPending}}
+                        <a href="{{$step.RelPermalink}}" class="step-link">{{with $step.Params.stepTitle}}{{.}}{{else}}{{$step.Title}}{{end}}</a>
+                    {{else}}
+                        <span class="step-title-disabled">{{with $step.Params.stepTitle}}{{.}}{{else}}{{$step.Title}}{{end}}</span>
+                    {{end}}
+                    {{with $step.Params.estimatedTime}}
+                    <span class="step-time-small">{{.}} min</span>
+                    {{end}}
+                </div>
+            </div>
+            {{- end -}}
+        </div>
+    </div>
+    
+    <!-- Compact navigation -->
+    <div class="tutorial-compact-nav">
+        {{if gt $stepCount 0}}
+        {{$prevStep := index .Parent.Pages (sub $stepCount 1)}}
+        <a href="{{$prevStep.RelPermalink}}" class="btn btn--sm btn--secondary">
+            <svg class="btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Previous
+        </a>
+        {{else}}
+        <a href="{{.Parent.RelPermalink}}" class="btn btn--sm btn--secondary">
+            <svg class="btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Overview
+        </a>
+        {{end}}
+        
+        {{if lt $stepCount (sub $stepTotal 1)}}
+        {{$nextStep := index .Parent.Pages (add $stepCount 1)}}
+        <a href="{{$nextStep.RelPermalink}}" class="btn btn--sm btn--primary">
+            Next Step
+            <svg class="btn__icon btn__icon--right" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+        {{else}}
+        <a href="{{.Parent.RelPermalink}}" class="btn btn--sm btn--primary">
+            <svg class="btn__icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Complete
+        </a>
+        {{end}}
+    </div>
 </div>

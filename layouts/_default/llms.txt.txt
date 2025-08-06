@@ -1,0 +1,60 @@
+# {{ .Site.Title }}
+
+{{- with .Site.Params.description }}
+> {{ . }}
+{{- else }}
+> {{ .Site.Title }} documentation in LLM-friendly format.
+{{- end }}
+
+{{- with .Plain }}
+{{ . | htmlUnescape }}
+{{- end }}
+
+{{- $mainSections := .Site.Sections }}
+{{- range $mainSections }}
+{{- if .RegularPages }}
+
+## {{ .Title }}
+
+{{- range .RegularPages }}
+{{- $page := . }}
+{{- with .OutputFormats.Get "txt" }}
+- [{{ $page.Title }}]({{ .RelPermalink }}): {{ if $page.Description }}{{ $page.Description | htmlUnescape }}{{ else if $page.Summary }}{{ $page.Summary | plainify | htmlUnescape | strings.Truncate 120 }}{{ else if $page.Plain }}{{ $page.Plain | htmlUnescape | strings.Truncate 100 | strings.FirstUpper }}{{ else }}{{ $page.Title }} documentation{{ end }}
+{{- end }}
+{{- end }}
+
+{{- if .Sections }}
+{{- range .Sections }}
+
+### {{ .Title }}
+
+{{- range .RegularPages }}
+{{- $page := . }}
+{{- with .OutputFormats.Get "txt" }}
+- [{{ $page.Title }}]({{ .RelPermalink }}): {{ if $page.Description }}{{ $page.Description | htmlUnescape }}{{ else if $page.Summary }}{{ $page.Summary | plainify | htmlUnescape | strings.Truncate 120 }}{{ else if $page.Plain }}{{ $page.Plain | htmlUnescape | strings.Truncate 100 | strings.FirstUpper }}{{ else }}{{ $page.Title }} documentation{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+## Optional
+
+{{- $notebooks := where .Site.RegularPages "Type" "notebook" }}
+{{- if $notebooks }}
+{{- range first 5 $notebooks }}
+{{- with .OutputFormats.Get "txt" }}
+- [{{ .Title }}]({{ .RelPermalink }}): Jupyter notebook with examples and tutorials
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- $openapi := where .Site.RegularPages "Type" "openapi" }}
+{{- if $openapi }}
+{{- range first 3 $openapi }}
+{{- with .OutputFormats.Get "txt" }}
+- [{{ .Title }}]({{ .RelPermalink }}): API documentation and specifications
+{{- end }}
+{{- end }}
+{{- end }}

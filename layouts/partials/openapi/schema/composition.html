@@ -1,0 +1,46 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+
+<!-- OneOf/AnyOf/AllOf -->
+{{ with $schema.OneOf }}
+  <div class="schema-composition">
+    <h6>One Of</h6>
+    <div class="composition-list">
+      {{ range $index, $subSchema := . }}
+        <div class="composition-item">
+          <div class="composition-index">Option {{ add $index 1 }}</div>
+          {{ partial "openapi/schema/container.html" (dict "schema" $subSchema "spec" $spec "level" (add $level 1)) }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}
+
+{{ with $schema.AnyOf }}
+  <div class="schema-composition">
+    <h6>Any Of</h6>
+    <div class="composition-list">
+      {{ range $index, $subSchema := . }}
+        <div class="composition-item">
+          <div class="composition-index">Option {{ add $index 1 }}</div>
+          {{ partial "openapi/schema/container.html" (dict "schema" $subSchema "spec" $spec "level" (add $level 1)) }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}
+
+{{ with $schema.AllOf }}
+  <div class="schema-composition">
+    <h6>All Of</h6>
+    <div class="composition-list">
+      {{ range $index, $subSchema := . }}
+        <div class="composition-item">
+          <div class="composition-index">Schema {{ add $index 1 }}</div>
+          {{ partial "openapi/schema/container.html" (dict "schema" $subSchema "spec" $spec "level" (add $level 1)) }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

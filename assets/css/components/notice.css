@@ -1,0 +1,310 @@
+/* Enhanced Notice Component */
+
+/* Base Enhanced Notice Styles */
+.notice {
+  position: relative;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  /* ✅ FIXED: Use animation tokens */
+  animation: notice-enter var(--timing-medium) var(--easing-standard);
+  animation-fill-mode: both;
+}
+
+/* Legacy Notice Override */
+.notice {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Enhanced Notice Container */
+.notice__container {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem;
+  position: relative;
+}
+
+/* Enhanced Notice Icon */
+.notice__icon-wrapper {
+  margin-right: 1rem;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.notice__icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Enhanced Notice Content */
+.notice__content {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
+.notice__title {
+  margin-bottom: 0.5rem;
+  font-family: "NVIDIA", Arial, Helvetica, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+  line-height: 1.3;
+}
+
+.notice__text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  line-height: 1.625;
+  color: var(--color-text-primary);
+  font-family: var(--font-brand);
+}
+
+.enhanced-notice__text p {
+  margin-bottom: 0.5rem;
+}
+
+.enhanced-notice__text p:last-child {
+  margin-bottom: 0;
+}
+
+.enhanced-notice__text strong {
+  font-weight: 600;
+}
+
+.enhanced-notice__text code {
+  border-radius: var(--radius-base);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-family: var(--font-family-mono, monospace);
+}
+
+/* Notice Type Variations */
+
+/* Info Notice */
+.notice--info {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--info .notice__title {
+  color: #1d4ed8;
+}
+
+.notice--info .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(59, 130, 246, 0.3));
+}
+
+/* Note Notice */
+.notice--note {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(99, 102, 241, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(99, 102, 241, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(99, 102, 241, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--note .notice__title {
+  color: #4c1d95;
+}
+
+.notice--note .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(99, 102, 241, 0.3));
+}
+
+/* Tip Notice */
+.notice--tip {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1) 0%,
+    rgba(34, 197, 94, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(34, 197, 94, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(34, 197, 94, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--tip .notice__title {
+  color: #15803d;
+}
+
+.notice--tip .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(34, 197, 94, 0.3));
+}
+
+/* Warning Notice */
+.notice--warning {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1) 0%,
+    rgba(245, 158, 11, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(245, 158, 11, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--warning .notice__title {
+  color: #d97706;
+}
+
+.notice--warning .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(245, 158, 11, 0.3));
+}
+
+/* Danger Notice */
+.notice--danger {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(239, 68, 68, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(239, 68, 68, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--danger .notice__title {
+  color: #dc2626;
+}
+
+.notice--danger .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(239, 68, 68, 0.3));
+}
+
+/* Security Notice */
+.notice--security {
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.1) 0%,
+    rgba(168, 85, 247, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(168, 85, 247, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--security .notice__title {
+  color: #7c3aed;
+}
+
+.notice--security .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(168, 85, 247, 0.3));
+}
+
+/* Snack Notice */
+.notice--snack {
+  background: linear-gradient(
+    135deg,
+    rgba(236, 72, 153, 0.1) 0%,
+    rgba(236, 72, 153, 0.05) 100%
+  ) !important;
+  border: 1px solid rgba(236, 72, 153, 0.2) !important;
+  box-shadow: 
+    0 4px 12px rgba(236, 72, 153, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.notice--snack .notice__title {
+  color: #db2777;
+}
+
+.notice--snack .notice__icon {
+  filter: drop-shadow(0 1px 2px rgba(236, 72, 153, 0.3));
+}
+
+/* Hover Effects */
+.enhanced-notice:hover {
+  transform: translateY(-1px);
+}
+
+.enhanced-notice:hover .notice__icon {
+  transform: scale(1.1);
+}
+
+.enhanced-notice.group:hover .notice__title {
+  transform: translateX(2px);
+}
+
+/* Entrance Animation */
+@keyframes notice-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dark mode code styling */
+@media (prefers-color-scheme: dark) {
+  .enhanced-notice__text code {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* :has() Notice Component Enhancements */
+
+/* Notices with titles get enhanced spacing */
+.notice:has(.notice__title) {
+  padding-top: 1.5rem;
+}
+
+.notice:has(.notice__title) .notice__content {
+  margin-top: 0.75rem;
+}
+
+/* Notices with icons get enhanced layout */
+.notice:has(.notice__icon) .notice__content {
+  margin-left: 2.5rem;
+}
+
+.notice:has(.notice__icon) .notice__title {
+  margin-left: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Interactive notices with links */
+.notice:has(a:hover) {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(var(--color-brand-rgb), 0.1);
+}

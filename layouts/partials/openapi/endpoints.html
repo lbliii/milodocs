@@ -1,0 +1,54 @@
+{{- $paths := .paths -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+<section class="openapi-endpoints" id="endpoints">
+  
+  <!-- Navigation and Header -->
+  {{ partial "openapi/endpoints/navigation.html" (dict "paths" $paths "spec" $spec "page" $page) }}
+  
+  <!-- Endpoints Grouped by Tags -->
+  <div class="endpoints-list">
+    {{ $endpointsByTag := dict }}
+    {{ $untaggedEndpoints := slice }}
+    
+    <!-- Group endpoints by their first tag -->
+    {{ range $path, $methods := $paths }}
+      {{ range $method, $operation := $methods }}
+        {{ $endpoint := dict "path" $path "method" $method "operation" $operation }}
+        {{ if $operation.tags }}
+          {{ $primaryTag := index $operation.tags 0 }}
+          {{ $existingEndpoints := index $endpointsByTag $primaryTag | default (slice) }}
+          {{ $endpointsByTag = merge $endpointsByTag (dict $primaryTag ($existingEndpoints | append $endpoint)) }}
+        {{ else }}
+          {{ $untaggedEndpoints = $untaggedEndpoints | append $endpoint }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    
+    <!-- Get tags from navigation partial for consistency -->
+    {{ $tags := slice }}
+    {{ range $path, $pathMethods := $paths }}
+      {{ range $method, $operation := $pathMethods }}
+        {{ range $tag := $operation.tags }}
+          {{ if not (in $tags $tag) }}
+            {{ $tags = $tags | append $tag }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    
+    <!-- Render grouped endpoints -->
+    {{ range $tag := $tags }}
+      {{ $tagEndpoints := index $endpointsByTag $tag }}
+      {{ if $tagEndpoints }}
+        {{ partial "openapi/endpoints/group.html" (dict "tag" $tag "tagEndpoints" $tagEndpoints "spec" $spec) }}
+      {{ end }}
+    {{ end }}
+    
+    <!-- Untagged endpoints -->
+    {{ if $untaggedEndpoints }}
+      {{ partial "openapi/endpoints/group.html" (dict "tag" "untagged" "customTitle" "Other Endpoints" "dataTag" "untagged" "tagEndpoints" $untaggedEndpoints "spec" $spec) }}
+    {{ end }}
+  </div>
+</section>

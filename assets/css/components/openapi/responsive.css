@@ -1,0 +1,151 @@
+/* OpenAPI Responsive Styles */
+
+/* ==========================================================================
+   Responsive & Mobile
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .openapi-header {
+    padding: 2rem 1.5rem;
+  }
+
+  .openapi-header__title {
+    font-size: 2rem;
+  }
+
+  .openapi-header__info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .endpoints-nav {
+    padding: 1rem;
+  }
+
+  .endpoints-nav__tags,
+  .endpoints-nav__methods {
+    gap: 0.375rem;
+  }
+
+  .tag-filter,
+  .method-filter {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .endpoint-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .endpoint-header__method {
+    align-self: flex-start;
+  }
+
+  .endpoint-header__toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .endpoint-details {
+    padding: 1rem;
+  }
+
+  .property-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .code-tabs-nav {
+    flex-wrap: wrap;
+  }
+
+  .code-tab {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .code-example-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .parameters-section-header,
+  .parameter-item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .openapi-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .openapi-header__title {
+    font-size: 1.75rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .overview-stat {
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    min-height: 50px;
+  }
+  
+  .overview-stat__icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .overview-doc-link {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .endpoint-header {
+    padding: 0.75rem;
+  }
+
+  .endpoint-details {
+    padding: 0.75rem;
+  }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .openapi-spec {
+    background: white !important;
+    color: black !important;
+  }
+
+  .endpoint-details {
+    display: block !important;
+  }
+
+  .code-tab-panel {
+    display: block !important;
+  }
+
+  .endpoints-nav,
+  .copy-button,
+  .endpoint-header__toggle {
+    display: none !important;
+  }
+}

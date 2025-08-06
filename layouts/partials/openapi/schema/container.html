@@ -1,0 +1,100 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+{{- $maxLevel := 5 -}}
+
+<!-- Prevent infinite recursion -->
+{{ if gt $level $maxLevel }}
+  <div class="schema-truncated">
+    <span class="truncated-message">Schema too deeply nested...</span>
+  </div>
+  {{ return }}
+{{ end }}
+
+<div class="schema-container" data-level="{{ $level }}">
+  
+  <!-- Handle $ref - only for SchemaRef types -->
+  {{ if and (isset $schema "Ref") $schema.Ref }}
+    {{ $fullRef := $schema.Ref }}
+    {{ $parts := split $fullRef "/" }}
+    {{ $refPath := "" }}
+    {{ if gt (len $parts) 0 }}
+      {{ $refPath = index $parts (sub (len $parts) 1) }}
+    {{ else }}
+      {{ $refPath = $fullRef }}
+    {{ end }}
+    {{ $refSchema := "" }}
+    {{ if and $spec.Components $spec.Components.Schemas }}
+      {{ $refSchema = index $spec.Components.Schemas $refPath }}
+    {{ end }}
+    {{ if not $refSchema }}
+      {{ warnf "Schema resolution failed: fullRef='%s' refPath='%s'" $fullRef $refPath }}
+      {{ warnf "Spec has components: %t" (isset $spec "Components") }}
+      {{ if $spec.Components }}
+        {{ warnf "Components has schemas: %t" (isset $spec.Components "Schemas") }}
+        {{ if $spec.Components.Schemas }}
+          {{ warnf "Total schemas available: %d" (len $spec.Components.Schemas) }}
+          {{ $availableSchemas := slice }}
+          {{ range $name, $schema := $spec.Components.Schemas }}
+            {{ if lt (len $availableSchemas) 10 }}
+              {{ $availableSchemas = $availableSchemas | append $name }}
+            {{ end }}
+          {{ end }}
+          {{ warnf "First 10 schemas: %s" (delimit $availableSchemas ", ") }}
+        {{ else }}
+          {{ warnf "No schemas found in spec.Components" }}
+        {{ end }}
+      {{ else }}
+        {{ warnf "No components found in spec" }}
+      {{ end }}
+    {{ end }}
+    {{ if $refSchema }}
+      <div class="schema-ref">
+        <div class="ref-header">
+          <span class="ref-label">Reference:</span>
+          <code class="ref-name">{{ $refPath }}</code>
+        </div>
+        {{ partial "openapi/schema/container.html" (dict "schema" $refSchema "spec" $spec "level" (add $level 1)) }}
+      </div>
+    {{ else if $schema.Value }}
+      {{/* If ref exists but we can't resolve it, use the actual schema value */}}
+      {{ partial "openapi/schema/container.html" (dict "schema" $schema.Value "spec" $spec "level" (add $level 1)) }}
+    {{ else }}
+      <div class="schema-ref-error">
+        <span class="error-message">Unable to resolve reference: {{ $fullRef }}</span>
+
+      </div>
+    {{ end }}
+    {{ return }}
+  {{ end }}
+  
+  {{/* Handle SchemaRef vs direct Schema */}}
+  {{ $actualSchema := $schema }}
+  {{ if $schema.Value }}
+    {{ $actualSchema = $schema.Value }}
+  {{ end }}
+
+  <!-- Schema Header -->
+  {{ partial "openapi/schema/header.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
+  
+
+  
+  <!-- Schema Description -->
+  {{ with $actualSchema.Description }}
+    <div class="schema-description">{{ . | markdownify }}</div>
+  {{ end }}
+  
+  <!-- Schema Constraints -->
+  {{ partial "openapi/schema/constraints.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
+  
+  <!-- Object Properties -->
+  {{ partial "openapi/schema/properties.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
+  
+  <!-- Array Information -->
+
+  {{ partial "openapi/schema/array-info.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
+  
+  <!-- Schema Composition -->
+  {{ partial "openapi/schema/composition.html" (dict "schema" $actualSchema "spec" $spec "level" $level) }}
+
+</div>

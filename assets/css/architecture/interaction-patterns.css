@@ -1,0 +1,314 @@
+/* 🎯 Universal Interaction Patterns System
+ * ========================================
+ * 
+ * This file centralizes all hover, focus, active, and interactive patterns
+ * to eliminate the hundreds of scattered transform/transition definitions
+ * across component files.
+ */
+
+:root {
+  /* ✨ INTERACTION TRANSFORM TOKENS */
+  --hover-lift-subtle: translateY(-1px);      /* Buttons, small elements */
+  --hover-lift-medium: translateY(-2px);      /* Cards, medium elements */
+  --hover-lift-dramatic: translateY(-4px);    /* Hero cards, dramatic elements */
+  --hover-scale-up: scale(1.02);              /* Slight growth on hover */
+  --hover-scale-down: scale(0.98);            /* Slight shrink on active */
+  --hover-combined-lift: translateY(-2px) scale(1.02); /* Combined lift + scale */
+  
+  /* ✨ SHADOW ELEVATION TOKENS */
+  --shadow-rest: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-hover-subtle: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-hover-dramatic: 0 12px 28px rgba(0, 0, 0, 0.12);
+  --shadow-focus: 0 0 0 2px rgba(var(--color-brand-rgb), 0.2);
+  --shadow-brand-glow: 0 0 20px rgba(var(--color-brand-rgb), 0.15);
+  
+  /* ✨ TRANSITION SETS - Reusable combinations */
+  --transition-interactive: 
+    transform var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
+    
+  --transition-elevation: 
+    transform var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
+    
+  --transition-button: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ INTERACTION BEHAVIOR CLASSES
+ * ================================
+ * Apply these classes for consistent interactive behavior
+ */
+
+/* Subtle interactive elements (buttons, small cards) */
+.interact-subtle {
+  transition: var(--transition-interactive);
+  cursor: pointer;
+}
+
+.interact-subtle:hover {
+  transform: var(--hover-lift-subtle);
+  box-shadow: var(--shadow-hover-subtle);
+}
+
+.interact-subtle:active {
+  transform: var(--hover-scale-down);
+  transition-duration: var(--timing-instant);
+}
+
+/* Medium interactive elements (content cards, tiles) */
+.interact-medium {
+  transition: var(--transition-elevation);
+  cursor: pointer;
+}
+
+.interact-medium:hover {
+  transform: var(--hover-lift-medium);
+  box-shadow: var(--shadow-hover-medium);
+}
+
+.interact-medium:active {
+  transform: var(--hover-scale-down);
+  transition-duration: var(--timing-instant);
+}
+
+/* Dramatic interactive elements (hero cards, featured content) */
+.interact-dramatic {
+  transition: var(--transition-elevation);
+  cursor: pointer;
+}
+
+.interact-dramatic:hover {
+  transform: var(--hover-lift-dramatic);
+  box-shadow: var(--shadow-hover-dramatic);
+  border-color: var(--color-brand);
+}
+
+.interact-dramatic:active {
+  transform: var(--hover-combined-lift);
+  transition-duration: var(--timing-instant);
+}
+
+/* ✅ BUTTON INTERACTION PATTERNS
+ * ===============================
+ * Specialized patterns for button-like elements
+ */
+
+.btn-interact {
+  transition: var(--transition-button);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-interact:hover {
+  transform: var(--hover-lift-subtle);
+  box-shadow: var(--shadow-hover-medium);
+}
+
+.btn-interact:active {
+  transform: var(--hover-scale-down);
+  transition-duration: var(--timing-instant);
+}
+
+.btn-interact:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ✅ BRAND-FOCUSED INTERACTIONS
+ * ==============================
+ * Elements that should emphasize brand colors
+ */
+
+.interact-brand {
+  transition: var(--transition-elevation);
+  cursor: pointer;
+}
+
+.interact-brand:hover {
+  transform: var(--hover-lift-medium);
+  box-shadow: 
+    var(--shadow-hover-medium),
+    var(--shadow-brand-glow);
+  border-color: var(--color-brand);
+}
+
+.interact-brand:hover h1,
+.interact-brand:hover h2,
+.interact-brand:hover h3,
+.interact-brand:hover h4,
+.interact-brand:hover h5,
+.interact-brand:hover h6 {
+  color: var(--color-brand);
+  transition: color var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ FOCUS MANAGEMENT
+ * ====================
+ * Consistent focus indicators across all interactive elements
+ */
+
+.focusable {
+  border-radius: 0.25rem; /* Ensure focus outline has proper shape */
+}
+
+.focusable:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+  transition: 
+    outline-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ DISABLED STATES
+ * ===================
+ * Consistent disabled behavior
+ */
+
+.interact-disabled,
+[data-interactive="false"],
+.interact-subtle:disabled,
+.interact-medium:disabled,
+.interact-dramatic:disabled {
+  opacity: var(--opacity-faded);
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(50%);
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ LOADING STATES
+ * ==================
+ * Interactive elements in loading state
+ */
+
+.interact-loading {
+  opacity: var(--loading-opacity);
+  cursor: wait;
+  pointer-events: none;
+  filter: var(--loading-blur);
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ NESTED INTERACTION INHERITANCE
+ * ==================================
+ * Child elements inherit parent interaction states
+ */
+
+.interact-subtle:hover .nested-text,
+.interact-medium:hover .nested-text,
+.interact-dramatic:hover .nested-text {
+  color: var(--color-brand);
+  transition: color var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ ACCESSIBILITY ENHANCEMENTS
+ * ==============================
+ * Enhanced interaction patterns for accessibility
+ */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .focusable:focus-visible {
+    outline-width: 3px;
+    outline-style: solid;
+  }
+  
+  .interact-subtle:hover,
+  .interact-medium:hover,
+  .interact-dramatic:hover {
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-brand);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .interact-subtle,
+  .interact-medium,
+  .interact-dramatic,
+  .btn-interact,
+  .interact-brand {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  .interact-subtle:hover,
+  .interact-medium:hover,
+  .interact-dramatic:hover,
+  .btn-interact:hover,
+  .interact-brand:hover {
+    transform: none !important;
+  }
+}
+
+/* ✅ TOUCH DEVICE OPTIMIZATIONS
+ * ==============================
+ * Better interactions for touch devices
+ */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Reduce hover effects on touch devices */
+  .interact-subtle:hover,
+  .interact-medium:hover,
+  .interact-dramatic:hover {
+    transform: none;
+    box-shadow: var(--shadow-rest);
+  }
+  
+  /* Enhance active states for touch feedback */
+  .interact-subtle:active,
+  .interact-medium:active,
+  .interact-dramatic:active {
+    transform: var(--hover-scale-down);
+    opacity: 0.8;
+  }
+}
+
+/* ✅ DARK MODE ENHANCEMENTS
+ * ==========================
+ * Enhanced shadows and interactions for dark mode
+ */
+
+.dark {
+  --shadow-rest: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-hover-subtle: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-hover-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-hover-dramatic: 0 12px 28px rgba(0, 0, 0, 0.5);
+  --shadow-focus: 0 0 0 2px rgba(var(--color-brand-rgb), 0.3);
+  --shadow-brand-glow: 0 0 20px rgba(var(--color-brand-rgb), 0.25);
+}
+
+/* ✅ COMPONENT-SPECIFIC OVERRIDES
+ * ================================
+ * Allow components to customize interaction patterns
+ */
+
+/* Cards and tiles can use larger transforms */
+.card,
+.tile {
+  /* Use .interact-medium or .interact-dramatic class instead of custom transforms */
+}
+
+/* Buttons get subtle interactions by default */
+.btn {
+  /* Use .btn-interact class instead of custom transforms */
+}
+
+/* Navigation items get subtle interactions */
+.nav-item,
+.sidebar-item {
+  /* Use .interact-subtle class instead of custom transforms */
+}

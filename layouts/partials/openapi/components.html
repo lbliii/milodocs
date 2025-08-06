@@ -1,0 +1,30 @@
+{{- $components := .components -}}
+{{- $page := .page -}}
+
+<section class="openapi-components" 
+         id="components"
+         data-component="openapi-collapse"
+         data-has-schemas="{{ if $components.Schemas }}true{{ else }}false{{ end }}"
+         data-has-responses="{{ if $components.Responses }}true{{ else }}false{{ end }}"
+         data-has-parameters="{{ if $components.Parameters }}true{{ else }}false{{ end }}"
+         data-has-examples="{{ if $components.Examples }}true{{ else }}false{{ end }}"
+         data-has-headers="{{ if $components.Headers }}true{{ else }}false{{ end }}"
+         data-has-links="{{ if $components.Links }}true{{ else }}false{{ end }}"
+         data-has-callbacks="{{ if $components.Callbacks }}true{{ else }}false{{ end }}"
+         data-schema-count="{{ if $components.Schemas }}{{ len $components.Schemas }}{{ else }}0{{ end }}"
+         data-response-count="{{ if $components.Responses }}{{ len $components.Responses }}{{ else }}0{{ end }}"
+         data-parameter-count="{{ if $components.Parameters }}{{ len $components.Parameters }}{{ else }}0{{ end }}">
+  
+  <!-- Schemas -->
+  {{ partial "openapi/components/schemas.html" (dict "schemas" $components.Schemas "spec" $.spec "page" $page) }}
+  
+  <!-- Security Schemes -->
+  {{ partial "openapi/components/security-schemes.html" (dict "securitySchemes" $components.SecuritySchemes "spec" $.spec "page" $page) }}
+  
+  <!-- Response Objects -->
+  {{ partial "openapi/components/responses.html" (dict "responses" $components.Responses "spec" $.spec "page" $page) }}
+  
+  <!-- Parameters -->
+  {{ partial "openapi/components/parameters.html" (dict "parameters" $components.Parameters "spec" $.spec "page" $page) }}
+
+</section>

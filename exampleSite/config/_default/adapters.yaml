@@ -1,0 +1,30 @@
+# Hugo Content Adapters Configuration
+# Generate individual API endpoint pages from OpenAPI specs
+
+adapters:
+  - name: openapi-endpoints
+    source: data/api-specs/*.yaml
+    target: content/api
+    template: layouts/adapters/openapi-endpoint.html
+    format: yaml
+    transform:
+      # Process each OpenAPI spec file
+      type: openapi
+      # Generate pages for each endpoint
+      pages:
+        - pattern: "{{.spec.info.title | urlize}}/{{.tag | urlize}}/{{.operationId | urlize}}"
+          layout: api-endpoint
+          params:
+            api_spec: "{{.sourceFile}}"
+            endpoint_id: "{{.operationId}}"
+            method: "{{.method}}"
+            path: "{{.path}}"
+            tag: "{{.tag}}"
+            operation: "{{.operation}}"
+        # Generate tag overview pages
+        - pattern: "{{.spec.info.title | urlize}}/{{.tag | urlize}}/_index"
+          layout: api-tag
+          params:
+            api_spec: "{{.sourceFile}}"
+            tag: "{{.tag}}"
+            endpoints: "{{.endpoints}}"

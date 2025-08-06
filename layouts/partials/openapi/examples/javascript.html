@@ -1,0 +1,31 @@
+{{- $method := .method -}}
+{{- $path := .path -}}
+{{- $operation := .operation -}}
+{{- $spec := .spec -}}
+
+{{- /* Build the base URL from servers */ -}}
+{{- $baseUrl := "https://api.example.com" -}}
+{{- if $spec.Servers -}}
+  {{- $baseUrl = (index $spec.Servers 0).URL -}}
+{{- end -}}
+
+const url = '{{ $baseUrl }}{{ $path }}{{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}{{ if $param.Example }}{{ if eq $param.Name (index $operation.Parameters 0).Name }}?{{ else }}&{{ end }}{{ $param.Name }}={{ $param.Example }}{{ end }}{{ end }}{{ end }}{{ end }}';
+
+const options = {
+  method: '{{ $method }}',
+  headers: {
+{{ if $operation.Security }}    'Authorization': 'Bearer YOUR_TOKEN',
+{{ end }}{{ if $operation.RequestBody }}    'Content-Type': 'application/json'{{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    'Content-Type': 'application/json'{{ end }}
+  }{{ if $operation.RequestBody }},
+  body: JSON.stringify({
+{{ range $mediaType, $content := $operation.RequestBody.Content }}{{ if eq $mediaType "application/json" }}{{ with $content.Example }}{{ . | jsonify (dict "indent" "    ") }}{{ else }}{{ with $content.Schema }}{{ if eq .Type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+  }){{ end }}
+};
+
+try {
+  const response = await fetch(url, options);
+  const data = await response.json();
+  console.log(data);
+} catch (error) {
+  console.error('Error:', error);
+}

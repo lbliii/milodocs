@@ -1,0 +1,139 @@
+{{/*
+  Notebook Cell Output Partial
+  Renders different types of cell outputs (stream, execute_result, display_data, error)
+  
+  Context: dict with "output" (output data), "index" (output index), and "cellId" (parent cell ID)
+  Usage: {{ partial "notebook/cell-output.html" (dict "output" $output "index" $index "cellId" $cellId) }}
+*/}}
+
+{{ $output := .output }}
+{{ $index := .index }}
+{{ $cellId := .cellId }}
+{{ $outputId := printf "%s-output-%d" $cellId $index }}
+
+{{ if eq $output.output_type "stream" }}
+  {{/* Stream output (stdout, stderr) - simplified */}}
+  <pre class="notebook-cell__output notebook-cell__output--stream" 
+       data-output-type="stream" 
+       data-output-id="{{ $outputId }}">
+    {{- range $output.text -}}
+      {{- . -}}
+    {{- end -}}
+  </pre>
+
+{{ else if eq $output.output_type "execute_result" }}
+  {{/* Execute result output - simplified */}}
+  <div class="notebook-cell__output notebook-cell__output--execute-result" 
+       data-output-type="execute_result" 
+       data-output-id="{{ $outputId }}">
+    
+    {{/* HTML output */}}
+    {{ with index $output.data "text/html" }}
+      {{ . | safeHTML }}
+    {{ end }}
+    
+    {{/* Plain text output */}}
+    {{ with index $output.data "text/plain" }}
+      <pre class="notebook-cell__text-output">
+        {{- range . -}}
+          {{- . -}}
+        {{- end -}}
+      </pre>
+    {{ end }}
+    
+    {{/* Image output */}}
+    {{ with index $output.data "image/png" }}
+      <img src="data:image/png;base64,{{ . }}" 
+           alt="Execution result" 
+           class="notebook-cell__output-image">
+    {{ end }}
+    
+    {{/* JSON output */}}
+    {{ with index $output.data "application/json" }}
+      <details class="notebook-cell__json-output">
+        <summary>JSON Output</summary>
+        <pre><code>{{ . | jsonify (dict "indent" "  ") }}</code></pre>
+      </details>
+    {{ end }}
+  </div>
+
+{{ else if eq $output.output_type "display_data" }}
+  {{/* Display data output */}}
+  <div class="notebook-cell__output notebook-cell__output--display-data" 
+       data-output-type="display_data" 
+       data-output-id="{{ $outputId }}">
+    
+    {{/* Image data */}}
+    {{ with index $output.data "image/png" }}
+      <img src="data:image/png;base64,{{ . }}" 
+           alt="Display output" 
+           class="notebook-cell__output-image">
+    {{ end }}
+    
+    {{ with index $output.data "image/jpeg" }}
+      <img src="data:image/jpeg;base64,{{ . }}" 
+           alt="Display output" 
+           class="notebook-cell__output-image">
+    {{ end }}
+    
+    {{ with index $output.data "image/svg+xml" }}
+      {{ . | safeHTML }}
+    {{ end }}
+    
+    {{/* HTML data */}}
+    {{ with index $output.data "text/html" }}
+      {{ . | safeHTML }}
+    {{ end }}
+    
+    {{/* Markdown data */}}
+    {{ with index $output.data "text/markdown" }}
+      {{ . | markdownify }}
+    {{ end }}
+    
+    {{/* LaTeX data */}}
+    {{ with index $output.data "text/latex" }}
+      {{ . | safeHTML }}
+    {{ end }}
+    
+    {{/* Plain text fallback */}}
+    {{ with index $output.data "text/plain" }}
+      <pre class="notebook-cell__text-output">
+        {{- range . -}}
+          {{- . -}}
+        {{- end -}}
+      </pre>
+    {{ end }}
+  </div>
+
+{{ else if eq $output.output_type "error" }}
+  {{/* Error output */}}
+  <div class="notebook-cell__output notebook-cell__output--error" 
+       data-output-type="error" 
+       data-output-id="{{ $outputId }}"
+       role="alert"
+       aria-live="polite">
+    
+    <div class="notebook-cell__error-name">{{ $output.ename }}</div>
+    <div class="notebook-cell__error-value">{{ $output.evalue }}</div>
+    
+    {{ if $output.traceback }}
+      <details class="notebook-cell__error-traceback" open>
+        <summary>Traceback</summary>
+        {{ range $output.traceback }}
+          <div class="notebook-cell__traceback-line">{{ . | safeHTML }}</div>
+        {{ end }}
+      </details>
+    {{ end }}
+  </div>
+
+{{ else }}
+  {{/* Unknown output type - simplified */}}
+  <div class="notebook-cell__output notebook-cell__output--unknown" 
+       data-output-type="{{ $output.output_type }}" 
+       data-output-id="{{ $outputId }}">
+    <details>
+      <summary>{{ $output.output_type | title }} Output</summary>
+      <pre><code>{{ $output | jsonify (dict "indent" "  ") }}</code></pre>
+    </details>
+  </div>
+{{ end }}

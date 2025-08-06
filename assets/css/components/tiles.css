@@ -1,0 +1,198 @@
+/* Tiles Component - Interactive content cards with enhanced UX */
+
+/* Base Tile Styles */
+.tile {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border-primary);
+  backdrop-filter: blur(10px);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.tile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    transparent 50%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Enhanced hover states - Use architectural classes instead */
+.tile {
+  /* Apply .interact-dramatic class to tile elements in HTML instead of this CSS */
+}
+
+.tile:hover::before {
+  opacity: 1;
+}
+
+/* Focus states for accessibility */
+.tile:focus-within {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  transform: var(--transform-lift-medium);
+}
+
+/* Tile content spacing */
+.tile .space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+.tile .space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+/* Tile links - ensure they take full space */
+.tile a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  z-index: 2;
+}
+
+.tile a:hover {
+  color: inherit;
+}
+
+/* Tile headers */
+.tile h3 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.tile:hover h3 {
+  color: var(--color-brand);
+}
+
+/* Tile descriptions */
+.tile p {
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+/* Tile icons */
+.tile .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    filter var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
+  filter: brightness(0.8);
+}
+
+.tile:hover .icon {
+  filter: brightness(1);
+  transform: scale(1.05);
+}
+
+/* Tile tag/badge styles */
+.tile .inline-block {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    filter var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
+  display: inline-block;
+  text-decoration: none;
+}
+
+.tile .inline-block:hover {
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  transform: var(--transform-lift-subtle);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tile {
+    margin-bottom: 1rem;
+  }
+  
+  .tile:hover {
+    transform: var(--transform-lift-medium);
+  }
+}
+
+/* Grid layout enhancements - simplified for child links component */
+.grid .tile {
+  height: 100%;
+  /* Layout handled by child-links.css when child links present */
+}
+
+
+
+/* Dark mode enhancements */
+.dark .tile {
+  border-color: var(--color-border-secondary);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .tile:hover {
+  box-shadow: 
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-brand-rgb), 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Animation improvements */
+.tile {
+  animation: tile-enter 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes tile-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Stagger animation for grids */
+.grid .tile:nth-child(1) { animation-delay: 0s; }
+.grid .tile:nth-child(2) { animation-delay: 0.1s; }
+.grid .tile:nth-child(3) { animation-delay: 0.2s; }
+.grid .tile:nth-child(4) { animation-delay: 0.3s; }
+.grid .tile:nth-child(5) { animation-delay: 0.4s; }
+.grid .tile:nth-child(6) { animation-delay: 0.5s; }

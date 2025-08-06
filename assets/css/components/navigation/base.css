@@ -1,0 +1,119 @@
+/* Navigation Base - Container queries and shared navigation foundations */
+
+/* ========================================
+   Container Query Context
+   ======================================== */
+
+.sidebar-container,
+.topbar,
+.chat-toc-toggle {
+  container-type: inline-size;
+}
+
+.sidebar-container {
+  container-name: sidebar;
+}
+
+.topbar {
+  container-name: topbar;
+}
+
+.chat-toc-toggle {
+  container-name: toggle;
+}
+
+/* Base navigation link styling */
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  min-height: 2.25rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
+  white-space: nowrap;
+  overflow: hidden; /* Essential for ripple containment */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Enhanced focus states for nav-links */
+.nav-link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.2); /* Double focus ring */
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.08) 0%,
+    transparent 50%,
+    rgba(var(--color-brand-rgb), 0.03) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+  pointer-events: none;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: var(--color-brand);
+  /* Removed transform and background for cleaner minimal look */
+}
+
+.nav-link:hover::before,
+.nav-link:focus::before {
+  opacity: 0.5; /* More subtle hover effect */
+}
+
+/* Base nested content styling - use new animation system */
+.nested-content {
+  /* Use animation bridge collapse system instead of display:none */
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
+  transition: 
+    max-height var(--collapse-timing) var(--collapse-easing),
+    opacity var(--collapse-timing) var(--collapse-easing);
+}
+
+/* Enhanced hover states - use animation tokens for consistency */
+.nested-content a:hover {
+  transform: translateX(4px);
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+/* Expand toggle button - use animation tokens */
+.expand-toggle {
+  padding: 0.25rem;
+  border-radius: var(--radius-base);
+  color: var(--color-text-secondary);
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
+}
+
+.expand-toggle:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+}
+
+.expand-toggle svg {
+  transition: transform var(--timing-fast) var(--easing-standard);
+}

@@ -13,7 +13,12 @@
 {{- end -}}
 
 {{- define "content" -}}
-  <h1 class="text-black p-4">{{ .Title }}</h1>
+  {{/* Only show frontmatter title if content doesn't start with H1 */}}
+  {{- $rawContent := .RawContent -}}
+  {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
+  {{- if not $startsWithH1 -}}
+    <h1 class="text-black p-4">{{ .Title }}</h1>
+  {{- end -}}
   {{if .Content}}
   <div id="articleContent" class="p-4 text-black">
     {{ .Content }}

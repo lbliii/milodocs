@@ -1,0 +1,64 @@
+{{- $servers := .servers -}}
+{{- $page := .page -}}
+
+<section class="openapi-servers" id="servers">
+  <div class="section-header">
+    <h2 class="section-title">Base URLs</h2>
+    <div class="section-description">Available API server endpoints</div>
+  </div>
+  
+  <div class="servers-list">
+    {{ range $index, $server := $servers }}
+      <div class="server-card" data-server-index="{{ $index }}">
+        <div class="server-card__header">
+          <div class="server-card__url">
+            <code class="server-url">{{ $server.url }}</code>
+            <button class="copy-button" data-copy-text="{{ $server.url }}" aria-label="Copy server URL">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+            </button>
+          </div>
+          {{ if $server.description }}
+            <div class="server-card__description">{{ $server.description | markdownify }}</div>
+          {{ end }}
+        </div>
+        
+        {{ with $server.variables }}
+          <div class="server-card__variables">
+            <h4>URL Variables</h4>
+            <div class="variables-grid">
+              {{ range $name, $variable := . }}
+                <div class="variable-item">
+                  <div class="variable-name">
+                    <code>{{ $name }}</code>
+                    {{ if $variable.required }}
+                      <span class="variable-required">required</span>
+                    {{ end }}
+                  </div>
+                  <div class="variable-details">
+                    {{ with $variable.description }}
+                      <div class="variable-description">{{ . }}</div>
+                    {{ end }}
+                    {{ with $variable.default }}
+                      <div class="variable-default">Default: <code>{{ . }}</code></div>
+                    {{ end }}
+                    {{ with $variable.enum }}
+                      <div class="variable-enum">
+                        <span>Allowed values:</span>
+                        {{ range $val := . }}
+                          <code>{{ $val }}</code>
+                        {{ end }}
+                      </div>
+                    {{ end }}
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</section>

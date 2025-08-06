@@ -1,0 +1,39 @@
+{{- $schema := .schema -}}
+{{- $spec := .spec -}}
+{{- $level := .level | default 0 -}}
+
+<!-- Array Items -->
+{{ if and $schema.Type $schema.Items (in $schema.Type "array") }}
+  <div class="schema-array-info">
+    <h6>Array Information</h6>
+    <div class="array-constraints">
+      {{ if isset $schema "MinItems" }}{{ with $schema.MinItems }}
+        <span class="constraint">
+          <span class="constraint-label">Min Items:</span>
+          <code>{{ . }}</code>
+        </span>
+      {{ end }}{{ end }}
+      {{ if isset $schema "MaxItems" }}{{ with $schema.MaxItems }}
+        <span class="constraint">
+          <span class="constraint-label">Max Items:</span>
+          <code>{{ . }}</code>
+        </span>
+      {{ end }}{{ end }}
+      {{ if and (isset $schema "UniqueItems") $schema.UniqueItems }}
+        <span class="constraint">
+          <span class="constraint-label">Unique Items:</span>
+          <code>true</code>
+        </span>
+      {{ end }}
+    </div>
+    
+    {{ with $schema.Items }}
+      <div class="schema-array-items">
+        <h6>Item Schema</h6>
+        <div class="array-item-schema">
+          {{ partial "openapi/schema/container.html" (dict "schema" . "spec" $spec "level" (add $level 1)) }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+{{ end }}

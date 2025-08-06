@@ -1,0 +1,68 @@
+# {{ .Site.Title }} - Complete Documentation
+
+{{- with .Site.Params.description }}
+> {{ . }}
+{{- else }}
+> Complete documentation for {{ .Site.Title }} in a single file for LLM context.
+{{- end }}
+
+This file contains the full content of all documentation pages for use as context in AI tools. Last updated: {{ now.Format "2006-01-02" }}.
+
+---
+
+{{- range .Site.Sections }}
+{{- if .RegularPages }}
+
+## {{ .Title }}
+
+{{- range .RegularPages }}
+
+### {{ .Title }}
+
+{{- with .Description }}
+**Description**: {{ . | htmlUnescape }}
+{{- end }}
+
+{{- with .Plain }}
+{{ . | htmlUnescape }}
+{{- end }}
+
+---
+
+{{- if .Sections }}
+{{- range .Sections }}
+
+#### {{ .Title }}
+
+{{- range .RegularPages }}
+
+##### {{ .Title }}
+
+{{- with .Description }}
+**Description**: {{ . | htmlUnescape }}
+{{- end }}
+
+{{- with .Plain }}
+{{ . | htmlUnescape }}
+{{- end }}
+
+---
+
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+{{- end }}
+
+---
+
+## Additional Information
+
+- **Site URL**: {{ .Site.BaseURL }}
+- **Documentation sections**: {{ len .Site.Sections }}
+- **Total pages**: {{ len .Site.RegularPages }}
+- **Generated**: {{ now.Format "2006-01-02 15:04:05 MST" }}
+
+For more targeted content, see the structured index at: {{ .Site.BaseURL }}llms.txt

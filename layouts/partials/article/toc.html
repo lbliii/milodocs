@@ -5,7 +5,7 @@
         {{- $content := $resource.Content | safeHTML -}}
         {{- with $content | transform.Unmarshal -}}
             {{- $decodedNotebook := . -}}
-            <div id="tocContainer" class="hidden toc sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto text-sm text-black transition duration-300">
+            <div id="tocContainer" class="hidden toc-sidebar sticky top-20 h-[calc(100vh-6rem)] overflow-y-auto transition-all duration-300">
                 <nav id="TableOfContents">
                     <ul>
                         {{- template "toc-items" (dict "level" 1 "items" $decodedNotebook.cells) -}}
@@ -15,7 +15,7 @@
         {{- end -}}
     {{- end -}}
 {{- else -}}
-    <div id="tocContainer" class="hidden toc sticky top-10 pt-4 h-[calc(100vh-4rem)] overflow-y-auto text-sm text-black transition duration-300"> 
+    <div id="tocContainer" class="hidden toc-sidebar sticky top-20 h-[calc(100vh-6rem)] overflow-y-auto transition-all duration-300"> 
         {{ .TableOfContents }}
     </div>
 {{- end -}}

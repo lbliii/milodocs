@@ -1,0 +1,311 @@
+/* OpenAPI Components */
+
+/* ==========================================================================
+   Components Section
+   ========================================================================== */
+
+.openapi-components {
+  padding: 2rem 0;
+}
+
+.components-section {
+  margin-bottom: 3rem;
+}
+
+.components-section:last-child {
+  margin-bottom: 0;
+}
+
+.components-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+.components-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.component-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.component-item:hover {
+  border-color: var(--color-brand);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.1);
+}
+
+.component-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.component-header:hover {
+  background: var(--color-bg-secondary);
+}
+
+.component-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-brand);
+  flex-shrink: 0;
+}
+
+.component-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.component-name h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.component-type {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.component-toggle {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.component-toggle .chevron {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+.component-header[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.component-details {
+  border-top: 1px solid var(--color-border-primary);
+  
+  /* Height-based collapse (consistent with all components) */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+  
+  /* Configure collapse behavior */
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 3000px; /* Large for complex schemas */
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  --collapse-overflow-collapsed: hidden;
+  --collapse-overflow-expanded: visible;
+  --collapse-padding-collapsed: 0;
+  --collapse-padding-expanded: 1.5rem;
+  --collapse-timing: 0.3s;
+  --collapse-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Remove old class-based approach - component-states.css handles this */
+
+/* Legacy styles removed - component-states.css now handles all collapse behavior */
+
+@keyframes schema-expand {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   :has() Content-Aware Components Enhancements
+   ========================================================================== */
+
+/* Components section adapts based on content type and count */
+.openapi-components:has(.components-section[data-section-type="schemas"]) {
+  --primary-section: schemas;
+}
+
+.openapi-components:has(.components-section[data-section-type="parameters"]) {
+  --secondary-section: parameters;
+}
+
+/* Enhanced styling for sections with many items */
+.components-section:has([data-item-count^="1"]) .components-section-title::after,
+.components-section:has([data-item-count^="2"]) .components-section-title::after,
+.components-section:has([data-item-count^="3"]) .components-section-title::after {
+  content: " (" attr(data-item-count) ")";
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   Enhanced Schema Expansion States with :has()
+   ========================================================================== */
+
+/* Component items with expanded content */
+.component-item:has(.component-details.expanded) {
+  border-color: var(--color-brand);
+  box-shadow: 0 4px 16px rgba(var(--color-brand-rgb), 0.15);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+}
+
+.component-item:has(.component-details.expanded) .component-header {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+  border-bottom: 1px solid rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Enhanced chevron rotation for expanded state */
+.component-item:has(.component-details.expanded) .chevron {
+  transform: rotate(90deg);
+  color: var(--color-brand);
+}
+
+/* Schema-specific expanded state styling */
+.component-item[data-component="component-schema"]:has(.component-details.expanded) {
+  border-left: 4px solid var(--color-brand);
+}
+
+.component-item[data-component="component-schema"]:has(.component-details.expanded) .component-name h4 {
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+/* Complex schemas (with many properties) get enhanced styling when expanded */
+.component-item[data-property-count^="1"]:has(.component-details.expanded),
+.component-item[data-property-count^="2"]:has(.component-details.expanded),
+.component-item[data-property-count^="3"]:has(.component-details.expanded) {
+  border-left: 4px solid var(--color-accent);
+}
+
+.component-item[data-property-count^="1"]:has(.component-details.expanded) .component-name h4,
+.component-item[data-property-count^="2"]:has(.component-details.expanded) .component-name h4,
+.component-item[data-property-count^="3"]:has(.component-details.expanded) .component-name h4 {
+  color: var(--color-accent);
+}
+
+/* Required schemas get special highlighting when expanded */
+.component-item[data-has-required="true"]:has(.component-details.expanded) .component-header {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-warning-rgb), 0.08) 0%,
+    rgba(var(--color-warning-rgb), 0.03) 100%
+  );
+}
+
+/* Different schema types get unique expanded styling */
+.component-item[data-schema-type="array"]:has(.component-details.expanded) {
+  border-left-color: var(--color-success);
+}
+
+.component-item[data-schema-type="object"]:has(.component-details.expanded) {
+  border-left-color: var(--color-brand);
+}
+
+.component-item[data-schema-type="string"]:has(.component-details.expanded) {
+  border-left-color: var(--color-info);
+}
+
+/* Schema-specific enhancements */
+.component-item[data-component="component-schema"]:has([data-has-properties="true"]) {
+  border-left: 3px solid var(--color-brand);
+}
+
+.component-item[data-component="component-schema"]:has([data-has-required="true"]) .component-header {
+  background: rgba(var(--color-accent-rgb), 0.05);
+}
+
+.component-item[data-schema-type="object"]:has([data-property-count]) .component-name::after {
+  content: " (" attr(data-property-count) " properties)";
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.component-item[data-schema-type="array"] .component-header {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
+}
+
+.component-item[data-schema-type="string"] .component-icon {
+  color: var(--color-accent);
+}
+
+/* Parameter-specific enhancements */
+.component-item[data-component="component-parameter"][data-param-required="true"] {
+  border-left: 3px solid var(--color-accent);
+}
+
+.component-item[data-component="component-parameter"][data-param-required="true"] .component-header {
+  background: rgba(var(--color-accent-rgb), 0.08);
+}
+
+.component-item[data-param-in="path"] .component-header {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(192, 57, 43, 0.05));
+}
+
+.component-item[data-param-in="query"] .component-header {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.05));
+}
+
+.component-item[data-param-in="header"] .component-header {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(142, 68, 173, 0.05));
+}
+
+/* Enhanced hover effects based on content */
+.component-item:has([data-has-description="true"]):hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 12px rgba(var(--color-brand-rgb), 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adaptations */
+.components-section:has(.component-item:nth-child(n+10)) {
+  --large-section: true;
+}
+
+.components-section:has(.component-item:nth-child(n+10)) .components-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Section with only one item gets special treatment */
+.components-section:has(.component-item:only-child) .component-item {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Enhanced focus states for accessibility */
+.component-item:has(.component-header:focus-visible) {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}

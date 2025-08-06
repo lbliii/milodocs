@@ -1,11 +1,45 @@
-<script src="https://unpkg.com/lunr/lunr.js" crossorigin="anonymous"></script>
+{{/* Advanced JavaScript bundling with environment-specific optimizations */}}
+{{- $jsResources := resources.Match "js/*.js" -}}
+{{- if $jsResources -}}
+  {{- $bundleName := printf "js/bundle-%s.js" hugo.Environment -}}
+  
+  {{/* Environment-specific build options */}}
+  {{- $opts := dict "target" "es2018" "format" "esm" -}}
+  {{- if hugo.IsProduction -}}
+    {{- $opts = $opts | merge (dict "minify" true "sourcemap" "external") -}}
+  {{- else -}}
+    {{- $opts = $opts | merge (dict "sourcemap" "inline") -}}
+  {{- end -}}
+  
+  {{- if hugo.IsProduction -}}
+    {{/* Production: Optimized bundle with integrity */}}
+    {{- $jsBundle := $jsResources | resources.Concat $bundleName | js.Build $opts | fingerprint "sha512" -}}
+    <script type="module" src="{{ $jsBundle.RelPermalink }}" integrity="{{ $jsBundle.Data.Integrity }}" crossorigin="anonymous" defer></script>
+  {{- else -}}
+    {{/* Development: Fast builds with debugging */}}
+    {{- $jsBundle := $jsResources | resources.Concat $bundleName | js.Build $opts -}}
+    <script type="module" src="{{ $jsBundle.RelPermalink }}" defer></script>
+    {{- if site.Params.debug -}}
+      <!-- JS Debug: Bundle contains {{ len $jsResources }} files for {{ hugo.Environment }} environment -->
+    {{- end -}}
+  {{- end -}}
+  
+  {{/* Environment-specific JavaScript globals */}}
+  <script>
+    window.HugoEnvironment = {
+      environment: "{{ hugo.Environment }}",
+      isProduction: {{ hugo.IsProduction }},
+      debug: {{ site.Params.debug | default false }},
+      version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}",
+      baseURL: "{{ site.BaseURL }}",
+      buildTime: "{{ now.UnixMilli }}"
+    };
+  </script>
+{{- else -}}
+  {{- warnf "JavaScript: No JS files found in assets/js/ for environment '%s'" hugo.Environment -}}
+{{- end -}}
 
-{{- $opts := dict "minify" true }}
-
-{{- if eq hugo.Environment "development" }}
-  {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build | fingerprint -}}
-  <script src="{{ $baseJsResources.RelPermalink }}" integrity="{{ $baseJsResources.Data.Integrity }}" crossorigin="anonymous"></script>
-{{- else }}
-  {{- $baseJsResources := resources.Match "js/*.js" | resources.Concat "js/bundle.js" | js.Build $opts | fingerprint  -}}
-  <script src="{{ $baseJsResources.RelPermalink }}" integrity="{{ $baseJsResources.Data.Integrity }}" crossorigin="anonymous"></script>
-{{- end }}
+{{/* Search JavaScript temporarily disabled */}}
+{{- if false -}}
+  <script src="https://unpkg.com/lunr/lunr.js" crossorigin="anonymous" defer></script>
+{{- end -}}

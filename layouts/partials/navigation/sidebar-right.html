@@ -1,8 +1,9 @@
-<aside id="sidebar-right" class="hidden lg:block w-1/5 max-w-sm">
+<aside id="sidebar-right" class="hidden lg:block w-1/5 max-w-sm" data-component="navigation-sidebar-right">
   {{if .Site.Params.article.toc.display}}
     {{partial "article/toc.html" . }}
   {{end}}
   {{if .Site.Params.article.chat.display}}
     {{partial "article/chat.html" . }}
   {{end}}
+  
 </aside>

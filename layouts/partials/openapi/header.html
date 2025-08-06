@@ -1,0 +1,102 @@
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+<header class="openapi-header" 
+        data-component="openapi-header"
+        data-has-version="{{ if $spec.Info.Version }}true{{ else }}false{{ end }}"
+        data-has-description="{{ if $spec.Info.Description }}true{{ else }}false{{ end }}"
+        data-has-contact="{{ if $spec.Info.Contact }}true{{ else }}false{{ end }}"
+        data-has-license="{{ if $spec.Info.License }}true{{ else }}false{{ end }}"
+        data-has-terms="{{ if $spec.Info.TermsOfService }}true{{ else }}false{{ end }}"
+        {{- with $spec.Info.Version -}}data-version="{{ . }}"{{- end -}}
+        {{- with $spec.OpenAPI -}}data-openapi-version="{{ . }}"{{- end -}}>
+  <div class="openapi-header__meta" data-component="openapi-header-meta">
+    <div class="openapi-header__badge" data-badge-type="openapi-version">
+      <span class="openapi-version">OpenAPI {{ $spec.OpenAPI }}</span>
+    </div>
+    
+    {{/* API Version Badge */}}
+    {{ if $spec.Info.Version }}
+      <div class="openapi-header__badge openapi-header__badge--version" data-badge-type="version">
+        <span class="badge-label">v{{ $spec.Info.Version }}</span>
+      </div>
+    {{ end }}
+    
+    {{/* API Type Badge */}}
+    {{- with $spec.Info.Extensions -}}
+      {{- with index . "x-api-type" -}}
+      <div class="openapi-header__badge openapi-header__badge--type" data-badge-type="api-type" data-api-type="{{ . }}">
+        <span class="badge-label">{{ . }}</span>
+      </div>
+      {{- end -}}
+    {{- end -}}
+    
+    {{/* Maturity Badge */}}
+    {{- with $spec.Info.Extensions -}}
+      {{- with index . "x-maturity" -}}
+      <div class="openapi-header__badge openapi-header__badge--maturity" data-badge-type="maturity" data-maturity="{{ . }}">
+        <span class="badge-label">{{ . }}</span>
+      </div>
+      {{- end -}}
+    {{- end -}}
+    
+    {{/* Stability Badge */}}
+    {{- with $spec.Info.Extensions -}}
+      {{- with index . "x-stability" -}}
+      <div class="openapi-header__badge openapi-header__badge--stability" data-badge-type="stability" data-stability="{{ . }}">
+        <span class="badge-label">{{ . }}</span>
+      </div>
+      {{- end -}}
+    {{- end -}}
+  </div>
+  
+  <h1 class="openapi-header__title">{{ $spec.Info.Title }}</h1>
+  
+  {{/* OpenAPI Info doesn't have Summary field, skip this section */}}
+  
+  {{ with $spec.Info.Description }}
+    <div class="openapi-header__description">{{ . | markdownify }}</div>
+  {{ end }}
+  
+  <div class="openapi-header__info" 
+       data-component="openapi-header-info"
+       data-info-sections="{{ len (slice (cond $spec.Info.Contact 1 0) (cond $spec.Info.License 1 0) (cond $spec.Info.TermsOfService 1 0)) }}">
+    {{ with $spec.Info.Contact }}
+      <div class="openapi-contact" 
+           data-component="openapi-contact"
+           {{- with .Name }}data-has-name="true"{{ else }}data-has-name="false"{{ end }}
+           {{- with .Email }}data-has-email="true"{{ else }}data-has-email="false"{{ end }}
+           {{- with .URL }}data-has-url="true"{{ else }}data-has-url="false"{{ end }}>
+        <h3>Contact</h3>
+        {{ with .Name }}<div class="contact-name">{{ . }}</div>{{ end }}
+        {{ with .Email }}<div class="contact-email"><a href="mailto:{{ . }}">{{ . }}</a></div>{{ end }}
+        {{ with .URL }}<div class="contact-url"><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></div>{{ end }}
+      </div>
+    {{ end }}
+    
+    {{ with $spec.Info.License }}
+      <div class="openapi-license" 
+           data-component="openapi-license"
+           data-has-url="{{ if .URL }}true{{ else }}false{{ end }}"
+           {{- with .Name }}data-license-name="{{ . | urlize }}"{{ end }}>
+        <h3>License</h3>
+        <div class="license-name">
+          {{ if .URL }}
+            <a href="{{ .URL }}" target="_blank" rel="noopener">{{ .Name }}</a>
+          {{ else }}
+            {{ .Name }}
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+    
+    {{ with $spec.Info.TermsOfService }}
+      <div class="openapi-terms" 
+           data-component="openapi-terms"
+           data-terms-url="{{ . }}">
+        <h3>Terms of Service</h3>
+        <div class="terms-link"><a href="{{ . }}" target="_blank" rel="noopener">View Terms</a></div>
+      </div>
+    {{ end }}
+  </div>
+</header>

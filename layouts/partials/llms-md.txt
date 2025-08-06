@@ -1,0 +1,62 @@
+# {{ .Title }}
+
+{{- with .Description }}
+> {{ . }}
+{{- end }}
+
+{{- with .Plain }}
+{{ . | htmlUnescape }}
+{{- end }}
+
+## Metadata
+
+- **Section**: {{ with .Section }}{{ . }}{{ else }}Home{{ end }}
+- **Type**: {{ .Type }}
+{{- with .Date }}
+- **Date**: {{ .Format "2006-01-02" }}
+{{- end }}
+{{- with .Params.author }}
+- **Author**: {{ . }}
+{{- end }}
+{{- with .Params.tags }}
+- **Tags**: {{ delimit . ", " }}
+{{- end }}
+{{- with .Parent }}
+{{- with .OutputFormats.Get "txt" }}
+- **Parent**: [{{ $.Title }}]({{ .RelPermalink }})
+{{- end }}
+{{- end }}
+
+## Navigation
+
+{{- if .IsPage }}
+{{- with .CurrentSection }}
+{{- with .OutputFormats.Get "txt" }}
+- **Current Section**: [{{ $.Title }}]({{ .RelPermalink }})
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- $related := .Site.RegularPages.Related . | first 3 }}
+{{- if $related }}
+
+## Related Content
+
+{{- range $related }}
+{{- with .OutputFormats.Get "txt" }}
+- [{{ $.Title }}]({{ .RelPermalink }}): {{ if $.Description }}{{ $.Description | htmlUnescape }}{{ else if $.Summary }}{{ $.Summary | plainify | htmlUnescape | strings.Truncate 120 }}{{ else if $.Plain }}{{ $.Plain | htmlUnescape | strings.Truncate 100 | strings.FirstUpper }}{{ else }}{{ $.Title }} documentation{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- if .IsSection }}
+
+## Pages in This Section
+
+{{- range .RegularPages }}
+{{- $page := . }}
+{{- with .OutputFormats.Get "txt" }}
+- [{{ $page.Title }}]({{ .RelPermalink }}): {{ if $page.Description }}{{ $page.Description | htmlUnescape }}{{ else if $page.Summary }}{{ $page.Summary | plainify | htmlUnescape | strings.Truncate 120 }}{{ else if $page.Plain }}{{ $page.Plain | htmlUnescape | strings.Truncate 100 | strings.FirstUpper }}{{ else }}{{ $page.Title }} documentation{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}

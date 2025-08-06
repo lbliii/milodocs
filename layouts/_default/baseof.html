@@ -3,19 +3,38 @@
 <head>
   {{ partial "head.html" . }}
 </head>
-<body class="bg-white">
+<body class="bg-white antialiased" 
+      data-environment="{{ hugo.Environment }}" 
+      data-theme="{{ site.Params.theme.mode | default "light" }}"
+      data-build="{{ cond hugo.IsProduction "production" "development" }}"
+      data-version="{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}"
+      {{- if site.Params.debug }} data-debug="true"{{- end }}>
   <header>
     {{- partial "header.html" . -}}
   </header>
   {{- block "top-bar" . -}}{{- end -}}
-  <main class="2xl:max-w-screen-2xl p-2 mx-auto flex">
+  <main class="p-2 mx-auto flex transition-all duration-300 ease-in-out">
     {{- block "sidebar-left" . -}}{{- end -}}
-    <div id="pageContainer" class="p-4 w-full md:w-3/5 mx-auto">
-      {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}} 
-      {{- if .IsHome}}{{ block "home" . }}{{ end }}{{- end}} 
-      {{ block "breadcrumbs" . }}{{- end -}}
-      {{ block "content" . }}{{- end -}}
-      {{ block "innerFooter" . }}{{- end -}}
+    <div id="pageContainer" class="p-4 w-full md:w-3/5 max-w-5xl mx-auto">
+      <!-- Loading skeleton for initial page load -->
+      <div id="pageLoadingSkeleton" class="hidden space-y-4">
+        <div class="h-8 bg-gray-200 rounded content-skeleton animate-pulse"></div>
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-200 rounded content-skeleton animate-pulse"></div>
+          <div class="h-4 bg-gray-200 rounded w-5/6 content-skeleton animate-pulse"></div>
+          <div class="h-4 bg-gray-200 rounded w-4/6 content-skeleton animate-pulse"></div>
+        </div>
+        <div class="h-6 bg-gray-200 rounded w-3/4 content-skeleton animate-pulse"></div>
+      </div>
+      
+      <!-- Main content area -->
+      <div id="mainContent" class="transition-opacity duration-300">
+        {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}} 
+        {{- if .IsHome}}{{ block "home" . }}{{ end }}{{- end}} 
+        {{ block "breadcrumbs" . }}{{- end -}}
+        {{ block "content" . }}{{- end -}}
+        {{ block "innerFooter" . }}{{- end -}}
+      </div>
     </div>
     {{- partial "searchResultsContainer.html" . -}}
     {{- block "sidebar-right" . -}}{{- end -}}
@@ -23,5 +42,7 @@
   <footer>
     {{- partial "footer.html" . -}}
   </footer>
+  
+
 </body>
 </html>

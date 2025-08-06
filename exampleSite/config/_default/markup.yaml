@@ -1,9 +1,28 @@
-## Markdown 
+# Markup configuration for better performance
 goldmark:
   renderer:
-    hardWraps: false
-    unsafe: true
-    xhtml: false
-highlight:
-  noClasses: false
+    unsafe: false
+  parser:
+    attribute:
+      block: true
+      title: true
+    autoHeadingID: true
+  extensions:
+    linkify: true
+    strikethrough: true
+    table: true
+    taskList: true
 
+# Image processing in markdown
+markup:
+  goldmark:
+    renderer:
+      hardWraps: false
+  highlight:
+    codeFences: true
+    guessSyntax: false
+    lineNos: false
+    lineNumbersInTable: false
+    noClasses: false
+    style: github
+    tabWidth: 4

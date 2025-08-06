@@ -10,7 +10,7 @@
           <div class="absolute -left-2 top-2 bg-brand w-5 h-5 rounded-full"></div>
           <a href="{{.RelPermalink}}"><h2 class="text-xl font-semibold">{{ .Title }}</h2></a>
           <p class="text-gray-500">{{ .Date.Format "January 2, 2006" }}</p>
-          <article class="mt-4 pl-4 text-gray-700">{{ .Content }}</article>
+          <article class="mt-4 pl-4" style="color: var(--color-text-secondary);">{{ .Content }}</article>
           <aside class="flex flex-row space-x-2 mt-4">
             <a href="https://github.com/pachyderm/pachyderm/releases/tag/v{{ .Title }}" class="text-xs text-black font-brand-thin bg-zinc-100 p-1 rounded hover:text-white hover:bg-brand hover:transition hover:duration-300">Read more on GitHub</a>
             {{- if .Params.blog -}}

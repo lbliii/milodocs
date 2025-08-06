@@ -1,0 +1,209 @@
+/* Table of Contents (TOC) - Navigation within content and sidebar TOC */
+
+/* Enhanced TOC Styling */
+.toc {
+  @apply rounded-lg p-6 mb-8;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.toc-header {
+  @apply flex items-center mb-4 pb-3;
+  border: none;
+  color: var(--color-text-primary);
+}
+
+.toc-content a {
+  @apply inline-block py-2 px-3 rounded-lg transition-all duration-200;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.toc-content a:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+  transform: translateX(4px);
+}
+
+/* Enhanced Right Sidebar TOC */
+.toc-sidebar {
+  @apply p-6 text-sm;
+  background: transparent;
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+}
+
+.toc-sidebar nav {
+  position: relative;
+}
+
+.toc-sidebar nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.3) 50%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+.toc-sidebar ul {
+  @apply list-none pl-4 space-y-1;
+  margin: 0;
+}
+
+.toc-sidebar ul ul {
+  @apply pl-4 mt-2 border-l border-opacity-20;
+  border-color: var(--color-border-primary);
+}
+
+/* TOC Link Styling */
+.toc-link {
+  @apply block py-2 px-3 rounded-lg transition-all duration-200 
+         relative overflow-hidden;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  line-height: 1.4;
+  font-weight: 400;
+  cursor: pointer; /* Ensure ripple-ready */
+}
+
+.toc-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-brand-rgb), 0.08) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+  pointer-events: none;
+}
+
+.toc-link:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-brand);
+  transform: translateX(4px);
+  padding-inline-start: calc(0.75rem + 2px);
+  border-inline-start: 2px solid var(--color-brand);
+}
+
+.toc-link:hover::before {
+  opacity: 1;
+}
+
+.toc-link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  color: var(--color-brand);
+  box-shadow: 
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.15); /* Enhanced double focus ring */
+}
+
+/* Heading Level Variations */
+.toc-link--h1 {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: var(--color-text-primary);
+}
+
+.toc-link--h2 {
+  font-weight: 500;
+  color: var(--color-brand);
+  opacity: 0.9;
+}
+
+.toc-link--h3 {
+  font-size: 0.85em;
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+
+/* Active state styling */
+.toc-link.active {
+  background-color: var(--color-brand);
+  color: var(--color-text-inverse);
+  font-weight: 500;
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+}
+
+.toc-link.active::before {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 100%
+  );
+  opacity: 1;
+}
+
+/* Smooth scrolling indicator */
+.toc-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 0%;
+  background-color: var(--color-brand);
+  transition: height var(--timing-medium) var(--easing-standard);
+  border-radius: 1px;
+}
+
+/* Enhanced animations */
+.toc-sidebar {
+  /* ✅ FIXED: Use animation tokens */
+  animation: toc-enter var(--timing-medium) var(--easing-standard);
+  animation-fill-mode: both;
+}
+
+@keyframes toc-enter {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@container (max-width: 1024px) {
+  .toc-sidebar {
+    @apply p-4 text-xs;
+  }
+  
+  .toc-link {
+    @apply py-1.5 px-2;
+  }
+}
+
+/* Remove TOC sidebar background in dark mode */
+.dark .toc-sidebar {
+  background: transparent !important;
+}
+
+/* Enhanced active state context */
+.toc-sidebar:has(.toc-link.active) nav::before {
+  opacity: 1;
+  transform: scaleY(1.1);
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand) 0%,
+    rgba(var(--color-brand-rgb), 0.5) 50%,
+    transparent 100%
+  );
+}

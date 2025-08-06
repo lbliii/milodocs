@@ -1,0 +1,116 @@
+/* Topbar Navigation - Main horizontal navigation bar with responsive grid layout */
+
+/* Clean CSS Grid Topbar Layout */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-primary);
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard);
+  
+  /* CSS Grid Layout */
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  grid-template-areas: "logo navigation search controls";
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 4rem;
+}
+
+/* Grid Areas */
+.topbar__logo {
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.topbar__logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+.topbar__logo-link:hover {
+  opacity: 0.8;
+}
+
+.topbar__logo-image {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.topbar__navigation {
+  grid-area: navigation;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0; /* Allow shrinking */
+}
+
+.topbar__search {
+  grid-area: search;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0; /* Allow shrinking */
+}
+
+.topbar__controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Responsive Grid Layout */
+@container topbar (max-width: 1024px) {
+  .topbar {
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas: "logo navigation search controls";
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@container topbar (max-width: 768px) {
+  .topbar {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "logo search controls";
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 3.5rem;
+  }
+  
+  /* Hide navigation on mobile - it should be in a hamburger menu */
+  .topbar__navigation {
+    display: none;
+  }
+}
+
+/* Updated Navigation Links for Grid Layout */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Tighter spacing for minimal look */
+  font-family: var(--font-brand);
+  font-weight: 300;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+/* Hide navigation links on mobile */
+@container (max-width: 768px) {
+  .nav-link {
+    display: none; /* Hidden on mobile, shown via hamburger menu */
+  }
+}

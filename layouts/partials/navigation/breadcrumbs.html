@@ -1,16 +1,45 @@
-<nav aria-label="Breadcrumb Navigation" class="breadcrumb flex flex-wrap text-xs px-2 items-center md:px-4">
-  <ol class="flex space-x-2 md:space-x-4 lg:space-x-6">
-    {{ range after 1 .Ancestors.Reverse }}
-      <li>
-        <a href="{{ .Permalink }}" class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile transition duration-300" aria-label="Breadcrumb Item">
-            {{ .Title | truncate 15 }}
+{{/* Pure breadcrumbs navigation component */}}
+{{- $ancestors := .Ancestors.Reverse -}}
+{{- if gt (len $ancestors) 1 -}}
+<nav aria-label="Breadcrumb" class="breadcrumb" role="navigation" data-component="breadcrumbs">
+  <ol class="breadcrumb__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    {{- range $index, $ancestor := after 1 $ancestors -}}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb__item">
+        <a href="{{ .Permalink }}" 
+           class="breadcrumb__link" 
+           itemprop="item"
+           aria-label="Navigate to {{ .Title }}">
+          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
         </a>
+        <meta itemprop="position" content="{{ add $index 1 }}" />
+        <span class="breadcrumb__separator" aria-hidden="true">›</span>
       </li>
-    {{ end }}
-    <li>
-      <a href="{{ .Permalink }}" class="text-black px-2 py-1 md:px-4 md:py-2 lg:px-6 rounded shadow-md block tile transition duration-300" aria-label="Breadcrumb Item" aria-current="page">
-          {{ .Title | truncate 15 }}
-      </a>
+    {{- end -}}
+    
+    {{/* Current page - clickable if metadata available */}}
+    {{- $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb__item">
+      {{- if $hasMetadata -}}
+        <button class="breadcrumb__current breadcrumb__current--clickable" 
+                aria-current="page"
+                aria-expanded="false"
+                aria-controls="article-metadata-panel"
+                data-metadata-toggle
+                itemprop="item">
+          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+          <svg class="breadcrumb__metadata-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      {{- else -}}
+        <span class="breadcrumb__current" 
+              aria-current="page"
+              itemprop="item">
+          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+        </span>
+      {{- end -}}
+      <meta itemprop="position" content="{{ len $ancestors }}" />
     </li>
   </ol>
 </nav>
+{{- end -}}

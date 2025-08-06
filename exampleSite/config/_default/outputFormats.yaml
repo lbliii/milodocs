@@ -1,0 +1,10 @@
+
+txt:
+  mediaType: text/plain
+  isPlainText: true
+  isHTML: false
+  noUgly: true
+  notAlternative: false
+  rel: alternate
+  baseName: index
+  weight: 0

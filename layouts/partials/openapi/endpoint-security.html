@@ -1,0 +1,108 @@
+{{- $security := .security -}}
+{{- $spec := .spec -}}
+
+<div class="endpoint-section">
+  <h4>Security</h4>
+  
+  <div class="security-requirements">
+    {{ range $requirement := $security }}
+      <div class="security-requirement">
+        {{ if eq (len $requirement) 0 }}
+          <div class="security-none">No authentication required</div>
+        {{ else }}
+          {{ range $schemeName, $scopes := $requirement }}
+            {{ $securityScheme := index $spec.components.securitySchemes $schemeName }}
+            {{ if $securityScheme }}
+              <div class="security-scheme">
+                <div class="security-scheme-header">
+                  <div class="security-scheme-name">{{ $schemeName }}</div>
+                  <div class="security-scheme-type">{{ $securityScheme.type }}</div>
+                </div>
+                
+                {{ with $securityScheme.description }}
+                  <div class="security-scheme-description">{{ . | markdownify }}</div>
+                {{ end }}
+                
+                {{ if eq $securityScheme.type "http" }}
+                  <div class="security-scheme-details">
+                    <div class="security-detail">
+                      <span class="detail-label">Scheme:</span>
+                      <code>{{ $securityScheme.scheme }}</code>
+                    </div>
+                    {{ with $securityScheme.bearerFormat }}
+                      <div class="security-detail">
+                        <span class="detail-label">Bearer Format:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}
+                  </div>
+                {{ end }}
+                
+                {{ if eq $securityScheme.type "apiKey" }}
+                  <div class="security-scheme-details">
+                    <div class="security-detail">
+                      <span class="detail-label">Key Name:</span>
+                      <code>{{ $securityScheme.name }}</code>
+                    </div>
+                    <div class="security-detail">
+                      <span class="detail-label">Location:</span>
+                      <code>{{ $securityScheme.in }}</code>
+                    </div>
+                  </div>
+                {{ end }}
+                
+                {{ if eq $securityScheme.type "oauth2" }}
+                  <div class="security-scheme-details">
+                    {{ with $securityScheme.flows }}
+                      <div class="oauth-flows">
+                        <h6>OAuth Flows</h6>
+                        {{ range $flowType, $flow := . }}
+                          <div class="oauth-flow">
+                            <div class="flow-type">{{ $flowType }}</div>
+                            {{ with $flow.authorizationUrl }}
+                              <div class="security-detail">
+                                <span class="detail-label">Authorization URL:</span>
+                                <code>{{ . }}</code>
+                              </div>
+                            {{ end }}
+                            {{ with $flow.tokenUrl }}
+                              <div class="security-detail">
+                                <span class="detail-label">Token URL:</span>
+                                <code>{{ . }}</code>
+                              </div>
+                            {{ end }}
+                            {{ with $flow.refreshUrl }}
+                              <div class="security-detail">
+                                <span class="detail-label">Refresh URL:</span>
+                                <code>{{ . }}</code>
+                              </div>
+                            {{ end }}
+                          </div>
+                        {{ end }}
+                      </div>
+                    {{ end }}
+                  </div>
+                {{ end }}
+                
+                {{ if gt (len $scopes) 0 }}
+                  <div class="security-scopes">
+                    <h6>Required Scopes</h6>
+                    <div class="scopes-list">
+                      {{ range $scope := $scopes }}
+                        <code class="scope-item">{{ $scope }}</code>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+            {{ else }}
+              <div class="security-scheme-error">
+                <span class="error-message">Security scheme "{{ $schemeName }}" not found</span>
+              </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</div>

@@ -1,5 +1,23 @@
-{{- $path := .Get 0 -}} <!-- Get the path from the shortcode argument -->
-{{- $content := readFile (print "content/" $path ".rst") -}} <!-- Read the RST file content -->
-{{- $opts := dict "markup" "rst" -}}
-{{- $table := .Page.RenderString $opts  $content -}} <!-- Render the RST content as HTML -->
-{{- $table | safeHTML -}} <!-- Output the HTML content -->
+{{- $path := .Get 0 -}}
+{{- $fullPath := printf "content/%s.rst" $path -}}
+{{- $resource := resources.Get $fullPath -}}
+{{- $content := "" -}}
+
+{{- if $resource -}}
+    {{- $content = $resource.Content -}}
+{{- else -}}
+    {{/* Fallback: try reading directly from file system */}}
+    {{- $content = readFile $fullPath -}}
+    {{- if not $content -}}
+        {{- errorf "RST shortcode: File not found in assets/%s or directly in the file system at %s on page %s" $fullPath $fullPath .Page.RelPermalink -}}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <strong>RST Error:</strong> File "{{ $fullPath }}" not found.
+        </div>
+    {{- end -}}
+{{- end -}}
+
+{{- if $content -}}
+    {{- $opts := dict "markup" "rst" -}}
+    {{- $rendered := .Page.RenderString $opts $content -}}
+    {{- $rendered | safeHTML -}}
+{{- end -}}

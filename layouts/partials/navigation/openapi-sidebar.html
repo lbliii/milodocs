@@ -1,0 +1,141 @@
+{{- $apiData := .Params.api_data -}}
+
+{{- if not $apiData -}}
+  <!-- Fallback to regular sidebar if no API data -->
+  {{ partial "navigation/sidebar-left.html" . }}
+  {{ return }}
+{{- end -}}
+
+<!-- Mobile navigation toggle -->
+<button id="mobileNavToggle" class="fixed top-4 left-4 z-50 md:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+</button>
+
+<!-- Mobile navigation overlay -->
+<div id="mobileNavOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" data-component="navigation-mobile-overlay"></div>
+
+<aside id="sidebar-left" class="sidebar-container fixed md:sticky left-0 top-0 md:top-16 z-40 h-full md:h-[calc(100vh-4rem)] w-80 md:w-1/5 md:max-w-80 shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:flex" data-component="openapi-sidebar">
+    <!-- Mobile header -->
+    <div class="sidebar-header flex md:hidden items-center justify-between p-4">
+        <h2 class="text-lg font-semibold">API Reference</h2>
+        <button id="closeMobileNav" class="sidebar-close-btn p-2 rounded-lg" aria-label="Close navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+    
+    <div id="linkTree" class="pt-4 md:pt-4 px-4 md:px-0 h-[calc(100vh-4rem)] md:h-full overflow-y-auto w-full">
+        <!-- API Info Section -->
+        <div class="openapi-sidebar-section">
+            <div class="openapi-sidebar-header">
+                <h3 class="openapi-sidebar-title">{{ $apiData.Info.Title | default "API Reference" }}</h3>
+                {{ with $apiData.Info.Version }}
+                <span class="openapi-sidebar-version">v{{ . }}</span>
+                {{ end }}
+            </div>
+            {{ with $apiData.Info.Description }}
+            <p class="openapi-sidebar-description">{{ . }}</p>
+            {{ end }}
+        </div>
+
+        <!-- Quick Links -->
+        <div class="openapi-sidebar-section">
+            <ul class="openapi-sidebar-nav">
+                {{ if $apiData.Info }}
+                <li class="openapi-sidebar-nav-item">
+                    <a href="#overview" class="openapi-sidebar-link" data-scroll-target="overview">
+                        <span class="openapi-sidebar-link-text">Overview</span>
+                    </a>
+                </li>
+                {{ end }}
+                
+                {{ if $apiData.Servers }}
+                <li class="openapi-sidebar-nav-item">
+                    <a href="#servers" class="openapi-sidebar-link" data-scroll-target="servers">
+                        <span class="openapi-sidebar-link-text">Servers</span>
+                    </a>
+                </li>
+                {{ end }}
+                
+                {{ if $apiData.Paths }}
+                <li class="openapi-sidebar-nav-item">
+                    <a href="#endpoint-groups" class="openapi-sidebar-link" data-scroll-target="endpoint-groups">
+                        <span class="openapi-sidebar-link-text">Endpoint Groups</span>
+                    </a>
+                </li>
+                {{ end }}
+                
+                {{ if $apiData.Components }}
+                <li class="openapi-sidebar-nav-item">
+                    <a href="#components" class="openapi-sidebar-link" data-scroll-target="components">
+                        <span class="openapi-sidebar-link-text">Components</span>
+                    </a>
+                </li>
+                {{ end }}
+                
+                {{ if $apiData.Security }}
+                <li class="openapi-sidebar-nav-item">
+                    <a href="#security" class="openapi-sidebar-link" data-scroll-target="security">
+                        <span class="openapi-sidebar-link-text">Security</span>
+                    </a>
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+
+        <!-- Hugo Generated Pages Navigation -->
+        {{ if .Pages }}
+        <div class="openapi-sidebar-section">
+            <div class="openapi-sidebar-section-header">
+                <h4>API Endpoints</h4>
+            </div>
+            
+            <ul class="openapi-sidebar-endpoints">
+                {{/* Iterate through generated tag section pages */}}
+                {{ range .Pages.ByTitle }}
+                    {{ if eq .Kind "section" }}
+                    <li class="openapi-sidebar-tag-group">
+                        <div class="openapi-sidebar-tag-header">
+                            <button class="openapi-sidebar-tag-toggle" 
+                                    data-target="tag-{{ .File.BaseFileName | urlize }}-sidebar"
+                                    aria-expanded="true"
+                                    aria-controls="tag-{{ .File.BaseFileName | urlize }}-sidebar">
+                                <svg class="openapi-sidebar-chevron" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <a href="{{ .RelPermalink }}" class="openapi-sidebar-tag-name">{{ .Title }}</a>
+                        </div>
+                        
+                        <ul class="openapi-sidebar-endpoints-list" id="tag-{{ .File.BaseFileName | urlize }}-sidebar">
+                            {{/* Show individual endpoint pages within this tag */}}
+                            {{ range .Pages.ByTitle }}
+                                {{ if eq .Kind "page" }}
+                                {{ $endpointData := .Params.endpoint }}
+                                <li class="openapi-sidebar-endpoint">
+                                    <a href="{{ .RelPermalink }}" 
+                                       class="openapi-sidebar-endpoint-link" 
+                                       data-method="{{ upper $endpointData.method }}">
+                                        <span class="openapi-sidebar-method openapi-sidebar-method--{{ lower $endpointData.method }}">
+                                            {{ upper $endpointData.method }}
+                                        </span>
+                                        <span class="openapi-sidebar-endpoint-path">{{ $endpointData.path }}</span>
+                                        {{ with $endpointData.operation.Summary }}
+                                        <span class="openapi-sidebar-endpoint-summary">{{ . }}</span>
+                                        {{ end }}
+                                    </a>
+                                </li>
+                                {{ end }}
+                            {{ end }}
+                        </ul>
+                    </li>
+                    {{ end }}
+                {{ end }}
+            </ul>
+        </div>
+        {{ end }}
+    </div>
+</aside>

@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+
+
+When refactoring or enhancing anything, comment out the old and replace it instead of tacking on "enhanced-" or "new-" to anything. this is messy and bloats our code.
+
+We already have an active hugo preview at localhost:1313, you do not need to trigger a new one
+
+do not update main.css -- it is updated automatically; we are running pnpm watch-tw

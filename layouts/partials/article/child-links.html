@@ -1,0 +1,37 @@
+{{/*
+  Child Links Component
+  Renders child page links as pills with consistent positioning
+  
+  Params:
+  - .page: The parent page to get children from
+  - .count: Maximum number of child links to show
+*/}}
+
+{{- $page := .page -}}
+{{- $count := .count | default 10 -}}
+
+{{- if and (eq $page.BundleType "branch") $page.Pages -}}
+<div class="child-links-container" data-component="child-links">
+  <ul class="child-links-list">
+    {{- range first $count $page.Pages -}}
+      {{- if not .Params.hidden -}}
+        <li class="child-link-item">
+          <a href="{{ with .Params.externalRedirect }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" 
+             class="child-link-pill">
+            {{- if eq .Parent.Title "Run Commands" -}}
+              {{- with replace .Title "pachctl " "" -}}{{ . }}{{- end -}}
+            {{- else -}}
+              {{- if .Params.linkTitle -}}
+                {{- .Params.linkTitle -}}
+              {{- else -}}
+                {{- .Title | truncate 22 -}}
+              {{- end -}}
+            {{- end -}}
+          </a>
+        </li>
+      {{- end -}}
+    {{- end -}}
+  </ul>
+</div>
+
+{{- end -}}

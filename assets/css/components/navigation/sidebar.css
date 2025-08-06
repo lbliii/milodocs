@@ -1,0 +1,271 @@
+/* Sidebar Navigation - Main navigation sidebar with responsive behavior */
+
+/* Sidebar Container Styling */
+.sidebar-container {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-inline-end: none;
+}
+
+/* Desktop sidebar styling */
+@container sidebar (min-width: 768px) {
+  .sidebar-container {
+    background-color: transparent;
+    border-inline-end: none;
+    /* Ensure it's always visible on desktop */
+    transform: translateX(0) !important;
+    position: sticky !important;
+    display: flex !important;
+  }
+}
+
+/* Mobile sidebar styling */
+@container sidebar (max-width: 767px) {
+  .sidebar-container {
+    /* Ensure it starts hidden on mobile */
+    position: fixed;
+    z-index: 40;
+    width: 20rem; /* w-80 equivalent */
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    /* ✅ FIXED: Use animation tokens */
+    transition: transform var(--timing-medium) var(--easing-standard);
+  }
+  
+  .sidebar-container.translate-x-0 {
+    transform: translateX(0) !important;
+  }
+}
+
+/* Mobile Header Styling - Force hide on desktop */
+.sidebar-header {
+  border-bottom: none;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  display: flex;
+}
+
+/* Force hide sidebar header on desktop */
+@container sidebar (min-width: 768px) {
+  .sidebar-header {
+    display: none !important;
+  }
+}
+
+/* Fallback: Hide mobile navigation elements on desktop */
+@media (min-width: 768px) {
+  .sidebar-header {
+    display: none !important;
+  }
+  
+  #mobileNavToggle {
+    display: none !important;
+  }
+}
+
+/* Ensure sidebar starts hidden on mobile */
+@container sidebar (max-width: 767px) {
+  .sidebar-container:not(.translate-x-0) {
+    transform: translateX(-100%) !important;
+  }
+}
+
+.sidebar-close-btn {
+  color: var(--color-text-secondary);
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.sidebar-close-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-lg);
+}
+
+.sidebar-close-btn:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* LinkTree Styling */
+#linkTree {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+/* Desktop linkTree padding adjustment */
+@container sidebar (min-width: 768px) {
+  #linkTree {
+    padding-inline-start: 4px; /* Add space for focus ring to prevent clipping */
+    padding-inline-end: 0;
+  }
+}
+
+/* Mobile linkTree styling */
+@container sidebar (max-width: 767px) {
+  #linkTree {
+    padding: 1rem;
+  }
+}
+
+/* Prevent layout shift during initialization */
+#linkTree:not(.initialized) {
+  opacity: 0;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+#linkTree.initialized {
+  opacity: 1;
+}
+
+/* ✅ NEW ANIMATION SYSTEM - Use data attributes for consistent behavior */
+/* Ensure animations only work after initialization */
+#linkTree.initialized .nested-content[data-collapse-state="expanded"] {
+  max-height: var(--collapse-height-expanded);
+  opacity: var(--collapse-opacity-expanded);
+  overflow: visible; /* Allow content to be fully visible */
+}
+
+#linkTree.initialized .nested-content[data-collapse-state="collapsed"] {
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
+}
+
+#linkTree.initialized .nested-content[data-collapse-state="transitioning"] {
+  overflow: hidden; /* Prevent content spillage during animation */
+}
+
+/* Sidebar Navigation Components - Cohesive Design */
+.sidebar-item {
+  @apply flex items-center rounded-md transition-all duration-200;
+  background-color: transparent;
+  margin: 1px 0;
+}
+
+.sidebar-item:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.sidebar-item__link {
+  @apply flex items-center flex-grow p-2 transition-all duration-200 
+         focus:outline-none focus:ring-2 rounded-l-md;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  --tw-ring-color: var(--color-brand);
+  min-height: 2.5rem; /* Consistent touch target */
+}
+
+.sidebar-item__link:hover,
+.sidebar-item__link:focus {
+  color: var(--color-brand);
+}
+
+.sidebar-item__link--active {
+  color: var(--color-brand);
+  background-color: var(--color-hover);
+}
+
+.sidebar-item__icon {
+  @apply w-5 h-5 mr-3 flex-shrink-0;
+}
+
+.sidebar-item__text {
+  @apply flex-grow;
+}
+
+.sidebar-item__expander {
+  @apply p-2 transition-all duration-200 focus:outline-none focus:ring-2 
+         rounded-r-md flex items-center justify-center;
+  color: var(--color-text-secondary);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  --tw-ring-color: var(--color-brand);
+}
+
+.sidebar-item__expander:hover,
+.sidebar-item__expander:focus {
+  color: var(--color-brand);
+  background-color: var(--color-surface-active);
+}
+
+.sidebar-item__chevron {
+  @apply w-4 h-4 transition-transform duration-200;
+}
+
+/* Level-specific styling */
+.sidebar-item--level-1 .sidebar-item__text {
+  @apply text-lg font-brand font-bold;
+}
+
+.sidebar-item--level-1 {
+  @apply mb-1;
+}
+
+.sidebar-item--level-2 {
+  @apply ml-4;
+}
+
+.sidebar-item--level-2 .sidebar-item__text {
+  @apply font-normal text-base;
+}
+
+.sidebar-item--level-3 {
+  @apply ml-6;
+}
+
+.sidebar-item--level-3 .sidebar-item__text {
+  @apply font-light text-sm;
+}
+
+.sidebar-item--level-4 {
+  @apply ml-8;
+}
+
+.sidebar-item--level-4 .sidebar-item__text {
+  @apply text-sm;
+}
+
+.sidebar-item--level-default {
+  @apply ml-10;
+}
+
+.sidebar-item--level-default .sidebar-item__text {
+  @apply text-xs;
+}
+
+/* Ensure text-brand utility works with sidebar items */
+.sidebar-item__link.text-brand {
+  color: var(--color-brand) !important;
+}
+
+/* Enhanced active state for the whole item */
+.sidebar-item:has(.sidebar-item__link--active) {
+  background-color: var(--color-hover);
+}
+
+/* Right Sidebar Styling - Remove background in dark mode */
+#sidebar-right {
+  background: transparent;
+}
+
+.dark #sidebar-right {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Remove chat controls background in dark mode */
+.dark .chat-controls {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}

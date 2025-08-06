@@ -1,0 +1,440 @@
+/* OpenAPI Overview - Modern Info-Dense Layout */
+
+/* ==========================================================================
+   Overview Section
+   ========================================================================== */
+
+.openapi-overview {
+  padding: 1.5rem 0;
+  margin-bottom: 1rem;
+}
+
+/* Header */
+.overview-header {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.overview-title {
+  font-family: var(--font-family-brand);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+/* Enhanced gradient text with fallback */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .overview-title {
+    background: linear-gradient(135deg, var(--color-brand, #3b82f6), var(--color-accent, #8b5cf6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.overview-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Content Container */
+.overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ==========================================================================
+   Stats Bar - Horizontal info-dense layout
+   ========================================================================== */
+
+.overview-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.overview-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 60px;
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  min-width: 140px;
+}
+
+.overview-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--color-brand-rgb), 0.03);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.overview-stat:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-brand);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(var(--color-brand-rgb), 0.1);
+}
+
+.overview-stat:hover::before {
+  opacity: 1;
+}
+
+/* Stat Icon - Container-based sizing following theme patterns */
+.overview-stat__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG naturally fills container */
+.overview-stat__icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.overview-stat:hover .overview-stat__icon {
+  color: var(--color-brand);
+}
+
+/* Stat Content */
+.overview-stat__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.overview-stat__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  line-height: 1;
+}
+
+.overview-stat__value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* Stat Variants */
+.overview-stat--primary {
+  background: linear-gradient(135deg, var(--color-brand), var(--color-accent));
+  color: var(--color-text-inverse);
+  border-color: transparent;
+}
+
+.overview-stat--primary .overview-stat__icon,
+.overview-stat--primary .overview-stat__label,
+.overview-stat--primary .overview-stat__value {
+  color: currentColor;
+}
+
+.overview-stat--primary .overview-stat__label {
+  opacity: 0.8;
+}
+
+.overview-stat--primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 20px rgba(var(--color-brand-rgb), 0.25),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   Description Section
+   ========================================================================== */
+
+.overview-description {
+  padding: 1rem 1.25rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--color-brand);
+}
+
+.overview-description p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   Documentation Links
+   ========================================================================== */
+
+.overview-documentation {
+  margin-top: 0.5rem;
+}
+
+.overview-documentation__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.overview-documentation__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.overview-doc-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.overview-doc-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--color-brand-rgb), 0.03);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.overview-doc-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-brand);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.overview-doc-link:hover::before {
+  opacity: 1;
+}
+
+.overview-doc-link__icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG naturally fills container */
+.overview-doc-link__icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.overview-doc-link:hover .overview-doc-link__icon {
+  color: var(--color-brand);
+}
+
+.overview-doc-link__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.overview-doc-link__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.overview-doc-link:hover .overview-doc-link__title {
+  color: var(--color-brand);
+}
+
+.overview-doc-link__description {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.4;
+}
+
+.overview-doc-link__arrow {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG naturally fills container */
+.overview-doc-link__arrow svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.overview-doc-link:hover .overview-doc-link__arrow {
+  color: var(--color-brand);
+  transform: translateX(2px) translateY(-2px);
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .overview-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .overview-stat {
+    min-width: unset;
+  }
+  
+  .overview-documentation__grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .overview-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .overview-stat {
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    min-height: 50px;
+  }
+  
+  .overview-stat__icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .overview-doc-link {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+}
+
+/* ==========================================================================
+   :has() Content-Aware Overview Enhancements
+   ========================================================================== */
+
+/* Overview with documentation gets enhanced layout */
+.openapi-overview:has(.overview-documentation) {
+  padding-bottom: 2rem;
+}
+
+.openapi-overview:has(.overview-documentation) .overview-stats {
+  margin-bottom: 2rem;
+}
+
+/* Stats container adapts based on number of stats */
+.overview-stats:has(.overview-stat:nth-child(4)) {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.overview-stats:has(.overview-stat:nth-child(3)) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.overview-stats:has(.overview-stat:nth-child(2)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Enhanced hover effects for overview with documentation */
+.openapi-overview:has(.overview-documentation) .overview-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Documentation section gets enhanced styling when stats are present */
+.openapi-overview:has(.overview-stats) .overview-documentation {
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Single stat gets special treatment */
+.overview-stats:has(.overview-stat:only-child) .overview-stat {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* API type specific enhancements */
+[data-api-type="REST"] .overview-stat--secondary {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(155, 89, 182, 0.1));
+  border-color: rgba(52, 152, 219, 0.2);
+}
+
+[data-api-type="GraphQL"] .overview-stat--secondary {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(230, 126, 34, 0.1));
+  border-color: rgba(231, 76, 60, 0.2);
+}
+
+/* Maturity-based styling */
+[data-maturity="stable"] .overview-stat--accent {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+  border-color: rgba(46, 204, 113, 0.2);
+}
+
+[data-maturity="beta"] .overview-stat--accent {
+  background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(243, 156, 18, 0.1));
+  border-color: rgba(241, 196, 15, 0.2);
+}
+
+[data-maturity="alpha"] .overview-stat--warning {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+  border-color: rgba(231, 76, 60, 0.2);
+}

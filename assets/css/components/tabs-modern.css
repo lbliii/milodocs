@@ -1,0 +1,195 @@
+/* Modern Tabs with :has selector - CSS-only solution */
+
+/* ==========================================================================
+   Modern Tabs Component using :has selector
+   ========================================================================== */
+
+.tabs-modern {
+  margin: 1.5rem 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Tab buttons container */
+.tabs-modern__nav {
+  display: flex;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs-modern__nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual tab buttons */
+.tabs-modern__button {
+  flex-shrink: 0;
+  padding: 0.875rem 1.5rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard);
+  position: relative;
+  white-space: nowrap;
+}
+
+.tabs-modern__button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-brand);
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tabs-modern__button:hover {
+  color: var(--color-text-primary);
+  background: rgba(var(--color-brand-rgb), 0.05);
+}
+
+/* Active tab styling using :has */
+.tabs-modern:has(.tabs-modern__radio:checked) .tabs-modern__button[for]:has(+ .tabs-modern__radio:checked),
+.tabs-modern__button:has(+ .tabs-modern__radio:checked) {
+  color: var(--color-brand);
+  background: var(--color-surface);
+  font-weight: 600;
+}
+
+.tabs-modern__button:has(+ .tabs-modern__radio:checked)::after {
+  transform: scaleX(1);
+}
+
+/* Hidden radio inputs for state management */
+.tabs-modern__radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Tab content container */
+.tabs-modern__content {
+  background: var(--color-surface);
+  min-height: 200px;
+}
+
+/* Individual content panels */
+.tabs-modern__panel {
+  padding: 2rem;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    opacity var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
+  transform: translateY(10px);
+}
+
+/* Show active panel using :has */
+.tabs-modern:has(.tabs-modern__radio:nth-of-type(1):checked) .tabs-modern__panel:nth-of-type(1),
+.tabs-modern:has(.tabs-modern__radio:nth-of-type(2):checked) .tabs-modern__panel:nth-of-type(2),
+.tabs-modern:has(.tabs-modern__radio:nth-of-type(3):checked) .tabs-modern__panel:nth-of-type(3),
+.tabs-modern:has(.tabs-modern__radio:nth-of-type(4):checked) .tabs-modern__panel:nth-of-type(4),
+.tabs-modern:has(.tabs-modern__radio:nth-of-type(5):checked) .tabs-modern__panel:nth-of-type(5) {
+  opacity: 1;
+  max-height: 50rem;
+  transform: translateY(0);
+}
+
+/* Enhanced content styling */
+.tabs-modern__panel > *:first-child {
+  margin-top: 0;
+}
+
+.tabs-modern__panel > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Focus styles for accessibility */
+.tabs-modern__button:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  background: rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Animation for better UX */
+@keyframes tabs-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tabs-modern__panel {
+  animation: tabs-fade-in 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .tabs-modern__nav {
+    flex-direction: column;
+  }
+  
+  .tabs-modern__button {
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-primary);
+  }
+  
+  .tabs-modern__button::after {
+    left: 0;
+    right: auto;
+    width: 3px;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    transform: scaleY(0);
+  }
+  
+  .tabs-modern__button:has(+ .tabs-modern__radio:checked)::after {
+    transform: scaleY(1);
+  }
+  
+  .tabs-modern__panel {
+    padding: 1.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .tabs-modern {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Print styles */
+@media print {
+  .tabs-modern__nav {
+    display: none;
+  }
+  
+  .tabs-modern__panel {
+    opacity: 1 !important;
+    max-height: none !important;
+    transform: none !important;
+    page-break-inside: avoid;
+  }
+}

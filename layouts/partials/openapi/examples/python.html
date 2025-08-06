@@ -1,0 +1,35 @@
+{{- $method := .method -}}
+{{- $path := .path -}}
+{{- $operation := .operation -}}
+{{- $spec := .spec -}}
+
+{{- /* Build the base URL from servers */ -}}
+{{- $baseUrl := "https://api.example.com" -}}
+{{- if $spec.Servers -}}
+  {{- $baseUrl = (index $spec.Servers 0).URL -}}
+{{- end -}}
+
+import requests
+{{ if $operation.RequestBody }}import json
+{{ end }}
+url = "{{ $baseUrl }}{{ $path }}"
+
+{{ if $operation.Parameters }}{{ $hasQuery := false }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}{{ if not $hasQuery }}params = {
+{{ $hasQuery = true }}{{ end }}{{ if $param.Example }}    "{{ $param.Name }}": "{{ $param.Example }}",
+{{ end }}{{ end }}{{ end }}{{ if $hasQuery }}}
+
+{{ end }}{{ end }}headers = {
+{{ if $operation.Security }}    "Authorization": "Bearer YOUR_TOKEN",
+{{ end }}{{ if $operation.RequestBody }}    "Content-Type": "application/json"{{ else if or (eq $method "POST") (eq $method "PUT") (eq $method "PATCH") }}    "Content-Type": "application/json"{{ end }}
+}
+
+{{ if $operation.RequestBody }}data = {
+{{ range $mediaType, $content := $operation.RequestBody.Content }}{{ if eq $mediaType "application/json" }}{{ with $content.Example }}{{ . | jsonify (dict "indent" "    ") }}{{ else }}{{ with $content.Schema }}{{ if eq .Type "object" }}{{ partial "openapi/examples/json-example.html" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+}
+
+{{ end }}try:
+    response = requests.{{ lower $method }}(url{{ if $operation.Parameters }}{{ range $param := $operation.Parameters }}{{ if eq $param.In "query" }}, params=params{{ break }}{{ end }}{{ end }}{{ end }}, headers=headers{{ if $operation.RequestBody }}, json=data{{ end }})
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as error:
+    print(f"Error: {error}")

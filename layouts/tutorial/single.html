@@ -14,8 +14,116 @@
 {{- end -}}
 
 {{- define "content" -}}
-    <div id="articleContent" class="p-4">
-    {{ .Content }}
+    <!-- Enhanced Tutorial Step Content -->
+    <div id="articleContent" class="tutorial-step-content">
+        <!-- Step content wrapper with enhanced styling -->
+        <div class="tutorial-step-wrapper">
+            {{/* Only show frontmatter title if content doesn't start with H1 */}}
+            {{- $rawContent := .RawContent -}}
+            {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
+            {{- if not $startsWithH1 -}}
+              <header class="mb-8 not-prose">
+                <h1 class="text-3xl font-bold mb-4" style="color: var(--color-text-primary);">{{ .Title }}</h1>
+                {{- with .Description -}}
+                  <div class="article-description not-prose mb-8 flex items-center gap-6">
+                    <div class="w-1 h-16 rounded-full flex-shrink-0" style="background-color: var(--color-brand); opacity: 0.3;"></div>
+                    <div class="flex-1">
+                      <p class="text-xl font-light leading-relaxed" style="color: var(--color-text-secondary); font-weight: 300;">{{ . }}</p>
+                    </div>
+                  </div>
+                {{- end -}}
+              </header>
+            {{- end -}}
+            
+            {{ .Content }}
+        </div>
+        
+        <!-- Step completion checklist (if defined in frontmatter) -->
+        {{with .Params.checklistItems}}
+        <div class="step-validation">
+            <div class="validation-checklist">
+                <h4>Complete these tasks to finish this step:</h4>
+                {{range .}}
+                <label class="validation-item">
+                    <input type="checkbox" class="validation-checkbox" data-checklist-item="{{.}}">
+                    <span class="validation-text">{{.}}</span>
+                </label>
+                {{end}}
+            </div>
+            <button class="btn btn--primary validate-step" disabled aria-disabled="true" aria-describedby="complete-step-disabled-reason" data-action="complete-step">
+                Mark Step Complete
+            </button>
+            <span id="complete-step-disabled-reason" class="sr-only">
+                You must complete all tasks in the checklist before marking this step as complete.
+            </span>
+        </div>
+        {{end}}
+        
+        <!-- Key takeaways section (if defined) -->
+        {{with .Params.keyTakeaways}}
+        <div class="tutorial-section">
+            <button class="section-header" aria-expanded="false">
+                <h3 class="section-title">Key Takeaways</h3>
+                <svg class="section-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div class="section-content" hidden>
+                <ul class="list-disc list-inside space-y-2">
+                    {{range .}}
+                    <li class="text-text-primary">{{.}}</li>
+                    {{end}}
+                </ul>
+            </div>
+        </div>
+        {{end}}
+        
+        <!-- Troubleshooting section (if defined) -->
+        {{with .Params.troubleshooting}}
+        <div class="tutorial-section">
+            <button class="section-header" aria-expanded="false">
+                <h3 class="section-title">Troubleshooting</h3>
+                <svg class="section-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div class="section-content" hidden>
+                {{range .}}
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-4">
+                    <h5 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">{{.issue}}</h5>
+                    <p class="text-yellow-700 dark:text-yellow-300">{{.solution}}</p>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+        
+        <!-- Related resources (if defined) -->
+        {{with .Params.relatedResources}}
+        <div class="tutorial-section">
+            <button class="section-header" aria-expanded="false">
+                <h3 class="section-title">Related Resources</h3>
+                <svg class="section-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div class="section-content" hidden>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {{range .}}
+                    <a href="{{.url}}" class="flex items-center p-4 bg-surface border border-border-primary rounded-lg hover:border-brand transition-colors duration-200" target="_blank" rel="noopener noreferrer">
+                        <svg class="w-5 h-5 mr-3 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                        </svg>
+                        <div>
+                            <h6 class="font-semibold text-text-primary">{{.title}}</h6>
+                            <p class="text-sm text-text-secondary">{{.description}}</p>
+                        </div>
+                    </a>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        {{end}}
     </div>
 {{- end -}}
 

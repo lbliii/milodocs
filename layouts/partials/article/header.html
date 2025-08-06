@@ -1,0 +1,25 @@
+{{/* Article Header - Parent component managing breadcrumbs and metadata */}}
+{{- $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
+
+<div class="article-header" data-component="article-header">
+  <div class="article-header__navigation">
+    {{/* Pure breadcrumbs navigation */}}
+    {{- partial "navigation/breadcrumbs.html" . -}}
+    
+    <div class="article-header__actions">
+      {{/* Copy Page Component */}}
+      {{- partial "article/copy-page.html" . -}}
+    </div>
+  </div>
+
+  {{/* Collapsible metadata panel */}}
+  {{- if $hasMetadata -}}
+  <div 
+    id="article-metadata-panel" 
+    class="article-header__metadata-panel"
+    aria-hidden="true"
+    data-metadata-panel>
+    {{- partial "article/metadata.html" . -}}
+  </div>
+  {{- end -}}
+</div>

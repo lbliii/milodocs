@@ -1,0 +1,63 @@
+logo: '/images/logo.png'
+names:
+  organization: 'Enterprise Corp'
+  product: 'Enterprise Documentation Platform'
+version: 
+  major: 0
+  minor: 0
+  patch: 3
+
+search:
+  enabled: true
+
+# AI Chat and Summarization Features
+openai:
+  enabled: false  # Set to true and configure API key for AI features
+  api_key: ""     # Your OpenAI API key (use environment variable)
+  model: "gpt-4"  # Model to use for chat/summarization
+
+# Footer settings
+footer:
+  visible: true
+  show: 
+    logo: true
+    links: true
+    copyright: true
+    social: false
+
+# Help and Support
+help:
+  display: true
+
+article:
+  childArticles:
+    display: true
+    count: 7 
+    titleTrunc: 90
+    descTrunc: 90
+  nextPrev: 
+    display: true
+    trunc: 35
+  chat: 
+    display: true
+  # Sidebar TOC (right sidebar)
+  toc: 
+    display: true
+  # Inline components (within article content)
+  inlineToc:
+    display: true
+    showProgress: true
+  pageResources:
+    display: true
+  # Content status warnings (draft and expiry alerts)
+  statusWarnings:
+    display: true
+  # Enhanced metadata section (dates, author, reading time, word count)
+  metadata:
+    display: true
+  # Related content section (shows related pages in same section)
+  relatedContent:
+    display: true
+
+# Development & Debug Settings
+debug: false  # Set to true to enable enhanced debugging

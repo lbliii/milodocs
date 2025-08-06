@@ -1,0 +1,317 @@
+/* 🎯 Universal Elevation System
+ * ==============================
+ * 
+ * This file centralizes all box-shadow patterns to create a consistent
+ * elevation system across the theme. Based on Material Design principles
+ * but adapted for our brand aesthetic.
+ */
+
+:root {
+  /* ✨ ELEVATION LEVELS (0-24dp equivalent) */
+  --elevation-0: none;
+  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.1);
+  --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.15);
+  
+  /* ✨ INTERACTIVE ELEVATION (hover states) */
+  --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.15);
+  --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.15);
+  --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.2);
+  
+  /* ✨ BRAND-COLORED ELEVATIONS */
+  --elevation-brand-subtle: 0 2px 8px rgba(var(--color-brand-rgb), 0.1);
+  --elevation-brand-medium: 0 4px 16px rgba(var(--color-brand-rgb), 0.15);
+  --elevation-brand-strong: 0 8px 24px rgba(var(--color-brand-rgb), 0.2);
+  --elevation-brand-glow: 0 0 20px rgba(var(--color-brand-rgb), 0.15);
+  --elevation-brand-focus: 0 0 0 2px rgba(var(--color-brand-rgb), 0.2);
+  
+  /* ✨ SPECIALIZED ELEVATIONS */
+  --elevation-inset: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  --elevation-inset-deep: inset 0 2px 6px rgba(0, 0, 0, 0.15);
+  --elevation-outline: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --elevation-outline-brand: 0 0 0 1px var(--color-brand);
+  
+  /* ✨ ERROR/WARNING/SUCCESS ELEVATIONS */
+  --elevation-error: 0 4px 12px rgba(239, 68, 68, 0.2);
+  --elevation-warning: 0 4px 12px rgba(245, 158, 11, 0.2);
+  --elevation-success: 0 4px 12px rgba(16, 185, 129, 0.2);
+  --elevation-info: 0 4px 12px rgba(59, 130, 246, 0.2);
+  
+  /* ✨ OVERLAYS AND MODALS */
+  --elevation-overlay: 0 24px 48px rgba(0, 0, 0, 0.3);
+  --elevation-modal: 0 32px 64px rgba(0, 0, 0, 0.4);
+  --elevation-dropdown: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --elevation-tooltip: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 🌙 DARK MODE ELEVATION ADJUSTMENTS */
+.dark {
+  /* Stronger shadows for dark mode */
+  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.6);
+  --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.7);
+  
+  /* Enhanced hover states for dark mode */
+  --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.6);
+  --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.6);
+  --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.7);
+  --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.8);
+  
+  /* Enhanced brand elevations for dark mode */
+  --elevation-brand-subtle: 0 2px 8px rgba(var(--color-brand-rgb), 0.15);
+  --elevation-brand-medium: 0 4px 16px rgba(var(--color-brand-rgb), 0.2);
+  --elevation-brand-strong: 0 8px 24px rgba(var(--color-brand-rgb), 0.25);
+  --elevation-brand-glow: 0 0 20px rgba(var(--color-brand-rgb), 0.25);
+  --elevation-brand-focus: 0 0 0 2px rgba(var(--color-brand-rgb), 0.3);
+  
+  /* Enhanced overlay elevations for dark mode */
+  --elevation-overlay: 0 24px 48px rgba(0, 0, 0, 0.8);
+  --elevation-modal: 0 32px 64px rgba(0, 0, 0, 0.9);
+  --elevation-dropdown: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --elevation-tooltip: 0 4px 12px rgba(0, 0, 0, 0.7);
+}
+
+/* ✅ ELEVATION UTILITY CLASSES
+ * =============================
+ * Apply these classes for consistent elevation
+ */
+
+.elevation-0 { box-shadow: var(--elevation-0); }
+.elevation-1 { box-shadow: var(--elevation-1); }
+.elevation-2 { box-shadow: var(--elevation-2); }
+.elevation-3 { box-shadow: var(--elevation-3); }
+.elevation-4 { box-shadow: var(--elevation-4); }
+.elevation-6 { box-shadow: var(--elevation-6); }
+.elevation-8 { box-shadow: var(--elevation-8); }
+.elevation-12 { box-shadow: var(--elevation-12); }
+.elevation-16 { box-shadow: var(--elevation-16); }
+.elevation-24 { box-shadow: var(--elevation-24); }
+
+/* Hover elevation classes */
+.elevation-hover-1:hover { box-shadow: var(--elevation-hover-1); }
+.elevation-hover-2:hover { box-shadow: var(--elevation-hover-2); }
+.elevation-hover-3:hover { box-shadow: var(--elevation-hover-3); }
+.elevation-hover-4:hover { box-shadow: var(--elevation-hover-4); }
+.elevation-hover-6:hover { box-shadow: var(--elevation-hover-6); }
+.elevation-hover-8:hover { box-shadow: var(--elevation-hover-8); }
+
+/* Brand elevation classes */
+.elevation-brand-subtle { box-shadow: var(--elevation-brand-subtle); }
+.elevation-brand-medium { box-shadow: var(--elevation-brand-medium); }
+.elevation-brand-strong { box-shadow: var(--elevation-brand-strong); }
+.elevation-brand-glow { box-shadow: var(--elevation-brand-glow); }
+
+/* Focus elevation */
+.elevation-focus:focus-visible { 
+  box-shadow: var(--elevation-brand-focus);
+  outline: none;
+}
+
+/* ✅ COMPONENT-SPECIFIC ELEVATION MAPPINGS
+ * =========================================
+ * Semantic elevation assignments for common components
+ */
+
+/* Surface elements */
+.surface {
+  box-shadow: var(--elevation-0);
+}
+
+.surface-raised {
+  box-shadow: var(--elevation-1);
+}
+
+/* Cards */
+.card-flat {
+  box-shadow: var(--elevation-1);
+}
+
+.card-raised {
+  box-shadow: var(--elevation-2);
+}
+
+.card-elevated {
+  box-shadow: var(--elevation-4);
+}
+
+.card-floating {
+  box-shadow: var(--elevation-8);
+}
+
+/* Interactive cards with hover */
+.card-interactive {
+  box-shadow: var(--elevation-2);
+  transition: box-shadow var(--timing-medium) var(--easing-standard);
+}
+
+.card-interactive:hover {
+  box-shadow: var(--elevation-hover-4);
+}
+
+/* Buttons */
+.btn-flat {
+  box-shadow: var(--elevation-0);
+}
+
+.btn-raised {
+  box-shadow: var(--elevation-1);
+}
+
+.btn-floating {
+  box-shadow: var(--elevation-6);
+}
+
+.btn-raised:hover,
+.btn-floating:hover {
+  box-shadow: var(--elevation-hover-2);
+}
+
+/* Navigation */
+.nav-bar {
+  box-shadow: var(--elevation-2);
+}
+
+.nav-drawer {
+  box-shadow: var(--elevation-16);
+}
+
+.nav-tabs {
+  box-shadow: var(--elevation-1);
+}
+
+/* Overlays */
+.dropdown-menu {
+  box-shadow: var(--elevation-dropdown);
+}
+
+.modal-content {
+  box-shadow: var(--elevation-modal);
+}
+
+.tooltip {
+  box-shadow: var(--elevation-tooltip);
+}
+
+.popover {
+  box-shadow: var(--elevation-8);
+}
+
+/* Content sections */
+.content-section {
+  box-shadow: var(--elevation-1);
+}
+
+.featured-content {
+  box-shadow: var(--elevation-4);
+}
+
+.hero-section {
+  box-shadow: var(--elevation-8);
+}
+
+/* ✅ STATE-BASED ELEVATIONS
+ * ==========================
+ * Elevation changes based on component state
+ */
+
+/* Loading states get reduced elevation */
+[data-component-state="loading"] {
+  box-shadow: var(--elevation-1) !important;
+  opacity: var(--opacity-faded);
+}
+
+/* Error states get error elevation */
+[data-component-state="error"] {
+  box-shadow: var(--elevation-error) !important;
+}
+
+/* Focus states for accessibility */
+[data-component-state="focused"] {
+  box-shadow: var(--elevation-brand-focus) !important;
+}
+
+/* ✅ COMBINED ELEVATIONS
+ * =======================
+ * Multiple shadows for complex effects
+ */
+
+.elevation-layered {
+  box-shadow: 
+    var(--elevation-2),
+    var(--elevation-brand-glow);
+}
+
+.elevation-outlined {
+  box-shadow: 
+    var(--elevation-4),
+    var(--elevation-outline);
+}
+
+.elevation-brand-outlined {
+  box-shadow: 
+    var(--elevation-4),
+    var(--elevation-outline-brand);
+}
+
+/* ✅ PERFORMANCE OPTIMIZATIONS
+ * =============================
+ * Enable hardware acceleration for elements with elevation changes
+ */
+
+.elevation-animated {
+  will-change: box-shadow;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* ✅ ACCESSIBILITY ENHANCEMENTS
+ * ==============================
+ * High contrast and reduced motion support
+ */
+
+@media (prefers-contrast: high) {
+  /* Enhance shadows for better visibility */
+  :root {
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Remove shadow transitions for reduced motion */
+  .card-interactive,
+  .btn-raised,
+  .btn-floating,
+  .elevation-animated {
+    transition: none !important;
+  }
+}
+
+/* ✅ PRINT STYLES
+ * ================
+ * Remove shadows for print media
+ */
+
+@media print {
+  * {
+    box-shadow: none !important;
+  }
+}

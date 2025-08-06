@@ -1,0 +1,43 @@
+{{- $responses := .responses -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+{{ with $responses }}
+  <div class="components-section">
+    <h3 class="components-section-title">Response Objects</h3>
+    <div class="components-list">
+      {{ range $responseName, $response := . }}
+        {{ $sanitizedResponseName := $responseName | replace "/" "-" | replace "{" "" | replace "}" "" | replace ":" "" | replace "." "-" | replace " " "-" | urlize }}
+        {{ if eq $sanitizedResponseName "" }}{{ $sanitizedResponseName = "unnamed" }}{{ end }}
+        <div class="component-item" id="response-{{ $sanitizedResponseName }}">
+          <div class="component-header collapse__header" 
+               data-target="response-{{ $sanitizedResponseName }}-details"
+               role="button"
+               tabindex="0"
+               aria-expanded="false">
+            <div class="component-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <path d="M7 10l5 5 5-5"></path>
+                <path d="M12 15V3"></path>
+              </svg>
+            </div>
+            <div class="component-name">
+              <h4>{{ $responseName }}</h4>
+              <div class="component-description">{{ $response.description }}</div>
+            </div>
+            <div class="component-toggle">
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="component-details" id="response-{{ $sanitizedResponseName }}-details">
+            {{ partial "openapi/endpoint-responses.html" (dict "responses" (dict "200" $response) "spec" $spec) }}
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

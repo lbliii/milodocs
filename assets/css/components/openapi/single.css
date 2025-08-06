@@ -1,0 +1,288 @@
+/*
+ * OpenAPI Single Endpoint Page Styles
+ * Content-aware styling using :has() selectors
+ */
+
+/* =============================================================================
+   Base Single Page Layout
+   ============================================================================= */
+
+.api-endpoint {
+  /* Content-aware layout adjustments */
+  container-type: inline-size;
+  container-name: endpoint-page;
+}
+
+/* Override the hidden default - single pages should show endpoint details */
+.api-endpoint .endpoint-details {
+  display: block;
+}
+
+/* =============================================================================
+   Header Enhancements with :has()
+   ============================================================================= */
+
+/* Enhanced header when endpoint has both summary and description */
+.api-endpoint-header:has(.endpoint-description) {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(var(--color-brand-rgb), 0.02) 100%);
+  border-left: 4px solid rgba(var(--color-brand-rgb), 0.3);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+/* Method-specific header styling */
+.api-endpoint-header:has(.method-badge--get) {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(34, 197, 94, 0.02) 100%);
+  border-left-color: rgba(34, 197, 94, 0.3);
+}
+
+.api-endpoint-header:has(.method-badge--post) {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(59, 130, 246, 0.02) 100%);
+  border-left-color: rgba(59, 130, 246, 0.3);
+}
+
+.api-endpoint-header:has(.method-badge--put) {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(245, 158, 11, 0.02) 100%);
+  border-left-color: rgba(245, 158, 11, 0.3);
+}
+
+.api-endpoint-header:has(.method-badge--delete) {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(239, 68, 68, 0.02) 100%);
+  border-left-color: rgba(239, 68, 68, 0.3);
+}
+
+.api-endpoint-header:has(.method-badge--patch) {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(168, 85, 247, 0.02) 100%);
+  border-left-color: rgba(168, 85, 247, 0.3);
+}
+
+/* =============================================================================
+   Breadcrumb Enhancements
+   ============================================================================= */
+
+.api-endpoint-breadcrumb {
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.api-endpoint-breadcrumb a {
+  color: var(--color-brand);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.api-endpoint-breadcrumb a:hover {
+  color: var(--color-brand-dark);
+  text-decoration: underline;
+}
+
+/* =============================================================================
+   Content Area Enhancements with :has()
+   ============================================================================= */
+
+/* Enhanced spacing for endpoints with multiple sections */
+.api-endpoint-content:has(.endpoint-section:nth-child(n+3)) {
+  display: grid;
+  gap: 2rem;
+}
+
+/* Special layout for complex endpoints */
+.endpoint-item:has([data-has-parameters="true"]):has([data-has-request-body="true"]):has([data-has-responses="true"]) {
+  container-type: inline-size;
+}
+
+.endpoint-item:has([data-has-parameters="true"]):has([data-has-request-body="true"]):has([data-has-responses="true"]) .endpoint-details {
+  display: grid;
+  gap: 2.5rem;
+}
+
+/* Enhanced visual hierarchy for parameter-heavy endpoints */
+.endpoint-item:has([data-parameter-count]) {
+  /* Parameters count specific styling */
+}
+
+.endpoint-item:has([data-parameter-count="0"]) .endpoint-details {
+  /* Simplified layout for parameter-less endpoints */
+  gap: 1.5rem;
+}
+
+.endpoint-item:has([data-parameter-count^="1"]) .endpoint-section,
+.endpoint-item:has([data-parameter-count^="2"]) .endpoint-section,
+.endpoint-item:has([data-parameter-count^="3"]) .endpoint-section {
+  /* Enhanced styling for endpoints with 10+ parameters */
+  border: 1px solid rgba(var(--color-border-rgb), 0.5);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  background: rgba(var(--color-surface-rgb), 0.5);
+}
+
+/* =============================================================================
+   Section-Specific :has() Patterns
+   ============================================================================= */
+
+/* Parameters Section */
+.endpoint-details:has(.endpoint-parameters) {
+  /* Enhanced layout when parameters are present */
+}
+
+.endpoint-details:has(.endpoint-parameters .parameter-item:nth-child(n+5)) {
+  /* Special handling for parameter-heavy endpoints */
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@container endpoint-page (max-width: 768px) {
+  .endpoint-details:has(.endpoint-parameters .parameter-item:nth-child(n+5)) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Request Body Section */
+.endpoint-details:has(.endpoint-request-body) .endpoint-section {
+  border-left: 3px solid rgba(var(--color-brand-rgb), 0.2);
+  padding-left: 1rem;
+}
+
+/* Responses Section */
+.endpoint-details:has(.endpoint-responses) {
+  /* Enhanced styling when responses are present */
+}
+
+.endpoint-details:has(.endpoint-responses .response-item:nth-child(n+3)) {
+  /* Special handling for endpoints with many response types */
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(var(--color-success-rgb), 0.01) 100%);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+/* Security Section */
+.endpoint-details:has(.endpoint-security) {
+  /* Enhanced styling when security requirements are present */
+  border-top: 1px solid rgba(var(--color-border-rgb), 0.3);
+  padding-top: 2rem;
+}
+
+/* Code Examples Section */
+.endpoint-details:has(.endpoint-examples) {
+  /* Enhanced styling when code examples are present */
+}
+
+.endpoint-details:has(.endpoint-examples .example-tabs .tab-button:nth-child(n+4)) {
+  /* Special styling for endpoints with many code examples */
+  background: rgba(var(--color-accent-rgb), 0.02);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* =============================================================================
+   Method-Specific Page Styling
+   ============================================================================= */
+
+/* GET endpoints - Success/data focused */
+.api-endpoint[data-method="GET"] {
+  --endpoint-accent: rgba(34, 197, 94, 0.1);
+}
+
+.api-endpoint[data-method="GET"]:has([data-has-responses="true"]) {
+  background: linear-gradient(180deg, transparent 0%, var(--endpoint-accent) 100%);
+}
+
+/* POST endpoints - Creation focused */
+.api-endpoint[data-method="POST"] {
+  --endpoint-accent: rgba(59, 130, 246, 0.1);
+}
+
+.api-endpoint[data-method="POST"]:has([data-has-request-body="true"]) {
+  background: linear-gradient(180deg, transparent 0%, var(--endpoint-accent) 100%);
+}
+
+/* PUT/PATCH endpoints - Update focused */
+.api-endpoint[data-method="PUT"],
+.api-endpoint[data-method="PATCH"] {
+  --endpoint-accent: rgba(245, 158, 11, 0.1);
+}
+
+.api-endpoint[data-method="PUT"]:has([data-has-request-body="true"]):has([data-has-responses="true"]),
+.api-endpoint[data-method="PATCH"]:has([data-has-request-body="true"]):has([data-has-responses="true"]) {
+  background: linear-gradient(180deg, transparent 0%, var(--endpoint-accent) 100%);
+}
+
+/* DELETE endpoints - Deletion focused */
+.api-endpoint[data-method="DELETE"] {
+  --endpoint-accent: rgba(239, 68, 68, 0.1);
+}
+
+.api-endpoint[data-method="DELETE"]:has([data-has-responses="true"]) {
+  background: linear-gradient(180deg, transparent 0%, var(--endpoint-accent) 100%);
+}
+
+/* =============================================================================
+   Complexity-Based Styling
+   ============================================================================= */
+
+/* Simple endpoints (no parameters, no request body) */
+.api-endpoint[data-has-parameters="false"][data-has-request-body="false"] {
+  /* Simplified, clean layout */
+}
+
+.api-endpoint[data-has-parameters="false"][data-has-request-body="false"] .endpoint-details {
+  gap: 1rem;
+}
+
+/* Complex endpoints (has parameters, request body, and multiple responses) */
+.api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="1"]),
+.api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="2"]),
+.api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="3"]) {
+  /* Enhanced organization for complex endpoints */
+}
+
+.api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="1"]) .endpoint-details,
+.api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="2"]) .endpoint-details,
+.api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="3"]) .endpoint-details {
+  border: 1px solid rgba(var(--color-border-rgb), 0.2);
+  border-radius: 1rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(var(--color-accent-rgb), 0.01) 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* =============================================================================
+   Responsive Enhancements
+   ============================================================================= */
+
+@container endpoint-page (max-width: 768px) {
+  .api-endpoint-header:has(.endpoint-description) {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .endpoint-details:has(.endpoint-parameters .parameter-item:nth-child(n+3)) {
+    grid-template-columns: 1fr;
+  }
+  
+  .api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="1"]) .endpoint-details,
+  .api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="2"]) .endpoint-details,
+  .api-endpoint[data-has-parameters="true"][data-has-request-body="true"]:has([data-response-count^="3"]) .endpoint-details {
+    padding: 1rem;
+  }
+}
+
+/* =============================================================================
+   Accessibility Enhancements
+   ============================================================================= */
+
+/* Enhanced focus styles for interactive elements */
+.api-endpoint:has(:focus-visible) {
+  /* Container styling when child elements have focus */
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .api-endpoint-header:has(.endpoint-description),
+  .endpoint-details:has(.endpoint-responses .response-item:nth-child(n+3)) {
+    background: var(--color-surface);
+    transition: none;
+  }
+}

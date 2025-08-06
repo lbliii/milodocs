@@ -3,6 +3,13 @@
 {{ $start := .Get 2 | default nil }}
 {{ $stop := .Get 3 | default nil}}
 {{ $content := readFile $path }}
+
+{{/* Optional: Log warning for missing files */}}
+{{ if and $path (not $content) }}
+    {{ warnf "Include shortcode: File not found '%s' on page %s" $path .Page.RelPermalink }}
+{{ end }}
+
+{{/* Original processing logic - unchanged */}}
 {{ $chunked := split $content "\n" }}
 {{ $snippet := "" }}
 {{ $capture := false }}

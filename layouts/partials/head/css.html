@@ -1,19 +1,308 @@
 
-{{- $cssResources := slice (resources.Get "css/main.css") }}
-{{- $cssResources = $cssResources | append (resources.Get "css/fonts.css") }}
-{{- $cssResources = $cssResources | append (resources.Get "css/syntax.css") }}
+{{/* Build CSS resources array */}}
+{{- $cssResources := slice -}}
 
-{{- if eq hugo.Environment "opensource" -}}
-{{- $cssResources = $cssResources | append (resources.Get "css/colors-opensource.css") }}
+{{/* Add main CSS */}}
+{{- $mainCSS := resources.Get "css/main.css" -}}
+{{- if $mainCSS -}}
+  {{- $cssResources = $cssResources | append $mainCSS -}}
 {{- else -}}
-{{- $cssResources = $cssResources | append (resources.Get "css/colors.css") }}
+  {{- warnf "CSS: main.css not found" -}}
 {{- end -}}
 
-{{- if eq hugo.Environment "development" }}
-  {{- $cssBundle := $cssResources | resources.Concat "css/bundle.css" }}
-  <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}">
-{{- else }}
-  {{- $opts := dict "minify" true }}
-  {{- $cssBundle := $cssResources | resources.Concat "css/bundle.css" | minify | fingerprint }}
-  <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}" integrity="{{ $cssBundle.Data.Integrity }}" crossorigin="anonymous">
-{{- end }}
+{{/* Environment-specific resource loading with advanced optimization */}}
+{{- $env := hugo.Environment -}}
+
+{{/* Critical font preloading with environment-specific fonts */}}
+{{- if eq $env "nvidia" -}}
+  {{/* NVIDIA: Preload critical brand fonts for optimal performance */}}
+  <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/var/NVIDIASansVF_W_Wght.woff2" as="font" type="font/woff2" crossorigin>
+  
+  {{- $envFonts := resources.Get "css/fonts-nvidia.css" -}}
+  {{- if $envFonts -}}
+    {{- $cssResources = $cssResources | append $envFonts -}}
+  {{- else -}}
+    {{- warnf "Environment CSS: fonts-nvidia.css not found, falling back to default fonts" -}}
+    {{- $fallbackFonts := resources.Get "css/fonts.css" -}}
+    {{- if $fallbackFonts -}}{{- $cssResources = $cssResources | append $fallbackFonts -}}{{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{/* Default: Load standard web fonts */}}
+  {{- $defaultFonts := resources.Get "css/fonts.css" -}}
+  {{- if $defaultFonts -}}
+    {{- $cssResources = $cssResources | append $defaultFonts -}}
+  {{- else -}}
+    {{- warnf "Environment CSS: fonts.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Environment-specific color schemes with smart fallbacks */}}
+{{- $colorCSS := "" -}}
+{{- if eq $env "open-source" -}}
+  {{- $colorCSS = resources.Get "css/colors-opensource.css" -}}
+{{- else if eq $env "nvidia" -}}
+  {{- $colorCSS = resources.Get "css/colors-nvidia.css" -}}
+{{- else if eq $env "enterprise" -}}
+  {{- $colorCSS = resources.Get "css/colors-enterprise.css" -}}
+{{- end -}}
+
+{{/* Fallback to default colors if environment-specific not found */}}
+{{- if not $colorCSS -}}
+  {{- $colorCSS = resources.Get "css/colors.css" -}}
+  {{- if eq $env "development" -}}
+    {{- warnf "Environment CSS: No specific colors found for '%s', using default colors" $env -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $colorCSS -}}
+  {{- $cssResources = $cssResources | append $colorCSS -}}
+{{- end -}}
+
+{{/* Add page enhancement styles */}}
+{{- $enhancementCSS := resources.Get "css/page-enhancements.css" -}}
+{{- if $enhancementCSS -}}
+  {{- $cssResources = $cssResources | append $enhancementCSS -}}
+{{- else -}}
+  {{- warnf "Enhancement CSS: page-enhancements.css not found" -}}
+{{- end -}}
+
+{{/* ==== MODULAR COMPONENT CSS ARCHITECTURE ==== */}}
+{{/* Load all component CSS files in dependency order */}}
+
+{{/* 0. Foundation CSS - Load first for optimal performance */}}
+
+{{/* Universal Animation System - Load before all components */}}
+{{- $animationSystemCSS := resources.Get "css/architecture/animation-system.css" -}}
+{{- if $animationSystemCSS -}}
+  {{- $cssResources = $cssResources | append $animationSystemCSS -}}
+{{- end -}}
+
+{{/* Component State Management - New architecture foundation */}}
+{{- $componentStatesCSS := resources.Get "css/architecture/component-states.css" -}}
+{{- if $componentStatesCSS -}}
+  {{- $cssResources = $cssResources | append $componentStatesCSS -}}
+{{- end -}}
+
+{{/* Design Tokens - Enhanced token system (load early) */}}
+{{- $designTokensCSS := resources.Get "css/components/design-tokens.css" -}}
+{{- if $designTokensCSS -}}
+  {{- $cssResources = $cssResources | append $designTokensCSS -}}
+{{- end -}}
+
+{{/* Performance Enhancements - Native browser optimizations */}}
+{{- $performanceCSS := resources.Get "css/components/performance-enhancements.css" -}}
+{{- if $performanceCSS -}}
+  {{- $cssResources = $cssResources | append $performanceCSS -}}
+{{- end -}}
+
+{{/* Enhanced Animations - State-driven animations */}}
+{{- $enhancedAnimationsCSS := resources.Get "css/components/enhanced-animations.css" -}}
+{{- if $enhancedAnimationsCSS -}}
+  {{- $cssResources = $cssResources | append $enhancedAnimationsCSS -}}
+{{- end -}}
+
+{{/* Component-Specific Animations - Professional component transitions */}}
+{{- $componentAnimationsCSS := resources.Get "css/components/component-animations.css" -}}
+{{- if $componentAnimationsCSS -}}
+  {{- $cssResources = $cssResources | append $componentAnimationsCSS -}}
+{{- end -}}
+
+
+
+{{/* 1. Foundation Components - Base UI elements */}}
+
+{{- $buttonsCSS := resources.Get "css/components/buttons.css" -}}
+{{- if $buttonsCSS -}}
+  {{- $cssResources = $cssResources | append $buttonsCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: buttons.css not found" -}}
+{{- end -}}
+
+{{- $tablesCSS := resources.Get "css/components/tables.css" -}}
+{{- if $tablesCSS -}}
+  {{- $cssResources = $cssResources | append $tablesCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: tables.css not found" -}}
+{{- end -}}
+
+{{- $noticeCSS := resources.Get "css/components/notice.css" -}}
+{{- if $noticeCSS -}}
+  {{- $cssResources = $cssResources | append $noticeCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: notice.css not found" -}}
+{{- end -}}
+
+{{/* 2. Navigation Components - Site navigation and wayfinding */}}
+{{- $navigationCSS := resources.Get "css/components/navigation.css" -}}
+{{- if $navigationCSS -}}
+  {{- $cssResources = $cssResources | append $navigationCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: navigation.css not found" -}}
+{{- end -}}
+
+{{- $breadcrumbsCSS := resources.Get "css/components/breadcrumbs.css" -}}
+{{- if $breadcrumbsCSS -}}
+  {{- $cssResources = $cssResources | append $breadcrumbsCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: breadcrumbs.css not found" -}}
+{{- end -}}
+
+{{/* 3. Interactive Components - User interaction elements */}}
+{{/* Search CSS temporarily disabled
+{{- $searchCSS := resources.Get "css/components/search.css" -}}
+{{- if $searchCSS -}}
+  {{- $cssResources = $cssResources | append $searchCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: search.css not found" -}}
+{{- end -}}
+*/}}
+
+{{/* SMART CONDITIONAL LOADING - Only load CSS for features used on this page */}}
+
+{{/* Chat CSS - only load if chat is enabled for this page */}}
+{{- if .Params.article.chat.display | default site.Params.article.chat.display -}}
+  {{- $chatCSS := resources.Get "css/components/chat.css" -}}
+  {{- if $chatCSS -}}
+    {{- $cssResources = $cssResources | append $chatCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: chat.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Collapse CSS - always needed for various components */}}
+{{- $collapseCSS := resources.Get "css/components/collapse.css" -}}
+{{- if $collapseCSS -}}
+  {{- $cssResources = $cssResources | append $collapseCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: collapse.css not found" -}}
+{{- end -}}
+
+{{/* 4. Article Components - Content-specific layout elements */}}
+{{- $articleHeaderCSS := resources.Get "css/components/article-header.css" -}}
+{{- if $articleHeaderCSS -}}
+  {{- $cssResources = $cssResources | append $articleHeaderCSS -}}
+{{- else -}}
+  {{- warnf "Component CSS: article-header.css not found" -}}
+{{- end -}}
+
+{{/* Tiles CSS - only for list/section pages */}}
+{{- if or .IsSection .IsHome -}}
+  {{- $tilesCSS := resources.Get "css/components/tiles.css" -}}
+  {{- if $tilesCSS -}}
+    {{- $cssResources = $cssResources | append $tilesCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: tiles.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Cards CSS - only for list/section pages */}}
+{{- if or .IsSection .IsHome -}}
+  {{- $cardsCSS := resources.Get "css/components/cards.css" -}}
+  {{- if $cardsCSS -}}
+    {{- $cssResources = $cssResources | append $cardsCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: cards.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Glossary CSS - only for glossary pages */}}
+{{- if or (eq .Section "glossary") (eq .Type "glossary") (in .RelPermalink "/glossary/") -}}
+  {{- $glossaryCSS := resources.Get "css/components/glossary.css" -}}
+  {{- if $glossaryCSS -}}
+    {{- $cssResources = $cssResources | append $glossaryCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: glossary.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Quicklinks CSS - only for home and section pages */}}
+{{- if or .IsHome .IsSection -}}
+  {{- $quicklinksCSS := resources.Get "css/components/quicklinks.css" -}}
+  {{- if $quicklinksCSS -}}
+    {{- $cssResources = $cssResources | append $quicklinksCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: quicklinks.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Next/Prev CSS - only for regular content pages */}}
+{{- if and (not .IsSection) (not .IsHome) -}}
+  {{- $nextPrevCSS := resources.Get "css/components/next-prev.css" -}}
+  {{- if $nextPrevCSS -}}
+    {{- $cssResources = $cssResources | append $nextPrevCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: next-prev.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Tutorial CSS - only for tutorial pages */}}
+{{- if or (eq .Section "tutorial") (eq .Type "tutorial") (in .RelPermalink "/tutorial/") -}}
+  {{- $tutorialCSS := resources.Get "css/components/tutorial.css" -}}
+  {{- if $tutorialCSS -}}
+    {{- $cssResources = $cssResources | append $tutorialCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: tutorial.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* PAGE-SPECIFIC CSS - Load heavy feature CSS only when needed */}}
+
+{{/* OpenAPI CSS - only for API documentation pages */}}
+{{- if or .Params.reference (eq .Layout "api-overview") (eq .Type "openapi") (in .RelPermalink "/api/") -}}
+  {{- $openapiCSS := resources.Get "css/components/openapi/index.css" -}}
+  {{- if $openapiCSS -}}
+    {{- $cssResources = $cssResources | append $openapiCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: openapi/index.css not found" -}}
+  {{- end -}}
+  
+  {{- $navigationAPICSS := resources.Get "css/components/navigation-api.css" -}}
+  {{- if $navigationAPICSS -}}
+    {{- $cssResources = $cssResources | append $navigationAPICSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: navigation-api.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Notebook CSS - only for notebook pages */}}
+{{- if or .Params.notebook_path (eq .Type "notebook") (eq .Layout "notebook") -}}
+  {{- $notebookCSS := resources.Get "css/components/notebook.css" -}}
+  {{- if $notebookCSS -}}
+    {{- $cssResources = $cssResources | append $notebookCSS -}}
+  {{- else -}}
+    {{- warnf "Component CSS: notebook.css not found" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Advanced CSS bundling with environment-specific optimization */}}
+{{- if $cssResources -}}
+  {{- $bundleName := printf "css/bundle-%s.css" hugo.Environment -}}
+  {{- $cssBundle := $cssResources | resources.Concat $bundleName -}}
+  
+  {{- if hugo.IsProduction -}}
+    {{/* Production: Full optimization pipeline */}}
+    {{- $cssOptimized := $cssBundle | minify | fingerprint "sha512" -}}
+    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
+    {{- if eq hugo.Environment "development" -}}
+      {{/* Development mode with production flag - add source map reference */}}
+      <!-- CSS Source: {{ $cssBundle.RelPermalink }} -->
+    {{- end -}}
+  {{- else -}}
+    {{/* Development: Fast rebuilds with debugging info */}}
+    <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
+    {{- if site.Params.debug -}}
+      <!-- CSS Debug: Bundle contains {{ len $cssResources }} files for {{ hugo.Environment }} environment -->
+    {{- end -}}
+  {{- end -}}
+  
+  {{/* Environment-specific CSS custom properties for JavaScript integration */}}
+  <style>
+    :root {
+      --hugo-environment: "{{ hugo.Environment }}";
+      --hugo-build: "{{ cond hugo.IsProduction "production" "development" }}";
+      --theme-version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}";
+    }
+  </style>
+{{- else -}}
+  {{- errorf "CSS: No CSS resources found to bundle for environment '%s'" hugo.Environment -}}
+{{- end -}}

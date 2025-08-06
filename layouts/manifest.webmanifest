@@ -1,0 +1,32 @@
+{{- $orgName := site.Params.names.organization | default "MiloDocs" -}}
+{{- $productName := site.Params.names.product | default "Documentation" -}}
+{{- $env := hugo.Environment | default "nvidia" -}}
+{{- $themeColor := "#76B900" -}}
+{{- if eq $env "enterprise" -}}
+  {{- $themeColor = "#6366f1" -}}
+{{- else if eq $env "open-source" -}}
+  {{- $themeColor = "#8ab5c1" -}}
+{{- end -}}
+{
+  "name": "{{ $orgName }} {{ $productName }}",
+  "short_name": "{{ $orgName }}", 
+  "description": "{{ $productName }} - Modern Documentation Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "{{ $themeColor }}",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png", 
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

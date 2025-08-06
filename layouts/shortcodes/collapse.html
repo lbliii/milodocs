@@ -1,28 +1,86 @@
-{{$title := .Get "title" | default "Expand"}}
-{{$description := .Get "description"}}
+{{- $title := .Get "title" | default "Expand" -}}
+{{- $description := .Get "description" -}}
+{{- $variant := .Get "variant" | default "default" -}}
+{{- $id := .Get "id" | default (printf "collapse-%s-%d" (md5 .Inner) (now.UnixNano)) -}}
 
-{{- if ne hugo.Environment "pdf" -}} 
-<section class="collapse-container mb-4">
-    <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].children[0].classList.toggle('rotate-90')" class="cursor-pointer px-4 py-2 rounded-md shadow-md bg-zinc-100 text-black flex items-center">
-        <!-- SVG container with flex-none to prevent it from growing or shrinking -->
-        <div class="flex-none">
-            <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
+{{- if ne hugo.Environment "pdf" -}}
+<section class="collapse{{ if ne $variant "default" }} collapse--{{ $variant }}{{ end }}" 
+         id="{{ $id }}"
+         data-collapse-state="collapsed"
+         data-component-state="ready">
+    <div class="collapse__header" 
+         onclick="toggleCollapse('{{ $id }}')"
+         role="button"
+         tabindex="0"
+         aria-expanded="false"
+         aria-controls="{{ $id }}-body"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse('{{ $id }}');}">
+        
+        <div class="collapse__icon-wrapper">
+            <svg class="collapse__icon" 
+                 xmlns="http://www.w3.org/2000/svg" 
+                 fill="none" 
+                 viewBox="0 0 24 24" 
+                 stroke-width="2.5" 
+                 stroke="currentColor"
+                 aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>
         </div>
-        <div class="flex-grow ml-2">
+        
+        <div class="collapse__content-wrapper">
             {{- with $title -}}
-            <h4 class="font-bold">{{- . -}}</h4>
+            <h3 class="collapse__title">{{ . }}</h3>
             {{- end -}}
             {{- with $description -}}
-            <p>{{- . -}}</p>
+            <p class="collapse__description">{{ . }}</p>
             {{- end -}}
         </div>
     </div>
-    <div class="hidden px-4 py-2 border border-t-0 border-zinc-100 border-dotted">
-        {{ .Inner | markdownify }}
+    
+    <div class="collapse__body" 
+         id="{{ $id }}-body"
+         role="region"
+         aria-labelledby="{{ $id }}-header">
+        <div class="collapse__body-content">
+            {{ .Inner | markdownify }}
+        </div>
     </div>
 </section>
+
+<script>
+// ✅ UPDATED: Use new animation bridge system (backward compatible)
+// Note: toggleCollapse is now provided by AnimationBridge.js and uses the new system
+// with CSS tokens and data attributes. Old function kept for immediate compatibility.
+if (typeof window.toggleCollapse === 'undefined') {
+    window.toggleCollapse = function(id) {
+        const collapse = document.getElementById(id);
+        if (!collapse) return;
+        
+        // Use new animation bridge if available, fallback to old system
+        if (window.animationBridge) {
+            window.animationBridge.toggle(collapse);
+        } else {
+            // Fallback for immediate compatibility
+            const header = collapse.querySelector('.collapse__header');
+            const isExpanded = collapse.classList.contains('expanded');
+            
+            if (isExpanded) {
+                collapse.classList.remove('expanded');
+                header.setAttribute('aria-expanded', 'false');
+            } else {
+                collapse.classList.add('expanded');
+                header.setAttribute('aria-expanded', 'true');
+            }
+        }
+    };
+}
+</script>
+
 {{- else -}}
+{{/* PDF fallback - just show content */}}
+{{- with $title -}}
+<h4>{{ . }}</h4>
+{{- end -}}
 {{ .Inner | markdownify }}
 {{- end -}}

@@ -3,5 +3,5 @@
   command = "cd exampleSite && hugo  --theme ../.."
 
 [build.environment]
-  HUGO_VERSION = "0.138.0" 
+  HUGO_VERSION = "0.146.0" 
   HUGO_THEME = "milodocs"

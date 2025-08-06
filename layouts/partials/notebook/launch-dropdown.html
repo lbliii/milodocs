@@ -1,0 +1,105 @@
+{{/* Notebook Launch Dropdown Component */}}
+{{- $notebookPath := .Params.notebook_path -}}
+{{- $repoUrl := .Params.notebookRepoUrl | default .Site.Params.notebook.defaultRepoUrl -}}
+{{- $branch := .Params.notebookRepoBranch | default .Site.Params.notebook.defaultBranch | default "main" -}}
+
+{{- if and $notebookPath $repoUrl -}}
+  {{- $repoInfo := urls.Parse $repoUrl -}}
+  {{- $repoPath := strings.TrimPrefix "/" $repoInfo.Path -}}
+  {{- $repoParts := split $repoPath "/" -}}
+  {{- $user := index $repoParts 0 -}}
+  {{- $repo := index $repoParts 1 -}}
+
+  <div class="notebook__launch relative" data-component="notebook-launch">
+    <button 
+      class="notebook__nav-btn notebook__launch-toggle" 
+      type="button"
+      aria-expanded="false"
+      aria-haspopup="true"
+      data-launch-toggle
+      title="Launch notebook in external platform">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+      </svg>
+      <span class="sr-only">Launch</span>
+      <svg class="notebook__launch-arrow w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-dropdown-arrow>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
+    
+    <div 
+      class="notebook__launch-dropdown absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 hidden"
+      data-launch-dropdown>
+      <div class="p-1">
+        {{/* Launch Platforms Section Header */}}
+        <div class="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          Launch Platform
+        </div>
+        
+        {{/* Google Colab */}}
+        <a 
+          href="https://colab.research.google.com/github/{{ $user }}/{{ $repo }}/blob/{{ $branch }}/{{ $notebookPath }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          <img src="/icons/light/star.svg" alt="Colab" class="w-4 h-4 icon">
+          Open in Colab
+        </a>
+        
+        {{/* Binder */}}
+        <a 
+          href="https://mybinder.org/v2/gh/{{ $user }}/{{ $repo }}/{{ $branch }}?filepath={{ $notebookPath }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          <img src="/icons/light/layers.svg" alt="Binder" class="w-4 h-4 icon">
+          Launch Binder
+        </a>
+        
+        {{/* NBViewer */}}
+        <a 
+          href="https://nbviewer.jupyter.org/github/{{ $user }}/{{ $repo }}/blob/{{ $branch }}/{{ $notebookPath }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          <img src="/icons/light/note.svg" alt="NBViewer" class="w-4 h-4 icon">
+          View in NBViewer
+        </a>
+        
+        <hr class="my-1 border-gray-100 dark:border-gray-600">
+        
+        {{/* Development Section Header */}}
+        <div class="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          Development
+        </div>
+        
+        {{/* GitHub.dev */}}
+        <a 
+          href="https://github.dev/{{ $user }}/{{ $repo }}/blob/{{ $branch }}/{{ $notebookPath }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          <img src="/icons/light/code_inspect.svg" alt="GitHub.dev" class="w-4 h-4 icon">
+          Edit in GitHub.dev
+        </a>
+        
+        {{/* View Source */}}
+        <a 
+          href="{{ $repoUrl }}/blob/{{ $branch }}/{{ $notebookPath }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          <img src="/icons/light/copy.svg" alt="View Source" class="w-4 h-4 icon">
+          View Source
+        </a>
+      </div>
+    </div>
+  </div>
+{{- else -}}
+  {{/* Optional: Show notification if no repository configured */}}
+  {{- if $notebookPath -}}
+    <div class="notebook__launch-notice text-xs text-gray-500 italic">
+      Configure notebookRepoUrl to enable platform launching
+    </div>
+  {{- end -}}
+{{- end -}}

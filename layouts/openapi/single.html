@@ -1,0 +1,112 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  <!-- Mobile navigation toggle -->
+  <button id="mobileNavToggle" class="fixed top-4 left-4 z-50 md:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+  </button>
+
+  <!-- Mobile navigation overlay -->
+  <div id="mobileNavOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" data-component="navigation-mobile-overlay"></div>
+
+  <aside id="sidebar-left" class="sidebar-container fixed md:sticky left-0 top-0 md:top-16 z-40 h-full md:h-[calc(100vh-4rem)] w-80 md:w-1/5 md:max-w-80 shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:flex" data-component="navigation-sidebar-left">
+      <!-- Mobile header -->
+      <div class="sidebar-header flex md:hidden items-center justify-between p-4">
+          <h2 class="text-lg font-semibold">API Reference</h2>
+          <button id="closeMobileNav" class="sidebar-close-btn p-2 rounded-lg" aria-label="Close navigation menu">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+          </button>
+      </div>
+      
+      <div id="linkTree" class="pt-4 md:pt-4 px-4 md:px-0 h-[calc(100vh-4rem)] md:h-full overflow-y-auto w-full">
+          {{ $currentpg := . }}
+          {{/* Show only API section and its children */}}
+          {{ $apiSection := .Site.GetPage "/api" }}
+          {{ if $apiSection }}
+            {{ partial "navigation/directory.html" (dict "dir" (slice $apiSection) "current" $currentpg "level" 1) }}
+          {{ end }}
+      </div>
+  </aside>
+{{- end -}}
+
+{{- define "content" -}}
+{{- $apiData := .Params.api_data -}}
+{{- $currentMethod := .Params.endpoint.method -}}
+{{- $currentPath := .Params.endpoint.path -}}
+{{- $currentTag := .Params.endpoint.tag -}}
+{{- $operationId := .Params.endpoint.operationId -}}
+{{- $operation := .Params.endpoint.operation -}}
+
+{{- if not $apiData -}}
+  <div class="error-message">
+    <h2>API Data Not Found</h2>
+    <p>Could not load API data from page front matter.</p>
+  </div>
+  {{ return }}
+{{- end -}}
+
+{{/* Generate metadata and data attributes */}}
+{{ $metadata := partial "openapi/single/metadata.html" (dict 
+    "operation" $operation 
+    "currentMethod" $currentMethod 
+    "currentPath" $currentPath 
+    "operationId" $operationId) }}
+
+<article id="articleContent" 
+         class="{{ $metadata.articleData.class }}"
+         data-component="{{ $metadata.articleData.dataComponent }}"
+         data-viewer-type="{{ $metadata.articleData.dataViewerType }}"
+         data-method="{{ $metadata.articleData.dataMethod }}"
+         data-has-parameters="{{ $metadata.articleData.dataHasParameters }}"
+         data-has-request-body="{{ $metadata.articleData.dataHasRequestBody }}"
+         data-has-responses="{{ $metadata.articleData.dataHasResponses }}"
+         data-has-security="{{ $metadata.articleData.dataHasSecurity }}"
+         data-parameter-count="{{ $metadata.articleData.dataParameterCount }}"
+         data-response-count="{{ $metadata.articleData.dataResponseCount }}"
+         data-has-summary="{{ $metadata.articleData.dataHasSummary }}"
+         data-has-description="{{ $metadata.articleData.dataHasDescription }}">
+  
+  <!-- Endpoint Header -->
+  {{ partial "openapi/single/header.html" (dict 
+      "operation" $operation
+      "currentMethod" $currentMethod 
+      "currentPath" $currentPath 
+      "currentTag" $currentTag 
+      "apiData" $apiData 
+      "page" .) }}
+  
+  <!-- Endpoint Content -->
+  <div class="api-endpoint-content">
+    <div class="endpoint-item" 
+         id="{{ $metadata.endpointData.id }}"
+         data-component="{{ $metadata.endpointData.dataComponent }}"
+         data-method="{{ $metadata.endpointData.dataMethod }}"
+         data-path="{{ $metadata.endpointData.dataPath }}"
+         data-operation-id="{{ $metadata.endpointData.dataOperationId }}"
+         data-has-parameters="{{ $metadata.endpointData.dataHasParameters }}"
+         data-has-request-body="{{ $metadata.endpointData.dataHasRequestBody }}"
+         data-has-responses="{{ $metadata.endpointData.dataHasResponses }}"
+         data-has-security="{{ $metadata.endpointData.dataHasSecurity }}"
+         data-has-examples="{{ $metadata.endpointData.dataHasExamples }}">
+      
+      {{ partial "openapi/single/content.html" (dict 
+          "operation" $operation
+          "currentMethod" $currentMethod 
+          "currentPath" $currentPath 
+          "apiData" $apiData 
+          "endpointId" $metadata.endpointId) }}
+    </div>
+  </div>
+
+</article>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+  {{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}}

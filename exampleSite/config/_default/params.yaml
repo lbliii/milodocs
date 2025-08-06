@@ -1,26 +1,9 @@
+# Example site parameters
+# Copy relevant sections to your main config
 logo: '/images/milo.png'
-topNav:
-  globalLinks:
-    display: true
-    links:
-    - title: 'Home'
-      url: '/'
-    - title: 'Get Started'
-      url: '/get-started/'
-  dropdown:
-    display: true
-    name: "Dropdown"
-    url: "/"             
-    links:              
-      - name: "About Us"
-        url: "/about"
-      - name: "Services"
-        url: "/services"
-      - name: "Contact"
-        url: "/contact"
 names:
-  organization: 'Emdash'
-  product: 'MiloDocs'
+  organization: 'Example Org'
+  product: 'Example Product'
 version: 
   major: 0
   minor: 0
@@ -36,5 +19,31 @@ article:
     trunc: 35
   chat: 
     display: true
+  # Sidebar TOC (right sidebar)
   toc: 
     display: true
+  # Inline components (within article content)
+  inlineToc:
+    display: false
+    showProgress: false
+  pageResources:
+    display: true
+  # Content status warnings (draft and expiry alerts)
+  statusWarnings:
+    display: true
+  # Enhanced metadata section (dates, author, reading time, word count)
+  metadata:
+    display: true
+  # Related content section (shows related pages in same section)
+  relatedContent:
+    display: true
+
+# Default notebook repository configuration
+notebook:
+  # Default repository URL for notebooks (can be overridden per page)
+  defaultRepoUrl: "https://github.com/nvidia/notebook-examples"
+  # Default branch (can be overridden per page)
+  defaultBranch: "main"
+
+# Development & Debug Settings
+debug: false  # Enable debugging to see what parameters are loaded

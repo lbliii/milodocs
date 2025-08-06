@@ -1,0 +1,551 @@
+/* 🎯 Universal Layout Foundations System
+ * =======================================
+ * 
+ * This file centralizes common spacing, positioning, and layout patterns
+ * to ensure consistent spatial relationships across all components.
+ */
+
+:root {
+  /* ✨ SPACING SCALE (based on 0.25rem = 4px base) */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 0.125rem;  /* 2px */
+  --space-1: 0.25rem;     /* 4px */
+  --space-1-5: 0.375rem;  /* 6px */
+  --space-2: 0.5rem;      /* 8px */
+  --space-2-5: 0.625rem;  /* 10px */
+  --space-3: 0.75rem;     /* 12px */
+  --space-3-5: 0.875rem;  /* 14px */
+  --space-4: 1rem;        /* 16px */
+  --space-5: 1.25rem;     /* 20px */
+  --space-6: 1.5rem;      /* 24px */
+  --space-7: 1.75rem;     /* 28px */
+  --space-8: 2rem;        /* 32px */
+  --space-9: 2.25rem;     /* 36px */
+  --space-10: 2.5rem;     /* 40px */
+  --space-11: 2.75rem;    /* 44px */
+  --space-12: 3rem;       /* 48px */
+  --space-14: 3.5rem;     /* 56px */
+  --space-16: 4rem;       /* 64px */
+  --space-20: 5rem;       /* 80px */
+  --space-24: 6rem;       /* 96px */
+  --space-28: 7rem;       /* 112px */
+  --space-32: 8rem;       /* 128px */
+  --space-36: 9rem;       /* 144px */
+  --space-40: 10rem;      /* 160px */
+  --space-44: 11rem;      /* 176px */
+  --space-48: 12rem;      /* 192px */
+  --space-52: 13rem;      /* 208px */
+  --space-56: 14rem;      /* 224px */
+  --space-60: 15rem;      /* 240px */
+  --space-64: 16rem;      /* 256px */
+  --space-72: 18rem;      /* 288px */
+  --space-80: 20rem;      /* 320px */
+  --space-96: 24rem;      /* 384px */
+
+  /* ✨ SEMANTIC SPACING TOKENS */
+  --space-xs: var(--space-1);     /* 4px - Minimal spacing */
+  --space-sm: var(--space-2);     /* 8px - Small spacing */
+  --space-md: var(--space-4);     /* 16px - Medium spacing */
+  --space-lg: var(--space-6);     /* 24px - Large spacing */
+  --space-xl: var(--space-8);     /* 32px - Extra large spacing */
+  --space-2xl: var(--space-12);   /* 48px - Double extra large */
+  --space-3xl: var(--space-16);   /* 64px - Triple extra large */
+
+  /* ✨ CONTENT SPACING TOKENS */
+  --content-gap-tight: var(--space-2);    /* 8px - Tight content */
+  --content-gap-normal: var(--space-4);   /* 16px - Normal content */
+  --content-gap-relaxed: var(--space-6);  /* 24px - Relaxed content */
+  --content-gap-loose: var(--space-8);    /* 32px - Loose content */
+
+  /* ✨ COMPONENT SPACING TOKENS */
+  --component-padding-sm: var(--space-3);  /* 12px - Small components */
+  --component-padding-md: var(--space-4);  /* 16px - Medium components */
+  --component-padding-lg: var(--space-6);  /* 24px - Large components */
+  --component-padding-xl: var(--space-8);  /* 32px - Extra large components */
+
+  /* ✨ BORDER RADIUS SCALE */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;   /* 2px */
+  --radius-base: 0.25rem;  /* 4px */
+  --radius-md: 0.375rem;   /* 6px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 0.75rem;    /* 12px */
+  --radius-2xl: 1rem;      /* 16px */
+  --radius-3xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;   /* Full radius */
+
+  /* ✨ SEMANTIC BORDER RADIUS TOKENS */
+  --radius-button: var(--radius-md);      /* Button border radius */
+  --radius-card: var(--radius-lg);        /* Card border radius */
+  --radius-modal: var(--radius-xl);       /* Modal border radius */
+  --radius-input: var(--radius-base);     /* Input border radius */
+
+  /* ✨ Z-INDEX SCALE */
+  --z-behind: -1;
+  --z-base: 0;
+  --z-low: 10;
+  --z-medium: 100;
+  --z-high: 1000;
+  --z-overlay: 10000;
+  --z-modal: 100000;
+  --z-popover: 1000000;
+  --z-tooltip: 10000000;
+  --z-top: 999999999;
+
+  /* ✨ SEMANTIC Z-INDEX TOKENS */
+  --z-dropdown: var(--z-overlay);
+  --z-sticky-header: var(--z-high);
+  --z-sidebar: var(--z-medium);
+  --z-loading-overlay: var(--z-modal);
+
+  /* ✨ MAX WIDTH SCALE */
+  --max-width-xs: 20rem;     /* 320px */
+  --max-width-sm: 24rem;     /* 384px */
+  --max-width-md: 28rem;     /* 448px */
+  --max-width-lg: 32rem;     /* 512px */
+  --max-width-xl: 36rem;     /* 576px */
+  --max-width-2xl: 42rem;    /* 672px */
+  --max-width-3xl: 48rem;    /* 768px */
+  --max-width-4xl: 56rem;    /* 896px */
+  --max-width-5xl: 64rem;    /* 1024px */
+  --max-width-6xl: 72rem;    /* 1152px */
+  --max-width-7xl: 80rem;    /* 1280px */
+  --max-width-full: 100%;
+  --max-width-prose: 65ch;   /* Optimal reading width */
+  --max-width-screen-sm: 640px;
+  --max-width-screen-md: 768px;
+  --max-width-screen-lg: 1024px;
+  --max-width-screen-xl: 1280px;
+  --max-width-screen-2xl: 1536px;
+
+  /* ✨ SEMANTIC MAX WIDTH TOKENS */
+  --max-width-content: var(--max-width-4xl);    /* Main content area */
+  --max-width-sidebar: var(--max-width-xs);     /* Sidebar width */
+  --max-width-modal: var(--max-width-2xl);      /* Modal dialogs */
+  --max-width-form: var(--max-width-lg);        /* Form containers */
+}
+
+/* ✅ SPACING UTILITY CLASSES
+ * ===========================
+ * Consistent spacing patterns for common use cases
+ */
+
+/* Margin utilities */
+.m-auto { margin: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.my-auto { margin-top: auto; margin-bottom: auto; }
+
+/* Padding utilities */
+.p-0 { padding: var(--space-0); }
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+.p-6 { padding: var(--space-6); }
+.p-8 { padding: var(--space-8); }
+
+/* Semantic spacing classes */
+.gap-tight { gap: var(--content-gap-tight); }
+.gap-normal { gap: var(--content-gap-normal); }
+.gap-relaxed { gap: var(--content-gap-relaxed); }
+.gap-loose { gap: var(--content-gap-loose); }
+
+/* Component padding classes */
+.padding-sm { padding: var(--component-padding-sm); }
+.padding-md { padding: var(--component-padding-md); }
+.padding-lg { padding: var(--component-padding-lg); }
+.padding-xl { padding: var(--component-padding-xl); }
+
+/* ✅ LAYOUT PATTERN CLASSES
+ * ==========================
+ * Common layout patterns as reusable classes
+ */
+
+/* Container patterns */
+.container {
+  width: 100%;
+  max-width: var(--max-width-content);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.container-narrow {
+  max-width: var(--max-width-2xl);
+}
+
+.container-wide {
+  max-width: var(--max-width-6xl);
+}
+
+.container-full {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Content sections */
+.section {
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-12);
+}
+
+.section-sm {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+.section-lg {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+
+/* Stack layouts (vertical spacing) */
+.stack > * + * {
+  margin-top: var(--content-gap-normal);
+}
+
+.stack-tight > * + * {
+  margin-top: var(--content-gap-tight);
+}
+
+.stack-relaxed > * + * {
+  margin-top: var(--content-gap-relaxed);
+}
+
+.stack-loose > * + * {
+  margin-top: var(--content-gap-loose);
+}
+
+/* Cluster layouts (horizontal spacing) */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--content-gap-normal);
+  align-items: center;
+}
+
+.cluster-tight {
+  gap: var(--content-gap-tight);
+}
+
+.cluster-relaxed {
+  gap: var(--content-gap-relaxed);
+}
+
+/* Grid patterns */
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--content-gap-normal);
+}
+
+.grid-auto-sm {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.grid-auto-lg {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Flexbox patterns */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* ✅ POSITIONING UTILITIES
+ * =========================
+ * Common positioning patterns
+ */
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* Absolute positioning helpers */
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-top-left {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+}
+
+.absolute-top-right {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+
+.absolute-bottom-left {
+  position: absolute;
+  bottom: var(--space-2);
+  left: var(--space-2);
+}
+
+.absolute-bottom-right {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-2);
+}
+
+/* Z-index utilities */
+.z-behind { z-index: var(--z-behind); }
+.z-base { z-index: var(--z-base); }
+.z-low { z-index: var(--z-low); }
+.z-medium { z-index: var(--z-medium); }
+.z-high { z-index: var(--z-high); }
+.z-overlay { z-index: var(--z-overlay); }
+.z-modal { z-index: var(--z-modal); }
+.z-top { z-index: var(--z-top); }
+
+/* ✅ BORDER RADIUS UTILITIES
+ * ===========================
+ * Consistent border radius patterns
+ */
+
+.rounded-none { border-radius: var(--radius-none); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded { border-radius: var(--radius-base); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-3xl { border-radius: var(--radius-3xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Semantic border radius */
+.rounded-button { border-radius: var(--radius-button); }
+.rounded-card { border-radius: var(--radius-card); }
+.rounded-modal { border-radius: var(--radius-modal); }
+.rounded-input { border-radius: var(--radius-input); }
+
+/* ✅ MAX WIDTH UTILITIES
+ * =======================
+ * Consistent content width constraints
+ */
+
+.max-w-xs { max-width: var(--max-width-xs); }
+.max-w-sm { max-width: var(--max-width-sm); }
+.max-w-md { max-width: var(--max-width-md); }
+.max-w-lg { max-width: var(--max-width-lg); }
+.max-w-xl { max-width: var(--max-width-xl); }
+.max-w-2xl { max-width: var(--max-width-2xl); }
+.max-w-3xl { max-width: var(--max-width-3xl); }
+.max-w-4xl { max-width: var(--max-width-4xl); }
+.max-w-5xl { max-width: var(--max-width-5xl); }
+.max-w-6xl { max-width: var(--max-width-6xl); }
+.max-w-7xl { max-width: var(--max-width-7xl); }
+.max-w-full { max-width: var(--max-width-full); }
+.max-w-prose { max-width: var(--max-width-prose); }
+
+/* Semantic max width */
+.max-w-content { max-width: var(--max-width-content); }
+.max-w-sidebar { max-width: var(--max-width-sidebar); }
+.max-w-modal { max-width: var(--max-width-modal); }
+.max-w-form { max-width: var(--max-width-form); }
+
+/* ✅ RESPONSIVE PATTERNS
+ * =======================
+ * Mobile-first responsive design patterns
+ */
+
+@media (min-width: 640px) {
+  .sm\:container { 
+    max-width: var(--max-width-screen-sm); 
+  }
+  
+  .sm\:section {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+  
+  .sm\:padding-lg {
+    padding: var(--component-padding-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:container { 
+    max-width: var(--max-width-screen-md); 
+  }
+  
+  .md\:section {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+  }
+  
+  .md\:padding-xl {
+    padding: var(--component-padding-xl);
+  }
+  
+  .md\:grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:container { 
+    max-width: var(--max-width-screen-lg); 
+  }
+  
+  .lg\:section {
+    padding-top: var(--space-24);
+    padding-bottom: var(--space-24);
+  }
+  
+  .lg\:grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:container { 
+    max-width: var(--max-width-screen-xl); 
+  }
+  
+  .xl\:grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1536px) {
+  .\32xl\:container { 
+    max-width: var(--max-width-screen-2xl); 
+  }
+}
+
+/* ✅ CONTENT FLOW PATTERNS
+ * =========================
+ * Typography and content spacing patterns
+ */
+
+/* Prose content */
+.prose {
+  max-width: var(--max-width-prose);
+  line-height: 1.7;
+}
+
+.prose > * + * {
+  margin-top: var(--space-4);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+}
+
+.prose h1:first-child,
+.prose h2:first-child,
+.prose h3:first-child,
+.prose h4:first-child,
+.prose h5:first-child,
+.prose h6:first-child {
+  margin-top: 0;
+}
+
+.prose p + h1,
+.prose p + h2,
+.prose p + h3 {
+  margin-top: var(--space-12);
+}
+
+.prose p + h4,
+.prose p + h5,
+.prose p + h6 {
+  margin-top: var(--space-8);
+}
+
+/* List spacing */
+.prose ul,
+.prose ol {
+  padding-left: var(--space-6);
+}
+
+.prose li + li {
+  margin-top: var(--space-2);
+}
+
+/* ✅ ACCESSIBILITY ENHANCEMENTS
+ * ==============================
+ * Spacing and layout for accessibility
+ */
+
+/* Focus spacing */
+.focus-spacing:focus-visible {
+  outline-offset: var(--space-1);
+}
+
+/* Touch target sizing */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--space-2);
+}
+
+/* Screen reader spacing */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ✅ PRINT OPTIMIZATIONS
+ * =======================
+ * Layout adjustments for print media
+ */
+
+@media print {
+  .section {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
+  }
+  
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .stack > * + * {
+    margin-top: var(--space-3);
+  }
+}

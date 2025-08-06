@@ -1,0 +1,56 @@
+/* Tables Component - Enhanced table styling for NVIDIA brand */
+
+/* Global Table Styles - Enhanced for NVIDIA */
+table {
+  @apply w-full border-collapse text-sm;
+  border-color: var(--color-border-primary);
+}
+
+table th,
+table td {
+  @apply p-3 text-left align-top;
+  border-top: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+table th {
+  background-color: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+  @apply font-semibold;
+}
+
+table tr:hover {
+  background-color: var(--color-hover);
+}
+
+/* Responsive Tables */
+@media (max-width: 640px) {
+  table {
+    @apply block;
+  }
+  table thead {
+    @apply hidden;
+  }
+  table tbody tr {
+    @apply block mb-4 shadow-md;
+  }
+  table tbody tr:last-child {
+    @apply mb-0;
+  }
+  table td {
+    @apply flex justify-between p-2;
+  }
+}
+
+/* NVIDIA-specific enhancements */
+.nvidia-accent {
+  color: var(--color-brand);
+}
+
+.nvidia-bg-accent {
+  background-color: var(--color-brand);
+}
+
+.nvidia-border-accent {
+  border-color: var(--color-brand);
+}

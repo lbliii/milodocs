@@ -1,0 +1,68 @@
+:root {
+    --primary-gradient-color: #ffffff; 
+    --secondary-gradient-color: rgba(99, 102, 241, 0.1); 
+    
+    /* Enterprise Brand Colors */
+    --color-brand: #6366f1;           /* primary color - Enterprise indigo */
+    --color-brand-rgb: 99, 102, 241;  /* RGB values for alpha transparency */
+    --color-brand-1: #4338ca;         /* secondary color - darker indigo */
+    --color-brand-2: #5145cd;         /* tertiary color - mid indigo */
+    --color-brand-3: #86a6cf;         /* note color */
+    --color-brand-4: #ADD9F4;         /* tip color */
+    --color-brand-5: #059669;         /* security color - enterprise green */
+    --color-brand-6: #d97706;         /* warning color - enterprise amber */
+    --color-brand-7: #dc2626;         /* danger color - enterprise red */
+
+    /* Semantic Color System for Light Mode */
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-tertiary: #9ca3af;
+    --color-text-inverse: #ffffff;
+    
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f9fafb;
+    --color-bg-tertiary: #f3f4f6;
+    --color-bg-inverse: #111827;
+    
+    --color-border-primary: #e5e7eb;
+    --color-border-secondary: #d1d5db;
+    --color-border-focus: var(--color-brand);
+    
+    --color-surface: #ffffff;
+    --color-surface-hover: #f9fafb;
+    --color-surface-active: #f3f4f6;
+    
+    /* Interactive states */
+    --color-hover: rgba(var(--color-brand-rgb), 0.1);
+    --color-active: rgba(var(--color-brand-rgb), 0.2);
+    --color-focus: rgba(var(--color-brand-rgb), 0.3);
+}
+
+.dark {
+    --primary-gradient-color: rgba(99, 102, 241, 0.3);
+    --secondary-gradient-color: #0f1419;
+    
+    /* Semantic Color System for Dark Mode - Enterprise Theme */
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-tertiary: #9ca3af;
+    --color-text-inverse: #111827;
+    
+    --color-bg-primary: #0f1419;
+    --color-bg-secondary: #1a202c;
+    --color-bg-tertiary: #2d3748;
+    --color-bg-inverse: #ffffff;
+    
+    --color-border-primary: #2d3748;
+    --color-border-secondary: #4a5568;
+    --color-border-focus: var(--color-brand);
+    
+    --color-surface: #1a202c;
+    --color-surface-hover: #2d3748;
+    --color-surface-active: #4a5568;
+    
+    /* Interactive states for dark mode */
+    --color-hover: rgba(var(--color-brand-rgb), 0.2);
+    --color-active: rgba(var(--color-brand-rgb), 0.3);
+    --color-focus: rgba(var(--color-brand-rgb), 0.4);
+}

@@ -1,0 +1,129 @@
+/* Chat/TOC Toggle Component - Interactive toggle between chat and table of contents */
+
+/* Chat/TOC Toggle Component */
+.chat-toc-toggle {
+  display: flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  box-shadow: var(--elevation-4);
+  height: 2.25rem;
+  min-width: 72px; /* Ensure minimum visibility */
+  
+  /* Prevent flash during initialization */
+  opacity: 1;
+  transition: opacity var(--timing-instant) var(--easing-standard);
+  
+  /* Enhance visibility */
+  position: relative;
+}
+
+.chat-toc-toggle.initialized {
+  opacity: 1;
+  animation: none; /* Cancel fallback animation */
+}
+
+@keyframes fallback-show {
+  to { opacity: 1; }
+}
+
+.chat-toc-toggle__option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
+  overflow: hidden;
+}
+
+.chat-toc-toggle__option:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  transform: var(--transform-lift-subtle);
+  box-shadow: 0 4px 8px color-mix(in srgb, black 10%, transparent);
+}
+
+.chat-toc-toggle__option--active {
+  background: var(--color-brand);
+  color: var(--color-text-inverse);
+}
+
+.chat-toc-toggle__option--active:hover {
+  background: var(--color-brand-1);
+  transform: var(--transform-lift-subtle);
+}
+
+.chat-toc-toggle__icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
+  filter: brightness(0.8);
+}
+
+.chat-toc-toggle__option:hover .chat-toc-toggle__icon {
+  filter: brightness(1);
+  transform: scale(1.1);
+}
+
+.chat-toc-toggle__option--active .chat-toc-toggle__icon {
+  filter: brightness(0) invert(1);
+}
+
+.chat-toc-toggle__option--active:hover .chat-toc-toggle__icon {
+  filter: brightness(0) invert(1);
+  transform: scale(1.1);
+}
+
+/* Focus states for accessibility */
+.chat-toc-toggle__option:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-brand);
+  z-index: 1;
+}
+
+/* Ripple effect on click */
+.chat-toc-toggle__option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--color-brand) 10%, transparent) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+  pointer-events: none;
+}
+
+.chat-toc-toggle__option:hover::before {
+  opacity: 1;
+}
+
+.chat-toc-toggle__option:active::before {
+  opacity: 1;
+}
+
+.chat-toc-toggle__option:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px color-mix(in srgb, black 10%, transparent);
+}

@@ -7,97 +7,133 @@
 {{- end -}}
 
 {{- define "content" -}}
-<div id="articleContent" class="p-4">
-    {{- $notebookPath := .Params.notebook_path -}}
-    {{- with resources.Get $notebookPath -}}
-        {{- $resource := . -}}
-        {{- $content := $resource.Content | safeHTML -}}
-        {{- with $content | transform.Unmarshal -}}
-            {{- $decodedNotebook := . -}}
-            
-            <section class="space-y-4">
-                <h1 class="text-3xl font-bold">{{ $.Title }}</h1>
-                {{ with $.Description }}
-                    <p class="text-lg text-gray-600">{{ . }}</p>
-                {{ end }}
-            </section>
 
-            {{ range $cell := $decodedNotebook.cells }}
-                {{ if eq $cell.cell_type "markdown" }}
-                        {{- $source := "" -}}
-                        {{- range $cell.source -}}
-                            {{- $source = printf "%s%s" $source . -}}
-                        {{- end -}}
-                        {{ $source | markdownify }}
-                {{ else if eq $cell.cell_type "code" }}
-                    <div class="codeblock relative bg-zinc-800 rounded text-sm p-4">
-                        {{ with $cell.execution_count }}
-                            <div class="execution-count text-sm text-white font-mono mb-2">In [{{ . }}]:</div>
-                        {{ end }}
-                        {{- $source := "" -}}
-                        {{- range $cell.source -}}
-                            {{- $source = printf "%s%s" $source . -}}
-                        {{- end -}}
-                        {{- transform.Highlight $source "python" -}}
-                        <button class="copy-btn absolute top-2 right-2 bg-zinc-600 hover:bg-zinc-900 transition duration-300 text-white rounded px-2 py-1 text-xs focus:outline-none" onclick="copyCodeToClipboard(this)">Copy</button>
-                    </div>
-                    {{ if $cell.outputs }}
-                        <div class="code-outputs space-y-2">
-                            {{ range $output := $cell.outputs }}
-                                {{ if eq $output.output_type "stream" }}
-                                    <div class="stream-output bg-zinc-800 p-4 rounded text-white font-mono text-sm">
-                                        <pre class="whitespace-pre-wrap">{{ $output.text }}</pre>
-                                    </div>
-                                {{ else if eq $output.output_type "execute_result" }}
-                                    <div class="execute-result bg-zinc-800 p-4 rounded text-white">
-                                        {{ with index $output.data "text/html" }}
-                                            <div class="html-output">{{ . | safeHTML }}</div>
-                                        {{ end }}
-                                        {{ with index $output.data "text/plain" }}
-                                            <pre class="text-output whitespace-pre-wrap font-mono text-sm">{{ . }}</pre>
-                                        {{ end }}
-                                    </div>
-                                {{ else if eq $output.output_type "display_data" }}
-                                    <div class="display-data bg-zinc-800 p-4 rounded text-white">
-                                        {{ with index $output.data "image/png" }}
-                                            <img src="data:image/png;base64,{{ . }}" alt="Notebook output image" class="max-w-full">
-                                        {{ end }}
-                                        {{ with index $output.data "text/html" }}
-                                            <div class="html-output">{{ . | safeHTML }}</div>
-                                        {{ end }}
-                                    </div>
-                                {{ else if eq $output.output_type "error" }}
-                                    <div class="error-output bg-red-900 p-4 rounded text-white border border-red-700">
-                                        <div class="error-name font-bold mb-1">{{ $output.ename }}</div>
-                                        <div class="error-value mb-2">{{ $output.evalue }}</div>
-                                        <div class="error-traceback font-mono text-sm">
-                                            {{ range $output.traceback }}
-                                                <div class="traceback-line">{{ . }}</div>
-                                            {{ end }}
-                                        </div>
-                                    </div>
-                                {{ end }}
-                            {{ end }}
-                        </div>
-                    {{ end }}
-                {{ else if eq $cell.cell_type "raw" }}
-                    <div class="raw-cell-content">
-                        {{- $source := "" -}}
-                        {{- range $cell.source -}}
-                            {{- $source = printf "%s%s" $source . -}}
-                        {{- end -}}
-                        {{ $source }}
-                    </div>
-                {{ end }}
-            {{ end }}
-        {{- else -}}
-            {{- errorf "Failed to unmarshal notebook: %s" $notebookPath -}}
-        {{- end -}}
+      <article id="articleContent" 
+               data-component="notebook-progressive-reveal"
+               data-view="normal">
+  
+  {{- $notebookPath := .Params.notebook_path -}}
+  {{- with resources.Get $notebookPath -}}
+    {{- $resource := . -}}
+    {{- $content := $resource.Content | safeHTML -}}
+    {{- with $content | transform.Unmarshal -}}
+      {{- $decodedNotebook := . -}}
+      
+      {{ partial "notebook/header.html" . }}
+      
+      <!-- Notebook Toolbar -->
+      <div class="notebook__toolbar" data-component="notebook-density">
+        <div class="notebook__density-toggle">
+          <button class="notebook__density-btn notebook__density-btn--active" 
+                  data-density="normal">Normal</button>
+          <button class="notebook__density-btn" 
+                  data-density="compact">Compact</button>
+          <button class="notebook__density-btn" 
+                  data-density="comfortable">Comfortable</button>
+        </div>
+        
+        <div class="notebook__cell-counter">
+          <span data-visible-cells="5">5</span> / <span data-total-cells="{{ len $decodedNotebook.cells }}">{{ len $decodedNotebook.cells }}</span> cells
+        </div>
+        
+                        <div class="notebook__actions">
+                  <button class="notebook__nav-btn" 
+                          data-action="collapse-all"
+                          title="Collapse all cells">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7-7m0 0l-7 7m7-7v18"/>
+                    </svg>
+                  </button>
+                  <button class="notebook__nav-btn" 
+                          data-action="expand-all"
+                          title="Expand all cells">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7 7m0 0l7-7m-7 7V3"/>
+                    </svg>
+                  </button>
+                  
+                  {{/* Notebook Launch Dropdown */}}
+                  {{ partial "notebook/launch-dropdown.html" $ }}
+                </div>
+      </div>
+      
+      <div class="notebook__cells" 
+           data-notebook-id="{{ .Permalink | base64Encode }}"
+           data-cell-count="{{ len $decodedNotebook.cells }}"
+           data-density="normal">
+          {{ range $index, $cell := $decodedNotebook.cells }}
+            {{/* Add hidden class to all cells except first few */}}
+            {{ $isInitiallyVisible := lt $index 5 }}
+            <div class="notebook-cell-wrapper{{ if not $isInitiallyVisible }} notebook-cell--hidden{{ end }}" 
+                 data-cell-index="{{ $index }}">
+              {{ if eq $cell.cell_type "markdown" }}
+                {{ partial "notebook/cell-markdown.html" (dict "cell" $cell "index" $index) }}
+              {{ else if eq $cell.cell_type "code" }}
+                {{ partial "notebook/cell-code.html" (dict "cell" $cell "index" $index) }}
+              {{ else if eq $cell.cell_type "raw" }}
+                {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
+              {{ else }}
+                {{/* Unknown cell type - render as raw */}}
+                {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
+              {{ end }}
+            </div>
+          {{ end }}
+      </div>
+      
+
+      
+      {{/* Enhanced metadata for JavaScript */}}
+      <script type="application/json" id="notebook-metadata">
+      {
+        "totalCells": {{ len $decodedNotebook.cells }},
+        "initiallyVisible": 5,
+        "batchSize": 20,
+        "cells": [
+          {{ range $index, $cell := $decodedNotebook.cells }}
+            {
+              "index": {{ $index }},
+              "type": "{{ $cell.cell_type }}",
+              "id": "cell-{{ $cell.cell_type }}-{{ $index }}",
+              {{ with $cell.execution_count }}"executionCount": {{ . }},{{ end }}
+              "hasOutput": {{ if $cell.outputs }}true{{ else }}false{{ end }}
+            }{{ if ne $index (sub (len $decodedNotebook.cells) 1) }},{{ end }}
+          {{ end }}
+        ]
+      }
+      </script>
+      
     {{- else -}}
-        {{- errorf "Failed to get notebook resource: %s" $notebookPath -}}
-        {{- errorf "Current working directory: %s" (os.Getwd) -}}
+      {{- errorf "Failed to unmarshal notebook: %s" $notebookPath -}}
     {{- end -}}
-</div>
+  {{- else -}}
+    {{- errorf "Failed to get notebook resource: %s" $notebookPath -}}
+    {{- errorf "Current working directory: %s" (os.Getwd) -}}
+  {{- end -}}
+</article>
+
+{{/* Include the toggleCollapse function for notebook cells */}}
+<script>
+// Only define the function once
+if (typeof window.toggleCollapse === 'undefined') {
+    window.toggleCollapse = function(id) {
+        const collapse = document.getElementById(id);
+        if (!collapse) return;
+        
+        const header = collapse.querySelector('.collapse__header');
+        const isExpanded = collapse.classList.contains('expanded');
+        
+        if (isExpanded) {
+            collapse.classList.remove('expanded');
+            header.setAttribute('aria-expanded', 'false');
+        } else {
+            collapse.classList.add('expanded');
+            header.setAttribute('aria-expanded', 'true');
+        }
+    };
+}
+</script>
+
+
 {{- end -}}
 
 {{- define "sidebar-right" -}}

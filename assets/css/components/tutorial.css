@@ -1,0 +1,1294 @@
+/* Tutorial Component - Enhanced tutorial system with modern UX patterns */
+
+/* ==========================================================================
+   Tutorial Overview Components
+   ========================================================================== */
+
+.tutorial-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
+.tutorial-card {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  border-radius: 1rem;
+  border: 1px solid var(--color-border-primary);
+  padding: 2rem;
+  /* ✅ FIXED: Specific properties instead of transition: all */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.tutorial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-brand-rgb), 0.05) 0%,
+    transparent 50%,
+    rgba(var(--color-brand-rgb), 0.02) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.tutorial-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-brand);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.tutorial-card:hover::before {
+  opacity: 1;
+}
+
+.tutorial-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tutorial-card__badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tutorial-card__title {
+  color: var(--color-text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1rem 0 0.75rem 0;
+  transition: color 0.2s ease;
+}
+
+.tutorial-card:hover .tutorial-card__title {
+  color: var(--color-brand);
+}
+
+.tutorial-card__description {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.tutorial-card__metadata {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-primary);
+}
+
+/* Tutorial Badges */
+.tutorial-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
+}
+
+.tutorial-badge--difficulty {
+  background: linear-gradient(135deg, var(--color-brand-3) 0%, var(--color-brand-2) 100%);
+  color: var(--color-text-inverse);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tutorial-badge--time {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.tutorial-badge--prerequisites {
+  background: linear-gradient(135deg, var(--color-brand-5) 0%, var(--color-brand-6) 100%);
+  color: var(--color-text-primary);
+}
+
+/* Tutorial Progress Mini Display */
+.tutorial-progress-mini {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.progress-bar-mini {
+  flex: 1;
+  height: 6px;
+  background-color: var(--color-border-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-mini__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-2) 100%);
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.progress-bar-mini__fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 100%);
+  animation: progress-shine 2s infinite;
+}
+
+@keyframes progress-shine {
+  0% { transform: translateX(-20px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(20px); opacity: 0; }
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* Tutorial Actions */
+.tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tutorial-actions__primary {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.tutorial-actions__secondary {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bookmark-tutorial {
+  position: relative;
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+.bookmark-tutorial:hover {
+  transform: scale(1.1);
+}
+
+.bookmark-tutorial.bookmarked .bookmark-icon {
+  fill: var(--color-brand);
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   Compact Progress Components (Primary)
+   ========================================================================== */
+
+.tutorial-progress-compact {
+  background: var(--color-surface);
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.tutorial-compact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.tutorial-compact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tutorial-compact-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.tutorial-parent-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.tutorial-parent-link:hover {
+  color: var(--color-brand);
+}
+
+.breadcrumb-separator {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.current-step-title {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.tutorial-compact-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+}
+
+.step-counter {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.progress-percentage {
+  color: var(--color-brand);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.time-estimate {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+}
+
+.tutorial-compact-actions {
+  display: flex;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+.btn-compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-compact:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-brand);
+  color: var(--color-text-primary);
+}
+
+.btn-compact svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Compact Progress Bar */
+.tutorial-progress-bar {
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.progress-track {
+  height: 3px;
+  background: var(--color-border-secondary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.625rem;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-2) 100%);
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -8px;
+  bottom: 0;
+  width: 8px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 100%);
+  animation: progress-shine 2s infinite;
+}
+
+.step-dots {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.step-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-decoration: none;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
+  position: relative;
+  z-index: 2;
+}
+
+.step-dot.completed {
+  background: var(--color-brand);
+  color: var(--color-text-inverse);
+  box-shadow: 0 2px 4px rgba(var(--color-brand-rgb), 0.2);
+}
+
+.step-dot.current {
+  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-2) 100%);
+  color: var(--color-text-inverse);
+  box-shadow: 0 2px 6px rgba(var(--color-brand-rgb), 0.3);
+  animation: pulse-gentle 2s infinite;
+}
+
+.step-dot.pending {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.step-dot.pending:hover:not(.disabled) {
+  background: var(--color-surface-hover);
+  border-color: var(--color-brand);
+  transform: scale(1.1);
+}
+
+.step-dot.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.step-number {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.step-dot svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* Expandable Progress Section */
+.tutorial-progress-expanded {
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.tutorial-steps-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.tutorial-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.tutorial-step-item:hover {
+  background: var(--color-surface-hover);
+}
+
+.tutorial-step-item.current {
+  background: var(--color-hover);
+}
+
+.step-indicator-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.step-indicator-small .current-indicator,
+.step-indicator-small .pending-indicator {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.step-indicator-small .current-indicator {
+  background: var(--color-brand);
+  color: var(--color-text-inverse);
+}
+
+.step-indicator-small .pending-indicator {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.step-info-small {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.step-link {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.step-link:hover {
+  color: var(--color-brand);
+}
+
+.step-title-disabled {
+  color: var(--color-text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.step-time-small {
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  background: var(--color-bg-tertiary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+/* Compact Navigation */
+.tutorial-compact-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* ==========================================================================
+   Enhanced Progress Navigation (Legacy)
+   ========================================================================== */
+
+/* Legacy Progress Components (for backward compatibility) */
+.tutorial-progress {
+  background: var(--color-surface);
+  border-radius: 1rem;
+  border: 1px solid var(--color-border-primary);
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tutorial-progress__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tutorial-title {
+  color: var(--color-text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.tutorial-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.time-remaining {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-tertiary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border-primary);
+}
+
+/* Progress Track */
+.tutorial-progress__track {
+  position: relative;
+  margin: 3rem 0;
+}
+
+.progress-line {
+  position: absolute;
+  top: 3rem;
+  left: 3rem;
+  right: 3rem;
+  height: 3px;
+  background-color: var(--color-border-secondary);
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.progress-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-2) 100%);
+  border-radius: 2px;
+  width: var(--progress-width, 0%);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(var(--color-brand-rgb), 0.3);
+}
+
+.tutorial-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+  gap: 1rem;
+}
+
+.tutorial-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 200px;
+  text-align: center;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tutorial-step:hover {
+  transform: translateY(-2px);
+}
+
+.tutorial-step.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tutorial-step.disabled:hover {
+  transform: none;
+}
+
+/* Step Indicators */
+.step-indicator {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border: 3px solid transparent;
+}
+
+.step-icon--complete {
+  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-2) 100%);
+  color: var(--color-text-inverse);
+  box-shadow: 0 4px 15px rgba(var(--color-brand-rgb), 0.3);
+}
+
+/* Checkmark handled by SVG, no need for ::before content */
+
+.step-icon--current {
+  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-2) 100%);
+  color: var(--color-text-inverse);
+  animation: pulse-gentle 2s infinite;
+  box-shadow: 0 4px 20px rgba(var(--color-brand-rgb), 0.4);
+  border-color: var(--color-brand);
+}
+
+.step-icon--pending {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border-secondary);
+}
+
+.step-icon--pending:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-brand);
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { 
+    transform: scale(1); 
+    box-shadow: 0 4px 20px rgba(var(--color-brand-rgb), 0.4), 0 0 0 0 rgba(var(--color-brand-rgb), 0.4); 
+  }
+  50% { 
+    transform: scale(1.05); 
+    box-shadow: 0 6px 25px rgba(var(--color-brand-rgb), 0.6), 0 0 0 15px rgba(var(--color-brand-rgb), 0); 
+  }
+}
+
+/* Step Content */
+.step-content {
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.step-title {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.step-description {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0 0 0.5rem 0;
+}
+
+.step-time {
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: var(--color-bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  display: inline-block;
+}
+
+/* Progress Actions */
+.tutorial-progress__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+  gap: 1rem;
+}
+
+/* ==========================================================================
+   Interactive Content Components
+   ========================================================================== */
+
+/* Enhanced Code Blocks - Now used by render-codeblock.html */
+.code-block-enhanced {
+  background: var(--color-bg-tertiary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.code-content {
+  background: var(--color-bg-tertiary);
+}
+
+.code-content pre {
+  margin: 0;
+  background: transparent;
+}
+
+.code-content code {
+  background: transparent;
+  padding: 1.5rem;
+  display: block;
+  overflow-x: auto;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.code-language {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--color-bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.code-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.copy-code {
+  position: relative;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
+}
+
+.copy-code.copied {
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
+  color: var(--color-text-inverse);
+}
+
+.copy-code .check-icon {
+  display: none;
+}
+
+.copy-code.copied .copy-icon {
+  display: none;
+}
+
+.copy-code.copied .check-icon {
+  display: block;
+}
+
+/* Collapsible Sections */
+.tutorial-section {
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.section-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard);
+  text-align: left;
+}
+
+.section-header:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.section-header[aria-expanded="true"] {
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.section-title {
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.section-chevron {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-text-secondary);
+  transition: transform 0.3s ease;
+}
+
+.section-header[aria-expanded="true"] .section-chevron {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  padding: 0 1.5rem;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    max-height var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard),
+    padding var(--timing-medium) var(--easing-standard);
+  /* Tutorial-specific customization */
+  --collapse-height-expanded: 2500px;
+  --collapse-timing: var(--timing-slow);
+  --collapse-easing: var(--easing-emphasized);
+}
+
+.section-content.expanded {
+  max-height: var(--collapse-height-expanded, 2500px);
+  opacity: 1;
+  padding: 1.5rem;
+}
+
+/* Step Validation */
+.step-validation {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.validation-checklist h4 {
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.validation-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    padding var(--timing-fast) var(--easing-standard);
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.validation-item:hover {
+  background-color: var(--color-surface-hover);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.validation-checkbox {
+  margin-right: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--color-brand);
+}
+
+.validation-text {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.validate-step {
+  margin-top: 1.5rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.validate-step:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .tutorial-overview {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .tutorial-card {
+    padding: 1.5rem;
+  }
+  
+  .tutorial-progress {
+    padding: 1.5rem;
+  }
+  
+  .tutorial-steps {
+    gap: 0.75rem;
+  }
+  
+  .tutorial-step {
+    max-width: 150px;
+  }
+  
+  .step-indicator {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutorial-overview {
+    padding: 0;
+  }
+  
+  .tutorial-card {
+    border-radius: 0.75rem;
+    margin: 0 0.5rem;
+  }
+  
+  .tutorial-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  /* Compact Progress Mobile */
+  .tutorial-progress-compact {
+    margin: 0.75rem 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+  
+  .tutorial-compact-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .tutorial-compact-meta {
+    justify-content: space-between;
+  }
+  
+  .tutorial-compact-actions {
+    align-self: flex-end;
+  }
+  
+  .tutorial-compact-nav {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .tutorial-compact-nav .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .step-dots {
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.25rem 0;
+  }
+  
+  .step-dot {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  /* Legacy tutorial progress mobile */
+  .tutorial-progress {
+    margin: 1rem 0.5rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+  
+  .tutorial-progress__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .tutorial-title {
+    font-size: 1.5rem;
+  }
+  
+  .tutorial-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  /* Mobile Step Layout */
+  .tutorial-steps {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+  
+  .tutorial-step {
+    flex-direction: row;
+    max-width: none;
+    text-align: left;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border-primary);
+  }
+  
+  .step-indicator {
+    margin-bottom: 0;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .step-content {
+    min-height: auto;
+    flex: 1;
+  }
+  
+  .progress-line {
+    display: none; /* Hide connecting line on mobile */
+  }
+  
+  .tutorial-progress__actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .tutorial-progress__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Mobile Code Blocks */
+  .code-header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .code-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  /* Mobile Sections */
+  .section-header {
+    padding: 1rem 1.25rem;
+  }
+  
+  .section-content.expanded {
+    padding: 1rem 1.25rem 1.5rem;
+  }
+  
+  /* Mobile Validation */
+  .step-validation {
+    margin: 1.5rem 0.5rem;
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tutorial-card {
+    margin: 0 0.25rem;
+    padding: 1.25rem;
+  }
+  
+  .tutorial-progress {
+    margin: 1rem 0.25rem;
+    padding: 0.75rem;
+  }
+  
+  .tutorial-title {
+    font-size: 1.25rem;
+  }
+  
+  .tutorial-step {
+    padding: 0.75rem;
+  }
+  
+  .step-indicator {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .step-title {
+    font-size: 0.9rem;
+  }
+  
+  .step-description {
+    font-size: 0.8rem;
+  }
+}
+
+/* ==========================================================================
+   Dark Mode Adjustments
+   ========================================================================== */
+
+.dark .tutorial-card {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .tutorial-card:hover {
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--color-brand-rgb), 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark .tutorial-progress {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark .code-block-enhanced {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark .tutorial-section {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark .step-validation {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   Accessibility Enhancements
+   ========================================================================== */
+
+.tutorial-step:focus-within {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+.section-header:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.validation-item:focus-within {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tutorial-card,
+  .tutorial-step,
+  .step-indicator,
+  .progress-bar-mini__fill,
+  .progress-line::after {
+    transition: none;
+  }
+  
+  .step-icon--current {
+    animation: none;
+  }
+  
+  .progress-bar-mini__fill::after {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .tutorial-card {
+    border-width: 2px;
+  }
+  
+  .tutorial-badge {
+    border: 1px solid currentColor;
+  }
+  
+  .step-indicator {
+    border-width: 2px;
+  }
+}

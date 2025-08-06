@@ -1,0 +1,196 @@
+/* OpenAPI Parameters */
+
+/* ==========================================================================
+   Parameters
+   ========================================================================== */
+
+.parameters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.parameters-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.parameters-section-header {
+  padding: 1rem 1.5rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.parameters-section-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Parameter Group Headers */
+.parameter-group-header {
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.parameter-group-header:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.parameter-group-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.parameter-count {
+  background: rgba(var(--color-brand-rgb), 0.1);
+  color: var(--color-brand);
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.parameter-group-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.parameter-group-toggle .chevron {
+  width: 0.875rem;
+  height: 0.875rem;
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+.parameter-group-header[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.parameter-list {
+  /* Height-based collapse (consistent with all components) */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+  
+  /* Configure collapse behavior */
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 1500px; /* Good for parameter lists */
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  --collapse-overflow-collapsed: hidden;
+  --collapse-overflow-expanded: visible;
+  --collapse-padding-collapsed: 0;
+  --collapse-padding-expanded: 1rem;
+  --collapse-timing: 0.3s;
+  --collapse-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Remove old class-based approach - component-states.css handles this */
+
+.parameters-list {
+  padding: 0;
+}
+
+.parameter-item {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-primary);
+  transition: background-color 0.2s ease;
+}
+
+.parameter-item:last-child {
+  border-bottom: none;
+}
+
+.parameter-item:hover {
+  background: var(--color-bg-secondary);
+}
+
+.parameter-item--required {
+  border-left: 4px solid var(--color-brand);
+}
+
+.parameter-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.parameter-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.parameter-name code {
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+  color: var(--color-brand);
+  background: rgba(var(--color-brand-rgb), 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.parameter-required {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.parameter-type {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.parameter-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.parameter-constraints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.constraint-item {
+  background: var(--color-bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.constraint-label {
+  font-weight: 600;
+}
+
+.constraint-value {
+  font-family: var(--font-family-mono);
+  color: var(--color-brand);
+}

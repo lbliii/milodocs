@@ -1,0 +1,60 @@
+{{- $paths := .paths -}}
+{{- $spec := .spec -}}
+{{- $page := .page -}}
+
+<div class="section-header">
+  <h2 class="section-title">API Endpoints</h2>
+  <div class="section-description">Available API operations and their details</div>
+</div>
+
+<!-- Enhanced Endpoint Navigation -->
+{{ $tags := slice }}
+{{ $methods := slice }}
+{{ range $path, $pathMethods := $paths }}
+  {{ range $method, $operation := $pathMethods }}
+    {{ $methodUpper := upper $method }}
+    {{ if not (in $methods $methodUpper) }}
+      {{ $methods = $methods | append $methodUpper }}
+    {{ end }}
+    {{ range $tag := $operation.tags }}
+      {{ if not (in $tags $tag) }}
+        {{ $tags = $tags | append $tag }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<nav class="endpoints-nav" data-component="endpoint-filter">
+  <div class="endpoints-nav__section">
+    <div class="endpoints-nav__header">Filter by Tag:</div>
+    <div class="endpoints-nav__tags">
+      <button class="tag-filter tag-filter--active" data-tag="all">All Tags</button>
+      {{ range $tag := $tags }}
+        <button class="tag-filter" data-tag="{{ $tag | urlize }}">{{ $tag }}</button>
+      {{ end }}
+    </div>
+  </div>
+  
+  {{ if gt (len $methods) 1 }}
+  <div class="endpoints-nav__section">
+    <div class="endpoints-nav__header">Filter by Method:</div>
+    <div class="endpoints-nav__methods">
+      <button class="method-filter method-filter--active" data-method="all">All Methods</button>
+      {{ range $method := $methods }}
+        <button class="method-filter method-filter--{{ lower $method }}" data-method="{{ lower $method }}">{{ $method }}</button>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+  
+  <div class="endpoints-nav__section">
+    <div class="endpoints-nav__header">Search:</div>
+    <div class="endpoints-nav__search">
+      <input type="text" class="endpoint-search" placeholder="Search endpoints..." data-search="endpoints">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </div>
+  </div>
+</nav>

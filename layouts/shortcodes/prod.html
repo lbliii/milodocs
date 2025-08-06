@@ -1,1 +1,10 @@
-{{- with .Site.Params.names.product}}{{.}}{{end}}
+{{- $productName := "" -}}
+{{- if .Site.Params.names -}}
+    {{- $productName = .Site.Params.names.product | default "" -}}
+{{- end -}}
+{{- if $productName -}}
+    {{- $productName -}}
+{{- else -}}
+    {{- warnf "Product name not found in site configuration. Add 'params.names.product' to your hugo.yaml config. Page: %s" .Page.RelPermalink -}}
+    [Product Name Not Configured]
+{{- end -}}

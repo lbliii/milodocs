@@ -7,16 +7,67 @@
 {{- end -}}
 
 {{- define "breadcrumbs" -}}
-  <div class="my-4">
-      {{partial "navigation/breadcrumbs.html" . }}
+  <div class="mb-4">
+      {{partial "article/header.html" . }}
   </div>
 {{- end -}}
 
 {{ define "content" }}
-  <h1 class="text-black p-4">{{ .Title }}</h1>
-  <div id="articleContent" class="p-4">
-    {{ .Content }}
-  </div>
+  <article class="prose max-w-5xl">
+    {{/* Content status warnings */}}
+    {{- if site.Params.article.statusWarnings.display -}}
+      {{- partial "article/status-warnings.html" . -}}
+    {{- end -}}
+
+    <header class="mb-8 not-prose">
+      {{/* Only show frontmatter title if content doesn't start with H1 */}}
+      {{- $rawContent := .RawContent -}}
+      {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
+      {{- if not $startsWithH1 -}}
+        <h1 class="text-3xl font-bold mb-4" style="color: var(--color-text-primary);">{{ .Title }}</h1>
+      {{- end -}}
+      
+      {{- with .Description -}}
+        <div class="article-description not-prose mb-8 flex items-center gap-6">
+          <div class="w-1 h-16 rounded-full flex-shrink-0" style="background-color: var(--color-brand); opacity: 0.3;"></div>
+          <div class="flex-1">
+            <p class="text-xl font-light leading-relaxed" style="color: var(--color-text-secondary); font-weight: 300;">{{ . }}</p>
+          </div>
+        </div>
+      {{- end -}}
+    </header>
+
+    {{/* Inline Table of Contents */}}
+    {{- if site.Params.article.inlineToc.display -}}
+      {{- partial "article/table-of-contents.html" . -}}
+    {{- end -}}
+
+    <div id="articleContent" class="article-content">
+      {{ .Content }}
+    </div>
+    
+    {{- with .Params.tags -}}
+      <footer class="mt-8 pt-6 border-t not-prose">
+        <div class="flex flex-wrap gap-2">
+          {{- range . -}}
+            <span class="inline-block px-3 py-1 rounded-full text-sm" style="background-color: var(--color-bg-tertiary); color: var(--color-text-secondary);">
+              {{ . }}
+            </span>
+          {{- end -}}
+        </div>
+      </footer>
+    {{- end -}}
+    
+    {{/* Page Resources */}}
+    {{- if site.Params.article.pageResources.display -}}
+      {{- partial "article/page-resources.html" . -}}
+    {{- end -}}
+    
+    {{/* Related Content Section */}}
+    {{- if site.Params.article.relatedContent.display -}}
+      {{- partial "article/related-content.html" . -}}
+    {{- end -}}
+  </article>
 {{ end }}
 
 {{ define "innerFooter" }}

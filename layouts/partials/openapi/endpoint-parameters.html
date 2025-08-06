@@ -1,0 +1,115 @@
+{{- $parameters := .parameters -}}
+{{- $spec := .spec -}}
+
+<div class="endpoint-section">
+  <h4>Parameters</h4>
+  
+  <!-- Group parameters by location -->
+  {{ $paramGroups := dict }}
+  {{ range $param := $parameters }}
+            {{ $location := $param.In | default "query" }}
+    {{ $existingParams := index $paramGroups $location | default (slice) }}
+    {{ $paramGroups = merge $paramGroups (dict $location ($existingParams | append $param)) }}
+  {{ end }}
+  
+  <div class="parameters-container">
+    {{ range $location, $params := $paramGroups }}
+      <div class="parameter-group">
+        <div class="parameter-group-header collapse__header"
+             data-target="params-{{ $location }}"
+             role="button"
+             tabindex="0"
+             aria-expanded="false"
+             aria-controls="params-{{ $location }}">
+          <h5 class="parameter-group-title">{{ title $location }} Parameters 
+            <span class="parameter-count">({{ len $params }})</span>
+          </h5>
+          <div class="parameter-group-toggle">
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"></path>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="parameter-list" id="params-{{ $location }}">
+          {{ range $param := $params }}
+            <div class="parameter-item{{ if $param.Required }} parameter-item--required{{ end }}">
+              <div class="parameter-header">
+                <div class="parameter-name">
+                  <code>{{ $param.Name }}</code>
+                  {{ if $param.Required }}
+                    <span class="parameter-required">required</span>
+                  {{ end }}
+                </div>
+                <div class="parameter-type">
+                  {{ with $param.Schema }}
+                    <span class="type-badge type-badge--{{ if .Value }}{{ .Value.Type }}{{ else }}unknown{{ end }}">{{ if .Value }}{{ .Value.Type }}{{ else }}unknown{{ end }}</span>
+                    {{ if and .Value .Value.Format }}<span class="type-format">({{ .Value.Format }})</span>{{ end }}
+                  {{ end }}
+                </div>
+              </div>
+              
+              {{ with $param.Description }}
+                <div class="parameter-description">{{ . | markdownify }}</div>
+              {{ end }}
+              
+              {{ with $param.Schema }}
+                {{ if and .Value (or .Value.Enum .Value.Minimum .Value.Maximum .Value.MinLength .Value.MaxLength .Value.Pattern .Value.Default .Value.Example) }}
+                  <div class="parameter-constraints">
+                    {{ if and .Value .Value.Default }}{{ with .Value.Default }}
+                      <div class="constraint">
+                        <span class="constraint-label">Default:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}{{ end }}
+                    
+                    {{ if and .Value .Value.Example }}{{ with .Value.Example }}
+                      <div class="constraint">
+                        <span class="constraint-label">Example:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}{{ end }}
+                    
+                    {{ if and .Value .Value.Enum }}{{ with .Value.Enum }}
+                      <div class="constraint">
+                        <span class="constraint-label">Allowed values:</span>
+                        <div class="enum-values">
+                          {{ range $val := . }}
+                            <code class="enum-value">{{ $val }}</code>
+                          {{ end }}
+                        </div>
+                      </div>
+                    {{ end }}{{ end }}
+                    
+                    {{ if and .Value (or .Value.Minimum .Value.Maximum) }}
+                      <div class="constraint">
+                        <span class="constraint-label">Range:</span>
+                        {{ if .Value.Minimum }}<code>min: {{ .Value.Minimum }}</code>{{ end }}
+                        {{ if .Value.Maximum }}<code>max: {{ .Value.Maximum }}</code>{{ end }}
+                      </div>
+                    {{ end }}
+                    
+                    {{ if and .Value (or .Value.MinLength .Value.MaxLength) }}
+                      <div class="constraint">
+                        <span class="constraint-label">Length:</span>
+                        {{ if .Value.MinLength }}<code>min: {{ .Value.MinLength }}</code>{{ end }}
+                        {{ if .Value.MaxLength }}<code>max: {{ .Value.MaxLength }}</code>{{ end }}
+                      </div>
+                    {{ end }}
+                    
+                    {{ if and .Value .Value.Pattern }}{{ with .Value.Pattern }}
+                      <div class="constraint">
+                        <span class="constraint-label">Pattern:</span>
+                        <code>{{ . }}</code>
+                      </div>
+                    {{ end }}{{ end }}
+                  </div>
+                {{ end }}
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</div>

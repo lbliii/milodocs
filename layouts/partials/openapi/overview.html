@@ -1,0 +1,72 @@
+{{- $info := .info -}}
+{{- $page := .page -}}
+
+{{/* Check if we have meaningful content beyond just version */}}
+{{- $hasExtendedInfo := false -}}
+{{- with $info.Extensions -}}
+  {{- if or (index . "x-api-type") (index . "x-maturity") (index . "x-documentation") (index . "x-stability") -}}
+    {{- $hasExtendedInfo = true -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Only render overview section if we have version OR extended info */}}
+{{- if or $info.Version $hasExtendedInfo -}}
+<section class="openapi-overview" 
+         id="overview"
+         data-component="openapi-overview"
+         data-has-version="{{ if $info.Version }}true{{ else }}false{{ end }}"
+         data-has-extended-info="{{ $hasExtendedInfo }}"
+         {{- with $info.Extensions -}}
+           {{- with index . "x-api-type" -}}data-api-type="{{ . }}"{{- end -}}
+           {{- with index . "x-maturity" -}}data-maturity="{{ . }}"{{- end -}}
+           {{- with index . "x-stability" -}}data-stability="{{ . }}"{{- end -}}
+         {{- end -}}>
+  <div class="overview-content">
+    {{/* Stats moved to header as badges for more compact design */}}
+
+
+    
+    {{/* Additional Documentation section */}}
+    {{- with $info.Extensions -}}
+      {{- with index . "x-documentation" -}}
+        <div class="overview-documentation" 
+             data-component="overview-documentation" 
+             data-doc-count="{{ len . }}">
+          <h2>Related Documentation</h2>
+          <div class="overview-documentation__grid">
+            {{- range $index, $doc := . -}}
+              <a href="{{ $doc.url }}" 
+                 class="overview-doc-link" 
+                 data-doc-index="{{ $index }}"
+                 data-doc-name="{{ $doc.name | urlize }}"
+                 target="_blank" 
+                 rel="noopener">
+                <div class="overview-doc-link__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14,2 14,8 20,8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10,9 9,9 8,9"></polyline>
+                  </svg>
+                </div>
+                <div class="overview-doc-link__content">
+                  <span class="overview-doc-link__title">{{ $doc.name }}</span>
+                  {{- with $doc.description -}}
+                  <span class="overview-doc-link__description">{{ . }}</span>
+                  {{- end -}}
+                </div>
+                <div class="overview-doc-link__arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17l9.2-9.2M17 17V7H7"></path>
+                  </svg>
+                </div>
+              </a>
+            {{- end -}}
+          </div>
+        </div>
+      {{- end -}}
+    {{- end -}}
+  </div>
+</section>
+{{- end -}}

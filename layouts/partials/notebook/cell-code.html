@@ -1,0 +1,112 @@
+{{/*
+  Notebook Code Cell Partial
+  Renders a code cell with syntax highlighting, copy functionality, and outputs
+  
+  Context: dict with "cell" (cell data) and "index" (cell index)
+  Usage: {{ partial "notebook/cell-code.html" (dict "cell" $cell "index" $index) }}
+*/}}
+
+{{ $cell := .cell }}
+{{ $index := .index }}
+{{ $cellId := printf "cell-code-%d" $index }}
+
+<section class="collapse notebook-cell notebook-cell--code"
+         data-collapse-state="expanded"
+         data-component-state="ready" 
+         id="{{ $cellId }}"
+         data-cell-type="code" 
+         data-cell-index="{{ $index }}"
+         style="--cell-index: {{ $index }}">
+  
+  <div class="collapse__header notebook-cell__header" 
+       onclick="toggleCollapse('{{ $cellId }}')"
+       role="button"
+       tabindex="0"
+       aria-expanded="true"
+       aria-controls="{{ $cellId }}-body"
+       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse('{{ $cellId }}');}">
+    
+    <div class="collapse__icon-wrapper">
+      <svg class="collapse__icon" 
+           xmlns="http://www.w3.org/2000/svg" 
+           fill="none" 
+           viewBox="0 0 24 24" 
+           stroke-width="2.5" 
+           stroke="currentColor"
+           aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </div>
+    
+    <div class="collapse__content-wrapper">
+      <div class="notebook-cell__type">
+        <span class="notebook-cell__number">{{ add $index 1 }}</span>
+        <span class="notebook-cell__type-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4.72 9.47L1.25 6l3.47-3.47a.75.75 0 00-1.06-1.06L.19 4.94a1.25 1.25 0 000 1.76l3.47 3.47a.75.75 0 101.06-1.06zm6.56 0L14.75 6l-3.47-3.47a.75.75 0 111.06-1.06l3.47 3.47a1.25 1.25 0 010 1.76l-3.47 3.47a.75.75 0 01-1.06-1.06z"/>
+          </svg>
+        </span>
+        <h3 class="notebook-cell__type-text">Code Cell</h3>
+        {{ if $cell.execution_count }}
+          <span class="notebook-cell__status notebook-cell__status--executed">In [{{ $cell.execution_count }}]</span>
+        {{ else }}
+          <span class="notebook-cell__status notebook-cell__status--pending">In [ ]</span>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+  
+  <div class="collapse__body" 
+       id="{{ $cellId }}-body"
+       role="region"
+       aria-labelledby="{{ $cellId }}-header">
+    <div class="collapse__body-content">
+      <div class="code-block-enhanced">
+        {{/* Process code cell source */}}
+        {{ $source := "" }}
+        {{ range $cell.source }}
+          {{ $source = printf "%s%s" $source . }}
+        {{ end }}
+        
+        {{/* Apply syntax highlighting - default to Python but could be configurable */}}
+        {{ $language := "python" }}
+        {{ with $cell.metadata.language }}
+          {{ $language = . }}
+        {{ end }}
+        
+        {{/* Enhanced code header - copy button aligned right */}}
+        <div class="code-header">
+          <span></span> {{/* Empty span to maintain space-between layout */}}
+          <div class="code-actions">
+            <button class="btn btn--sm btn--ghost copy-code" 
+                    type="button" 
+                    aria-label="Copy code to clipboard"
+                    data-clipboard-target="#{{ $cellId }}-code">
+              <svg class="btn__icon copy-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              <svg class="btn__icon check-icon w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="copy-text">Copy</span>
+            </button>
+          </div>
+        </div>
+        
+        {{/* Code content - matches regular articles */}}
+        <div class="code-content" id="{{ $cellId }}-code">
+          {{ transform.Highlight $source $language }}
+        </div>
+      </div>
+      
+      {{/* Cell outputs */}}
+      {{ if $cell.outputs }}
+        <div class="notebook-cell__outputs">
+          {{ range $outputIndex, $output := $cell.outputs }}
+            {{ partial "notebook/cell-output.html" (dict "output" $output "index" $outputIndex "cellId" $cellId) }}
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>

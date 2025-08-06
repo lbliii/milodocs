@@ -3,7 +3,7 @@
 {{$currentPage := . }}
 {{ $pages := $currentPage.Pages }}
 
-<div id="enteries-container">
+<div id="entries-container" data-component="glossary-entries">
     {{ range $i, $letter := split $letters "" }}
         <h1 id="{{$letter}}" class="text-black"><a href="#{{$letter}}">{{$letter | upper}}</a></h1>
         {{ range $pages }}

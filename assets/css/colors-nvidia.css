@@ -1,0 +1,72 @@
+:root {
+    --primary-gradient-color: #ffffff; 
+    --secondary-gradient-color: rgba(118, 185, 0, 0.1); 
+    
+    /* NVIDIA Brand Colors - Official Palette */
+    --color-brand: #76B900;            /* primary color - NVIDIA green */
+    --color-brand-rgb: 118, 185, 0;    /* RGB values for alpha transparency */
+    --color-brand-1: #265600;          /* secondary color - NVIDIA green dark 2 */
+    --color-brand-2: #3f8500;          /* tertiary color - NVIDIA green dark 1 */
+    --color-brand-3: #0074df;          /* note color - NVIDIA blue */
+    --color-brand-4: #7cd7fe;          /* tip color - NVIDIA blue light 1 */
+    --color-brand-5: #76B900;          /* security color - NVIDIA green */
+    --color-brand-6: #f9c500;          /* warning color - NVIDIA yellow */
+    --color-brand-7: #e52020;          /* danger color - NVIDIA red */
+
+    /* NVIDIA Font Families */
+    --font-family-brand: NVIDIA, Arial, Helvetica, sans-serif;
+    --font-family-mono: RobotoMono, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+
+    /* Semantic Color System for Light Mode - NVIDIA Grays */
+    --color-text-primary: #313131;        /* NVIDIA gray dark 2 */
+    --color-text-secondary: #757575;      /* NVIDIA gray */
+    --color-text-tertiary: #a7a7a7;       /* NVIDIA gray light 1 */
+    --color-text-inverse: #ffffff;
+    
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f9fafb;
+    --color-bg-tertiary: #f3f4f6;
+    --color-bg-inverse: #111827;
+    
+    --color-border-primary: #e0e0e0;      /* NVIDIA gray light 2 */
+    --color-border-secondary: #a7a7a7;    /* NVIDIA gray light 1 */
+    --color-border-focus: var(--color-brand);
+    
+    --color-surface: #ffffff;
+    --color-surface-hover: #f9fafb;
+    --color-surface-active: #f3f4f6;
+    
+    /* Interactive states */
+    --color-hover: rgba(var(--color-brand-rgb), 0.1);
+    --color-active: rgba(var(--color-brand-rgb), 0.2);
+    --color-focus: rgba(var(--color-brand-rgb), 0.3);
+}
+
+.dark {
+    --primary-gradient-color: rgba(118, 185, 0, 0.3);
+    --secondary-gradient-color: #0f0f0f;
+    
+    /* Semantic Color System for Dark Mode - NVIDIA Theme */
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-tertiary: #9ca3af;
+    --color-text-inverse: #111827;
+    
+    --color-bg-primary: #0f0f0f;
+    --color-bg-secondary: #1a1a1a;
+    --color-bg-tertiary: #262626;
+    --color-bg-inverse: #ffffff;
+    
+    --color-border-primary: #313131;      /* NVIDIA gray dark 2 */
+    --color-border-secondary: #4b4b4b;    /* NVIDIA gray dark 1 */
+    --color-border-focus: var(--color-brand);
+    
+    --color-surface: #1a1a1a;
+    --color-surface-hover: #262626;
+    --color-surface-active: #313131;      /* NVIDIA gray dark 2 */
+    
+    /* Interactive states for dark mode */
+    --color-hover: rgba(var(--color-brand-rgb), 0.2);
+    --color-active: rgba(var(--color-brand-rgb), 0.3);
+    --color-focus: rgba(var(--color-brand-rgb), 0.4);
+}

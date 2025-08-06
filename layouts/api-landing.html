@@ -1,0 +1,176 @@
+{{- define "top-bar" -}}
+  {{- partial "navigation/topbar/main.html" . -}}
+{{- end -}}
+
+{{- define "sidebar-left" -}}
+  <!-- Mobile navigation toggle -->
+  <button id="mobileNavToggle" class="fixed top-4 left-4 z-50 md:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+  </button>
+
+  <!-- Mobile navigation overlay -->
+  <div id="mobileNavOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" data-component="navigation-mobile-overlay"></div>
+
+  <aside id="sidebar-left" class="sidebar-container fixed md:sticky left-0 top-0 md:top-16 z-40 h-full md:h-[calc(100vh-4rem)] w-80 md:w-1/5 md:max-w-80 shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:flex" data-component="navigation-sidebar-left">
+      <!-- Mobile header -->
+      <div class="sidebar-header flex md:hidden items-center justify-between p-4">
+          <h2 class="text-lg font-semibold">API Reference</h2>
+          <button id="closeMobileNav" class="sidebar-close-btn p-2 rounded-lg" aria-label="Close navigation menu">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+          </button>
+      </div>
+      
+      <div id="linkTree" class="pt-4 md:pt-4 px-4 md:px-0 h-[calc(100vh-4rem)] md:h-full overflow-y-auto w-full">
+          {{ $currentpg := . }}
+          {{/* Show only API section and its children */}}
+          {{ $apiSection := .Site.GetPage "/api" }}
+          {{ if $apiSection }}
+            {{ partial "navigation/directory.html" (dict "dir" (slice $apiSection) "current" $currentpg "level" 1) }}
+          {{ end }}
+      </div>
+  </aside>
+{{- end -}}
+
+{{- define "content" -}}
+<article id="articleContent" 
+         class="api-landing-page"
+         data-component="api-landing">
+  
+  <!-- Page Header -->
+  <header class="api-landing-header">
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}
+      <div class="api-landing-description">
+        {{ . }}
+      </div>
+    {{ end }}
+  </header>
+
+  <!-- Available APIs Section -->
+  {{ if .Pages }}
+  <section class="api-landing-apis">
+    <h2>Available APIs</h2>
+    <div class="api-cards-grid">
+      {{ range .Pages.ByTitle }}
+        {{ if eq .Kind "section" }}
+          {{/* Get the API data from this section's params if available */}}
+          {{ $apiData := .Params.api_data }}
+          <div class="api-card">
+            <div class="api-card-header">
+              <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+              {{ if $apiData }}
+                {{ with $apiData.Info.Version }}
+                  <span class="api-version">v{{ . }}</span>
+                {{ end }}
+              {{ end }}
+            </div>
+            
+            <div class="api-card-content">
+              {{ if $apiData }}
+                {{ with $apiData.Info.Description }}
+                  <p class="api-description">{{ . }}</p>
+                {{ end }}
+              {{ else }}
+                {{ with .Description }}
+                  <p class="api-description">{{ . }}</p>
+                {{ end }}
+              {{ end }}
+              
+              <div class="api-card-stats">
+                {{ $endpointCount := len .Pages }}
+                <span class="endpoint-count">{{ $endpointCount }} endpoint{{ if ne $endpointCount 1 }}s{{ end }}</span>
+                
+                {{ if $apiData }}
+                  {{ with $apiData.Servers }}
+                    {{ $server := index . 0 }}
+                    <span class="api-server">{{ $server.URL }}</span>
+                  {{ end }}
+                {{ end }}
+              </div>
+            </div>
+            
+            <div class="api-card-actions">
+              <a href="{{ .RelPermalink }}" class="btn btn-primary">View API</a>
+              {{ if $apiData }}
+                <a href="{{ .RelPermalink }}#components" class="btn btn-secondary">Components</a>
+              {{ end }}
+            </div>
+          </div>
+        {{ end }}
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <!-- Quick Links Section -->
+  <section class="api-landing-quicklinks">
+    <h2>Quick Links</h2>
+    <div class="quicklinks-grid">
+      <div class="quicklink-card">
+        <h3>Getting Started</h3>
+        <p>Learn how to authenticate and make your first API call.</p>
+        <a href="#authentication" class="quicklink-arrow">→</a>
+      </div>
+      
+      <div class="quicklink-card">
+        <h3>Rate Limits</h3>
+        <p>Understand API rate limiting and best practices.</p>
+        <a href="#rate-limits" class="quicklink-arrow">→</a>
+      </div>
+      
+      <div class="quicklink-card">
+        <h3>Error Codes</h3>
+        <p>Reference for common error codes and troubleshooting.</p>
+        <a href="#errors" class="quicklink-arrow">→</a>
+      </div>
+      
+      <div class="quicklink-card">
+        <h3>SDKs & Libraries</h3>
+        <p>Official SDKs and community libraries for popular languages.</p>
+        <a href="#sdks" class="quicklink-arrow">→</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- API Overview Stats -->
+  {{ if .Pages }}
+  <section class="api-landing-stats">
+    <h2>Overview</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">{{ len .Pages }}</span>
+        <span class="stat-label">API{{ if ne (len .Pages) 1 }}s{{ end }}</span>
+      </div>
+      
+      {{ $totalEndpoints := 0 }}
+      {{ range .Pages }}
+        {{ $totalEndpoints = add $totalEndpoints (len .Pages) }}
+      {{ end }}
+      <div class="stat-item">
+        <span class="stat-number">{{ $totalEndpoints }}</span>
+        <span class="stat-label">Total Endpoint{{ if ne $totalEndpoints 1 }}s{{ end }}</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-number">REST</span>
+        <span class="stat-label">API Type</span>
+      </div>
+      
+      <div class="stat-item">
+        <span class="stat-number">JSON</span>
+        <span class="stat-label">Response Format</span>
+      </div>
+    </div>
+  </section>
+  {{ end }}
+
+</article>
+{{- end -}}
+
+{{- define "sidebar-right" -}}
+  {{- partial "navigation/sidebar-right.html" . -}}
+{{- end -}}

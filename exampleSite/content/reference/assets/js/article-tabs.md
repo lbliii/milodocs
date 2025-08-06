@@ -16,19 +16,19 @@ The `tabs.js` file is used to manage the [tabbed experience](/reference/layouts/
 
 {{<tabs/tabContentsContainer>}}
 {{<tabs/tabContent val1="shortcode/container">}}
-{{%include "layouts/shortcodes/article-tabs/container.html" "golang" %}}
+{{%include "layouts/shortcodes/tabs/container.html" "golang" %}}
 {{</tabs/tabContent>}}
 {{<tabs/tabContent val1="shortcode/tabbuttons">}}
-{{%include "layouts/shortcodes/article-tabs/tabButtons.html" "golang" %}}
+{{%include "layouts/shortcodes/tabs/tabButtons.html" "golang" %}}
 {{</tabs/tabContent>}}
 {{<tabs/tabContent val1="shortcode/tab">}}
-{{%include "layouts/shortcodes/article-tabs/tab.html" "golang" %}}
+{{%include "layouts/shortcodes/tabs/tab.html" "golang" %}}
 {{</tabs/tabContent>}}
 {{<tabs/tabContent val1="shortcode/tabcontentscontainer">}}
-{{%include "layouts/shortcodes/article-tabs/tabContentsContainer.html" "golang" %}}
+{{%include "layouts/shortcodes/tabs/tabContentsContainer.html" "golang" %}}
 {{</tabs/tabContent>}}
 {{<tabs/tabContent val1="shortcode/tabcontent">}}
-{{%include "layouts/shortcodes/article-tabs/tabContent.html" "golang" %}}
+{{%include "layouts/shortcodes/tabs/tabContent.html" "golang" %}}
 {{</tabs/tabContent>}}   
 {{</tabs/tabContentsContainer>}}
 {{</tabs/container>}}
