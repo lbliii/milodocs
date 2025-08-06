@@ -5,13 +5,16 @@
   
   {{/* Environment-specific build options */}}
   {{- $opts := dict "target" "es2018" "format" "esm" -}}
-  {{- if hugo.IsProduction -}}
+  {{/* Define production-like environments that should get minification */}}
+  {{- $isProductionBuild := or hugo.IsProduction (in (slice "nvidia" "enterprise" "open-source") hugo.Environment) -}}
+  
+  {{- if $isProductionBuild -}}
     {{- $opts = $opts | merge (dict "minify" true "sourcemap" "external") -}}
   {{- else -}}
     {{- $opts = $opts | merge (dict "sourcemap" "inline") -}}
   {{- end -}}
   
-  {{- if hugo.IsProduction -}}
+  {{- if $isProductionBuild -}}
     {{/* Production: Optimized bundle with integrity */}}
     {{- $jsBundle := $jsResources | resources.Concat $bundleName | js.Build $opts | fingerprint "sha512" -}}
     <script type="module" src="{{ $jsBundle.RelPermalink }}" integrity="{{ $jsBundle.Data.Integrity }}" crossorigin="anonymous" defer></script>

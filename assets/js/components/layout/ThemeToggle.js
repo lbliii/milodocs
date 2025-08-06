@@ -217,14 +217,16 @@ export class ThemeToggle extends Component {
    */
   updateIconSources() {
     const isDarkMode = this.isDarkMode();
-    const iconPath = isDarkMode ? '/icons/dark/' : '/icons/light/';
     
     // Update all icons with the .icon class
     document.querySelectorAll('.icon').forEach(icon => {
       const currentSrc = icon.getAttribute('src');
-      if (currentSrc && currentSrc.includes('/icons/')) {
+      if (currentSrc && currentSrc.includes('icons/')) {
         const iconName = currentSrc.split('/').pop();
-        icon.setAttribute('src', iconPath + iconName);
+        // Preserve the relative path structure from the current src
+        const pathPrefix = currentSrc.substring(0, currentSrc.lastIndexOf('icons/'));
+        const iconPath = isDarkMode ? 'icons/dark/' : 'icons/light/';
+        icon.setAttribute('src', pathPrefix + iconPath + iconName);
       }
     });
   }

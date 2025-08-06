@@ -279,7 +279,10 @@
   {{- $bundleName := printf "css/bundle-%s.css" hugo.Environment -}}
   {{- $cssBundle := $cssResources | resources.Concat $bundleName -}}
   
-  {{- if hugo.IsProduction -}}
+  {{/* Define production-like environments that should get minification */}}
+  {{- $isProductionBuild := or hugo.IsProduction (in (slice "nvidia" "enterprise" "open-source") hugo.Environment) -}}
+  
+  {{- if $isProductionBuild -}}
     {{/* Production: Full optimization pipeline */}}
     {{- $cssOptimized := $cssBundle | minify | fingerprint "sha512" -}}
     <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">

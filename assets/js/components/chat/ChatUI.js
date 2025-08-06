@@ -234,15 +234,21 @@ export class ChatUI {
     
     // Update icon source after a brief moment for smooth transition
     setTimeout(() => {
+      // Get the current path structure to preserve relative paths
+      const currentSrc = img.getAttribute('src') || '';
+      const pathPrefix = currentSrc.includes('icons/') 
+        ? currentSrc.substring(0, currentSrc.lastIndexOf('icons/'))
+        : './';
+      
       if (isExpanded) {
         // Show collapse icon
         this.expandButton.setAttribute('aria-label', 'Collapse chat');
-        img.src = '/icons/light/collapse.svg';
+        img.src = pathPrefix + 'icons/light/collapse.svg';
         img.alt = 'Collapse';
       } else {
         // Show expand icon
         this.expandButton.setAttribute('aria-label', 'Expand chat');
-        img.src = '/icons/light/expand.svg';
+        img.src = pathPrefix + 'icons/light/expand.svg';
         img.alt = 'Expand';
       }
       
