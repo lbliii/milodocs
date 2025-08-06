@@ -101,7 +101,29 @@ export class ArticleTOC extends Component {
     this.progressText = document.getElementById('progress-text');
     
     if (this.progressBar && this.progressText) {
-      this.updateProgress(); // Initial call
+      // 🚀 NEW: Professional initialization sequence
+      this.updateComponentState('initializing-progress');
+      
+      // Start hidden for smooth reveal
+      this.progressBar.style.opacity = '0';
+      this.progressBar.style.transition = 'all var(--timing-medium) var(--easing-emphasized)';
+      this.progressText.style.opacity = '0';
+      this.progressText.style.transition = 'all var(--timing-medium) var(--easing-emphasized)';
+      
+      // Initialize after DOM is ready
+      requestAnimationFrame(() => {
+        this.updateProgress(); // Initial calculation
+        
+        // Smooth reveal after calculation with staggered timing
+        setTimeout(() => {
+          this.progressBar.style.opacity = '1';
+          setTimeout(() => {
+            this.progressText.style.opacity = '1';
+            this.updateComponentState('progress-active');
+          }, 100);
+        }, 150);
+      });
+      
       console.log('ArticleTOC: Reading progress initialized');
     }
   }
@@ -123,14 +145,35 @@ export class ArticleTOC extends Component {
     const scrollTop = window.pageYOffset;
     const windowHeight = window.innerHeight;
     
-    // Calculate progress percentage
+    // 🚀 NEW: Enhanced progress calculation with better accuracy
     const progress = Math.min(100, Math.max(0, 
       ((scrollTop + windowHeight - articleTop) / articleHeight) * 100
     ));
     
-    // Update progress bar
+    // 🚀 NEW: Smooth progress updates with visual feedback
+    const currentWidth = parseFloat(this.progressBar.style.width) || 0;
+    const difference = Math.abs(progress - currentWidth);
+    
+    // Add updating class for smooth transitions during significant changes
+    if (difference > 2) {
+      this.progressBar.classList.add('updating');
+      setTimeout(() => {
+        this.progressBar.classList.remove('updating');
+      }, 200);
+    }
+    
+    // Update progress bar with enhanced timing
     this.progressBar.style.width = `${progress}%`;
     this.progressText.textContent = `${Math.round(progress)}%`;
+    
+    // 🚀 NEW: Update component state based on progress
+    if (progress < 10) {
+      this.setCSSProperty('--progress-stage', 'start');
+    } else if (progress > 90) {
+      this.setCSSProperty('--progress-stage', 'end');
+    } else {
+      this.setCSSProperty('--progress-stage', 'middle');
+    }
     
     // Emit progress event
     this.emit('toc:progressChanged', { progress });

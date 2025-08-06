@@ -167,6 +167,71 @@
 .notebook-cell:nth-child(5) { animation-delay: calc(var(--reveal-stagger-delay) * 5); }
 
 /* ========================================
+   READING PROGRESS BAR ANIMATIONS
+   ======================================== */
+
+/* TOC progress bar professional initialization */
+.component[data-component="article-toc"][data-component-state="initializing-progress"] #progress-bar,
+.component[data-component="article-toc"][data-component-state="initializing-progress"] #progress-text {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.component[data-component="article-toc"][data-component-state="progress-active"] #progress-bar,
+.component[data-component="article-toc"][data-component-state="progress-active"] #progress-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced progress bar styling */
+#progress-bar {
+  transition: width var(--timing-standard) var(--easing-emphasized),
+              opacity var(--timing-medium) var(--easing-emphasized),
+              transform var(--timing-medium) var(--easing-emphasized);
+  transform-origin: left center;
+}
+
+#progress-text {
+  transition: opacity var(--timing-medium) var(--easing-emphasized),
+              transform var(--timing-medium) var(--easing-emphasized);
+}
+
+/* Smooth progress updates */
+#progress-bar.updating {
+  transition: width var(--timing-fast) var(--easing-standard);
+}
+
+/* Reading progress container enhancement */
+#reading-progress {
+  transition: all var(--timing-medium) var(--easing-smooth);
+}
+
+#reading-progress:hover #progress-bar {
+  box-shadow: 0 0 8px rgba(var(--color-brand-rgb), 0.3);
+}
+
+/* Progress stage-based styling */
+.component[data-component="article-toc"] #progress-bar {
+  transition: all var(--timing-standard) var(--easing-emphasized);
+}
+
+/* Start of article - subtle glow */
+.component[data-component="article-toc"][style*="--progress-stage: start"] #progress-bar {
+  box-shadow: 0 0 4px rgba(var(--color-brand-rgb), 0.2);
+}
+
+/* Middle of article - standard appearance */
+.component[data-component="article-toc"][style*="--progress-stage: middle"] #progress-bar {
+  box-shadow: 0 0 2px rgba(var(--color-brand-rgb), 0.1);
+}
+
+/* Near end - enhanced glow indicating completion */
+.component[data-component="article-toc"][style*="--progress-stage: end"] #progress-bar {
+  box-shadow: 0 0 6px rgba(var(--color-brand-rgb), 0.4);
+  filter: brightness(1.1);
+}
+
+/* ========================================
    ENHANCED HOVER STATES
    ======================================== */
 
