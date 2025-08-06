@@ -303,7 +303,7 @@
   <style>
     :root {
       --hugo-environment: "{{ hugo.Environment }}";
-      --hugo-build: "{{ cond hugo.IsProduction "production" "development" }}";
+      --hugo-build: "{{ cond $isProductionBuild "production" "development" }}";
       --theme-version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}";
     }
     

@@ -31,7 +31,7 @@
   <script>
     window.HugoEnvironment = {
       environment: "{{ hugo.Environment }}",
-      isProduction: {{ hugo.IsProduction }},
+      isProduction: {{ $isProductionBuild }},
       debug: {{ site.Params.debug | default false }},
       version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}",
       baseURL: "{{ site.BaseURL }}",
