@@ -18,6 +18,11 @@ export class Sidebar extends Component {
     this.toggles = [];
     this.currentPath = window.location.pathname;
     this.isInitialized = false;
+    
+    // Normalize current path for static deployments
+    if (this.currentPath.endsWith('/')) {
+      this.currentPath += 'index.html';
+    }
     this.linkTreeElement = null;
     this.isOpen = false; // Track mobile sidebar state
     this.resizeTimeout = null; // For debouncing resize events
@@ -143,8 +148,47 @@ export class Sidebar extends Component {
    * Expand the path to current page
    */
   expandCurrentPath() {
-    const currentLink = this.linkTreeElement.querySelector(`a[href="${this.currentPath}"]`);
-    if (!currentLink) return;
+    // Try multiple approaches to find the current link
+    let currentLink = null;
+    
+    // First, try exact match with current path
+    currentLink = this.linkTreeElement.querySelector(`a[href="${this.currentPath}"]`);
+    
+    // If not found, try with relative path format (for static deployments)
+    if (!currentLink) {
+      const relativePath = `.${this.currentPath}`;
+      currentLink = this.linkTreeElement.querySelector(`a[href="${relativePath}"]`);
+    }
+    
+    // If still not found, try without leading slash
+    if (!currentLink && this.currentPath.startsWith('/')) {
+      const pathWithoutSlash = this.currentPath.substring(1);
+      currentLink = this.linkTreeElement.querySelector(`a[href="${pathWithoutSlash}"]`);
+    }
+    
+    // If still not found, try finding by data-current="true" attribute (fallback)
+    if (!currentLink) {
+      currentLink = this.linkTreeElement.querySelector('a[data-current="true"]');
+    }
+    
+    // If still not found, try matching based on ending paths
+    if (!currentLink) {
+      const allLinks = this.linkTreeElement.querySelectorAll('a[href]');
+      for (const link of allLinks) {
+        const linkPath = link.getAttribute('href');
+        if (this.pathsMatch(this.currentPath, linkPath)) {
+          currentLink = link;
+          break;
+        }
+      }
+    }
+    
+    if (!currentLink) {
+      console.debug('Sidebar: No current link found for path:', this.currentPath);
+      return;
+    }
+    
+    console.debug('Sidebar: Found current link:', currentLink.href);
     
     // Mark current link as active
     currentLink.classList.add('sidebar-link--active');
@@ -226,6 +270,50 @@ export class Sidebar extends Component {
     
     await Promise.all(collapsePromises);
     this.emit('sidebar:collapsedAll');
+  }
+
+  /**
+   * Check if two paths match, accounting for relative vs absolute paths
+   */
+  pathsMatch(currentPath, linkPath) {
+    // Normalize both paths
+    const normalizePath = (path) => {
+      if (path.startsWith('./')) {
+        return path.substring(2);
+      }
+      if (path.startsWith('/')) {
+        return path.substring(1);
+      }
+      return path;
+    };
+
+    const normalizedCurrent = normalizePath(currentPath);
+    const normalizedLink = normalizePath(linkPath);
+    
+    // Direct match
+    if (normalizedCurrent === normalizedLink) {
+      return true;
+    }
+    
+    // Handle index.html cases
+    if (normalizedCurrent.endsWith('/index.html') && normalizedLink.endsWith('/')) {
+      return normalizedCurrent.replace('/index.html', '/') === normalizedLink;
+    }
+    
+    if (normalizedLink.endsWith('/index.html') && normalizedCurrent.endsWith('/')) {
+      return normalizedLink.replace('/index.html', '/') === normalizedCurrent;
+    }
+    
+    // Handle directory vs index file
+    if (normalizedCurrent.endsWith('/') && normalizedLink === normalizedCurrent + 'index.html') {
+      return true;
+    }
+    
+    if (normalizedLink.endsWith('/') && normalizedCurrent === normalizedLink + 'index.html') {
+      return true;
+    }
+    
+    return false;
   }
 
   /**
