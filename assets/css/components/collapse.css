@@ -9,8 +9,11 @@
   margin: 1.5rem 0 !important;
   border-radius: 1rem !important;
   overflow: hidden !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  animation: collapse-enter 0.4s ease-out !important;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard) !important;
+  animation: collapse-enter var(--timing-medium) var(--easing-standard) !important;
   animation-fill-mode: both !important;
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.05),
@@ -42,7 +45,11 @@
   );
   border: 1px solid var(--color-border-primary);
   border-radius: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    border-color var(--timing-medium) var(--easing-standard),
+    background var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -63,7 +70,7 @@
     rgba(var(--color-brand-rgb), 0.02) 100%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--timing-medium) var(--easing-standard);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -162,29 +169,45 @@
    ========================================================================== */
 
 .collapse__body {
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  max-height: 0;
-  opacity: 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border-primary);
   border-top: none;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
+  
+  /* Height-based collapse (consistent with all components) */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  
+  /* Configure collapse behavior via CSS custom properties */
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 2000px;
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  --collapse-overflow-collapsed: hidden;
+  --collapse-overflow-expanded: visible;
+  --collapse-padding-collapsed: 0;
+  --collapse-padding-expanded: 1.5rem;
+  /* ✅ FIXED: Use animation tokens */
+  --collapse-timing: var(--timing-medium);
+  --collapse-easing: var(--easing-standard);
 }
 
+/* ✅ MIGRATED: Class-based to data-attribute system */
+.collapse[data-collapse-state="expanded"] .collapse__body,
 .collapse.expanded .collapse__body {
-  max-height: 50rem; /* Large enough to accommodate most content */
-  opacity: 1;
-  padding: 1.5rem;
   border-color: var(--color-brand);
 }
 
 .collapse__body-content {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens */
+  transition: transform var(--timing-medium) var(--easing-standard);
   transform: translateY(-10px);
 }
 
+/* ✅ MIGRATED: Support both class-based and data-attribute systems */
+.collapse[data-collapse-state="expanded"] .collapse__body-content,
 .collapse.expanded .collapse__body-content {
   transform: translateY(0);
 }
@@ -376,4 +399,61 @@
   .collapse__body-content code {
     background: rgba(255, 255, 255, 0.1);
   }
+}
+
+/* ✅ DATA-ATTRIBUTE INTEGRATION
+ * =======================================================================
+ * Integration with the Universal Component State Management System
+ * This allows collapse components to work with both class-based legacy
+ * and modern data-attribute approaches
+ */
+
+/* Data-attribute collapsed state */
+.collapse[data-collapse-state="collapsed"] .collapse__body {
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
+  padding: var(--collapse-padding-collapsed);
+  transition: 
+    max-height var(--collapse-timing) var(--collapse-easing),
+    opacity var(--collapse-timing) var(--collapse-easing),
+    padding var(--collapse-timing) var(--collapse-easing);
+}
+
+/* Data-attribute transitioning state */
+.collapse[data-collapse-state="transitioning"] .collapse__body {
+  overflow: hidden; /* Prevent content spillage during animation */
+  pointer-events: none; /* Prevent interaction during transition */
+}
+
+/* Data-attribute expanded state */
+.collapse[data-collapse-state="expanded"] .collapse__body {
+  max-height: var(--collapse-height-expanded);
+  opacity: var(--collapse-opacity-expanded);
+  overflow: var(--collapse-overflow-expanded);
+  padding: var(--collapse-padding-expanded);
+  transition: 
+    max-height var(--collapse-timing) var(--collapse-easing),
+    opacity var(--collapse-timing) var(--collapse-easing),
+    padding var(--collapse-timing) var(--collapse-easing);
+}
+
+/* Icon rotation for data-attribute system */
+.collapse[data-collapse-state="expanded"] .collapse__icon {
+  transform: rotate(180deg);
+}
+
+/* Enhanced accessibility for data-attribute system */
+.collapse[data-collapse-state] .collapse__header {
+  /* Ensure proper ARIA attributes are communicated visually */
+}
+
+.collapse[data-collapse-state="expanded"] .collapse__header[aria-expanded="true"] {
+  /* Visual confirmation of expanded state */
+  border-color: var(--color-brand);
+}
+
+/* Migration helper - components can use either system */
+.collapse:not([data-collapse-state]) {
+  /* Legacy class-based system continues to work */
 }

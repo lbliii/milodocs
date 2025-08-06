@@ -37,7 +37,7 @@ export class FilterUI extends Component {
         endpoint.style.display = '';
         endpoint.style.opacity = '0';
         endpoint.style.transform = 'translateY(10px)';
-        endpoint.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        // CSS handles transitions via animation tokens
         
         // Trigger animation
         requestAnimationFrame(() => {
@@ -53,7 +53,7 @@ export class FilterUI extends Component {
         
       } else if (!isVisible && endpoint.style.display !== 'none') {
         // Hide with animation
-        endpoint.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        // CSS handles transitions via animation tokens
         endpoint.style.opacity = '0';
         endpoint.style.transform = 'translateY(-10px)';
         

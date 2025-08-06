@@ -39,14 +39,26 @@
 }
 
 .notebook-cell--hidden {
-  display: none !important;
+  /* ✅ FIXED: Use animation tokens instead of display: none */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: 
+    max-height var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
+  transform: translateY(20px);
 }
 
 .notebook-cell--revealing {
-  display: block !important;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: revealCell 300ms ease-out forwards;
+  /* ✅ FIXED: Use animation tokens for smooth transitions */
+  max-height: var(--collapse-height-expanded, 2000px);
+  opacity: 1;
+  transform: translateY(0);
+  transition: 
+    max-height var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
 }
 
 @keyframes revealCell {
@@ -535,7 +547,7 @@
 .notebook-cell__output-toggle-icon {
   width: 1rem;
   height: 1rem;
-  transition: transform 0.2s ease;
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 .notebook-cell__output--collapsed .notebook-cell__output-toggle-icon {
@@ -547,7 +559,13 @@
 }
 
 .notebook-cell__output--collapsed .notebook-cell__output-content {
-  display: none;
+  /* ✅ FIXED: Use height-based collapse for smooth animation */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: 
+    max-height var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard);
 }
 
 .notebook-cell__output-preview {
@@ -695,7 +713,7 @@
   border: 1px solid var(--color-border-primary);
   border-radius: 0.5rem;
   padding: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elevation-6);
   max-height: 60vh;
   overflow-y: auto;
   width: 200px;
@@ -797,7 +815,7 @@
   /* Light mode cell styling */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
   /* Add theme transition only to cells that need it */
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: var(--transition-elevation);
 }
 
 .notebook-cell.collapse:hover {
@@ -967,8 +985,19 @@
     display: none !important;
   }
   
-  .notebook-cell.collapse:not(.expanded) .collapse__body {
-    display: block !important;
+  /* ✅ FIXED: Use standard collapse behavior with animation tokens */
+  .notebook-cell .collapse__body {
+    max-height: var(--collapse-height-collapsed);
+    opacity: var(--collapse-opacity-collapsed);
+    overflow: hidden;
+    transition: 
+      max-height var(--collapse-timing) var(--collapse-easing),
+      opacity var(--collapse-timing) var(--collapse-easing);
+  }
+  
+  .notebook-cell .collapse__body.expanded {
+    max-height: var(--collapse-height-expanded);
+    opacity: var(--collapse-opacity-expanded);
   }
   
   .notebook-cell {

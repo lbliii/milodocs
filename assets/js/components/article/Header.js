@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 import { localStorage } from '../../utils/storage.js';
 
 export class ArticleHeader extends Component {
@@ -190,12 +191,13 @@ export class ArticleHeader extends Component {
       // Collapse to 0
       this.metadataPanel.style.maxHeight = '0';
       
-      // Clean up after animation
+      // ✅ UPDATED: Use CSS timing tokens instead of hardcoded duration
+      const duration = animationBridge.getTiming('medium');
       setTimeout(() => {
         this.element.classList.remove('collapsing');
         this.isAnimating = false;
         this.emit('header:metadataCollapsed');
-      }, this.animationDuration);
+      }, duration);
     } else {
       // Immediate collapse
       this.metadataPanel.style.maxHeight = '0';

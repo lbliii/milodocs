@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 import ComponentManager from '../../core/ComponentManager.js';
 
 export class Sidebar extends Component {
@@ -74,23 +75,25 @@ export class Sidebar extends Component {
    */
   setupEventListeners() {
     this.toggles.forEach(toggle => {
-      this.addEventListener(toggle, 'click', (e) => {
+      this.addEventListener(toggle, 'click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.handleToggleClick(toggle);
+        // ✅ FIXED: Handle async animation properly
+        await this.handleToggleClick(toggle);
       });
     });
   }
 
   /**
-   * Handle toggle button clicks
+   * Handle toggle button clicks - FIXED for async animation handling
    */
-  handleToggleClick(toggle) {
+  async handleToggleClick(toggle) {
     const listItem = toggle.closest('li');
     const nestedContent = listItem.querySelector('.nested-content');
     const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
     
-    this.toggleContent(toggle, !isExpanded);
+    // ✅ FIXED: Await the animation completion for better state management
+    await this.toggleContent(toggle, !isExpanded);
     
     this.emit('sidebar:toggled', {
       toggle,
@@ -100,40 +103,39 @@ export class Sidebar extends Component {
   }
 
   /**
-   * Toggle content visibility with animation
+   * Toggle content visibility with animation - FIXED for better performance
    */
-  toggleContent(toggle, expand) {
+  async toggleContent(toggle, expand) {
     const listItem = toggle.closest('li');
     const nestedContent = listItem.querySelector('.nested-content');
     const svg = toggle.querySelector('svg');
 
     if (!nestedContent) return;
 
+    // Update ARIA and visual state immediately for better UX
+    toggle.setAttribute('aria-expanded', expand.toString());
     if (expand) {
-      // Expand content
-      if (this.isInitialized) {
-        nestedContent.classList.add('expanding');
-        setTimeout(() => {
-          nestedContent.classList.remove('expanding');
-          nestedContent.classList.add('expanded');
-        }, 300);
-      } else {
-        nestedContent.classList.add('expanded');
-      }
-      toggle.setAttribute('aria-expanded', 'true');
       svg?.classList.add('rotate-90');
     } else {
-      // Collapse content
-      if (this.isInitialized) {
-        nestedContent.classList.add('collapsing');
-        setTimeout(() => {
-          nestedContent.classList.remove('collapsing', 'expanded');
-        }, 300);
-      } else {
-        nestedContent.classList.remove('expanded');
-      }
-      toggle.setAttribute('aria-expanded', 'false');
       svg?.classList.remove('rotate-90');
+    }
+
+    if (expand) {
+      // ✅ FIXED: Use proper animation bridge methods for smoother expansion
+      if (this.isInitialized) {
+        await animationBridge.expand(nestedContent, { timing: 'medium' });
+      } else {
+        // Instant expansion during initialization
+        animationBridge.setCollapseState(nestedContent, 'expanded');
+      }
+    } else {
+      // ✅ FIXED: Use proper animation bridge methods for smoother collapse
+      if (this.isInitialized) {
+        await animationBridge.collapse(nestedContent, { timing: 'medium' });
+      } else {
+        // Instant collapse during initialization
+        animationBridge.setCollapseState(nestedContent, 'collapsed');
+      }
     }
   }
 
@@ -164,21 +166,21 @@ export class Sidebar extends Component {
    * Setup accessibility features
    */
   setupAccessibility() {
-    // Keyboard navigation
-    this.addEventListener(this.linkTreeElement, 'keydown', (e) => {
+    // Keyboard navigation - FIXED for async animations
+    this.addEventListener(this.linkTreeElement, 'keydown', async (e) => {
       const focusedElement = document.activeElement;
       
       if (e.key === 'ArrowRight') {
         const toggle = focusedElement.querySelector('.expand-toggle');
         if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
           e.preventDefault();
-          this.handleToggleClick(toggle);
+          await this.handleToggleClick(toggle);
         }
       } else if (e.key === 'ArrowLeft') {
         const toggle = focusedElement.querySelector('.expand-toggle');
         if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
           e.preventDefault();
-          this.handleToggleClick(toggle);
+          await this.handleToggleClick(toggle);
         }
       }
     });
@@ -195,26 +197,34 @@ export class Sidebar extends Component {
   }
 
   /**
-   * Expand all sections
+   * Expand all sections - FIXED for async animations
    */
-  expandAll() {
-    this.toggles.forEach(toggle => {
+  async expandAll() {
+    // Use Promise.all for parallel expansion for better performance
+    const expandPromises = this.toggles.map(toggle => {
       if (toggle.getAttribute('aria-expanded') === 'false') {
-        this.toggleContent(toggle, true);
+        return this.toggleContent(toggle, true);
       }
+      return Promise.resolve();
     });
+    
+    await Promise.all(expandPromises);
     this.emit('sidebar:expandedAll');
   }
 
   /**
-   * Collapse all sections
+   * Collapse all sections - FIXED for async animations
    */
-  collapseAll() {
-    this.toggles.forEach(toggle => {
+  async collapseAll() {
+    // Use Promise.all for parallel collapse for better performance
+    const collapsePromises = this.toggles.map(toggle => {
       if (toggle.getAttribute('aria-expanded') === 'true') {
-        this.toggleContent(toggle, false);
+        return this.toggleContent(toggle, false);
       }
+      return Promise.resolve();
     });
+    
+    await Promise.all(collapsePromises);
     this.emit('sidebar:collapsedAll');
   }
 

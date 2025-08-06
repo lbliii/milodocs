@@ -2,6 +2,7 @@
  * OpenAPI Collapse Component
  * Extends the base Collapse component with OpenAPI-specific functionality
  * Handles responses, schemas, endpoints, and other OpenAPI documentation elements
+ * Now uses the new StateManager system for consistent behavior
  */
 
 import { Collapse } from '../ui/Collapse.js';
@@ -59,15 +60,7 @@ class OpenAPICollapse extends Collapse {
     collapseData.type = this.identifyType(header);
     collapseData.priority = this.calculatePriority(header);
 
-    // Debug logging for response elements
-    if (collapseData.type === 'response') {
-      console.log(`[OpenAPICollapse] Initialized response element: ${target}`, {
-        section: collapseData.section,
-        type: collapseData.type,
-        target: collapseData.target,
-        hasResponseDetailsClass: collapseData.target?.classList.contains('response-details')
-      });
-    }
+
 
     // Store enhanced data
     this.collapseElements.set(target, collapseData);
@@ -182,25 +175,50 @@ class OpenAPICollapse extends Collapse {
   }
 
   /**
-   * Handle special response expansion logic
+   * Handle special response expansion logic using enhanced Component base class
    */
   handleResponseExpansion(collapseData) {
-    const { target } = collapseData;
+    const { target, header } = collapseData;
     
-    // Ensure response details are visible with proper CSS classes
     if (target && target.classList.contains('response-details')) {
-      target.style.display = 'block';
-      // Force a style recalculation to ensure visibility
-      target.offsetHeight;
+      // Set transitioning first to trigger CSS transitions
+      target.setAttribute('data-collapse-state', 'transitioning');
+      header.setAttribute('aria-expanded', 'true');
+      
+      // Use requestAnimationFrame to ensure transition triggers
+      requestAnimationFrame(() => {
+        target.setAttribute('data-collapse-state', 'expanded');
+      });
     }
+  }
+
+  /**
+   * Handle response collapse
+   */
+  handleResponseCollapse(collapseData) {
+    const { target, header } = collapseData;
     
-    console.log(`[OpenAPICollapse] Response expanded: ${collapseData.targetId}`);
+    if (target && target.classList.contains('response-details')) {
+      // Set transitioning first to trigger CSS transitions
+      target.setAttribute('data-collapse-state', 'transitioning');
+      header.setAttribute('aria-expanded', 'false');
+      
+      // Use requestAnimationFrame to ensure transition triggers
+      requestAnimationFrame(() => {
+        target.setAttribute('data-collapse-state', 'collapsed');
+      });
+    }
   }
 
   /**
    * Enhanced collapse with OpenAPI-specific cleanup
    */
   collapse(collapseData) {
+    // Handle response-specific collapse
+    if (collapseData.type === 'response') {
+      this.handleResponseCollapse(collapseData);
+    }
+
     super.collapse(collapseData);
 
     // Emit OpenAPI-specific event

@@ -1,6 +1,6 @@
 # Example site parameters
 # Copy relevant sections to your main config
-
+logo: '/images/milo.png'
 names:
   organization: 'Example Org'
   product: 'Example Product'

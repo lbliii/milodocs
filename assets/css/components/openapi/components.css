@@ -92,7 +92,7 @@
 .component-toggle .chevron {
   width: 1rem;
   height: 1rem;
-  transition: transform 0.2s ease;
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 .component-header[aria-expanded="true"] .chevron {
@@ -100,36 +100,30 @@
 }
 
 .component-details {
-  display: none;
-  padding: 0 1.5rem 1.5rem 1.5rem;
   border-top: 1px solid var(--color-border-primary);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.component-details.expanded {
-  display: block;
-  animation: schema-expand 0.3s ease-out;
-}
-
-/* Enhanced collapse body styling that works with existing JS */
-.component-details.collapse__body {
+  
+  /* Height-based collapse (consistent with all components) */
   max-height: 0;
-  overflow: hidden;
-  display: block;
-  padding: 0 1.5rem;
   opacity: 0;
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.3s ease;
+  overflow: hidden;
+  padding: 0;
+  
+  /* Configure collapse behavior */
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 3000px; /* Large for complex schemas */
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  --collapse-overflow-collapsed: hidden;
+  --collapse-overflow-expanded: visible;
+  --collapse-padding-collapsed: 0;
+  --collapse-padding-expanded: 1.5rem;
+  --collapse-timing: 0.3s;
+  --collapse-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Support both .expanded and aria-expanded="true" for compatibility */
-.component-details.collapse__body.expanded,
-.component-header[aria-expanded="true"] + .component-details.collapse__body {
-  max-height: 2000px;
-  padding: 1.5rem 1.5rem;
-  opacity: 1;
-}
+/* Remove old class-based approach - component-states.css handles this */
+
+/* Legacy styles removed - component-states.css now handles all collapse behavior */
 
 @keyframes schema-expand {
   from {

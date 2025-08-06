@@ -4,7 +4,10 @@
 {{- $id := .Get "id" | default (printf "collapse-%s-%d" (md5 .Inner) (now.UnixNano)) -}}
 
 {{- if ne hugo.Environment "pdf" -}}
-<section class="collapse{{ if ne $variant "default" }} collapse--{{ $variant }}{{ end }}" id="{{ $id }}">
+<section class="collapse{{ if ne $variant "default" }} collapse--{{ $variant }}{{ end }}" 
+         id="{{ $id }}"
+         data-collapse-state="collapsed"
+         data-component-state="ready">
     <div class="collapse__header" 
          onclick="toggleCollapse('{{ $id }}')"
          role="button"
@@ -46,21 +49,29 @@
 </section>
 
 <script>
-// Only define the function once
+// ✅ UPDATED: Use new animation bridge system (backward compatible)
+// Note: toggleCollapse is now provided by AnimationBridge.js and uses the new system
+// with CSS tokens and data attributes. Old function kept for immediate compatibility.
 if (typeof window.toggleCollapse === 'undefined') {
     window.toggleCollapse = function(id) {
         const collapse = document.getElementById(id);
         if (!collapse) return;
         
-        const header = collapse.querySelector('.collapse__header');
-        const isExpanded = collapse.classList.contains('expanded');
-        
-        if (isExpanded) {
-            collapse.classList.remove('expanded');
-            header.setAttribute('aria-expanded', 'false');
+        // Use new animation bridge if available, fallback to old system
+        if (window.animationBridge) {
+            window.animationBridge.toggle(collapse);
         } else {
-            collapse.classList.add('expanded');
-            header.setAttribute('aria-expanded', 'true');
+            // Fallback for immediate compatibility
+            const header = collapse.querySelector('.collapse__header');
+            const isExpanded = collapse.classList.contains('expanded');
+            
+            if (isExpanded) {
+                collapse.classList.remove('expanded');
+                header.setAttribute('aria-expanded', 'false');
+            } else {
+                collapse.classList.add('expanded');
+                header.setAttribute('aria-expanded', 'true');
+            }
         }
     };
 }

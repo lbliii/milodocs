@@ -1,0 +1,304 @@
+/* 🎯 Universal Component State Management System
+ * ==============================================
+ * 
+ * This file establishes consistent state management patterns across all
+ * interactive components, replacing inconsistent class-based approaches
+ * with data-attribute driven state management.
+ */
+
+/* ✅ COLLAPSE STATE MANAGEMENT
+ * =============================
+ * Universal collapse/expand states using data attributes
+ */
+
+/* Base collapsed state - applies to any element with data-collapse-state */
+[data-collapse-state="collapsed"] {
+  max-height: var(--collapse-height-collapsed, 0);
+  opacity: var(--collapse-opacity-collapsed, 0);
+  overflow: hidden;
+  transition: 
+    max-height var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard)),
+    opacity var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard));
+}
+
+/* Transitioning state - shows element is mid-animation */
+[data-collapse-state="transitioning"] {
+  overflow: hidden; /* Ensure no content spillage during animation */
+  pointer-events: none; /* Prevent interaction during transition */
+}
+
+/* Expanded state - fully visible and interactive */
+[data-collapse-state="expanded"] {
+  max-height: var(--collapse-height-expanded, 2000px);
+  opacity: var(--collapse-opacity-expanded, 1);
+  overflow: visible; /* Allow content to be fully visible when expanded */
+  transition: 
+    max-height var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard)),
+    opacity var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard));
+}
+
+/* ✅ COMPONENT LIFECYCLE STATES
+ * ==============================
+ * Standard states for component initialization and interaction
+ */
+
+/* Loading state - component is being initialized */
+[data-component-state="loading"] {
+  opacity: var(--opacity-faded, 0.6);
+  pointer-events: none;
+  cursor: wait;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+/* Ready state - component is initialized and interactive */
+[data-component-state="ready"] {
+  opacity: var(--opacity-visible, 1);
+  pointer-events: auto;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+/* Disabled state - component is non-interactive */
+[data-component-state="disabled"] {
+  opacity: var(--opacity-faded, 0.6);
+  pointer-events: none;
+  cursor: not-allowed;
+  filter: grayscale(50%);
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+}
+
+/* Error state - component has encountered an error */
+[data-component-state="error"] {
+  opacity: var(--opacity-visible, 1);
+  border-color: var(--color-danger, #ef4444);
+  background-color: rgba(239, 68, 68, 0.05);
+  transition: 
+    border-color var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard);
+}
+
+/* ✅ LEGACY CLASS SUPPORT (Backward Compatibility)
+ * =================================================
+ * Bridge classes for existing components that use class-based states
+ */
+
+/* Support for existing .expanded classes */
+.expanded {
+  max-height: var(--collapse-height-expanded, 2000px) !important;
+  opacity: var(--collapse-opacity-expanded, 1) !important;
+  overflow: visible !important;
+  transition: 
+    max-height var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard)),
+    opacity var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard));
+}
+
+/* Support for existing .collapsed classes */
+.collapsed {
+  max-height: var(--collapse-height-collapsed, 0) !important;
+  opacity: var(--collapse-opacity-collapsed, 0) !important;
+  overflow: hidden !important;
+  transition: 
+    max-height var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard)),
+    opacity var(--collapse-timing, var(--timing-medium)) var(--collapse-easing, var(--easing-standard));
+}
+
+/* ✅ INTERACTIVE STATES
+ * =====================
+ * Consistent hover, focus, and active states
+ */
+
+/* Interactive elements with hover states */
+[data-interactive="true"]:hover,
+.interactive:hover {
+  transform: var(--transform-translate-up, translateY(-2px));
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+/* Interactive elements with focus states */
+[data-interactive="true"]:focus-visible,
+.interactive:focus-visible {
+  outline: 2px solid var(--color-brand, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Interactive elements with active states */
+[data-interactive="true"]:active,
+.interactive:active {
+  transform: var(--transform-scale-down, scale(0.98));
+  transition: transform var(--timing-instant) var(--easing-standard);
+}
+
+/* ✅ COMPONENT-SPECIFIC STATE OVERRIDES
+ * ======================================
+ * Customization for specific component types
+ */
+
+/* OpenAPI Components */
+.openapi-response[data-collapse-state],
+.openapi-endpoint[data-collapse-state],
+.openapi-parameter[data-collapse-state] {
+  --collapse-height-expanded: 3000px; /* Complex API content needs more space */
+  --collapse-timing: var(--timing-medium);
+  --collapse-easing: var(--easing-standard);
+}
+
+/* Notebook Components */
+.notebook-cell[data-collapse-state],
+.notebook-output[data-collapse-state] {
+  --collapse-height-expanded: 2000px; /* Code and output content */
+  --collapse-timing: var(--timing-fast); /* Snappier interaction */
+  --collapse-easing: var(--easing-standard);
+}
+
+/* Tutorial Components */
+.tutorial-section[data-collapse-state],
+.section-content[data-collapse-state] {
+  --collapse-height-expanded: 2500px; /* Text-heavy content */
+  --collapse-timing: var(--timing-slow); /* More dramatic for educational content */
+  --collapse-easing: var(--easing-emphasized);
+}
+
+/* Tab Components */
+.tab-content[data-collapse-state],
+[data-tabcontent][data-collapse-state] {
+  --collapse-height-expanded: 1500px; /* Tab content usually more compact */
+  --collapse-timing: var(--timing-fast); /* Quick switching expected */
+  --collapse-easing: var(--easing-standard);
+}
+
+/* ✅ UTILITY CLASSES
+ * ===================
+ * Quick state application classes
+ */
+
+/* Force immediate state without animation */
+.state-immediate {
+  transition: none !important;
+}
+
+/* Force slow animation timing */
+.state-slow {
+  --collapse-timing: var(--timing-slow);
+  --collapse-easing: var(--easing-smooth);
+}
+
+/* Force fast animation timing */
+.state-fast {
+  --collapse-timing: var(--timing-fast);
+  --collapse-easing: var(--easing-standard);
+}
+
+/* Emphasized dramatic animation */
+.state-dramatic {
+  --collapse-timing: var(--timing-slow);
+  --collapse-easing: var(--easing-emphasized);
+}
+
+/* ✅ ACCESSIBILITY ENHANCEMENTS
+ * ==============================
+ * Enhanced states for screen readers and assistive technology
+ */
+
+/* ✅ REMOVED: Enhanced focus indicators causing ancestry tree echoing
+ * The :focus-within pseudo-class was applying styling to ALL ancestor elements
+ * with data-collapse-state attributes, creating the visual "echo" effect.
+ * Focus should be handled by individual interactive elements instead.
+ */
+
+/* Screen reader friendly state announcements */
+[data-collapse-state="collapsed"][aria-label]::before {
+  content: "Collapsed: ";
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+[data-collapse-state="expanded"][aria-label]::before {
+  content: "Expanded: ";
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ✅ MOTION REDUCTION SUPPORT
+ * ============================
+ * Respect user motion preferences
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-collapse-state],
+  [data-component-state],
+  .expanded,
+  .collapsed,
+  [data-interactive] {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ✅ HIGH CONTRAST MODE SUPPORT
+ * ==============================
+ * Enhanced visibility for high contrast users
+ */
+
+@media (prefers-contrast: high) {
+  [data-component-state="error"] {
+    border-width: 2px;
+    border-style: solid;
+  }
+  
+  /* ✅ REMOVED: focus-within outline for high contrast mode
+   * This was also contributing to the ancestry tree echo effect
+   */
+}
+  
+[data-interactive="true"]:focus-visible {
+  outline-width: 3px;
+  outline-style: solid;
+}
+
+/* ✅ DEBUG MODE (Development Only)
+ * =================================
+ * Uncomment to visualize state management in development
+ */
+
+/*
+[data-collapse-state] {
+  position: relative;
+}
+
+[data-collapse-state]::before {
+  content: "State: " attr(data-collapse-state);
+  position: absolute;
+  top: -1.5rem;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+[data-component-state]::after {
+  content: "Component: " attr(data-component-state);
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  background: #3b82f6;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  z-index: 1000;
+  pointer-events: none;
+}
+*/

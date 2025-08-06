@@ -48,14 +48,19 @@
 }
 
 .chat-input {
-  @apply transition-all duration-200 focus:outline-none;
+  @apply focus:outline-none;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    border-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard);
   font-family: var(--font-brand);
   line-height: 1.4;
 }
 
 .chat-input:hover {
   border-color: var(--color-brand);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elevation-4);
 }
 
 .chat-input:focus {
@@ -69,12 +74,13 @@
 
 /* Smooth transitions for chat container */
 #chatContainer {
+  /* ✅ FIXED: Use animation tokens for consistent timing */
   transition: 
-    width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    max-width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-radius 0.3s ease;
+    width var(--timing-medium) var(--easing-smooth),
+    max-width var(--timing-medium) var(--easing-smooth),
+    box-shadow var(--timing-medium) var(--easing-smooth),
+    transform var(--timing-medium) var(--easing-smooth),
+    border-radius var(--timing-medium) var(--easing-standard);
   transform-origin: top right;
   will-change: width, transform, box-shadow;
 }
@@ -90,7 +96,7 @@
     0 12px 40px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-  transform: scale(1.01) translateY(-1px); /* Subtle lift */
+  transform: var(--transform-lift-and-scale); /* Subtle lift */
 }
 
 /* Enhanced input styling for expanded state */
@@ -102,7 +108,10 @@
 
 /* Micro-interaction for expand button */
 .chat-header button {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard);
 }
 
 .chat-header button:hover {
@@ -124,7 +133,8 @@
 
 /* Subtle animation for chat messages in expanded state */
 .chat-expanded #chat-messages {
-  animation: subtle-fade-in 0.3s ease-out 0.1s both;
+  /* ✅ FIXED: Use animation tokens */
+  animation: subtle-fade-in var(--timing-medium) var(--easing-standard) var(--reveal-stagger-delay) both;
 }
 
 @keyframes subtle-fade-in {
@@ -155,7 +165,11 @@
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
 }
 
 .chat-input::-webkit-scrollbar {
@@ -173,7 +187,12 @@
 
 /* Enhanced send button styling */
 #sendButton {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -181,7 +200,7 @@
 
 /* Chat container responds to input focus */
 #chatContainer:has(.chat-input:focus) {
-  transform: scale(1.02) translateY(-2px);
+  transform: var(--transform-lift-and-scale);
   box-shadow: 
     0 12px 40px rgba(0, 0, 0, 0.15),
     0 0 0 3px rgba(var(--color-brand-rgb), 0.1),
@@ -250,12 +269,13 @@
 /* Header button hover effects with enhanced micro-interactions */
 .chat-header button:hover svg {
   transform: scale(1.15) rotate(2deg);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 /* Smooth state transitions for expand button icon */
 .chat-header button svg {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: transform var(--timing-medium) var(--easing-standard);
 }
 
 /* Chat bubble improvements - tighter spacing and better hierarchy */
@@ -276,7 +296,7 @@
   background-color: var(--color-brand);
   color: var(--color-text-inverse);
   border-radius: 1rem 1rem 0.25rem 1rem; /* User tail on right */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elevation-4);
 }
 
 .chat-bubble--bot {
@@ -341,7 +361,8 @@
 
 /* Chat message animations */
 .chat-bubble {
-  animation: chat-message-enter 0.3s ease-out;
+  /* ✅ FIXED: Use animation tokens */
+  animation: chat-message-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
 }
 
@@ -384,7 +405,8 @@
   height: 4px;
   border-radius: 50%;
   background-color: var(--color-text-secondary);
-  animation: typing-dot 1.4s infinite 0.2s;
+  /* ✅ FIXED: Use animation tokens for stagger */
+  animation: typing-dot 1.4s infinite var(--reveal-batch-delay);
   margin-right: 4px;
 }
 
@@ -410,8 +432,14 @@
 .chat-delete {
   @apply absolute -top-1 -right-1 w-5 h-5 
          rounded-full flex items-center justify-center text-xs
-         opacity-0 group-hover:opacity-100 transition-all duration-200
+         opacity-0 group-hover:opacity-100
          focus:outline-none focus:ring-2 focus:ring-offset-1;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border-primary);
   color: var(--color-text-secondary);
@@ -431,7 +459,8 @@
 
 .chat-delete:active {
   transform: scale(0.95);
-  animation: delete-shake 0.3s ease-in-out;
+  /* ✅ FIXED: Use animation tokens */
+  animation: delete-shake var(--timing-medium) var(--easing-standard);
 }
 
 .chat-pair:hover .chat-delete {

@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 
 export class ArticleTiles extends Component {
   constructor(config = {}) {
@@ -64,7 +65,6 @@ export class ArticleTiles extends Component {
   handleTileHover(e) {
     const tile = e.currentTarget;
     tile.style.transform = 'translateY(-8px) scale(1.02)';
-    tile.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
     tile.style.zIndex = '10';
     
     this.emit('tiles:tileHovered', { tile });
@@ -90,10 +90,11 @@ export class ArticleTiles extends Component {
       tile.style.opacity = '0';
       tile.style.transform = 'translateY(20px)';
       
-      // Staggered animation with random delay
-      const delay = Math.random() * 200;
+      // Use CSS timing tokens for staggered animation
+      const baseDelay = animationBridge.getTiming('fast');
+      const staggerDelay = index * (baseDelay / 10);
+      const delay = staggerDelay + (Math.random() * baseDelay / 2);
       setTimeout(() => {
-        tile.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         tile.style.opacity = '1';
         tile.style.transform = 'translateY(0)';
         
@@ -198,7 +199,7 @@ export class ArticleTiles extends Component {
         tile.style.opacity = '0';
         tile.style.transform = 'translateY(20px)';
         setTimeout(() => {
-          tile.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          // CSS handles transitions via animation tokens
           tile.style.opacity = '1';
           tile.style.transform = 'translateY(0)';
         }, 100);

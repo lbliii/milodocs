@@ -4,6 +4,7 @@
  */
 
 import { announceToScreenReader, motion } from './accessibility.js';
+import { animationBridge } from '../core/AnimationBridge.js';
 
 /**
  * @typedef {Object} NotificationOptions
@@ -387,7 +388,7 @@ export class NotificationManager {
     // Set initial state
     element.style.opacity = '0';
     element.style.transform = 'translateX(100%)';
-    element.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    // CSS handles transitions via animation tokens
 
     // Trigger animation
     requestAnimationFrame(() => {
@@ -407,11 +408,12 @@ export class NotificationManager {
       return;
     }
 
-    element.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    // CSS handles transitions via animation tokens
     element.style.opacity = '0';
     element.style.transform = 'translateX(100%)';
 
-    setTimeout(callback, 300);
+    const duration = animationBridge.getTiming('medium');
+    setTimeout(callback, duration);
   }
 
   /**
@@ -539,7 +541,7 @@ export class NotificationManager {
         min-width: 20rem;
         max-width: 24rem;
         border-left: 4px solid;
-        transition: all 0.3s ease;
+        transition: all var(--timing-medium) var(--easing-standard);
       }
 
       .notification:hover {
@@ -615,7 +617,7 @@ export class NotificationManager {
         padding: 0.25rem 0.5rem;
         font-size: 0.75rem;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all var(--timing-fast) var(--easing-standard);
       }
 
       .notification__action:hover {
@@ -630,7 +632,7 @@ export class NotificationManager {
         cursor: pointer;
         border-radius: 0.25rem;
         color: #6b7280;
-        transition: all 0.2s ease;
+        transition: all var(--timing-fast) var(--easing-standard);
       }
 
       .notification__dismiss:hover {

@@ -3,6 +3,8 @@
  * Handles all user interface interactions and state management
  */
 
+import { animationBridge } from '../../core/AnimationBridge.js';
+
 export class ChatUI {
   constructor(chatManager) {
     this.chat = chatManager;
@@ -171,7 +173,7 @@ export class ChatUI {
     
     if (isExpanded) {
       // Collapse back to normal size with smooth transition
-      container.classList.remove('chat-expanded');
+              // Use data attributes instead of classes
       
       // Add a slight delay to let the scale animation finish, then restore original positioning
       setTimeout(() => {
@@ -185,7 +187,7 @@ export class ChatUI {
       
     } else {
       // Expand leftward while keeping right edge anchored
-      container.classList.add('chat-expanded');
+              animationBridge.setCollapseState(container, 'expanded');
       
       // Get current positioning
       const rect = container.getBoundingClientRect();

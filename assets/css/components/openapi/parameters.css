@@ -76,7 +76,7 @@
 .parameter-group-toggle .chevron {
   width: 0.875rem;
   height: 0.875rem;
-  transition: transform 0.2s ease;
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 .parameter-group-header[aria-expanded="true"] .chevron {
@@ -84,12 +84,26 @@
 }
 
 .parameter-list {
-  display: none;
+  /* Height-based collapse (consistent with all components) */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+  
+  /* Configure collapse behavior */
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 1500px; /* Good for parameter lists */
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  --collapse-overflow-collapsed: hidden;
+  --collapse-overflow-expanded: visible;
+  --collapse-padding-collapsed: 0;
+  --collapse-padding-expanded: 1rem;
+  --collapse-timing: 0.3s;
+  --collapse-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.parameter-list.expanded {
-  display: block;
-}
+/* Remove old class-based approach - component-states.css handles this */
 
 .parameters-list {
   padding: 0;

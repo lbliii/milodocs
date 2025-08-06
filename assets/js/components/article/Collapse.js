@@ -5,6 +5,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 import ComponentManager from '../../core/ComponentManager.js';
 import { $$, aria } from '../../utils/index.js';
 import { transitions } from '../../utils/animation.js';
@@ -145,9 +146,9 @@ export class ArticleCollapse extends Component {
     
     const { content, chevron, ariaController, isExpanded } = toggleData;
     
-    // 🚀 NEW: Enhanced state management with visual feedback
-    this.updateComponentState(isExpanded ? 'collapsing' : 'expanding');
-    this.setLoadingState(true);
+    // 🚀 UPDATED: Use animation bridge for state management
+    animationBridge.setComponentState(this.element, isExpanded ? 'collapsing' : 'expanding');
+    animationBridge.setLoadingState(this.element, true);
     
     // Update state
     toggleData.isExpanded = !isExpanded;
@@ -159,9 +160,9 @@ export class ArticleCollapse extends Component {
         await this.collapse(toggle, toggleData);
       }
       
-      // 🚀 NEW: Animation complete - update states
-      this.setLoadingState(false);
-      this.updateComponentState(toggleData.isExpanded ? 'expanded' : 'collapsed');
+      // 🚀 UPDATED: Animation complete - update states using bridge
+      animationBridge.setLoadingState(this.element, false);
+      animationBridge.setComponentState(this.element, toggleData.isExpanded ? 'expanded' : 'collapsed');
       
       // Save state if enabled
       if (this.options.storeState) {
@@ -177,9 +178,9 @@ export class ArticleCollapse extends Component {
       
     } catch (error) {
       console.error('Toggle animation failed:', error);
-      // 🚀 NEW: Error handling with state reset
-      this.setLoadingState(false);
-      this.updateComponentState('error');
+      // 🚀 UPDATED: Error handling with state reset using bridge
+      animationBridge.setLoadingState(this.element, false);
+      animationBridge.setComponentState(this.element, 'error');
       // Revert state on error
       toggleData.isExpanded = !toggleData.isExpanded;
     }
@@ -204,7 +205,7 @@ export class ArticleCollapse extends Component {
       content.classList.remove('expanding');
     }
     
-    content.classList.add('expanded');
+            animationBridge.setCollapseState(content, 'expanded');
     
     // Rotate chevron
     if (chevron) {
@@ -235,7 +236,7 @@ export class ArticleCollapse extends Component {
       content.classList.remove('collapsing');
     }
     
-    content.classList.remove('expanded');
+            animationBridge.setCollapseState(content, 'collapsed');
     content.style.display = 'none';
     
     // Rotate chevron back

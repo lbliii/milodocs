@@ -11,7 +11,11 @@
   border-radius: 0.875rem;
   border: 1px solid var(--color-border-primary);
   backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
   overflow: hidden;
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.05),
@@ -128,7 +132,11 @@
 .glossary-entry + h1 a {
   color: inherit;
   text-decoration: none;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
 }
 
 .glossary-entry + h1 a:hover {
@@ -151,7 +159,11 @@ h1[id] {
 h1[id] a {
   color: inherit;
   text-decoration: none;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   display: inline-block;
 }
 
@@ -252,7 +264,11 @@ h1[id]::before {
   border-radius: 0.5rem;
   color: var(--color-text-secondary);
   text-decoration: none;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   font-weight: 500;
 }
 

@@ -4,6 +4,7 @@
  */
 
 import { motion } from './accessibility.js';
+import { animationBridge } from '../core/AnimationBridge.js';
 
 /**
  * @typedef {Object} LoadingOptions
@@ -398,7 +399,7 @@ export class LoadingStateManager {
           height: 100%;
           background-color: var(--color-brand, #3b82f6);
           width: ${progress}%;
-          transition: width 0.3s ease;
+          transition: width var(--timing-medium) var(--easing-standard);
           ${config.animate ? 'animation: progress-shimmer 2s infinite;' : ''}
         " role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
@@ -487,9 +488,10 @@ export class LoadingStateManager {
     const content = newContent || originalContent;
     
     // Fade out current content
-    element.style.transition = 'opacity 0.2s ease';
+    // CSS handles transitions via animation tokens
     element.style.opacity = '0';
 
+    const duration = animationBridge.getTiming('fast');
     setTimeout(() => {
       // Update content
       if (typeof content === 'string') {

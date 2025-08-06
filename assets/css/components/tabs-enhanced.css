@@ -85,9 +85,13 @@
   transform: translateZ(0); /* Force hardware acceleration */
 }
 
-/* Hide inactive content */
+/* Hide inactive content - use height-based approach for consistency */
 [data-component="tabs"] [data-tabcontent].hidden {
-  display: none;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease;
 }
 
 /* Enhanced content styling */

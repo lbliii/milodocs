@@ -6,6 +6,7 @@
 
 import { Component } from '../../core/Component.js';
 import ComponentManager from '../../core/ComponentManager.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 
 export class NotebookProgressiveReveal extends Component {
   constructor(config = {}) {
@@ -253,7 +254,8 @@ export class NotebookProgressiveReveal extends Component {
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }
-      scrollTimeout = setTimeout(handleScroll, 100);
+      const throttleDelay = animationBridge.getTiming('fast') / 2;
+      scrollTimeout = setTimeout(handleScroll, throttleDelay);
     };
 
             this.addEventListener(window, 'scroll', throttledScroll);

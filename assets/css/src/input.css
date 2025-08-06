@@ -1,5 +1,9 @@
 /* Import component CSS files - MUST be first! */
 
+/* ✅ ARCHITECTURE: Core animation and state management systems */
+@import "../architecture/animation-system.css";
+@import "../architecture/component-states.css";
+
 @import "../components/buttons.css";
 @import "../components/tables.css";
 @import "../components/notice.css";
@@ -26,9 +30,9 @@
 
 @layer base {
 
-  /* Optimized theme transitions - selective rather than global */
+  /* ✅ FIXED: Use animation tokens instead of hardcoded values */
   html:not(.no-transitions) {
-    transition: color-scheme 0.3s ease;
+    transition: color-scheme var(--timing-medium) var(--easing-standard);
   }
   
   /* Apply transitions only to specific elements that need them */
@@ -39,7 +43,10 @@
   html:not(.no-transitions) .search-container,
   html:not(.no-transitions) .toast-notification,
   html:not(.no-transitions) .theme-transition {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: 
+      background-color var(--timing-medium) var(--easing-standard), 
+      color var(--timing-medium) var(--easing-standard), 
+      border-color var(--timing-medium) var(--easing-standard);
   }
   
   /* Disable transitions during page load to prevent flash */
@@ -156,7 +163,8 @@
     @apply py-3;
     counter-increment: item;
     position: relative;
-    transition: all 0.2s ease;
+    /* ✅ FIXED: Use animation tokens and specific properties */
+    transition: transform var(--timing-fast) var(--easing-standard);
   }
   
   /* Enhanced List Item Hover Effect */
@@ -186,7 +194,8 @@
     box-shadow: 
       0 2px 8px rgba(var(--color-brand-rgb), 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.2s ease;
+    /* ✅ FIXED: Use animation tokens and specific properties */
+    transition: transform var(--timing-fast) var(--easing-standard);
     position: relative;
     top: -1px;
   }
@@ -222,7 +231,8 @@
     box-shadow: 
       0 2px 6px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.2s ease;
+    /* ✅ FIXED: Use animation tokens and specific properties */
+    transition: transform var(--timing-fast) var(--easing-standard);
     position: relative;
     top: -1px;
   }

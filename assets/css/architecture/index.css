@@ -1,0 +1,156 @@
+/* 🎯 Architecture System - Complete Import
+ * =========================================
+ * 
+ * This file imports all architectural foundation files in the correct order
+ * to ensure proper CSS cascade and prevent conflicts.
+ * 
+ * Import this single file to get the complete architectural system.
+ */
+
+/* ✅ STEP 1: ANIMATION FOUNDATION
+ * ================================
+ * Must be first - provides timing tokens, easing curves, and base animation patterns
+ * that other systems depend on.
+ */
+@import './animation-system.css';
+
+/* ✅ STEP 2: COMPONENT STATE MANAGEMENT
+ * ======================================
+ * Depends on animation tokens. Provides state management patterns that
+ * interaction and loading systems build upon.
+ */
+@import './component-states.css';
+
+/* ✅ STEP 3: LAYOUT FOUNDATIONS
+ * ==============================
+ * Independent system that provides spacing, positioning, and layout tokens.
+ * Can be loaded in parallel with other systems.
+ */
+@import './layout-foundations.css';
+
+/* ✅ STEP 4: ELEVATION SYSTEM
+ * ============================
+ * Independent shadow system. Provides elevation tokens that interaction
+ * patterns will reference.
+ */
+@import './elevation-system.css';
+
+/* ✅ STEP 5: INTERACTION PATTERNS
+ * ================================
+ * Depends on animation tokens and elevation tokens. Provides unified
+ * hover, focus, and active state patterns.
+ */
+@import './interaction-patterns.css';
+
+/* ✅ STEP 6: LOADING STATES
+ * ==========================
+ * Depends on animation tokens and layout tokens. Provides loading patterns
+ * and skeleton components.
+ */
+@import './loading-states.css';
+
+/* 🎯 ARCHITECTURE SYSTEM SUMMARY
+ * ===============================
+ * 
+ * This architecture system provides:
+ * 
+ * 1. **Animation System** (animation-system.css)
+ *    - Consistent timing tokens (--timing-*)
+ *    - Easing curves (--easing-*)
+ *    - Transform patterns (--transform-*)
+ *    - Collapse/expand behaviors
+ *    - Utility animation classes
+ * 
+ * 2. **Component States** (component-states.css)
+ *    - Data-attribute driven state management
+ *    - Lifecycle states (loading, ready, disabled, error)
+ *    - Collapse states (collapsed, transitioning, expanded)
+ *    - Interactive states with accessibility support
+ * 
+ * 3. **Layout Foundations** (layout-foundations.css)
+ *    - Comprehensive spacing scale (--space-*)
+ *    - Semantic spacing tokens (--space-xs, --space-md, etc.)
+ *    - Border radius system (--radius-*)
+ *    - Z-index scale (--z-*)
+ *    - Max-width tokens (--max-width-*)
+ *    - Layout pattern classes (.container, .stack, .cluster, etc.)
+ * 
+ * 4. **Elevation System** (elevation-system.css)
+ *    - Consistent shadow elevation levels (--elevation-*)
+ *    - Interactive hover elevations (--elevation-hover-*)
+ *    - Brand-colored elevations (--elevation-brand-*)
+ *    - State-specific elevations (error, focus, etc.)
+ *    - Semantic elevation classes (.card-elevated, .btn-floating, etc.)
+ * 
+ * 5. **Interaction Patterns** (interaction-patterns.css)
+ *    - Unified hover/focus/active behaviors
+ *    - Interactive element classes (.interact-subtle, .interact-dramatic, etc.)
+ *    - Consistent focus management
+ *    - Disabled and loading state patterns
+ *    - Touch device optimizations
+ * 
+ * 6. **Loading States** (loading-states.css)
+ *    - Loading state classes (.loading, .loading-blur, etc.)
+ *    - Spinner components (.spinner, .spinner-dots, etc.)
+ *    - Skeleton loading patterns (.skeleton, .skeleton-text, etc.)
+ *    - Progressive loading behaviors
+ *    - Async operation state management
+ * 
+ * USAGE EXAMPLES:
+ * ===============
+ * 
+ * // Use architectural tokens in components:
+ * .my-component {
+ *   padding: var(--space-md);
+ *   border-radius: var(--radius-card);
+ *   box-shadow: var(--elevation-2);
+ *   transition: var(--transition-interactive);
+ * }
+ * 
+ * .my-component:hover {
+ *   transform: var(--transform-lift-medium);
+ *   box-shadow: var(--elevation-hover-4);
+ * }
+ * 
+ * // Apply architectural classes:
+ * <div class="interact-medium elevation-4 rounded-card padding-lg">
+ *   <div data-component-state="loading">...</div>
+ * </div>
+ * 
+ * // Use state management:
+ * <div data-collapse-state="collapsed">
+ *   <div class="collapse-body">Content</div>
+ * </div>
+ * 
+ * BENEFITS:
+ * =========
+ * 
+ * ✅ **Consistency**: All components use the same timing, spacing, and interaction patterns
+ * ✅ **Maintainability**: Changes to timing/spacing/shadows happen in one place
+ * ✅ **Performance**: Optimized transitions and hardware acceleration
+ * ✅ **Accessibility**: Built-in support for reduced motion, high contrast, screen readers
+ * ✅ **Developer Experience**: Semantic tokens and utility classes speed up development
+ * ✅ **Brand Coherence**: Consistent elevation and interaction patterns across all components
+ * ✅ **Scalability**: Easy to extend with new tokens and patterns
+ * 
+ * MIGRATION GUIDE:
+ * ================
+ * 
+ * To migrate existing components to use this architecture:
+ * 
+ * 1. Replace hardcoded timing values with --timing-* tokens
+ * 2. Replace hardcoded shadows with --elevation-* tokens  
+ * 3. Replace hardcoded transforms with --transform-* tokens
+ * 4. Use .interact-* classes instead of custom hover states
+ * 5. Use data-attributes for state management instead of classes
+ * 6. Replace loading patterns with .skeleton and .loading classes
+ * 
+ * PERFORMANCE NOTES:
+ * ==================
+ * 
+ * - All animations use transform and opacity for 60fps performance
+ * - Hardware acceleration is enabled on interactive elements
+ * - Reduced motion preferences are respected throughout
+ * - Z-index values are managed to prevent stacking conflicts
+ * - Specific property transitions prevent layout thrashing
+ */

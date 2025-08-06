@@ -3,8 +3,14 @@
 /* Enhanced Button System */
 .btn {
   @apply inline-flex items-center justify-center px-4 py-2 
-         font-medium rounded-lg transition-all duration-200 
-         focus:outline-none focus:ring-2 focus:ring-offset-2;
+         font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
   min-height: 2.5rem;
   text-decoration: none;
   cursor: pointer;
@@ -24,8 +30,8 @@
 
 .btn--primary:hover:not(:disabled) {
   background-color: var(--color-brand-1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: var(--transform-lift-subtle);
+  box-shadow: var(--elevation-hover-2);
 }
 
 .btn--secondary {
@@ -38,7 +44,7 @@
 .btn--secondary:hover:not(:disabled) {
   background-color: var(--color-surface-hover);
   border-color: var(--color-brand);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
 }
 
 .btn--ghost {
@@ -60,7 +66,7 @@
 
 .btn--danger:hover:not(:disabled) {
   background-color: #dc2626;
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
 }
 
 .btn--sm {
@@ -104,13 +110,18 @@
 .topbar__button {
   position: relative;
   padding: 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   min-width: 2.25rem;
   min-height: 2.25rem;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border-primary);
   color: var(--color-text-secondary);
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -127,7 +138,7 @@
   bottom: 0;
   background: radial-gradient(circle at center, rgba(var(--color-brand-rgb), 0.1) 0%, transparent 70%);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--timing-fast) var(--easing-standard);
   pointer-events: none;
 }
 
@@ -135,7 +146,7 @@
   background-color: var(--color-surface-hover);
   border-color: var(--color-brand);
   color: var(--color-text-primary);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -151,7 +162,12 @@
 .topbar__button img {
   width: 1.125rem;
   height: 1.125rem;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   filter: brightness(0.8);
   flex-shrink: 0;
 }
@@ -165,13 +181,18 @@
 .toggle-btn {
   position: relative;
   padding: 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   min-width: 2.25rem;
   min-height: 2.25rem;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border-primary);
   color: var(--color-text-secondary);
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -198,7 +219,7 @@
     transparent 70%
   );
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--timing-fast) var(--easing-standard);
   pointer-events: none;
 }
 
@@ -206,7 +227,7 @@
   background-color: var(--color-surface-hover);
   border-color: var(--color-brand);
   color: var(--color-text-primary);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -233,7 +254,12 @@
 .toggle-btn img {
   width: 1.125rem !important; /* Properly sized icons */
   height: 1.125rem !important;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   filter: brightness(0.8);
   flex-shrink: 0; /* Prevent icon compression */
 }
@@ -253,7 +279,8 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   transform: scale(0);
-  animation: ripple-animation 0.6s linear;
+  /* ✅ FIXED: Use animation tokens for ripple effect */
+  animation: ripple-animation var(--timing-slow) linear;
   pointer-events: none;
   z-index: 1;
   /* Ensure it doesn't affect layout */
@@ -267,10 +294,11 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* ✅ KEYFRAME: Ripple animation using animation tokens */
 @keyframes ripple-animation {
   to {
     transform: scale(4);
-    opacity: 0;
+    opacity: var(--opacity-hidden);
   }
 }
 

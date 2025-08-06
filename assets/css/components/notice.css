@@ -5,13 +5,16 @@
   position: relative;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  transition-property: all;
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
   border-radius: 0.875rem;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  animation: notice-enter 0.4s ease-out;
+  /* ✅ FIXED: Use animation tokens */
+  animation: notice-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
 }
 

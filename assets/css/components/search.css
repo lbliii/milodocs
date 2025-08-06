@@ -7,7 +7,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   width: 100%;
   max-width: 24rem;
   padding: 0.625rem 0.75rem 0.625rem 2.25rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-primary);
   font-size: 0.875rem;
   font-weight: 500;
@@ -30,7 +30,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 .search-input:hover {
   border-color: var(--color-brand);
   background-color: var(--color-surface-hover);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 
     0 4px 8px rgba(0, 0, 0, 0.1),
     0 0 20px rgba(var(--color-brand-rgb), 0.15),
@@ -42,7 +42,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   outline-offset: 2px;
   border-color: var(--color-brand);
   background-color: var(--color-surface);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 
     0 0 0 2px var(--color-brand),
     0 0 0 4px rgba(var(--color-brand-rgb), 0.15),
@@ -218,7 +218,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 }
 
 .search-hit:hover .search-hit-content {
-  transform: translateY(-4px);
+  transform: var(--transform-lift-dramatic);
   border-color: var(--color-brand);
   box-shadow: 
     0 12px 28px rgba(0, 0, 0, 0.12),
@@ -238,7 +238,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 .search-hit:focus-within .search-hit-content {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
-  transform: translateY(-2px);
+  transform: var(--transform-lift-medium);
 }
 
 /* Search Hit Typography - Matching design system */
@@ -330,7 +330,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 }
 
 .search-section:hover {
-  transform: translateY(-2px);
+  transform: var(--transform-lift-medium);
 }
 
 .search-section-header {
@@ -498,7 +498,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 }
 
 .search-section:hover {
-  transform: translateY(-2px);
+  transform: var(--transform-lift-medium);
 }
 
 /* Enhanced Search Hit Styling */
@@ -571,7 +571,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border-primary);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -585,7 +585,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 #filterSelect:hover {
   background: var(--color-surface-hover);
   border-color: var(--color-brand);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -607,7 +607,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 .filter-active:hover {
   background: var(--color-brand-1) !important;
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
 }
 
 /* Filter container styling */
@@ -812,7 +812,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   background: var(--color-brand);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -822,7 +822,7 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 .search-error button:hover {
   background: var(--color-brand-1);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 0 4px 8px rgba(var(--color-brand-rgb), 0.25);
 }
 

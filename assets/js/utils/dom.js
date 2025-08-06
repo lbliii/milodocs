@@ -64,7 +64,10 @@ export function createRipple(element, event) {
   element.style.overflow = 'hidden';
   element.appendChild(ripple);
   
-  setTimeout(() => ripple.remove(), 600);
+  // Use CSS timing token for ripple duration
+  const rippleDuration = getComputedStyle(document.documentElement).getPropertyValue('--timing-slow');
+  const duration = parseFloat(rippleDuration) * 1000 || 500; // Default to 500ms if token unavailable
+  setTimeout(() => ripple.remove(), duration);
 }
 
 /**

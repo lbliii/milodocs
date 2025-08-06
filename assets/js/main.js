@@ -7,6 +7,7 @@ import { milo } from './core/MiloCore.js';
 import { ready } from './utils/dom.js';
 import { registerAllComponents } from './components/index.js';
 import { logger } from './utils/Logger.js';
+import { animationBridge } from './core/AnimationBridge.js';
 
 const log = logger.component('MiloDocs');
 
@@ -17,6 +18,10 @@ async function initializeMiloDocs() {
   try {
     // Initialize core system
     await milo.init();
+    
+    // Initialize animation bridge (NEW)
+    animationBridge.init();
+    animationBridge.migrateExistingComponents();
     
     // Register critical components
     await registerAllComponents();

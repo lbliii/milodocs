@@ -45,7 +45,7 @@
     var(--color-bg-secondary) 100%
   );
   border: 2px solid var(--color-border-primary);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-card);
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.06),
     0 1px 4px rgba(0, 0, 0, 0.04),
@@ -55,7 +55,7 @@
   border-left: 3px solid var(--color-brand);
   
   /* Optimized transition for performance */
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: var(--transition-interactive);
   overflow: hidden; /* Essential for ripple effects */
   cursor: pointer;
 }
@@ -106,10 +106,14 @@
     rgba(var(--color-brand-rgb), 0.1) 0%,
     rgba(var(--color-brand-rgb), 0.05) 100%
   );
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   border: 1px solid rgba(var(--color-brand-rgb), 0.2);
   filter: brightness(0.9);
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
   margin-top: 0;
 }
 
@@ -202,7 +206,7 @@
   padding: 0.5rem 0.875rem;
   background: var(--color-brand);
   border: 1px solid var(--color-brand);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   color: var(--color-text-inverse);
   text-decoration: none;
   font-size: 0.75rem;
@@ -210,7 +214,11 @@
   font-family: var(--font-brand);
   text-transform: uppercase;
   letter-spacing: 0.25px;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
   overflow: hidden; /* Enable ripple effects */
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(var(--color-brand-rgb), 0.25);
@@ -219,7 +227,7 @@
 .quicklinks__link:hover {
   background: var(--color-brand-2);
   border-color: var(--color-brand-2);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 0 4px 12px rgba(var(--color-brand-rgb), 0.35);
 }
 
@@ -274,7 +282,7 @@
   }
   
   .quicklinks__item:hover {
-    transform: translateY(-2px);
+    transform: var(--transform-lift-medium);
   }
   
   .quicklinks__icon {

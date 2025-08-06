@@ -1,0 +1,570 @@
+/* 🎯 Universal Loading States System
+ * ===================================
+ * 
+ * This file centralizes all loading patterns, skeletons, and async state
+ * management to ensure consistent loading experiences across components.
+ */
+
+:root {
+  /* ✨ LOADING TIMING TOKENS */
+  --loading-duration-fast: 1s;
+  --loading-duration-normal: 1.5s;
+  --loading-duration-slow: 2s;
+  --loading-pulse-duration: 2s;
+  --loading-shimmer-duration: 1.5s;
+  
+  /* ✨ LOADING VISUAL TOKENS */
+  --loading-opacity: 0.6;
+  --loading-blur: blur(1px);
+  --loading-grayscale: grayscale(30%);
+  --loading-backdrop: rgba(255, 255, 255, 0.8);
+  --loading-spinner-size: 2rem;
+  --loading-spinner-border: 2px;
+  
+  /* ✨ SKELETON TOKENS */
+  --skeleton-bg-base: rgba(var(--color-text-primary-rgb, 0, 0, 0), 0.1);
+  --skeleton-bg-shimmer: rgba(var(--color-text-primary-rgb, 0, 0, 0), 0.2);
+  --skeleton-border-radius: 0.25rem;
+  --skeleton-height-text: 1rem;
+  --skeleton-height-title: 1.5rem;
+  --skeleton-height-button: 2.5rem;
+  --skeleton-height-avatar: 3rem;
+  
+  /* ✨ SHIMMER GRADIENT */
+  --shimmer-gradient: linear-gradient(
+    90deg,
+    var(--skeleton-bg-base) 25%,
+    var(--skeleton-bg-shimmer) 50%,
+    var(--skeleton-bg-base) 75%
+  );
+  
+  /* ✨ PULSE GRADIENT */
+  --pulse-gradient: linear-gradient(
+    45deg,
+    rgba(var(--color-brand-rgb), 0.1) 0%,
+    rgba(var(--color-brand-rgb), 0.3) 50%,
+    rgba(var(--color-brand-rgb), 0.1) 100%
+  );
+}
+
+/* 🌙 DARK MODE LOADING ADJUSTMENTS */
+.dark {
+  --loading-backdrop: rgba(0, 0, 0, 0.8);
+  --skeleton-bg-base: rgba(255, 255, 255, 0.1);
+  --skeleton-bg-shimmer: rgba(255, 255, 255, 0.2);
+  
+  --shimmer-gradient: linear-gradient(
+    90deg,
+    var(--skeleton-bg-base) 25%,
+    var(--skeleton-bg-shimmer) 50%,
+    var(--skeleton-bg-base) 75%
+  );
+}
+
+/* ✅ LOADING STATE CLASSES
+ * =========================
+ * Apply these classes to show loading states
+ */
+
+/* Basic loading state */
+.loading {
+  opacity: var(--loading-opacity);
+  pointer-events: none;
+  cursor: wait;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+/* Loading with blur effect */
+.loading-blur {
+  opacity: var(--loading-opacity);
+  filter: var(--loading-blur);
+  pointer-events: none;
+  cursor: wait;
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+}
+
+/* Loading with grayscale effect */
+.loading-muted {
+  opacity: var(--loading-opacity);
+  filter: var(--loading-grayscale);
+  pointer-events: none;
+  cursor: wait;
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: relative;
+}
+
+.loading-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--loading-backdrop);
+  backdrop-filter: blur(2px);
+  z-index: var(--z-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--timing-medium) var(--easing-standard);
+}
+
+.loading-overlay.is-loading::before {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ✅ SPINNER COMPONENTS
+ * ======================
+ * Various spinner patterns
+ */
+
+/* Basic spinner */
+.spinner {
+  width: var(--loading-spinner-size);
+  height: var(--loading-spinner-size);
+  border: var(--loading-spinner-border) solid rgba(var(--color-brand-rgb), 0.2);
+  border-top: var(--loading-spinner-border) solid var(--color-brand);
+  border-radius: 50%;
+  animation: spin var(--loading-duration-fast) linear infinite;
+  display: inline-block;
+}
+
+.spinner-sm {
+  --loading-spinner-size: 1rem;
+  --loading-spinner-border: 1px;
+}
+
+.spinner-lg {
+  --loading-spinner-size: 3rem;
+  --loading-spinner-border: 3px;
+}
+
+/* Dots spinner */
+.spinner-dots {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.spinner-dots::before,
+.spinner-dots::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--color-brand);
+  border-radius: 50%;
+  animation: pulse var(--loading-pulse-duration) ease-in-out infinite;
+}
+
+.spinner-dots::before {
+  animation-delay: 0s;
+}
+
+.spinner-dots::after {
+  animation-delay: 0.5s;
+}
+
+/* Pulse spinner */
+.spinner-pulse {
+  width: var(--loading-spinner-size);
+  height: var(--loading-spinner-size);
+  background: var(--color-brand);
+  border-radius: 50%;
+  animation: pulse var(--loading-pulse-duration) ease-in-out infinite;
+}
+
+/* ✅ SKELETON COMPONENTS
+ * =======================
+ * Skeleton loading patterns for different content types
+ */
+
+/* Base skeleton */
+.skeleton {
+  background: var(--skeleton-bg-base);
+  border-radius: var(--skeleton-border-radius);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--shimmer-gradient);
+  animation: shimmer var(--loading-shimmer-duration) ease-in-out infinite;
+}
+
+/* Skeleton variations */
+.skeleton-text {
+  height: var(--skeleton-height-text);
+  width: 100%;
+}
+
+.skeleton-text-short {
+  width: 75%;
+}
+
+.skeleton-text-long {
+  width: 90%;
+}
+
+.skeleton-title {
+  height: var(--skeleton-height-title);
+  width: 60%;
+  margin-bottom: var(--space-2);
+}
+
+.skeleton-button {
+  height: var(--skeleton-height-button);
+  width: 120px;
+  border-radius: var(--radius-button);
+}
+
+.skeleton-avatar {
+  width: var(--skeleton-height-avatar);
+  height: var(--skeleton-height-avatar);
+  border-radius: 50%;
+}
+
+.skeleton-card {
+  height: 200px;
+  border-radius: var(--radius-card);
+}
+
+.skeleton-image {
+  height: 150px;
+  width: 100%;
+  border-radius: var(--radius-base);
+}
+
+/* ✅ SKELETON LAYOUTS
+ * ====================
+ * Complete skeleton layouts for common components
+ */
+
+/* Article skeleton */
+.skeleton-article {
+  padding: var(--space-6);
+}
+
+.skeleton-article .skeleton-title {
+  margin-bottom: var(--space-4);
+}
+
+.skeleton-article .skeleton-text {
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-article .skeleton-text:last-child {
+  width: 65%;
+  margin-bottom: 0;
+}
+
+/* Card skeleton */
+.skeleton-card-content {
+  padding: var(--space-4);
+}
+
+.skeleton-card-content .skeleton-image {
+  margin-bottom: var(--space-4);
+}
+
+.skeleton-card-content .skeleton-title {
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-card-content .skeleton-text {
+  margin-bottom: var(--space-2);
+}
+
+/* List item skeleton */
+.skeleton-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.skeleton-list-item .skeleton-avatar {
+  flex-shrink: 0;
+}
+
+.skeleton-list-item .skeleton-content {
+  flex: 1;
+}
+
+.skeleton-list-item .skeleton-text {
+  margin-bottom: var(--space-1);
+}
+
+.skeleton-list-item .skeleton-text:last-child {
+  width: 40%;
+  margin-bottom: 0;
+}
+
+/* ✅ PROGRESSIVE LOADING
+ * =======================
+ * Progressive reveal patterns
+ */
+
+.progressive-load {
+  opacity: 0;
+  transform: var(--transform-slide-in-up);
+  transition: 
+    opacity var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
+}
+
+.progressive-load.loaded {
+  opacity: 1;
+  transform: var(--transform-translate-none);
+}
+
+/* Staggered progressive loading */
+.progressive-load-stagger > * {
+  opacity: 0;
+  transform: var(--transform-slide-in-up);
+  transition: 
+    opacity var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
+  transition-delay: calc(var(--reveal-stagger-delay) * var(--stagger-index, 0));
+}
+
+.progressive-load-stagger.loaded > * {
+  opacity: 1;
+  transform: var(--transform-translate-none);
+}
+
+/* ✅ ASYNC OPERATION STATES
+ * ==========================
+ * Loading states for different async operations
+ */
+
+/* Button loading states */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  cursor: wait;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin var(--loading-duration-fast) linear infinite;
+}
+
+/* Form loading states */
+.form-loading {
+  opacity: var(--loading-opacity);
+  pointer-events: none;
+}
+
+.form-loading input,
+.form-loading textarea,
+.form-loading select {
+  cursor: wait;
+  background-color: var(--color-surface-muted);
+}
+
+/* Content loading states */
+.content-loading {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ ERROR AND RETRY STATES
+ * ==========================
+ * Loading error and retry patterns
+ */
+
+.loading-error {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.loading-error-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto var(--space-4);
+  opacity: 0.5;
+}
+
+.retry-button {
+  margin-top: var(--space-4);
+}
+
+/* ✅ KEYFRAME ANIMATIONS
+ * =======================
+ * Loading-specific animations
+ */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes fade-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ✅ ACCESSIBILITY ENHANCEMENTS
+ * ==============================
+ * Loading states for screen readers and reduced motion
+ */
+
+/* Screen reader announcements */
+.sr-loading-text {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .spinner-pulse,
+  .skeleton::after {
+    animation: fade-pulse var(--loading-duration-slow) ease-in-out infinite;
+  }
+  
+  .progressive-load,
+  .progressive-load-stagger > * {
+    transition: opacity var(--timing-fast) ease;
+    transform: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .skeleton {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark .skeleton {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ✅ COMPONENT INTEGRATION
+ * =========================
+ * Integration with existing component systems
+ */
+
+/* Loading states for data attributes */
+[data-loading="true"] {
+  opacity: var(--loading-opacity);
+  pointer-events: none;
+  cursor: wait;
+}
+
+[data-loading-type="skeleton"] {
+  background: var(--skeleton-bg-base);
+  border-radius: var(--skeleton-border-radius);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-loading-type="skeleton"]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--shimmer-gradient);
+  animation: shimmer var(--loading-shimmer-duration) ease-in-out infinite;
+}
+
+/* Loading states for component states */
+[data-component-state="loading"] {
+  opacity: var(--loading-opacity);
+  filter: var(--loading-blur);
+  pointer-events: none;
+  cursor: wait;
+}
+
+/* ✅ PERFORMANCE OPTIMIZATIONS
+ * =============================
+ * Hardware acceleration for loading animations
+ */
+
+.spinner,
+.skeleton::after,
+.progressive-load {
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* ✅ UTILITY CLASSES
+ * ===================
+ * Quick loading state utilities
+ */
+
+.is-loading { opacity: var(--loading-opacity); pointer-events: none; }
+.is-skeleton { background: var(--skeleton-bg-base); }
+.has-shimmer { position: relative; overflow: hidden; }
+.has-shimmer::after { 
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--shimmer-gradient);
+  animation: shimmer var(--loading-shimmer-duration) ease-in-out infinite;
+}

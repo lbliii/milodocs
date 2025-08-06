@@ -22,7 +22,11 @@
   border-radius: 0.75rem;
   color: var(--color-text-primary);
   text-decoration: none;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
   overflow: hidden;
   min-height: 4rem;
   box-shadow: 
@@ -101,7 +105,11 @@
 /* SVG Icons */
 [data-component="article-next-prev"] .nav-link svg {
   color: var(--color-text-secondary);
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard);
   flex-shrink: 0;
 }
 
@@ -143,12 +151,20 @@
 /* Enhanced Visual Hierarchy */
 [data-component="article-next-prev"] .nav-link[aria-label*="Previous"] {
   border-left: 3px solid transparent;
-  transition: all 0.2s ease, border-left-color 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-left-color var(--timing-fast) var(--easing-standard);
 }
 
 [data-component="article-next-prev"] .nav-link[aria-label*="Next"] {
   border-right: 3px solid transparent;
-  transition: all 0.2s ease, border-right-color 0.2s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    background-color var(--timing-fast) var(--easing-standard),
+    border-right-color var(--timing-fast) var(--easing-standard);
 }
 
 [data-component="article-next-prev"] .nav-link[aria-label*="Previous"]:hover {

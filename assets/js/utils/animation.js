@@ -3,6 +3,8 @@
  * Consolidates animation logic from various components
  */
 
+import { animationBridge } from '../core/AnimationBridge.js';
+
 /**
  * CSS transition utilities
  */
@@ -10,11 +12,12 @@ export const transitions = {
   /**
    * Slide down animation
    */
-  slideDown(element, duration = 300) {
+  slideDown(element, duration = null) {
+    const animDuration = duration || animationBridge.getTiming('medium');
     return new Promise(resolve => {
       element.style.height = '0';
       element.style.overflow = 'hidden';
-      element.style.transition = `height ${duration}ms ease`;
+      // CSS handles transitions via animation tokens
       
       requestAnimationFrame(() => {
         element.style.height = element.scrollHeight + 'px';
@@ -32,11 +35,12 @@ export const transitions = {
   /**
    * Slide up animation
    */
-  slideUp(element, duration = 300) {
+  slideUp(element, duration = null) {
+    const animDuration = duration || animationBridge.getTiming('medium');
     return new Promise(resolve => {
       element.style.height = element.scrollHeight + 'px';
       element.style.overflow = 'hidden';
-      element.style.transition = `height ${duration}ms ease`;
+      // CSS handles transitions via animation tokens
       
       requestAnimationFrame(() => {
         element.style.height = '0';

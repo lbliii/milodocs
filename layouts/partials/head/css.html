@@ -71,6 +71,18 @@
 
 {{/* 0. Foundation CSS - Load first for optimal performance */}}
 
+{{/* Universal Animation System - Load before all components */}}
+{{- $animationSystemCSS := resources.Get "css/architecture/animation-system.css" -}}
+{{- if $animationSystemCSS -}}
+  {{- $cssResources = $cssResources | append $animationSystemCSS -}}
+{{- end -}}
+
+{{/* Component State Management - New architecture foundation */}}
+{{- $componentStatesCSS := resources.Get "css/architecture/component-states.css" -}}
+{{- if $componentStatesCSS -}}
+  {{- $cssResources = $cssResources | append $componentStatesCSS -}}
+{{- end -}}
+
 {{/* Design Tokens - Enhanced token system (load early) */}}
 {{- $designTokensCSS := resources.Get "css/components/design-tokens.css" -}}
 {{- if $designTokensCSS -}}

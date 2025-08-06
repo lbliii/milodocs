@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 import { localStorage } from '../../utils/storage.js';
 import { debounce } from '../../utils/dom.js';
 
@@ -290,7 +291,9 @@ export class TutorialManager extends Component {
       
       if (allChecked) {
         continueBtn.classList.add('pulse-gentle');
-        setTimeout(() => continueBtn.classList.remove('pulse-gentle'), 3000);
+        // Use CSS timing tokens for animations
+        const duration = animationBridge.getTiming('slow') * 6;
+        setTimeout(() => continueBtn.classList.remove('pulse-gentle'), duration);
       }
     }
     

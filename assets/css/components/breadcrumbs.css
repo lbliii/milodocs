@@ -56,8 +56,8 @@
 .breadcrumb__link:hover {
   color: var(--color-brand);
   background-color: var(--color-surface-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: var(--transform-lift-subtle);
+  box-shadow: var(--elevation-4);
 }
 
 .breadcrumb__link:hover:before {
@@ -80,7 +80,9 @@
   font-size: 1.125rem;
   line-height: 1.75rem;
   color: var(--color-text-tertiary);
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: 
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   font-weight: 300;
 }
 
@@ -114,7 +116,7 @@
 
 .breadcrumb__current--clickable:hover {
   background-color: var(--color-brand-1);
-  transform: translateY(-1px);
+  transform: var(--transform-lift-subtle);
   box-shadow: 0 4px 12px rgba(var(--color-brand-rgb), 0.4);
 }
 
@@ -286,7 +288,7 @@
 
 .breadcrumb:has(.breadcrumb__current[aria-expanded="true"]) .breadcrumb__link:hover {
   background-color: rgba(var(--color-brand-rgb), 0.15);
-  transform: translateY(-2px);
+  transform: var(--transform-lift-medium);
   box-shadow: 0 4px 12px rgba(var(--color-brand-rgb), 0.2);
 }
 

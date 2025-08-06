@@ -24,7 +24,10 @@
   max-width: 20rem;
   width: 100%;
   transform: translateX(100%);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    transform var(--timing-slow) var(--easing-emphasized),
+    opacity var(--timing-slow) var(--easing-emphasized);
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid;

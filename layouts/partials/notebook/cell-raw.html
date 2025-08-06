@@ -10,7 +10,9 @@
 {{ $index := .index }}
 {{ $cellId := printf "cell-raw-%d" $index }}
 
-<section class="collapse expanded notebook-cell notebook-cell--raw" 
+<section class="collapse notebook-cell notebook-cell--raw"
+         data-collapse-state="expanded"
+         data-component-state="ready" 
          id="{{ $cellId }}"
          data-cell-type="raw" 
          data-cell-index="{{ $index }}"

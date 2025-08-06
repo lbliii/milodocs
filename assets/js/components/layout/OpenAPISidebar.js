@@ -5,6 +5,7 @@
 
 import { Component } from '../../core/Component.js';
 import ComponentManager from '../../core/ComponentManager.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 import { logger } from '../../utils/Logger.js';
 
 const log = logger.component('OpenAPISidebar');
@@ -74,7 +75,7 @@ export class OpenAPISidebar extends Component {
       if (targetElement) {
         toggle.setAttribute('aria-expanded', 'true');
         targetElement.style.display = 'block';
-        toggle.classList.add('openapi-sidebar-tag-toggle--expanded');
+        animationBridge.setCollapseState(targetElement, 'expanded');
       }
     });
   }
@@ -131,14 +132,14 @@ export class OpenAPISidebar extends Component {
       targetElement.style.display = 'block';
       // Force reflow for animation
       targetElement.offsetHeight;
-      targetElement.classList.add('openapi-sidebar-endpoints-list--expanded');
+              animationBridge.setCollapseState(targetElement, 'expanded');
     } else {
-      targetElement.classList.remove('openapi-sidebar-endpoints-list--expanded');
+              animationBridge.setCollapseState(targetElement, 'collapsed');
       setTimeout(() => {
         if (toggle.getAttribute('aria-expanded') === 'false') {
           targetElement.style.display = 'none';
         }
-      }, 150); // Match CSS transition duration
+      }, animationBridge.getTiming('fast')); // Use CSS timing tokens
     }
     
     log.debug(`Toggled ${target}: ${newState ? 'expanded' : 'collapsed'}`);

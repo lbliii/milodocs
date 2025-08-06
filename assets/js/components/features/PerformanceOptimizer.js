@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 import ComponentManager from '../../core/ComponentManager.js';
 import { debounce, throttle } from '../../utils/dom.js';
 import { logger } from '../../utils/Logger.js';
@@ -313,7 +314,8 @@ export class PerformanceOptimizer extends Component {
     window.announceToScreenReader = (message) => {
       announcer.textContent = message;
       this.emit('a11y:announced', { message });
-      setTimeout(() => announcer.textContent = '', 1000);
+      const duration = animationBridge.getTiming('slow') * 2;
+      setTimeout(() => announcer.textContent = '', duration);
     };
   }
 
@@ -356,7 +358,8 @@ export class PerformanceOptimizer extends Component {
     setVH();
     window.addEventListener('resize', debounce(setVH, 100));
     window.addEventListener('orientationchange', () => {
-      setTimeout(setVH, 100);
+      const delay = animationBridge.getTiming('fast') / 2;
+    setTimeout(setVH, delay);
     });
   }
 

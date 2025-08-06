@@ -65,7 +65,7 @@
 .endpoint-group-toggle .chevron {
   width: 1rem;
   height: 1rem;
-  transition: transform 0.2s ease;
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 .endpoint-group-header[aria-expanded="true"] .chevron {
@@ -73,13 +73,26 @@
 }
 
 .endpoint-group-content {
-  display: none;
+  /* Use height-based collapse (consistent with response-details) */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
   padding: 0;
+  
+  /* Configure collapse behavior */
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 3000px; /* Larger for endpoint lists */
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  --collapse-overflow-collapsed: hidden;
+  --collapse-overflow-expanded: visible;
+  --collapse-padding-collapsed: 0;
+  --collapse-padding-expanded: 0;
+  --collapse-timing: 0.3s;
+  --collapse-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.endpoint-group-content.expanded {
-  display: block;
-}
+/* Remove old class-based approach - component-states.css handles this */
 
 /* Endpoint Items within Groups */
 .endpoint-item {
@@ -243,7 +256,7 @@
 .chevron {
   width: 1rem;
   height: 1rem;
-  transition: transform 0.2s ease;
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 .endpoint-header[aria-expanded="true"] .chevron {

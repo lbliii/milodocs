@@ -1,0 +1,9 @@
+/* Navigation Module - Main import file for all navigation components */
+
+/* Import all navigation modules in proper order */
+@import 'base.css';
+@import 'chat-toc-toggle.css';
+@import 'sidebar.css';
+@import 'topbar.css';
+@import 'toc.css';
+@import 'dropdown.css';

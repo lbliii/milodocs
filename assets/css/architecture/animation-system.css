@@ -1,0 +1,417 @@
+/* 🎯 Universal Animation System - Single Source of Truth
+ * =====================================================
+ * 
+ * This file establishes consistent timing, easing, and animation patterns
+ * across the entire theme to eliminate timing chaos and performance issues.
+ */
+
+:root {
+  /* ✨ TIMING TOKENS - Only these 4 speeds allowed site-wide */
+  --timing-instant: 0.1s;   /* Micro-interactions (hover, focus) */
+  --timing-fast: 0.2s;      /* Standard interactions (buttons, links) */
+  --timing-medium: 0.3s;    /* Complex interactions (collapse, expand) */
+  --timing-slow: 0.5s;      /* Dramatic reveals (page transitions) */
+  
+  /* ✨ EASING TOKENS - Only these 3 curves allowed site-wide */
+  --easing-standard: cubic-bezier(0.4, 0, 0.2, 1);      /* Default - smooth start/end */
+  --easing-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1); /* Dramatic - bouncy feel */
+  --easing-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Gentle - soft motion */
+  
+  /* 🎯 COLLAPSE TOKENS - Universal collapse/expand behavior */
+  --collapse-timing: var(--timing-medium);
+  --collapse-easing: var(--easing-standard);
+  --collapse-height-collapsed: 0;
+  --collapse-height-expanded: 2000px; /* Never use 'none' or 'auto' - breaks animation */
+  --collapse-opacity-collapsed: 0;
+  --collapse-opacity-expanded: 1;
+  
+  /* 🎨 TRANSFORM TOKENS - 3D acceleration friendly */
+  --transform-scale-down: scale(0.95);
+  --transform-scale-up: scale(1.05);
+  --transform-scale-normal: scale(1);
+  --transform-translate-up: translateY(-4px);
+  --transform-translate-down: translateY(4px);
+  --transform-translate-none: translateY(0);
+  
+  /* 🌟 OPACITY TOKENS - Visibility states */
+  --opacity-hidden: 0;
+  --opacity-faded: 0.6;
+  --opacity-visible: 1;
+  
+  /* 🎨 COMPONENT-SPECIFIC TOKENS - From design-tokens.css merge */
+  
+  /* Card & Tile Tokens */
+  --card-shadow-rest: 0 1px 3px rgba(0,0,0,0.1);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+  --card-shadow-active: 0 8px 25px rgba(0,0,0,0.15);
+  --card-transform-hover: translateY(-2px);
+  --card-transform-active: translateY(-1px) scale(0.98);
+  --card-border-radius: 0.5rem;
+  
+  /* ✨ ADDITIONAL TRANSFORM PATTERNS - From component analysis */
+  --transform-lift-subtle: translateY(-1px);      /* Buttons, small elements */
+  --transform-lift-medium: translateY(-2px);      /* Cards, medium elements */
+  --transform-lift-dramatic: translateY(-4px);    /* Hero elements */
+  --transform-slide-in-up: translateY(20px);      /* Entry animations */
+  --transform-slide-in-down: translateY(-20px);   /* Dropdown animations */
+  --transform-scale-hover: scale(1.02);           /* Hover scale up */
+  --transform-scale-active: scale(0.98);          /* Active scale down */
+  --transform-scale-entrance: scale(0.95);        /* Entry scale */
+  
+  /* ✨ COMBINED TRANSFORMS - Common combinations */
+  --transform-lift-and-scale: translateY(-2px) scale(1.02);
+  --transform-press-down: translateY(1px) scale(0.98);
+  --transform-bounce-in: translateY(10px) scale(0.95);
+  --transform-slide-up-fade: translateY(15px);
+  
+  /* Interaction Tokens */
+  --hover-scale: 1.02;
+  --active-scale: 0.98;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: rgba(var(--color-brand-rgb), 0.2);
+  
+  /* Loading State Tokens */
+  --loading-opacity: 0.6;
+  --loading-blur: blur(1px);
+  --loading-skeleton-bg: linear-gradient(90deg, 
+    rgba(var(--color-brand-rgb), 0.1) 25%, 
+    rgba(var(--color-brand-rgb), 0.2) 50%, 
+    rgba(var(--color-brand-rgb), 0.1) 75%);
+  --loading-skeleton-size: 200% 100%;
+  
+  /* Feedback Tokens */
+  --feedback-success: #10b981;
+  --feedback-warning: #f59e0b;
+  --feedback-error: #ef4444;
+  --feedback-info: #3b82f6;
+  --feedback-slide-in: translateY(-10px);
+  --feedback-slide-out: translateY(-20px);
+  
+  /* Progressive Reveal Tokens */
+  --reveal-stagger-delay: 0.05s;
+  --reveal-batch-delay: 0.15s;
+  --reveal-slide-distance: 20px;
+}
+
+/* 🌙 DARK MODE ENHANCEMENTS */
+.dark {
+  --focus-ring-color: rgba(var(--color-brand-rgb), 0.3);
+  
+  /* Enhanced loading states for dark mode */
+  --loading-skeleton-bg: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.05) 25%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0.05) 75%);
+    
+  /* Enhanced shadows for dark mode */
+  --card-shadow-rest: 0 1px 3px rgba(0,0,0,0.3);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+  --card-shadow-active: 0 8px 25px rgba(0,0,0,0.5);
+}
+
+/* 🚨 ACCESSIBILITY - Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --timing-instant: 0.01s;
+    --timing-fast: 0.01s;
+    --timing-medium: 0.01s;
+    --timing-slow: 0.01s;
+  }
+  
+  * {
+    animation-duration: 0.01s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01s !important;
+  }
+}
+
+/* ✅ UNIVERSAL COLLAPSE COMPONENT
+ * ================================
+ * Use these classes on any collapsible content for consistent behavior
+ */
+
+/* Base collapsible container */
+.collapse-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Collapsible content body */
+.collapse-body {
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
+  transition: 
+    max-height var(--collapse-timing) var(--collapse-easing),
+    opacity var(--collapse-timing) var(--collapse-easing);
+}
+
+/* Expanded state */
+.collapse-body.expanded {
+  max-height: var(--collapse-height-expanded);
+  opacity: var(--collapse-opacity-expanded);
+}
+
+/* ✅ UNIVERSAL COMPONENT STATES
+ * ==============================
+ * Use data attributes for consistent state management
+ */
+
+/* Component initialization states */
+[data-component-state="loading"] {
+  opacity: var(--opacity-faded);
+  pointer-events: none;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+[data-component-state="ready"] {
+  opacity: var(--opacity-visible);
+  pointer-events: auto;
+  transition: opacity var(--timing-fast) var(--easing-standard);
+}
+
+[data-component-state="disabled"] {
+  opacity: var(--opacity-faded);
+  pointer-events: none;
+  filter: grayscale(50%);
+  transition: 
+    opacity var(--timing-fast) var(--easing-standard),
+    filter var(--timing-fast) var(--easing-standard);
+}
+
+/* Collapse states with data attributes */
+[data-collapse-state="collapsed"] {
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
+  transition: 
+    max-height var(--collapse-timing) var(--collapse-easing),
+    opacity var(--collapse-timing) var(--collapse-easing);
+}
+
+[data-collapse-state="transitioning"] {
+  overflow: hidden; /* Ensure no content spillage during animation */
+}
+
+[data-collapse-state="expanded"] {
+  max-height: var(--collapse-height-expanded);
+  opacity: var(--collapse-opacity-expanded);
+  overflow: visible; /* Allow content to be fully visible when expanded */
+  transition: 
+    max-height var(--collapse-timing) var(--collapse-easing),
+    opacity var(--collapse-timing) var(--collapse-easing);
+}
+
+/* ✅ PERFORMANCE-OPTIMIZED HOVER STATES
+ * ======================================
+ * Use specific property transitions instead of "transition: all"
+ */
+
+.interactive-element {
+  transition: 
+    transform var(--timing-fast) var(--easing-standard),
+    opacity var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
+}
+
+.interactive-element:hover {
+  transform: var(--transform-translate-up);
+  opacity: var(--opacity-visible);
+}
+
+.interactive-element:active {
+  transform: var(--transform-scale-down);
+  transition-duration: var(--timing-instant); /* Instant feedback */
+}
+
+/* ✅ COMPONENT-SPECIFIC CUSTOMIZATION
+ * ====================================
+ * Override tokens for specific component needs
+ */
+
+/* OpenAPI components need larger heights for complex content */
+.openapi-response {
+  --collapse-height-expanded: 3000px;
+  --collapse-timing: var(--timing-medium);
+}
+
+/* Notebook cells should be snappier */
+.notebook-cell {
+  --collapse-height-expanded: 2000px;
+  --collapse-timing: var(--timing-fast);
+}
+
+/* Tutorial sections can be more dramatic */
+.tutorial-section {
+  --collapse-height-expanded: 2500px;
+  --collapse-timing: var(--timing-slow);
+  --collapse-easing: var(--easing-emphasized);
+}
+
+/* Tabs need instant switching for good UX */
+.tab-content {
+  --collapse-height-expanded: 1500px;
+  --collapse-timing: var(--timing-fast);
+}
+
+/* ✅ SIDEBAR NAVIGATION TREE - Optimized for hierarchical content */
+.nested-content {
+  --collapse-height-expanded: 2000px;
+  --collapse-timing: var(--timing-medium);
+  --collapse-easing: var(--easing-standard);
+  
+  /* Performance optimization for tree navigation */
+  will-change: max-height, opacity;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* ✅ UTILITY CLASSES
+ * ===================
+ * Common animation patterns as reusable classes
+ */
+
+.fade-in {
+  opacity: var(--opacity-hidden);
+  animation: fadeIn var(--timing-medium) var(--easing-standard) forwards;
+}
+
+.fade-out {
+  opacity: var(--opacity-visible);
+  animation: fadeOut var(--timing-medium) var(--easing-standard) forwards;
+}
+
+.slide-up {
+  transform: var(--transform-translate-down);
+  animation: slideUp var(--timing-medium) var(--easing-standard) forwards;
+}
+
+.slide-in-up {
+  transform: var(--transform-slide-in-up);
+  opacity: var(--opacity-hidden);
+  animation: slideInUp var(--timing-medium) var(--easing-standard) forwards;
+}
+
+.slide-in-down {
+  transform: var(--transform-slide-in-down);
+  opacity: var(--opacity-hidden);
+  animation: slideInDown var(--timing-medium) var(--easing-standard) forwards;
+}
+
+.scale-in {
+  transform: var(--transform-scale-down);
+  opacity: var(--opacity-hidden);
+  animation: scaleIn var(--timing-medium) var(--easing-emphasized) forwards;
+}
+
+.bounce-in {
+  transform: var(--transform-bounce-in);
+  opacity: var(--opacity-hidden);
+  animation: bounceIn var(--timing-slow) var(--easing-emphasized) forwards;
+}
+
+.lift-on-hover {
+  transition: transform var(--timing-fast) var(--easing-standard);
+}
+
+.lift-on-hover:hover {
+  transform: var(--transform-lift-medium);
+}
+
+/* ✅ KEYFRAME ANIMATIONS
+ * =======================
+ * Standard animations used across components
+ */
+
+@keyframes fadeIn {
+  to {
+    opacity: var(--opacity-visible);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: var(--opacity-hidden);
+  }
+}
+
+@keyframes slideUp {
+  to {
+    transform: var(--transform-translate-none);
+  }
+}
+
+@keyframes slideInUp {
+  to {
+    transform: var(--transform-translate-none);
+    opacity: var(--opacity-visible);
+  }
+}
+
+@keyframes slideInDown {
+  to {
+    transform: var(--transform-translate-none);
+    opacity: var(--opacity-visible);
+  }
+}
+
+@keyframes scaleIn {
+  to {
+    transform: var(--transform-scale-normal);
+    opacity: var(--opacity-visible);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: var(--transform-bounce-in);
+    opacity: var(--opacity-hidden);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.02);
+    opacity: var(--opacity-faded);
+  }
+  100% {
+    transform: var(--transform-translate-none);
+    opacity: var(--opacity-visible);
+  }
+}
+
+/* ✅ STAGGER ANIMATIONS
+ * ======================
+ * For animating groups of elements with delays
+ */
+
+.stagger-children > * {
+  animation-delay: calc(var(--reveal-stagger-delay) * var(--stagger-index, 0));
+}
+
+.stagger-fade-in > * {
+  opacity: var(--opacity-hidden);
+  animation: fadeIn var(--timing-medium) var(--easing-standard) forwards;
+}
+
+.stagger-slide-up > * {
+  transform: var(--transform-slide-in-up);
+  opacity: var(--opacity-hidden);
+  animation: slideInUp var(--timing-medium) var(--easing-standard) forwards;
+}
+
+/* ✅ DEBUG MODE
+ * ==============
+ * Uncomment to visualize animation timing (development only)
+ */
+
+/*
+.collapse-body {
+  border: 2px dashed red !important;
+}
+
+.collapse-body.expanded {
+  border-color: green !important;
+}
+
+[data-collapse-state] {
+  outline: 2px solid blue !important;
+}
+*/

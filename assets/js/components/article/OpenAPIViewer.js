@@ -6,6 +6,7 @@
 import { Component } from '../../core/Component.js';
 import ComponentManager from '../../core/ComponentManager.js';
 import { $$, $, CopyManager, localStorage } from '../../utils/index.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 
 export class OpenAPIViewer extends Component {
   constructor(config = {}) {
@@ -213,33 +214,20 @@ export class OpenAPIViewer extends Component {
     // Update ARIA
     header.setAttribute('aria-expanded', 'true');
     
-    // Show details
-    details.style.display = 'block';
-    details.classList.add('expanded');
+    // Use AnimationBridge for consistent state management
+    animationBridge.setCollapseState(details, 'expanded');
+    animationBridge.setComponentState(details, 'transitioning');
     
-    // Animate if motion is allowed
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      // Simple slide down animation
-      details.style.maxHeight = '0';
-      details.style.overflow = 'hidden';
-      details.style.transition = 'max-height 0.3s ease-out';
-      
-      // Force reflow
-      details.offsetHeight;
-      
-      // Animate to full height
-      details.style.maxHeight = details.scrollHeight + 'px';
-      
-      // Clean up after animation
-      setTimeout(() => {
-        details.style.maxHeight = '';
-        details.style.overflow = '';
-        details.style.transition = '';
-      }, 300);
-    }
+    // Use animation bridge for timing
+    const duration = animationBridge.getTiming('medium');
     
     // Initialize any components within the expanded section
     this.initializeNestedComponents(details);
+    
+    // Complete state update
+    setTimeout(() => {
+      animationBridge.setComponentState(details, 'ready');
+    }, duration);
     
     this.emit('endpoint-expanded', { endpoint, details });
   }
@@ -253,31 +241,17 @@ export class OpenAPIViewer extends Component {
     // Update ARIA
     header.setAttribute('aria-expanded', 'false');
     
-    // Animate if motion is allowed
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      details.style.maxHeight = details.scrollHeight + 'px';
-      details.style.overflow = 'hidden';
-      details.style.transition = 'max-height 0.3s ease-in';
-      
-      // Force reflow
-      details.offsetHeight;
-      
-      // Animate to zero height
-      details.style.maxHeight = '0';
-      
-      // Hide after animation
-      setTimeout(() => {
-        details.style.display = 'none';
-        details.classList.remove('expanded');
-        details.style.maxHeight = '';
-        details.style.overflow = '';
-        details.style.transition = '';
-      }, 300);
-    } else {
-      // No animation
-      details.style.display = 'none';
-      details.classList.remove('expanded');
-    }
+    // Use AnimationBridge for consistent state management
+    animationBridge.setComponentState(details, 'transitioning');
+    animationBridge.setCollapseState(details, 'collapsed');
+    
+    // Use animation bridge for timing
+    const duration = animationBridge.getTiming('medium');
+    
+    // Complete state update
+    setTimeout(() => {
+      animationBridge.setComponentState(details, 'ready');
+    }, duration);
     
     this.emit('endpoint-collapsed', { endpoint, details });
   }
@@ -461,7 +435,8 @@ export class OpenAPIViewer extends Component {
         
         // Apply filter
         if (preferences.filter && preferences.filter !== 'all') {
-          setTimeout(() => this.filterByTag(preferences.filter), 100);
+          const delay = animationBridge.getTiming('fast') / 4;
+      setTimeout(() => this.filterByTag(preferences.filter), delay);
         }
         
         // Expand previously expanded endpoints

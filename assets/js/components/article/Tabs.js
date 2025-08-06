@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 
 export class ArticleTabs extends Component {
   constructor(config = {}) {
@@ -315,7 +316,7 @@ export class ArticleTabs extends Component {
     element.style.opacity = '0';
     element.style.transform = 'translateY(8px) scale(0.98)';
     element.style.filter = 'blur(1px)';
-    element.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    // CSS handles transitions via animation tokens
     
     // Force reflow to ensure initial state is applied
     element.offsetHeight;
@@ -332,7 +333,7 @@ export class ArticleTabs extends Component {
    * Hide content with smooth fade out
    */
   hideContent(element) {
-    element.style.transition = 'all 0.25s cubic-bezier(0.4, 0, 0.6, 1)';
+    // CSS handles transitions via animation tokens
     element.style.opacity = '0';
     element.style.transform = 'translateY(-4px) scale(1.02)';
     element.style.filter = 'blur(0.5px)';

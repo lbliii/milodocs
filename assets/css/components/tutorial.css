@@ -22,7 +22,11 @@
   border-radius: 1rem;
   border: 1px solid var(--color-border-primary);
   padding: 2rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Specific properties instead of transition: all */
+  transition: 
+    transform var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
   overflow: hidden;
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.05),
@@ -111,7 +115,11 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
 }
 
 .tutorial-badge--difficulty {
@@ -201,7 +209,7 @@
 
 .bookmark-tutorial {
   position: relative;
-  transition: transform 0.2s ease;
+  transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 .bookmark-tutorial:hover {
@@ -319,7 +327,11 @@
   border: 1px solid var(--color-border-primary);
   background: var(--color-surface);
   color: var(--color-text-secondary);
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -386,7 +398,13 @@
   font-size: 0.6875rem;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   position: relative;
   z-index: 2;
 }
@@ -804,7 +822,12 @@
 
 .copy-code {
   position: relative;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
 }
 
 .copy-code.copied {
@@ -843,7 +866,9 @@
   background: none;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard);
   text-align: left;
 }
 
@@ -877,12 +902,22 @@
 .section-content {
   padding: 0 1.5rem;
   max-height: 0;
+  opacity: 0;
   overflow: hidden;
-  transition: all 0.3s ease;
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    max-height var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard),
+    padding var(--timing-medium) var(--easing-standard);
+  /* Tutorial-specific customization */
+  --collapse-height-expanded: 2500px;
+  --collapse-timing: var(--timing-slow);
+  --collapse-easing: var(--easing-emphasized);
 }
 
 .section-content.expanded {
-  max-height: none;
+  max-height: var(--collapse-height-expanded, 2500px);
+  opacity: 1;
   padding: 1.5rem;
 }
 
@@ -908,7 +943,10 @@
   align-items: center;
   padding: 0.75rem 0;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* ✅ FIXED: Specific properties for better performance */
+  transition: 
+    background-color var(--timing-fast) var(--easing-standard),
+    padding var(--timing-fast) var(--easing-standard);
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
 }

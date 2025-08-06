@@ -34,7 +34,11 @@
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    background-color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard);
   position: relative;
   white-space: nowrap;
 }
@@ -88,7 +92,10 @@
   opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ✅ FIXED: Use animation tokens and specific properties */
+  transition: 
+    opacity var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
   transform: translateY(10px);
 }
 

@@ -394,16 +394,16 @@ export class Component {
    */
   setLoadingState(isLoading) {
     this.updateComponentState(isLoading ? 'loading' : 'ready');
-    this.setCSSProperty('opacity', isLoading ? '0.6' : '1');
   }
 
   /**
    * Enable/disable component with CSS feedback
    */
   setEnabled(isEnabled) {
-    this.updateComponentState(isEnabled ? 'enabled' : 'disabled');
-    this.setCSSProperty('pointer-events', isEnabled ? 'auto' : 'none');
-    this.element.setAttribute('aria-disabled', (!isEnabled).toString());
+    this.updateComponentState(isEnabled ? 'ready' : 'disabled');
+    if (this.element) {
+      this.element.setAttribute('aria-disabled', (!isEnabled).toString());
+    }
   }
 
   // ============================================================================
@@ -429,6 +429,164 @@ export class Component {
   // ============================================================================
   // STATE MANAGEMENT
   // ============================================================================
+
+  /**
+   * Set collapse state using the unified state system
+   */
+  setCollapseState(state) {
+    const validStates = ['collapsed', 'expanded', 'transitioning'];
+    if (!validStates.includes(state)) {
+      log.warn(`Invalid collapse state "${state}" for component ${this.name}`);
+      return this;
+    }
+
+    // Update data attribute for CSS
+    if (this.element) {
+      this.element.setAttribute('data-collapse-state', state);
+      
+      // Also update aria-expanded for accessibility
+      if (state === 'expanded') {
+        this.element.setAttribute('aria-expanded', 'true');
+      } else if (state === 'collapsed') {
+        this.element.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    // Emit state change event
+    this.emit('collapse-state-changed', { 
+      previous: this.element?.getAttribute('data-collapse-state'),
+      current: state 
+    });
+
+    return this;
+  }
+
+  /**
+   * Set visibility state using the unified state system
+   */
+  setVisibilityState(state) {
+    const validStates = ['hidden', 'visible', 'partial'];
+    if (!validStates.includes(state)) {
+      log.warn(`Invalid visibility state "${state}" for component ${this.name}`);
+      return this;
+    }
+
+    if (this.element) {
+      this.element.setAttribute('data-visibility-state', state);
+    }
+
+    this.emit('visibility-state-changed', { 
+      previous: this.element?.getAttribute('data-visibility-state'),
+      current: state 
+    });
+
+    return this;
+  }
+
+  /**
+   * Expand a collapsible element with proper state management
+   */
+  async expand(options = {}) {
+    const {
+      showFirst = false,
+      duration = 300
+    } = options;
+
+    this.setCollapseState('transitioning');
+
+    if (showFirst) {
+      this.setVisibilityState('visible');
+      this.element?.offsetHeight;
+    }
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.setCollapseState('expanded');
+        if (!showFirst) {
+          this.setVisibilityState('visible');
+        }
+        resolve();
+      }, 10);
+    });
+  }
+
+  /**
+   * Collapse a collapsible element with proper state management
+   */
+  async collapse(options = {}) {
+    const {
+      hideAfter = false,
+      duration = null
+    } = options;
+
+    this.setCollapseState('transitioning');
+
+    const animationDuration = duration || parseFloat(this.getCSSProperty('--collapse-timing') || '0.3') * 1000;
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.setCollapseState('collapsed');
+        if (hideAfter) {
+          this.setVisibilityState('hidden');
+        }
+        resolve();
+      }, animationDuration);
+    });
+  }
+
+  /**
+   * Toggle collapse state
+   */
+  async toggle(options = {}) {
+    const isExpanded = this.element?.getAttribute('data-collapse-state') === 'expanded';
+    
+    if (isExpanded) {
+      return this.collapse(options);
+    } else {
+      return this.expand(options);
+    }
+  }
+
+  /**
+   * Configure collapse behavior by setting CSS custom properties
+   * This allows components to customize how component-states.css handles them
+   */
+  configureCollapseBehavior(config = {}) {
+    const {
+      heightCollapsed = '0',
+      heightExpanded = 'none',
+      opacityCollapsed = '1',
+      opacityExpanded = '1',
+      overflowCollapsed = 'hidden',
+      overflowExpanded = 'visible',
+      paddingCollapsed = '0',
+      paddingExpanded = 'initial',
+      timing = '0.3s',
+      easing = 'ease',
+      display = 'block'
+    } = config;
+
+    // Set CSS custom properties that component-states.css will use
+    const properties = {
+      '--collapse-height-collapsed': heightCollapsed,
+      '--collapse-height-expanded': heightExpanded,
+      '--collapse-opacity-collapsed': opacityCollapsed,
+      '--collapse-opacity-expanded': opacityExpanded,
+      '--collapse-overflow-collapsed': overflowCollapsed,
+      '--collapse-overflow-expanded': overflowExpanded,
+      '--collapse-padding-collapsed': paddingCollapsed,
+      '--collapse-padding-expanded': paddingExpanded,
+      '--collapse-timing': timing,
+      '--collapse-easing': easing,
+      '--component-display': display
+    };
+
+    Object.entries(properties).forEach(([property, value]) => {
+      this.setCSSProperty(property, value);
+    });
+
+    return this;
+  }
 
   /**
    * Check if component is ready

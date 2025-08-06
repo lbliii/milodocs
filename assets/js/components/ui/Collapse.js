@@ -5,6 +5,7 @@
  */
 
 import { Component } from '../../core/Component.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 
 class Collapse extends Component {
   constructor(config = {}) {
@@ -130,16 +131,14 @@ class Collapse extends Component {
   /**
    * Expand a collapse element
    */
-  expand(collapseData) {
+  async expand(collapseData) {
     const { header, target, targetId } = collapseData;
 
-    // Update state
+    // Update state using new animation bridge
     collapseData.isExpanded = true;
-    header.setAttribute('aria-expanded', 'true');
-    target.classList.add('expanded');
-
-    // Visual enhancements
-    this.applyExpandAnimation(target, header);
+    
+    // Use animation bridge for consistent state management
+    await animationBridge.expand(target, { timing: 'medium' });
 
     // Store state if configured
     if (this.options.storeState) {
@@ -153,16 +152,14 @@ class Collapse extends Component {
   /**
    * Collapse a collapse element
    */
-  collapse(collapseData) {
+  async collapse(collapseData) {
     const { header, target, targetId } = collapseData;
 
-    // Update state
+    // Update state using new animation bridge
     collapseData.isExpanded = false;
-    header.setAttribute('aria-expanded', 'false');
-    target.classList.remove('expanded');
-
-    // Visual enhancements
-    this.applyCollapseAnimation(target, header);
+    
+    // Use animation bridge for consistent state management
+    await animationBridge.collapse(target, { timing: 'medium' });
 
     // Store state if configured
     if (this.options.storeState) {
