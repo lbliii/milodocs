@@ -1,8 +1,7 @@
 /* Import component CSS files - MUST be first! */
 
-/* ✅ ARCHITECTURE: Core animation and state management systems */
-@import "../architecture/animation-system.css";
-@import "../architecture/component-states.css";
+/* ✅ ARCHITECTURE: Complete architectural system */
+@import "../architecture/index.css";
 
 @import "../components/buttons.css";
 @import "../components/tables.css";

@@ -8,7 +8,7 @@
     var(--color-surface) 0%,
     var(--color-bg-secondary) 100%
   );
-  border-radius: 0.875rem;
+  border-radius: var(--radius-xl);
   border: 1px solid var(--color-border-primary);
   backdrop-filter: blur(10px);
   /* ✅ FIXED: Use animation tokens and specific properties */
@@ -250,7 +250,7 @@ h1[id]::before {
   position: sticky;
   top: 2rem;
   background: var(--color-surface);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-xl);
   padding: 1rem;
   border: 1px solid var(--color-border-primary);
   backdrop-filter: blur(10px);
@@ -261,7 +261,7 @@ h1[id]::before {
   display: inline-block;
   padding: 0.5rem;
   margin: 0.25rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-lg);
   color: var(--color-text-secondary);
   text-decoration: none;
   /* ✅ FIXED: Use animation tokens and specific properties */

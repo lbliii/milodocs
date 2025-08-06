@@ -3,7 +3,8 @@
 /* Enhanced Button System */
 .btn {
   @apply inline-flex items-center justify-center px-4 py-2 
-         font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2;
+         font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+  border-radius: var(--radius-button);
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
     background-color var(--timing-fast) var(--easing-standard),

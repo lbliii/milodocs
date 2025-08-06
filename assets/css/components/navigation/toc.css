@@ -30,7 +30,7 @@
 .toc-sidebar {
   @apply p-6 text-sm;
   background: transparent;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-xl);
   color: var(--color-text-primary);
 }
 
