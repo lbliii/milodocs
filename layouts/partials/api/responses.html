@@ -16,7 +16,11 @@
     {{- end -}}
 
     <section class="mt-2">
-        <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].classList.toggle('rotate-90')" class="flex items-center space-x-4 {{ $bgColor }} p-2 rounded-md cursor-pointer">
+        <div class="collapse__header response-header flex items-center space-x-4 {{ $bgColor }} p-2 rounded-md cursor-pointer"
+             role="button"
+             tabindex="0"
+             aria-expanded="false"
+             data-target="response-{{ $statusCode | anchorize }}-details">
             <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>
@@ -30,7 +34,7 @@
         {{/* Check and iterate over 'content' object for media types */}}
         {{ if $response.content }}
             {{ range $contentType, $contentValue := $response.content }}
-                <div class="bg-zinc-100 p-2 mt-2 hidden">
+                <div id="response-{{ $statusCode | anchorize }}-details" class="response-details bg-zinc-100 p-2 mt-2" data-collapse-state="collapsed">
                     {{/* Render schema details for the content type */}}
                     {{ with $contentValue.schema }}
                         {{ if .properties }}

@@ -29,8 +29,8 @@
 {{- end -}}
 <meta name="description" content="{{ $description }}" />
 
-{{/* Early JS init moved to bundled asset: assets/js/early-init.js */}}
-{{- $early := resources.Get "js/early-init.js" | js.Build (dict "target" "es2018" "format" "iife") -}}
+{{/* Early JS init moved to bundled asset: assets/js/early/early-init.js */}}
+{{- $early := resources.Get "js/early/early-init.js" | js.Build (dict "target" "es2018" "format" "iife") -}}
 <script src="{{ $early.RelPermalink }}" defer></script>
 
 {{/* Critical inline CSS to prevent flicker during navigation */}}

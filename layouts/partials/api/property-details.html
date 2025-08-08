@@ -1,6 +1,10 @@
 <section class="ml-2">
     <div class="p-2">
-        <div class="flex items-center space-x-2 cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden'); this.children[0].classList.toggle('rotate-90');">
+        <div class="collapse__header flex items-center space-x-2 cursor-pointer"
+             role="button"
+             tabindex="0"
+             aria-expanded="false"
+             data-target="prop-{{ .name | anchorize }}-details">
             <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>
@@ -8,7 +12,7 @@
             {{- with .value.type -}}<span class="font-brand-thin">(<code>{{ . }}</code>)</span>{{- end -}}
             <span class="font-brand-thin text-xs text-red-500">{{ if .required }}REQUIRED{{ end }}</span>
         </div>
-        <div class="ml-8 font-brand-thin hidden">
+        <div id="prop-{{ .name | anchorize }}-details" class="ml-8 font-brand-thin collapse__body" data-collapse-state="collapsed">
             {{- if .value.description -}}
             <div>
                 {{- with .value.description -}}{{- . | markdownify -}}{{- end -}}

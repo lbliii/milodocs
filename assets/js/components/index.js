@@ -34,6 +34,8 @@ export const componentRegistry = {
   'article-summarization': () => import('./article/Summarization.js'),
   'article-related-content': () => import('./article/RelatedContent.js'),
   'copy-page': () => import('./article/CopyPage.js'),
+  'mermaid-diagram': () => import('./article/Mermaid.js'),
+  'video-player': () => import('./article/Video.js'),
   'notebook-viewer': () => import('./notebook/NotebookViewer.js'),
   'notebook-progressive-reveal': () => import('./article/NotebookProgressiveReveal.js'),
   'notebook-cell': () => import('./notebook/NotebookCell.js'),
@@ -58,6 +60,7 @@ export const componentRegistry = {
   'openapi-sidebar': () => import('./layout/OpenAPISidebar.js'),
   'navigation-mobile-toggle': () => import('./layout/MobileNav.js'),
   'navigation-sidebar-left': () => import('./layout/Sidebar.js'),
+  'language-switcher': () => import('./layout/LanguageSwitcher.js'),
 
   'glossary': () => import('./layout/Glossary.js'),
   'chat-toc-toggle': () => import('./layout/ChatTocToggle.js'),
@@ -167,6 +170,7 @@ export function registerAllComponents() {
     'article-related-content',     // Enhanced related content with view toggling
     'copy-page',                   // Copy page functionality
     'mermaid-diagram',             // Initialize Mermaid diagrams
+    'asciinema-embed',             // Initialize Asciinema embeds
     
     // Notebook components
     'notebook-density',            // Notebook density toggle controls

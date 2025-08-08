@@ -2,6 +2,7 @@
  * Storage utilities - Safe localStorage/sessionStorage access
  * Extracted from layout-theme.js and other files
  */
+import { logger } from './Logger.js';
 
 // In-memory fallback storage
 let inMemoryStorage = new Map();
@@ -47,7 +48,7 @@ class SafeStorage {
         return inMemoryStorage.has(key) ? inMemoryStorage.get(key) : fallback;
       }
     } catch (error) {
-      console.warn(`Storage get error for key "${key}":`, error);
+      logger.warn('Storage', `Storage get error for key "${key}":`, error);
       return fallback;
     }
   }
@@ -63,7 +64,7 @@ class SafeStorage {
         return true;
       }
     } catch (error) {
-      console.warn(`Storage set error for key "${key}":`, error);
+      logger.warn('Storage', `Storage set error for key "${key}":`, error);
       return false;
     }
   }
@@ -77,7 +78,7 @@ class SafeStorage {
       }
       return true;
     } catch (error) {
-      console.warn(`Storage remove error for key "${key}":`, error);
+      logger.warn('Storage', `Storage remove error for key "${key}":`, error);
       return false;
     }
   }
@@ -91,7 +92,7 @@ class SafeStorage {
       }
       return true;
     } catch (error) {
-      console.warn('Storage clear error:', error);
+      logger.warn('Storage', 'Storage clear error:', error);
       return false;
     }
   }
@@ -104,7 +105,7 @@ class SafeStorage {
         return Array.from(inMemoryStorage.keys());
       }
     } catch (error) {
-      console.warn('Storage keys error:', error);
+      logger.warn('Storage', 'Storage keys error:', error);
       return [];
     }
   }

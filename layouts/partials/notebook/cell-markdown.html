@@ -18,13 +18,12 @@
          data-component-state="ready"
          style="--cell-index: {{ $index }}">
   
-  <div class="collapse__header notebook-cell__header" 
-       onclick="toggleCollapse('{{ $cellId }}')"
+  <div class="collapse__header notebook-cell__header"
        role="button"
        tabindex="0"
        aria-expanded="true"
        aria-controls="{{ $cellId }}-body"
-       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse('{{ $cellId }}');}">
+       data-target="{{ $cellId }}-body">
     
     <div class="collapse__icon-wrapper">
       <svg class="collapse__icon" 

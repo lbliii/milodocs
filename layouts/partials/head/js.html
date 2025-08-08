@@ -28,16 +28,19 @@
   {{- end -}}
   
   {{/* Environment-specific JavaScript globals */}}
-  <script>
-    window.HugoEnvironment = {
-      environment: "{{ hugo.Environment }}",
-      isProduction: {{ $isProductionBuild }},
-      debug: {{ site.Params.debug | default false }},
-      version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}",
-      baseURL: "{{ site.BaseURL }}",
-      buildTime: "{{ now.UnixMilli }}"
-    };
+  {{/* Expose env as JSON for early access without inline <script> */}}
+  <script type="application/json" id="hugo-environment-json">
+    {
+      "environment": "{{ hugo.Environment }}",
+      "isProduction": {{ $isProductionBuild }},
+      "debug": {{ site.Params.debug | default false }},
+      "version": "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}",
+      "baseURL": "{{ site.BaseURL }}",
+      "buildTime": "{{ now.UnixMilli }}"
+    }
   </script>
+  {{- $envInit := resources.Get "js/hugo-env-init.js" | js.Build (dict "target" "es2018" "format" "iife") -}}
+  <script src="{{ $envInit.RelPermalink }}" defer></script>
 {{- else -}}
   {{- warnf "JavaScript: No JS files found in assets/js/ for environment '%s'" hugo.Environment -}}
 {{- end -}}

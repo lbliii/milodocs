@@ -8,12 +8,12 @@
     {{ $bgColor := index $bgColors $method }}
     
     <div id="{{ $method | anchorize }}-method" class="my-2 p-2">
-        <div onclick="toggleCollapse('{{ $method | anchorize }}-method-content')" 
-             class="flex items-center {{ $bgColor }} p-2 rounded-md text-lg space-x-4 cursor-pointer"
+        <div class="collapse__header flex items-center {{ $bgColor }} p-2 rounded-md text-lg space-x-4 cursor-pointer"
              role="button"
              tabindex="0"
              aria-expanded="false"
-             aria-controls="{{ $method | anchorize }}-method-content">
+             aria-controls="{{ $method | anchorize }}-method-content"
+             data-target="{{ $method | anchorize }}-method-content">
             <svg class="transition-transform transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>

@@ -10,6 +10,10 @@ import { logger } from './utils/Logger.js';
 import configureLogging from './utils/LoggingConfig.js';
 import { animationBridge } from './core/AnimationBridge.js';
 import ComponentManager from './core/ComponentManager.js';
+import installGlobalErrorGuards from './init/ErrorGuards.js';
+import { setupGlobalEnhancements } from './ui/GlobalEnhancements.js';
+import { isStaticDeployment, attachStaticNavigationHandlers, attachDynamicNavigationHandlers, checkComponentHealth, syncSidebarComponent } from './nav/StaticNavigation.js';
+import installDebugTools from './debug/DevTools.js';
 
 const log = logger.component('MiloDocs');
 
@@ -27,14 +31,7 @@ async function initializeMiloDocs() {
     // Configure logging early; guard to avoid interfering with error handling
     try { configureLogging(); } catch (_) {}
     // Global safety nets: avoid unhandled promise and error floods
-    window.addEventListener('unhandledrejection', (event) => {
-      try { logger.error('Global', 'Unhandled promise rejection', event.reason); } catch (_) {}
-      // Prevent default console spam in production
-      if (!window.HugoEnvironment?.debug) event.preventDefault();
-    });
-    window.addEventListener('error', (event) => {
-      try { logger.error('Global', 'Unhandled error', event.error || event.message); } catch (_) {}
-    });
+    installGlobalErrorGuards();
     // Initialize core system
     await milo.init();
     
@@ -48,7 +45,7 @@ async function initializeMiloDocs() {
 
     
     // Setup global utilities
-    await setupGlobalUtilities();
+    await setupGlobalEnhancements();
     
     log.info('MiloDocs fully initialized');
     log.debug('Debug utilities available:');
@@ -56,6 +53,7 @@ async function initializeMiloDocs() {
     log.debug('  - window.debugSidebar() - Debug sidebar info + auto-fix');
     log.debug('  - window.debugComponents() - Show all registered components');
     log.debug('  - window.reinitializeComponents() - Reinitialize broken components (simulates cache restore)');
+    installDebugTools();
     
   } catch (error) {
     log.error('MiloDocs initialization failed:', error);
@@ -67,135 +65,6 @@ async function initializeMiloDocs() {
 
 
 
-/**
- * Setup global utilities and enhancements
- */
-async function setupGlobalUtilities() {
-  // Enhanced global utilities that replace the old main.js functionality
-  const { 
-    createRipple, 
-    smoothScrollTo, 
-    debounce, 
-    throttle 
-  } = await import('./utils/dom.js');
-  
-  const { showLoading, hideLoading } = await import('./utils/LoadingStateManager.js');
-  
-  // Global ripple effect setup (from old main.js)
-  const clickableElements = document.querySelectorAll(`
-    button, .btn, .topbar__button,
-    .nav-link, .breadcrumb__link, .toc-link,
-    .quicklinks__link, .quicklinks__item,
-    .tile, .card, .resource-card,
-    .topbar__logo-link, .dropdown-link,
-    .sidebar-item__link, .expand-toggle
-  `);
-  
-  clickableElements.forEach(element => {
-    element.addEventListener('click', (e) => createRipple(element, e));
-  });
-  
-  // Enhanced hover states (from old main.js)
-  const hoverElements = document.querySelectorAll('.tile, .card, .quicklinks__item');
-  hoverElements.forEach(element => {
-    element.addEventListener('mouseenter', () => {
-      element.style.transform = 'translateY(-2px)';
-      element.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
-    });
-    
-    element.addEventListener('mouseleave', () => {
-      element.style.transform = 'translateY(0)';
-      element.style.boxShadow = '';
-    });
-  });
-  
-  // Form loading states using unified LoadingStateManager
-  const forms = document.querySelectorAll('form');
-  forms.forEach(form => {
-    form.addEventListener('submit', function(e) {
-      const submitButton = form.querySelector('button[type="submit"]');
-      if (submitButton) {
-        submitButton.disabled = true;
-        
-        // Store original content for restoration
-        const originalContent = submitButton.innerHTML;
-        submitButton.setAttribute('data-original-content', originalContent);
-        
-        // Show loading state using LoadingStateManager
-        const loaderId = showLoading(submitButton, {
-          type: 'dots',
-          message: 'Processing...',
-          size: 'small'
-        });
-        
-        // Store loader ID for potential cleanup
-        submitButton.setAttribute('data-loader-id', loaderId);
-      }
-    });
-    
-    // Handle form completion/error for cleanup
-    form.addEventListener('reset', function() {
-      const submitButton = form.querySelector('button[type="submit"]');
-      if (submitButton) {
-        const loaderId = submitButton.getAttribute('data-loader-id');
-        const originalContent = submitButton.getAttribute('data-original-content');
-        
-        if (loaderId) {
-          hideLoading(loaderId);
-          submitButton.removeAttribute('data-loader-id');
-        }
-        
-        if (originalContent) {
-          submitButton.innerHTML = originalContent;
-          submitButton.removeAttribute('data-original-content');
-        }
-        
-        submitButton.disabled = false;
-      }
-    });
-  });
-  
-  // Scroll enhancements (from old main.js)
-  await setupScrollEnhancements();
-}
-
-/**
- * Setup scroll-based enhancements
- */
-async function setupScrollEnhancements() {
-  const { throttle } = await import('./utils/dom.js');
-  
-  let lastScrollY = window.scrollY;
-  
-  let scheduled = false;
-  function onScroll() {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      const currentScrollY = window.scrollY;
-      const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
-      document.body.setAttribute('data-scroll-direction', scrollDirection);
-
-      const scrolled = window.pageYOffset;
-      document.querySelectorAll('.hero-parallax').forEach((hero) => {
-        const parallax = scrolled * 0.5;
-        hero.style.transform = `translateY(${parallax}px)`;
-      });
-
-      document.querySelectorAll('.fade-in-on-scroll').forEach((element) => {
-        const rect = element.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          element.classList.add('visible');
-        }
-      });
-
-      lastScrollY = currentScrollY;
-      scheduled = false;
-    });
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
 
 
 
@@ -232,129 +101,6 @@ let lastURL = window.location.href;
 let reinitializationAttempts = 0;
 const MAX_REINIT_ATTEMPTS = 3;
 
-/**
- * Check if this is a static deployment
- */
-function isStaticDeployment() {
-  // Check for static deployment indicators
-  const hasUglyURLs = window.location.pathname.includes('.html');
-  const hasBaseURL = window.HugoEnvironment?.baseURL === '/' || window.HugoEnvironment?.baseURL?.endsWith('/');
-  return hasUglyURLs || hasBaseURL;
-}
-
-/**
- * Enhanced component health check for static sites
- */
-function checkComponentHealth() {
-  // Wait a bit for any ongoing page transitions to complete
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (!milo.initialized) {
-        log.warn('Core system not initialized after navigation');
-        resolve('needs_full_init');
-        return;
-      }
-
-      // 🔧 ENHANCED: Check if critical components are working
-      const sidebarElement = document.getElementById('sidebar-left');
-      if (sidebarElement) {
-        const toggles = sidebarElement.querySelectorAll('.expand-toggle');
-        if (toggles.length > 0) {
-          // Test if first toggle has proper attributes (indicates initialization)
-          const firstToggle = toggles[0];
-          if (!firstToggle.hasAttribute('aria-expanded')) {
-            log.info('Sidebar toggles missing aria-expanded attributes');
-            resolve('needs_component_reinit');
-            return;
-          }
-          
-          // 🔧 ENHANCED: Check for event listener tracking
-          if (!firstToggle.dataset.componentListeners) {
-            log.info('Sidebar toggles missing event listener tracking');
-            resolve('needs_component_reinit');
-            return;
-          }
-          
-          // 🔧 ENHANCED: Test if click events actually work
-          if (!testSidebarInteractivity(firstToggle)) {
-            log.info('Sidebar toggles not responsive to events');
-            resolve('needs_component_reinit');
-            return;
-          }
-        }
-      }
-
-      // 🔧 ENHANCED: Check for orphaned event listeners
-      if (hasOrphanedEventListeners()) {
-        log.info('Detected orphaned event listeners');
-        resolve('needs_component_reinit');
-        return;
-      }
-
-      resolve('healthy');
-    }, 150); // Longer delay for static sites
-  });
-}
-
-/**
- * Test if sidebar interactivity is working
- */
-function testSidebarInteractivity(toggle) {
-  try {
-    // Non-destructive health check: do not mutate UI state here.
-    // We already validate listener presence separately; just ensure ARIA wiring exists.
-    return toggle.hasAttribute('aria-expanded');
-  } catch (error) {
-    log.debug('Sidebar interactivity test failed:', error);
-    return false;
-  }
-}
-
-/**
- * Check for orphaned event listeners from destroyed components
- */
-function hasOrphanedEventListeners() {
-  try {
-    const elementsWithListeners = document.querySelectorAll('[data-component-listeners]');
-    
-    for (const element of elementsWithListeners) {
-      const listenerIds = element.dataset.componentListeners.split(',');
-      
-      // Check if any of these component IDs are no longer valid
-      for (const componentId of listenerIds) {
-        const instance = ComponentManager.instances.get(componentId);
-        if (!instance || instance.state === 'destroyed') {
-          log.debug(`Found orphaned listeners from component ${componentId}`);
-          return true;
-        }
-      }
-    }
-    
-    return false;
-  } catch (error) {
-    log.debug('Error checking for orphaned listeners:', error);
-    return false;
-  }
-}
-
-/**
- * Helper: sync Sidebar component to current page
- * Placed at module scope so navigation handlers can call it.
- */
-function syncSidebarComponent() {
-  try {
-    const instance = Array.from(ComponentManager.instances.values())
-      .find(inst => inst.name === 'navigation-sidebar-left');
-    if (instance && typeof instance.syncToCurrentPage === 'function') {
-      instance.syncToCurrentPage();
-      return true;
-    }
-    return false;
-  } catch (e) {
-    log.debug('syncSidebarComponent failed:', e);
-    return false;
-  }
-}
 
 /**
  * Handle page navigation for static sites
@@ -409,60 +155,10 @@ async function handleStaticNavigation(event) {
 // Different event handling for static vs dynamic sites
 if (isStaticDeployment()) {
   log.info('Static deployment detected, using enhanced navigation handling');
-  
-  // For static sites, use pageshow as primary event
-  window.addEventListener('pageshow', handleStaticNavigation);
-  
-  // Also handle popstate for browser navigation
-  window.addEventListener('popstate', (event) => {
-    log.info('Static site popstate navigation');
-    handleStaticNavigation(event);
-  });
-  
-  // Handle focus events (when returning to tab)
-  window.addEventListener('focus', () => {
-    setTimeout(() => {
-      handleStaticNavigation({ type: 'focus' });
-    }, 100);
-  });
-  
+  attachStaticNavigationHandlers({ onInit: handlePageInitialization });
 } else {
-  // For dynamic sites, use the original approach
   log.info('Dynamic deployment detected, using standard navigation handling');
-  
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted || !isCurrentPageInitialized) {
-      log.info('Page restored/loaded, checking component state...');
-      
-      if (!milo.initialized) {
-        handlePageInitialization().then(() => {
-          isCurrentPageInitialized = true;
-          // Use component API to sync sidebar reliably
-          syncSidebarComponent();
-        });
-      } else {
-        const reinitialized = ComponentManager.reinitializeAfterCacheRestore();
-        log.info(`Page navigation handled: ${reinitialized} components reinitialized`);
-        isCurrentPageInitialized = true;
-        // Use component API to sync sidebar reliably
-        syncSidebarComponent();
-      }
-    }
-  });
-  
-  window.addEventListener('popstate', (event) => {
-    log.info('Navigation detected (popstate), reinitializing components...');
-    setTimeout(() => {
-      if (milo.initialized) {
-        const reinitialized = ComponentManager.reinitializeAfterCacheRestore();
-        log.info(`Back/forward navigation handled: ${reinitialized} components reinitialized`);
-        // Use component API to sync sidebar reliably
-        syncSidebarComponent();
-      } else {
-        handlePageInitialization();
-      }
-    }, 100);
-  });
+  attachDynamicNavigationHandlers({ onInit: handlePageInitialization });
 }
 
 // Global debug utilities for testing

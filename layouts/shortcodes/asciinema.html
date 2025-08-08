@@ -1,2 +1,3 @@
 {{- $id := .Get 0 -}}
-<script src="https://asciinema.org/a/{{- $id -}}.js" id="asciicast-{{- $id -}}" async></script>
+<div class="asciinema-embed" data-component="asciinema-embed" data-asciinema-id="{{- $id -}}"></div>
+{{/* Inline script removed. JS component will load asciinema script and embed. */}}

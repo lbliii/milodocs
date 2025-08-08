@@ -8,13 +8,12 @@
          id="{{ $id }}"
          data-collapse-state="collapsed"
          data-component-state="ready">
-    <div class="collapse__header" 
-         onclick="toggleCollapse('{{ $id }}')"
+    <div class="collapse__header"
          role="button"
          tabindex="0"
          aria-expanded="false"
          aria-controls="{{ $id }}-body"
-         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse('{{ $id }}');}">
+         data-target="{{ $id }}-body">
         
         <div class="collapse__icon-wrapper">
             <svg class="collapse__icon" 
@@ -48,34 +47,7 @@
     </div>
 </section>
 
-<script>
-// ✅ UPDATED: Use new animation bridge system (backward compatible)
-// Note: toggleCollapse is now provided by AnimationBridge.js and uses the new system
-// with CSS tokens and data attributes. Old function kept for immediate compatibility.
-if (typeof window.toggleCollapse === 'undefined') {
-    window.toggleCollapse = function(id) {
-        const collapse = document.getElementById(id);
-        if (!collapse) return;
-        
-        // Use new animation bridge if available, fallback to old system
-        if (window.animationBridge) {
-            window.animationBridge.toggle(collapse);
-        } else {
-            // Fallback for immediate compatibility
-            const header = collapse.querySelector('.collapse__header');
-            const isExpanded = collapse.classList.contains('expanded');
-            
-            if (isExpanded) {
-                collapse.classList.remove('expanded');
-                header.setAttribute('aria-expanded', 'false');
-            } else {
-                collapse.classList.add('expanded');
-                header.setAttribute('aria-expanded', 'true');
-            }
-        }
-    };
-}
-</script>
+{{/* Inline JS removed. Collapse handled by Collapse components. */}}
 
 {{- else -}}
 {{/* PDF fallback - just show content */}}

@@ -111,27 +111,7 @@
   {{- end -}}
 </article>
 
-{{/* Include the toggleCollapse function for notebook cells */}}
-<script>
-// Only define the function once
-if (typeof window.toggleCollapse === 'undefined') {
-    window.toggleCollapse = function(id) {
-        const collapse = document.getElementById(id);
-        if (!collapse) return;
-        
-        const header = collapse.querySelector('.collapse__header');
-        const isExpanded = collapse.classList.contains('expanded');
-        
-        if (isExpanded) {
-            collapse.classList.remove('expanded');
-            header.setAttribute('aria-expanded', 'false');
-        } else {
-            collapse.classList.add('expanded');
-            header.setAttribute('aria-expanded', 'true');
-        }
-    };
-}
-</script>
+{{/* Inline JS removed. Notebook cells use Collapse/Notebook components. */}}
 
 
 {{- end -}}
