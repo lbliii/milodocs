@@ -6414,8 +6414,17 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   border: none;
   box-shadow: none;
   border-radius: 0.75rem; /* Add consistent border radius */
-  margin-right: 1.5rem; /* Align with page container padding */
+  /* margin-right: 1.5rem;  Align with page container padding */
+  /* Replaced: remove right margin on wide screens to avoid pinching */
   margin-top: 1rem; /* Match the pageContainer's top padding to align with content start */
+}
+
+/* On xl+, let chat use full sidebar column width */
+
+@media (min-width: 1280px) {
+  #chatContainer {
+    margin-right: 0;
+  }
 }
 
 /* Enhanced Chat Interface - Clean transparent design */
@@ -18613,10 +18622,6 @@ button:focus-visible,
   z-index: 50;
 }
 
-.col-span-12 {
-  grid-column: span 12 / span 12;
-}
-
 .m-4 {
   margin: 1rem;
 }
@@ -18861,10 +18866,6 @@ button:focus-visible,
   width: 0.25rem;
 }
 
-.w-1\/5 {
-  width: 20%;
-}
-
 .w-12 {
   width: 3rem;
 }
@@ -18949,14 +18950,6 @@ button:focus-visible,
   max-width: 80rem;
 }
 
-.max-w-\[100rem\] {
-  max-width: 100rem;
-}
-
-.max-w-sm {
-  max-width: 24rem;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -18966,10 +18959,6 @@ button:focus-visible,
 }
 
 .flex-shrink-0 {
-  flex-shrink: 0;
-}
-
-.shrink-0 {
   flex-shrink: 0;
 }
 
@@ -19064,10 +19053,6 @@ button:focus-visible,
 
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
-.grid-cols-12 {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
 .grid-cols-2 {
@@ -19568,8 +19553,16 @@ button:focus-visible,
   padding-left: 2rem;
 }
 
+.pr-1 {
+  padding-right: 0.25rem;
+}
+
 .pr-12 {
   padding-right: 3rem;
+}
+
+.pr-2 {
+  padding-right: 0.5rem;
 }
 
 .pt-2 {
@@ -19586,14 +19579,6 @@ button:focus-visible,
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pr-1 {
-  padding-right: 0.25rem;
-}
-
-.pr-2 {
-  padding-right: 0.5rem;
 }
 
 .text-left {
@@ -20169,10 +20154,6 @@ button:focus-visible,
     width: 8rem;
   }
 
-  .md\:w-64 {
-    width: 16rem;
-  }
-
   .md\:max-w-80 {
     max-width: 20rem;
   }
@@ -20228,14 +20209,6 @@ button:focus-visible,
 
 @media (min-width: 1024px) {
 
-  .lg\:block {
-    display: block;
-  }
-
-  .lg\:w-72 {
-    width: 18rem;
-  }
-
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -20265,14 +20238,6 @@ button:focus-visible,
     top: 4rem;
   }
 
-  .xl\:col-span-2 {
-    grid-column: span 2 / span 2;
-  }
-
-  .xl\:col-span-8 {
-    grid-column: span 8 / span 8;
-  }
-
   .xl\:block {
     display: block;
   }
@@ -20287,10 +20252,6 @@ button:focus-visible,
 
   .xl\:h-\[calc\(100vh-4rem\)\] {
     height: calc(100vh - 4rem);
-  }
-
-  .xl\:w-80 {
-    width: 20rem;
   }
 
   .xl\:w-auto {
@@ -20308,14 +20269,6 @@ button:focus-visible,
 
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .xl\:grid-cols-\[18rem_minmax\(0\2c 1fr\)_16rem\] {
-    grid-template-columns: 18rem minmax(0,1fr) 16rem;
-  }
-
-  .xl\:grid-cols-\[18rem_minmax\(0\2c 1fr\)_20rem\] {
-    grid-template-columns: 18rem minmax(0,1fr) 20rem;
   }
 
   .xl\:grid-cols-\[18rem_minmax\(0\2c 1fr\)_22rem\] {
@@ -20347,16 +20300,8 @@ button:focus-visible,
     max-width: 80rem;
   }
 
-  .\32xl\:grid-cols-\[20rem_minmax\(0\2c 1fr\)_24rem\] {
-    grid-template-columns: 20rem minmax(0,1fr) 24rem;
-  }
-
   .\32xl\:grid-cols-\[20rem_minmax\(0\2c 1fr\)_28rem\] {
     grid-template-columns: 20rem minmax(0,1fr) 28rem;
-  }
-
-  .\32xl\:gap-12 {
-    gap: 3rem;
   }
 
   .\32xl\:gap-16 {
