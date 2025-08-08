@@ -153,6 +153,12 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   overflow: hidden;
 }
 
+/* Allow interaction inside nested content while its parent is transitioning */
+.nested-content[data-collapse-state="transitioning"] {
+  /* Override global pattern that disables all pointer events during transitions */
+  pointer-events: auto;
+}
+
 /* ✅ NEW ANIMATION SYSTEM - Use data attributes for consistent behavior */
 /* Ensure animations only work after initialization */
 #linkTree.initialized .nested-content[data-collapse-state="expanded"] {

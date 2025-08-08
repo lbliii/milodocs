@@ -39,7 +39,9 @@ export class Sidebar extends Component {
     this.initExpandable({
       toggleSelector: '.expand-toggle',
       contentSelector: '.nested-content',
-      animationTiming: 'medium'
+      // Prefer snappier interactions in the sidebar
+      // animationTiming: 'medium'
+      animationTiming: 'fast'
     });
     
     this.initResponsive({

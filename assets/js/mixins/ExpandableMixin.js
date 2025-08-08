@@ -108,7 +108,9 @@ export const ExpandableMixin = {
       collapsing: !newState
     });
     
-    await this.setToggleState(toggle, newState);
+    // Fire-and-forget the animation to avoid serializing rapid interactions
+    // await this.setToggleState(toggle, newState);
+    const _promise = this.setToggleState(toggle, newState);
     
     // Emit event after toggle
     this.emit('after-toggle', {
