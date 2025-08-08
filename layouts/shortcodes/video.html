@@ -3,69 +3,14 @@
 {{- $id := printf "video-%d" (now.UnixMilli) -}}
 
 <div class="video-container {{ $class }}">
-  <div id="{{ $id }}" class="player-wrapper relative">
+  <div id="{{ $id }}" class="player-wrapper relative" data-component="video-player">
     <div class="loading-placeholder bg-gray-200 animate-pulse rounded-lg" style="aspect-ratio: 16/9;">
       <div class="flex items-center justify-center h-full">
         <span class="text-gray-500">Loading video...</span>
       </div>
     </div>
   </div>
+  <span class="sr-only" data-video-src="{{ $src }}"></span>
 </div>
 
-<script type="module">
-(function() {
-  const playerId = '{{ $id }}';
-  const playerElement = document.getElementById(playerId);
-  const placeholder = playerElement.querySelector('.loading-placeholder');
-  
-  // Modern dynamic import with error handling
-  async function loadPlayer() {
-    try {
-      const { default: Clappr } = await import('https://cdn.jsdelivr.net/npm/@clappr/player@0.4.0/dist/clappr.min.js');
-      
-      const player = new Clappr.Player({
-        source: {{ $src | jsonify }},
-        autoPlay: false,  // Better UX - let user choose
-        mute: false,      // Better UX - respect user preferences 
-        height: '100%',
-        width: '100%',
-        responsive: true,
-        playback: {
-          preload: 'metadata'  // Performance - only load metadata initially
-        }
-      });
-      
-      player.attachTo(playerElement);
-      
-      // Remove placeholder when ready
-      player.on(Clappr.Events.PLAYER_READY, () => {
-        if (placeholder) {
-          placeholder.style.opacity = '0';
-          setTimeout(() => placeholder.remove(), 300);
-        }
-      });
-      
-    } catch (error) {
-      console.error('Failed to load video player:', error);
-      playerElement.innerHTML = `
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <strong>Video Error:</strong> Failed to load video player. 
-          <a href="{{ $src }}" class="underline" target="_blank">View video directly</a>
-        </div>
-      `;
-    }
-  }
-  
-  // Load player when element is in viewport (performance optimization)
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        loadPlayer();
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  
-  observer.observe(playerElement);
-})();
-</script>
+{{/* Inline JS removed. Initialization handled by data-component="video-player" */}}

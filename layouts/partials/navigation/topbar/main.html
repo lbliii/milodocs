@@ -27,34 +27,7 @@
             </button>
         </div>
         
-        <!-- Inline script to set button state immediately, preventing flicker -->
-        <script>
-        (function() {
-            try {
-                const savedState = localStorage.getItem('chatTocSettings') || 'chat';
-                const toggle = document.getElementById('chatTocToggle');
-                if (toggle) {
-                    const chatBtn = toggle.querySelector('[data-mode="chat"]');
-                    const tocBtn = toggle.querySelector('[data-mode="toc"]');
-                    
-                    // Set button states only - containers will be handled later
-                    if (savedState === 'chat') {
-                        chatBtn?.classList.add('chat-toc-toggle__option--active');
-                        tocBtn?.classList.remove('chat-toc-toggle__option--active');
-                    } else {
-                        chatBtn?.classList.remove('chat-toc-toggle__option--active');
-                        tocBtn?.classList.add('chat-toc-toggle__option--active');
-                    }
-                    
-                    // Show the component immediately with correct button state
-                    toggle.classList.add('initialized');
-                }
-            } catch (e) {
-                // Fallback: show with default state
-                document.getElementById('chatTocToggle')?.classList.add('initialized');
-            }
-        })();
-        </script>
+        <!-- Removed inline JS; state is handled by component `chat-toc-toggle` -->
         
         <button id="darkModeToggle" aria-label="Toggle Darkmode" class="topbar__button" data-component="theme-toggle">
             <img id="moon" src="{{ "icons/light/dark.svg" | relURL }}" alt="moon" class="icon hidden" title="Dark Mode">

@@ -7,7 +7,7 @@
               id="language-menu-button" 
               aria-expanded="false" 
               aria-haspopup="true"
-              onclick="toggleLanguageMenu()">
+              data-component="language-switcher">
         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a1 1 0 01-1.788.894L14.618 14H12.382l-.479.958a1 1 0 11-1.788-.894l2.991-5.982A1 1 0 0113 8zm0 3.236L12.382 13h1.236L13 11.236z" clip-rule="evenodd"></path>
         </svg>
@@ -53,25 +53,5 @@
     </div>
   </div>
 
-  <script>
-    function toggleLanguageMenu() {
-      const menu = document.getElementById('language-menu');
-      const button = document.getElementById('language-menu-button');
-      const isExpanded = button.getAttribute('aria-expanded') === 'true';
-      
-      button.setAttribute('aria-expanded', !isExpanded);
-      menu.classList.toggle('hidden');
-    }
-
-    // Close menu when clicking outside
-    const handleClickOutside = function(event) {
-      const menu = document.getElementById('language-menu');
-      const button = document.getElementById('language-menu-button');
-      
-      if (!button.contains(event.target) && !menu.contains(event.target)) {
-        menu.classList.add('hidden');
-        button.setAttribute('aria-expanded', 'false');
-      }
-    });
-  </script>
+  {{/* Inline JS removed. Replaced with LanguageSwitcher component. */}}
 {{- end -}}

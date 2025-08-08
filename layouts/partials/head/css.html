@@ -286,14 +286,14 @@
   {{- if $isProductionBuild -}}
     {{/* Production: Full optimization pipeline */}}
     {{- $cssOptimized := $cssBundle | minify | fingerprint "sha512" -}}
-    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
+    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css">
     {{- if eq hugo.Environment "development" -}}
       {{/* Development mode with production flag - add source map reference */}}
       <!-- CSS Source: {{ $cssBundle.RelPermalink }} -->
     {{- end -}}
   {{- else -}}
     {{/* Development: Fast rebuilds with debugging info */}}
-    <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}" id="main-css" onload="document.dispatchEvent(new CustomEvent('cssLoaded'))">
+    <link rel="stylesheet" href="{{ $cssBundle.RelPermalink }}" id="main-css">
     {{- if site.Params.debug -}}
       <!-- CSS Debug: Bundle contains {{ len $cssResources }} files for {{ hugo.Environment }} environment -->
     {{- end -}}
@@ -320,35 +320,7 @@
   </style>
   
   {{- if eq $env "nvidia" -}}
-  {{/* Font loading optimization script */}}
-  <script>
-    (function() {
-      document.documentElement.classList.add('fonts-loading');
-      
-      // Use FontFace API if available to detect font loading
-      if ('fonts' in document) {
-        Promise.all([
-          document.fonts.load('400 1rem NVIDIA'),
-          document.fonts.load('700 1rem NVIDIA')
-        ]).then(function() {
-          document.documentElement.classList.remove('fonts-loading');
-          document.documentElement.classList.add('fonts-loaded');
-        }).catch(function() {
-          // Fallback: remove loading class after timeout
-          setTimeout(function() {
-            document.documentElement.classList.remove('fonts-loading');
-            document.documentElement.classList.add('fonts-loaded');
-          }, 2000);
-        });
-      } else {
-        // Fallback for browsers without FontFace API
-        setTimeout(function() {
-          document.documentElement.classList.remove('fonts-loading');
-          document.documentElement.classList.add('fonts-loaded');
-        }, 1000);
-      }
-    })();
-  </script>
+  {{/* Font loading optimization handled in JS (fonts-init.js) */}}
   {{- end -}}
 {{- else -}}
   {{- errorf "CSS: No CSS resources found to bundle for environment '%s'" hugo.Environment -}}

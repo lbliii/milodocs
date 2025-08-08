@@ -166,6 +166,7 @@ export function registerAllComponents() {
     'article-summarization',
     'article-related-content',     // Enhanced related content with view toggling
     'copy-page',                   // Copy page functionality
+    'mermaid-diagram',             // Initialize Mermaid diagrams
     
     // Notebook components
     'notebook-density',            // Notebook density toggle controls

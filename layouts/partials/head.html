@@ -29,70 +29,9 @@
 {{- end -}}
 <meta name="description" content="{{ $description }}" />
 
-{{/* JS environment marker: swap no-js -> js early */}}
-<script>
-  (function(){
-    try {
-      document.documentElement.classList.remove('no-js');
-      document.documentElement.classList.add('js');
-    } catch (e) {}
-  })();
-  </script>
-
-{{/* Immediate theme application to prevent flash */}}
-<script>
-  (function() {
-    // Disable transitions during theme application
-    document.documentElement.classList.add('no-transitions');
-    
-    // Apply saved theme immediately (before any CSS loads)
-    try {
-      const saved = localStorage.getItem('theme.mode') || 
-                   localStorage.getItem('theme-mode') ||
-                   '{{ site.Params.theme.mode | default "light" }}';
-      
-      if (saved === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        // Explicitly ensure light mode (remove any existing dark class)
-        document.documentElement.classList.remove('dark');
-      }
-    } catch (e) {
-      // Fallback if localStorage fails - default to light mode for consistency
-      console.warn('Theme: localStorage unavailable, defaulting to light mode');
-      document.documentElement.classList.remove('dark');
-    }
-    
-    // Wait for CSS to be fully loaded before re-enabling transitions
-    let transitionsEnabled = false;
-    function enableTransitions() {
-      if (!transitionsEnabled) {
-        transitionsEnabled = true;
-        document.documentElement.classList.remove('no-transitions');
-      }
-    }
-    
-    // Listen for the CSS loaded event (most reliable)
-    document.addEventListener('cssLoaded', enableTransitions);
-    
-    // Multiple fallback strategies to ensure CSS is loaded
-    if (document.readyState === 'loading') {
-      // If document is still loading, wait for DOM content and then some extra time for CSS
-      document.addEventListener('DOMContentLoaded', function() {
-        // Wait additional time for CSS to parse, especially on slower connections
-        setTimeout(enableTransitions, 250);
-      });
-    } else {
-      // Document already loaded, wait for next frame + buffer for CSS parsing
-      requestAnimationFrame(function() {
-        setTimeout(enableTransitions, 150);
-      });
-    }
-    
-    // Final fallback: always enable after maximum wait time to prevent indefinite disabled transitions
-    setTimeout(enableTransitions, 1000);
-  })();
-</script>
+{{/* Early JS init moved to bundled asset: assets/js/early-init.js */}}
+{{- $early := resources.Get "js/early-init.js" | js.Build (dict "target" "es2018" "format" "iife") -}}
+<script src="{{ $early.RelPermalink }}" defer></script>
 
 {{/* Critical inline CSS to prevent flicker during navigation */}}
 <style>

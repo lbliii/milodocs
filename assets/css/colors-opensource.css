@@ -36,6 +36,41 @@
     --color-hover: rgba(var(--color-brand-rgb), 0.1);
     --color-active: rgba(var(--color-brand-rgb), 0.2);
     --color-focus: rgba(var(--color-brand-rgb), 0.3);
+
+  /* Semantic status colors (light) */
+  --color-success: #10b981; --color-success-rgb: 16, 185, 129;
+  --color-info: #3b82f6; --color-info-rgb: 59, 130, 246;
+  --color-warning: #f59e0b; --color-warning-rgb: 245, 158, 11;
+  --color-danger: #ef4444; --color-danger-rgb: 239, 68, 68;
+  --color-note: #6366f1; --color-note-rgb: 99, 102, 241;
+  --color-tip: #22c55e; --color-tip-rgb: 34, 197, 94;
+  --color-security: #a855f7; --color-security-rgb: 168, 85, 247;
+  --color-snack: #ec4899; --color-snack-rgb: 236, 72, 153;
+
+  /* HTTP method colors (light) */
+  --http-get-bg: #22c55e; --http-get-text: #ffffff;
+  --http-post-bg: #3b82f6; --http-post-text: #ffffff;
+  --http-put-bg: #f59e0b; --http-put-text: #ffffff;
+  --http-patch-bg: #8b5cf6; --http-patch-text: #ffffff;
+  --http-delete-bg: #ef4444; --http-delete-text: #ffffff;
+  --http-head-bg: #6b7280; --http-head-text: #ffffff;
+  --http-options-bg: #9333ea; --http-options-text: #ffffff;
+
+  /* Response status colors (light) */
+  --status-2xx-bg: #22c55e; --status-2xx-text: #ffffff;
+  --status-3xx-bg: #3b82f6; --status-3xx-text: #ffffff;
+  --status-4xx-bg: #f59e0b; --status-4xx-text: #ffffff;
+  --status-5xx-bg: #ef4444; --status-5xx-text: #ffffff;
+  --status-dxx-bg: #6b7280; --status-dxx-text: #ffffff;
+
+  /* Schema type badge colors (light) */
+  --type-string-bg: rgba(34, 197, 94, 0.1); --type-string-text: #059669;
+  --type-number-bg: rgba(59, 130, 246, 0.1); --type-number-text: #2563eb;
+  --type-integer-bg: rgba(59, 130, 246, 0.1); --type-integer-text: #2563eb;
+  --type-boolean-bg: rgba(168, 85, 247, 0.1); --type-boolean-text: #7c3aed;
+  --type-array-bg: rgba(245, 158, 11, 0.1); --type-array-text: #d97706;
+  --type-object-bg: rgba(239, 68, 68, 0.1); --type-object-text: #dc2626;
+  --type-null-bg: rgba(107, 114, 128, 0.1); --type-null-text: #4b5563;
 }
 
 .dark {
@@ -65,4 +100,29 @@
     --color-hover: rgba(var(--color-brand-rgb), 0.2);
     --color-active: rgba(var(--color-brand-rgb), 0.3);
     --color-focus: rgba(var(--color-brand-rgb), 0.4);
+
+  /* HTTP method colors (dark) */
+  --http-get-bg: #059669; --http-get-text: #ffffff;
+  --http-post-bg: #2563eb; --http-post-text: #ffffff;
+  --http-put-bg: #d97706; --http-put-text: #ffffff;
+  --http-patch-bg: #7c3aed; --http-patch-text: #ffffff;
+  --http-delete-bg: #dc2626; --http-delete-text: #ffffff;
+  --http-head-bg: #4b5563; --http-head-text: #ffffff;
+  --http-options-bg: #7c3aed; --http-options-text: #ffffff;
+
+  /* Response status colors (dark) */
+  --status-2xx-bg: #059669; --status-2xx-text: #ffffff;
+  --status-3xx-bg: #2563eb; --status-3xx-text: #ffffff;
+  --status-4xx-bg: #d97706; --status-4xx-text: #111827;
+  --status-5xx-bg: #dc2626; --status-5xx-text: #ffffff;
+  --status-dxx-bg: #4b5563; --status-dxx-text: #ffffff;
+
+  /* Schema type badge colors (dark) */
+  --type-string-bg: rgba(34, 197, 94, 0.15); --type-string-text: #10b981;
+  --type-number-bg: rgba(59, 130, 246, 0.15); --type-number-text: #3b82f6;
+  --type-integer-bg: rgba(59, 130, 246, 0.15); --type-integer-text: #3b82f6;
+  --type-boolean-bg: rgba(168, 85, 247, 0.15); --type-boolean-text: #8b5cf6;
+  --type-array-bg: rgba(245, 158, 11, 0.15); --type-array-text: #f59e0b;
+  --type-object-bg: rgba(239, 68, 68, 0.15); --type-object-text: #ef4444;
+  --type-null-bg: rgba(107, 114, 128, 0.15); --type-null-text: #9ca3af;
 }

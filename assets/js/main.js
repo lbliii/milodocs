@@ -7,16 +7,34 @@ import { milo } from './core/MiloCore.js';
 import { ready } from './utils/dom.js';
 import { registerAllComponents } from './components/index.js';
 import { logger } from './utils/Logger.js';
+import configureLogging from './utils/LoggingConfig.js';
 import { animationBridge } from './core/AnimationBridge.js';
 import ComponentManager from './core/ComponentManager.js';
 
 const log = logger.component('MiloDocs');
 
 /**
+ * Configure centralized logging and optional console shim
+ * Allows build/runtime control via: window.HugoEnvironment.logLevel or data-log-level on <html>
+ */
+// configureLogging moved to utils/LoggingConfig.js to slim this entry file
+
+/**
  * Initialize MiloDocs system
  */
 async function initializeMiloDocs() {
   try {
+    // Configure logging early; guard to avoid interfering with error handling
+    try { configureLogging(); } catch (_) {}
+    // Global safety nets: avoid unhandled promise and error floods
+    window.addEventListener('unhandledrejection', (event) => {
+      try { logger.error('Global', 'Unhandled promise rejection', event.reason); } catch (_) {}
+      // Prevent default console spam in production
+      if (!window.HugoEnvironment?.debug) event.preventDefault();
+    });
+    window.addEventListener('error', (event) => {
+      try { logger.error('Global', 'Unhandled error', event.error || event.message); } catch (_) {}
+    });
     // Initialize core system
     await milo.init();
     
