@@ -18,6 +18,29 @@ module.exports = {
         "brand-5": "var(--color-brand-5)",
         "brand-6": "var(--color-brand-6)",
         "brand-7": "var(--color-brand-7)",
+
+        /* Semantic color tokens mapped to CSS variables */
+        surface: "var(--color-surface)",
+        "surface-hover": "var(--color-surface-hover)",
+        "surface-active": "var(--color-surface-active)",
+
+        text: {
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          tertiary: "var(--color-text-tertiary)",
+          inverse: "var(--color-text-inverse)",
+        },
+        bg: {
+          primary: "var(--color-bg-primary)",
+          secondary: "var(--color-bg-secondary)",
+          tertiary: "var(--color-bg-tertiary)",
+          inverse: "var(--color-bg-inverse)",
+        },
+        border: {
+          primary: "var(--color-border-primary)",
+          secondary: "var(--color-border-secondary)",
+          focus: "var(--color-border-focus)",
+        },
       },
       fontFamily: {
         "brand": ["NVIDIA", "Arial", "Helvetica", "sans-serif"],

@@ -36,7 +36,11 @@
   background: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -151,8 +155,8 @@
 }
 
 .parameter-required {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
+  background: rgba(var(--color-danger-rgb), 0.1);
+  color: var(--color-danger);
   padding: 0.125rem 0.5rem;
   border-radius: 1rem;
   font-size: 0.75rem;

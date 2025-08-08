@@ -12,9 +12,9 @@
           <p class="text-gray-500">{{ .Date.Format "January 2, 2006" }}</p>
           <article class="mt-4 pl-4" style="color: var(--color-text-secondary);">{{ .Content }}</article>
           <aside class="flex flex-row space-x-2 mt-4">
-            <a href="https://github.com/pachyderm/pachyderm/releases/tag/v{{ .Title }}" class="text-xs text-black font-brand-thin bg-zinc-100 p-1 rounded hover:text-white hover:bg-brand hover:transition hover:duration-300">Read more on GitHub</a>
+            <a href="https://github.com/pachyderm/pachyderm/releases/tag/v{{ .Title }}" class="text-xs text-text-primary font-brand-thin bg-zinc-100 p-1 rounded hover:text-white hover:bg-brand hover:transition hover:duration-300">Read more on GitHub</a>
             {{- if .Params.blog -}}
-            <a href="{{.Params.blog}}" class="text-xs text-black font-brand-thin p-1 rounded hover:text-white bg-zinc-100 hover:bg-brand hover:transition hover:duration-300">Read the {{.Title}} blog post</a>
+            <a href="{{.Params.blog}}" class="text-xs text-text-primary font-brand-thin p-1 rounded hover:text-white bg-zinc-100 hover:bg-brand hover:transition hover:duration-300">Read the {{.Title}} blog post</a>
             {{- end -}}
           </aside>
         </div>

@@ -3,7 +3,7 @@
   <div class="language-switcher relative inline-block text-left">
     <div>
       <button type="button" 
-              class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" 
+              class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-surface text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus-ring hit-target" 
               id="language-menu-button" 
               aria-expanded="false" 
               aria-haspopup="true"
@@ -19,7 +19,7 @@
     </div>
 
     <div id="language-menu" 
-         class="hidden absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none" 
+         class="hidden absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-surface ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none" 
          role="menu" 
          aria-orientation="vertical" 
          aria-labelledby="language-menu-button">
@@ -38,7 +38,7 @@
           {{- range .AllTranslations -}}
             {{- if ne .Language.Lang $.Language.Lang -}}
               <a href="{{ .Permalink }}" 
-                 class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" 
+                 class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus-ring" 
                  role="menuitem"
                  hreflang="{{ .Language.Lang }}">
                 <svg class="w-4 h-4 mr-3 text-transparent" fill="currentColor" viewBox="0 0 20 20">

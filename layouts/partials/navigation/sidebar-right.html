@@ -1,11 +1,9 @@
-<!-- Tight mid-widths felt cramped. Show right sidebar at xl+ instead of lg. -->
-<!-- <aside id="sidebar-right" class="hidden lg:block w-1/5 max-w-sm" data-component="navigation-sidebar-right"> -->
-<aside id="sidebar-right" class="hidden xl:block w-1/5 max-w-sm" data-component="navigation-sidebar-right">
+<!-- Right Sidebar: sticky on xl+, consistent width managed by grid tracks in base layout -->
+<aside id="sidebar-right" class="sticky top-16 hidden xl:block h-[calc(100vh-4rem)] overflow-y-auto pr-2" data-component="navigation-sidebar-right" role="complementary" aria-label="On-page navigation">
   {{if .Site.Params.article.toc.display}}
     {{partial "article/toc.html" . }}
   {{end}}
   {{if .Site.Params.article.chat.display}}
     {{partial "article/chat.html" . }}
   {{end}}
-  
 </aside>

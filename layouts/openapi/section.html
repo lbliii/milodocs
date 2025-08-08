@@ -37,7 +37,7 @@
 
 {{- define "content" -}}
 <article id="articleContent" 
-         class="openapi-spec api-overview"
+         class="openapi-spec api-overview article-content"
          data-component="openapi-viewer">
 
   
@@ -72,7 +72,7 @@
       <div class="endpoint-groups-grid">
         {{/* Get all child pages (tag sections) */}}
         {{ range .Pages }}
-          <div class="endpoint-group-card">
+          <div class="endpoint-group-card focus-ring">
             <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
             <p>{{ .Description }}</p>
             <div class="endpoint-count">

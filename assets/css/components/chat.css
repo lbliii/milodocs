@@ -32,8 +32,16 @@
   border: none;
   box-shadow: none;
   border-radius: 0.75rem; /* Add consistent border radius */
-  margin-right: 1.5rem; /* Align with page container padding */
+  /* margin-right: 1.5rem;  Align with page container padding */
+  /* Replaced: remove right margin on wide screens to avoid pinching */
   margin-top: 1rem; /* Match the pageContainer's top padding to align with content start */
+}
+
+/* On xl+, let chat use full sidebar column width */
+@screen xl {
+  #chatContainer {
+    margin-right: 0;
+  }
 }
 
 /* Enhanced Chat Interface - Clean transparent design */

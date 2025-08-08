@@ -62,7 +62,7 @@
                 <thead>
                     <tr>
                     {{- range $filteredHeaders -}}
-                        <th scope="col" class="px-3 py-2 text-left text-sm font-semibold text-black uppercase tracking-wider">
+                        <th scope="col" class="px-3 py-2 text-left text-sm font-semibold text-text-primary uppercase tracking-wider">
                             {{- . | markdownify -}}
                         </th>
                     {{- end -}}
@@ -70,9 +70,9 @@
                 </thead>
                 <tbody class="divide-y divide-zinc-200">
                     {{- range $rowIndex, $row := after 1 $csvData -}}
-                        <tr class="{{ cond (modBool $rowIndex 2) "bg-zinc-50" "bg-white" }}">
+                        <tr class="{{ cond (modBool $rowIndex 2) "bg-zinc-50" "bg-surface" }}">
                         {{- range $filteredIndices -}}
-                            <td class="px-3 py-2 whitespace-nowrap text-sm text-black">
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-text-primary">
                                 {{- if lt . (len $row) -}}
                                     {{- index $row . | markdownify -}}
                                 {{- else -}}

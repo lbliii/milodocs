@@ -8,7 +8,8 @@
   margin: 1.5rem 0;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */
+  box-shadow: var(--elevation-2);
 }
 
 /* Tab buttons container */
@@ -52,7 +53,8 @@
   height: 3px;
   background: var(--color-brand);
   transform: scaleX(0);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+  transition: transform var(--timing-medium) var(--easing-standard);
 }
 
 .tabs-modern__button:hover {
@@ -139,7 +141,8 @@
 }
 
 .tabs-modern__panel {
-  animation: tabs-fade-in 0.4s ease-out;
+  /* animation: tabs-fade-in 0.4s ease-out; */
+  animation: tabs-fade-in var(--timing-fast) var(--easing-standard);
   animation-fill-mode: both;
 }
 
@@ -176,7 +179,8 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .tabs-modern {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
+    box-shadow: var(--elevation-4);
   }
 }
 

@@ -3,7 +3,7 @@
 <head>
   {{ partial "head.html" . }}
 </head>
-<body class="bg-white antialiased" 
+<body class="bg-bg-primary antialiased" 
       data-environment="{{ hugo.Environment }}" 
       data-theme="{{ site.Params.theme.mode | default "light" }}"
       data-build="{{ cond (or hugo.IsProduction (in (slice "nvidia" "enterprise" "open-source") hugo.Environment)) "production" "development" }}"
@@ -13,11 +13,10 @@
     {{- partial "header.html" . -}}
   </header>
   {{- block "top-bar" . -}}{{- end -}}
-  <main class="p-2 mx-auto flex transition-all duration-300 ease-in-out">
+  <main class="w-full px-4 sm:px-6 lg:px-8 xl:px-0 transition-all duration-300 ease-in-out xl:grid xl:grid-cols-[18rem_minmax(0,1fr)_22rem] xl:gap-8 2xl:grid-cols-[20rem_minmax(0,1fr)_28rem] 2xl:gap-16">
+    <!-- Left sidebar (present at all sizes; handles mobile off-canvas + xl sticky itself) -->
     {{- block "sidebar-left" . -}}{{- end -}}
-    <!-- Original: fixed width at md created extra right gutter when right sidebar is hidden -->
-    <!-- <div id="pageContainer" class="p-4 w-full md:w-3/5 max-w-5xl mx-auto"> -->
-    <div id="pageContainer" class="p-4 w-full md:flex-1 xl:max-w-5xl">
+    <div id="pageContainer" class="p-4 w-full md:flex-1 min-w-0 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl xl:px-8 2xl:px-12">
       <!-- Loading skeleton for initial page load -->
       <div id="pageLoadingSkeleton" class="hidden space-y-4">
         <div class="h-8 bg-gray-200 rounded content-skeleton animate-pulse"></div>
@@ -39,7 +38,10 @@
       </div>
     </div>
     {{- partial "searchResultsContainer.html" . -}}
-    {{- block "sidebar-right" . -}}{{- end -}}
+    <!-- Right sidebar column (xl+) -->
+    <div class="hidden xl:block">
+      {{- block "sidebar-right" . -}}{{- end -}}
+    </div>
   </main>
   <footer>
     {{- partial "footer.html" . -}}

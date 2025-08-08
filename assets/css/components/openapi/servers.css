@@ -19,7 +19,12 @@
   border: 1px solid var(--color-border-primary);
   border-radius: 1rem;
   padding: 2rem;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .server-item:hover {

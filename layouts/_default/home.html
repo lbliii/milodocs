@@ -13,14 +13,14 @@
 {{- end -}}
 
 {{ define "content" }}
-    <div id="articleContent" class="text-black p-4">
+    <div id="articleContent" class="article-content text-text-primary p-4 mx-auto max-w-6xl 2xl:max-w-7xl">
       {{if lt (len .Site.Sections) 1}}
         {{- partial "welcome.html" -}}
       {{- else -}}
       {{ .Content }} 
       {{- end -}}
     </div>
-    <div class="p-4">
+    <div class="p-4 mx-auto max-w-6xl 2xl:max-w-7xl">
       {{- partial "article/tiles.html" . -}}
     </div>
 {{ end }}

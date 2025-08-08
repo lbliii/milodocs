@@ -293,6 +293,8 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 /* Enhanced active state for the whole item */
 .sidebar-item:has(.sidebar-item__link--active) {
   background-color: var(--color-hover);
+  /* box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.2); */
+  box-shadow: var(--elevation-brand-subtle);
 }
 
 /* Right Sidebar Styling - Remove background in dark mode */

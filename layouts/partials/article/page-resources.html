@@ -91,7 +91,7 @@
       {{/* Videos */}}
       {{- if $videos -}}
         <div class="mb-6">
-          <h3 class="text-base font-medium text-black mb-3 flex items-center">
+          <h3 class="text-base font-medium text-text-primary mb-3 flex items-center">
             <svg class="w-4 h-4 mr-2 text-current" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
             </svg>
@@ -99,13 +99,13 @@
           </h3>
           <div class="grid gap-4 md:grid-cols-2">
             {{- range $videos -}}
-              <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <div class="border border-gray-200 rounded-lg overflow-hidden bg-surface shadow-sm">
                 <video controls class="w-full h-48 bg-zinc-100">
                   <source src="{{ .RelPermalink }}" type="{{ .MediaType }}">
                   Your browser does not support the video tag.
                 </video>
                 <div class="p-3">
-                  <p class="text-sm font-medium text-black">
+                   <p class="text-sm font-medium text-text-primary">
                     {{ .Title | default .Name }}
                   </p>
                   {{- with .Params.description -}}
@@ -121,7 +121,7 @@
       {{/* Other file types */}}
       {{- if $others -}}
         <div>
-          <h3 class="text-base font-medium text-black mb-3 flex items-center">
+          <h3 class="text-base font-medium text-text-primary mb-3 flex items-center">
             <svg class="w-4 h-4 mr-2 text-current" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
             </svg>

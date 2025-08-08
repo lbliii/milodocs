@@ -7,7 +7,7 @@
 {{- end -}}
 
 {{- define "content" -}}
-<article id="articleContent" class="container mx-auto px-4 py-8">
+<article id="articleContent" class="article-content container mx-auto px-4 py-8">
     {{- $schemaPath := .Params.schema -}}
     {{- $schema := index .Site.Data (replace $schemaPath ".yaml" "") -}}
     {{- $objectModel := $schema.ObjectModel -}}

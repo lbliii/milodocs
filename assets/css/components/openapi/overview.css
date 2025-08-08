@@ -71,7 +71,12 @@
   );
   border: 1px solid var(--color-border-primary);
   border-radius: 0.5rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 60px;
   position: relative;
   overflow: hidden;
@@ -94,9 +99,7 @@
 .overview-stat:hover {
   transform: translateY(-2px);
   border-color: var(--color-brand);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 2px 4px rgba(var(--color-brand-rgb), 0.1);
+  box-shadow: var(--elevation-hover-2);
 }
 
 .overview-stat:hover::before {
@@ -226,7 +229,12 @@
   border: 1px solid var(--color-border-primary);
   border-radius: 0.5rem;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   position: relative;
   overflow: hidden;
 }
@@ -306,7 +314,9 @@
   height: 1rem;
   color: var(--color-text-tertiary);
   flex-shrink: 0;
-  transition: all 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -329,22 +339,13 @@
    ========================================================================== */
 
 @media (max-width: 768px) {
-  .overview-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+  .overview-stats { flex-direction: column; gap: 0.5rem; }
   
-  .overview-stat {
-    min-width: unset;
-  }
+  .overview-stat { min-width: unset; }
   
-  .overview-documentation__grid {
-    grid-template-columns: 1fr;
-  }
+  .overview-documentation__grid { grid-template-columns: 1fr; }
   
-  .overview-title {
-    font-size: 1.5rem;
-  }
+  .overview-title { font-size: 1.5rem; }
 }
 
 @media (max-width: 480px) {
@@ -394,9 +395,7 @@
 /* Enhanced hover effects for overview with documentation */
 .openapi-overview:has(.overview-documentation) .overview-stat:hover {
   transform: translateY(-3px);
-  box-shadow: 
-    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
-    0 4px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--elevation-hover-4);
 }
 
 /* Documentation section gets enhanced styling when stats are present */
@@ -414,27 +413,27 @@
 
 /* API type specific enhancements */
 [data-api-type="REST"] .overview-stat--secondary {
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(155, 89, 182, 0.1));
-  border-color: rgba(52, 152, 219, 0.2);
+  background: linear-gradient(135deg, rgba(var(--color-info-rgb), 0.1), rgba(var(--color-security-rgb), 0.1));
+  border-color: rgba(var(--color-info-rgb), 0.2);
 }
 
 [data-api-type="GraphQL"] .overview-stat--secondary {
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(230, 126, 34, 0.1));
-  border-color: rgba(231, 76, 60, 0.2);
+  background: linear-gradient(135deg, rgba(var(--color-danger-rgb), 0.1), rgba(var(--color-warning-rgb), 0.1));
+  border-color: rgba(var(--color-danger-rgb), 0.2);
 }
 
 /* Maturity-based styling */
 [data-maturity="stable"] .overview-stat--accent {
-  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
-  border-color: rgba(46, 204, 113, 0.2);
+  background: linear-gradient(135deg, rgba(var(--color-success-rgb), 0.1), rgba(var(--color-success-rgb), 0.1));
+  border-color: rgba(var(--color-success-rgb), 0.2);
 }
 
 [data-maturity="beta"] .overview-stat--accent {
-  background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(243, 156, 18, 0.1));
-  border-color: rgba(241, 196, 15, 0.2);
+  background: linear-gradient(135deg, rgba(var(--color-warning-rgb), 0.1), rgba(var(--color-warning-rgb), 0.1));
+  border-color: rgba(var(--color-warning-rgb), 0.2);
 }
 
 [data-maturity="alpha"] .overview-stat--warning {
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
-  border-color: rgba(231, 76, 60, 0.2);
+  background: linear-gradient(135deg, rgba(var(--color-danger-rgb), 0.1), rgba(var(--color-danger-rgb), 0.1));
+  border-color: rgba(var(--color-danger-rgb), 0.2);
 }

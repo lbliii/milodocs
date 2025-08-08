@@ -8,7 +8,8 @@
   margin: 1.5rem 0;
   border-radius: 1rem;
   background: var(--color-surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */
+  box-shadow: var(--elevation-2);
   overflow: hidden;
 }
 
@@ -27,7 +28,12 @@
   position: relative;
   border-radius: 0.5rem;
   font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+  transition:
+    background-color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard);
   border: 1px solid transparent;
   cursor: pointer;
   white-space: nowrap;
@@ -53,7 +59,8 @@
   background: var(--color-brand) !important;
   color: white !important;
   border-color: var(--color-brand);
-  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+  /* box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3); */
+  box-shadow: var(--elevation-brand-subtle);
   transform: translateY(-1px);
 }
 
@@ -90,8 +97,11 @@
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.3s ease;
+  /* transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease; */
+  transition:
+    max-height var(--timing-medium) var(--easing-standard),
+    opacity var(--timing-medium) var(--easing-standard);
 }
 
 /* Enhanced content styling */
@@ -110,7 +120,8 @@
 
 /* Subtle entrance animation fallback */
 [data-component="tabs"] [data-tabcontent]:not(.hidden) {
-  animation: tab-content-gentle-fade 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* animation: tab-content-gentle-fade 0.4s cubic-bezier(0.4, 0, 0.2, 1); */
+  animation: tab-content-gentle-fade var(--timing-fast) var(--easing-standard);
 }
 
 @keyframes tab-content-gentle-fade {
@@ -172,10 +183,12 @@
 /* Dark mode enhancements */
 @media (prefers-color-scheme: dark) {
   [data-component="tabs"] {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
+    box-shadow: var(--elevation-4);
   }
   
   [data-component="tabs"] button.bg-brand {
-    box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.4);
+    /* box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.4); */
+    box-shadow: var(--elevation-brand-medium);
   }
 }

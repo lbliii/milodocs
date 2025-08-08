@@ -54,8 +54,8 @@
 .type-nullable,
 .type-readonly,
 .type-writeonly {
-  background: rgba(107, 114, 128, 0.1);
-  color: #4b5563;
+  background: rgba(var(--color-text-secondary-rgb, 107, 114, 128), 0.1);
+  color: var(--color-text-secondary);
   padding: 0.125rem 0.5rem;
   border-radius: 1rem;
   font-size: 0.75rem;
@@ -112,7 +112,11 @@
   flex-direction: column;
   gap: 0.5rem;
   position: relative;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .property-item:last-child {
@@ -152,8 +156,8 @@
 }
 
 .property-required {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
+  background: rgba(var(--color-danger-rgb), 0.1);
+  color: var(--color-danger);
   padding: 0.125rem 0.5rem;
   border-radius: 1rem;
   font-size: 0.75rem;
@@ -474,7 +478,7 @@
 }
 
 .schema-ref-error .error-message {
-  color: #dc2626;
+  color: var(--color-danger);
   font-weight: 500;
   margin-bottom: 0.5rem;
 }

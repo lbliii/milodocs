@@ -52,7 +52,11 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-brand, #3b82f6);
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .openapi-header__badge:hover {
@@ -75,41 +79,41 @@
 
 /* API Type Badge */
 .openapi-header__badge--type[data-api-type="REST"] {
-  background: rgba(52, 152, 219, 0.1);
-  border-color: rgba(52, 152, 219, 0.2);
-  color: #3498db;
+  background: rgba(var(--color-info-rgb), 0.1);
+  border-color: rgba(var(--color-info-rgb), 0.2);
+  color: var(--color-info);
 }
 
 .openapi-header__badge--type[data-api-type="GraphQL"] {
-  background: rgba(231, 76, 60, 0.1);
-  border-color: rgba(231, 76, 60, 0.2);
-  color: #e74c3c;
+  background: rgba(var(--color-danger-rgb), 0.1);
+  border-color: rgba(var(--color-danger-rgb), 0.2);
+  color: var(--color-danger);
 }
 
 /* Maturity Badge */
 .openapi-header__badge--maturity[data-maturity="stable"] {
-  background: rgba(46, 204, 113, 0.1);
-  border-color: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
+  background: rgba(var(--color-success-rgb), 0.1);
+  border-color: rgba(var(--color-success-rgb), 0.2);
+  color: var(--color-success);
 }
 
 .openapi-header__badge--maturity[data-maturity="beta"] {
-  background: rgba(241, 196, 15, 0.1);
-  border-color: rgba(241, 196, 15, 0.2);
-  color: #f1c40f;
+  background: rgba(var(--color-warning-rgb), 0.1);
+  border-color: rgba(var(--color-warning-rgb), 0.2);
+  color: var(--color-warning);
 }
 
 .openapi-header__badge--maturity[data-maturity="alpha"] {
-  background: rgba(231, 76, 60, 0.1);
-  border-color: rgba(231, 76, 60, 0.2);
-  color: #e74c3c;
+  background: rgba(var(--color-danger-rgb), 0.1);
+  border-color: rgba(var(--color-danger-rgb), 0.2);
+  color: var(--color-danger);
 }
 
 /* Stability Badge */
 .openapi-header__badge--stability {
-  background: rgba(155, 89, 182, 0.1);
-  border-color: rgba(155, 89, 182, 0.2);
-  color: #9b59b6;
+  background: rgba(var(--color-security-rgb), 0.1);
+  border-color: rgba(var(--color-security-rgb), 0.2);
+  color: var(--color-security);
 }
 
 .openapi-version {

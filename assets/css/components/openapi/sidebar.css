@@ -68,7 +68,12 @@
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
   border: 1px solid transparent;
 }
 
@@ -138,7 +143,10 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   border-radius: 0.25rem;
-  transition: all 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .openapi-sidebar-tag-toggle:hover {
@@ -172,7 +180,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  transition: all 0.15s ease;
+  transition: max-height 0.15s ease, opacity 0.15s ease;
 }
 
 .openapi-sidebar-endpoints-list--expanded {
@@ -191,7 +199,11 @@
   text-decoration: none;
   border-radius: 0.375rem;
   font-size: 0.8125rem;
-  transition: all 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
   border: 1px solid transparent;
   margin-left: 1.75rem; /* Indent under tag */
   gap: 0.5rem;
@@ -226,36 +238,18 @@
   letter-spacing: 0.025em;
 }
 
-.openapi-sidebar-method--get {
-  background: #10b981;
-  color: white;
-}
+.openapi-sidebar-method--get { background: var(--http-get-bg); color: var(--http-get-text); }
 
-.openapi-sidebar-method--post {
-  background: #3b82f6;
-  color: white;
-}
+.openapi-sidebar-method--post { background: var(--http-post-bg); color: var(--http-post-text); }
 
-.openapi-sidebar-method--put {
-  background: #f59e0b;
-  color: white;
-}
+.openapi-sidebar-method--put { background: var(--http-put-bg); color: var(--http-put-text); }
 
-.openapi-sidebar-method--patch {
-  background: #8b5cf6;
-  color: white;
-}
+.openapi-sidebar-method--patch { background: var(--http-patch-bg); color: var(--http-patch-text); }
 
-.openapi-sidebar-method--delete {
-  background: #ef4444;
-  color: white;
-}
+.openapi-sidebar-method--delete { background: var(--http-delete-bg); color: var(--http-delete-text); }
 
 .openapi-sidebar-method--head,
-.openapi-sidebar-method--options {
-  background: #6b7280;
-  color: white;
-}
+.openapi-sidebar-method--options { background: var(--http-head-bg); color: var(--http-head-text); }
 
 /* ==========================================================================
    Endpoint Details
@@ -308,29 +302,7 @@
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
-  .openapi-sidebar-version {
-    background: var(--color-brand-primary-dark, var(--color-brand-primary));
-  }
-  
-  .openapi-sidebar-method--get {
-    background: #059669;
-  }
-  
-  .openapi-sidebar-method--post {
-    background: #2563eb;
-  }
-  
-  .openapi-sidebar-method--put {
-    background: #d97706;
-  }
-  
-  .openapi-sidebar-method--patch {
-    background: #7c3aed;
-  }
-  
-  .openapi-sidebar-method--delete {
-    background: #dc2626;
-  }
+  .openapi-sidebar-version { background: var(--color-brand-primary-dark, var(--color-brand-primary)); }
 }
 
 /* ==========================================================================

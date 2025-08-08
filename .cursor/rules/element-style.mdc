@@ -1,0 +1,63 @@
+---
+globs: *.css
+alwaysApply: false
+---
+Long-term CSS strategy: Keep a hybrid approach.
+- Use Tailwind utilities for layout, spacing, typography, states, and responsiveness.
+- Use thin, semantic component classes only for reusable patterns and complex selectors.
+- Centralize all tokens in Tailwind config and/or CSS variables; never hard-code ad-hoc values.
+
+To-do checklist for any CSS/markup change
+
+- [ ] Tokens first: If you need a new color/space/radius/shadow/font/size, add it to Tailwind config (or map to a CSS var) instead of hard-coding in CSS.
+- [ ] Prefer utilities: If the style is a one-off, use Tailwind classes directly in the template.
+- [ ] Create a component class only if reused or complex: For repeated patterns or complex structure/states, make a component class and compose with `@apply`.
+- [ ] Place component styles under `@layer components` in `themes/milodocs/assets/css/src/input.css`.
+- [ ] Compose with variants: Prefer `@apply md:… lg:… hover:… focus:…` over custom media queries or ad-hoc selectors.
+- [ ] Breakpoints: Use Tailwind screen tokens only; do not hard-code px breakpoints in CSS.
+- [ ] Dark mode: Use Tailwind `dark:` variants and/or theme CSS vars; avoid duplicating color values.
+- [ ] Naming: Use `component` and `component__element`; for states use `is-*`/`has-*`. Never invent utility-like class names (e.g., `mt-6px`).
+- [ ] Do not edit `themes/milodocs/assets/css/main.css`. It is generated; we run pnpm watch-tw.
+- [ ] Follow replacement policy: Comment out the old and replace in-place (no `enhanced-`/`-new` forks).
+
+When evaluating an existing custom class
+
+- [ ] If it duplicates 1–3 Tailwind utilities and is used once, inline utilities and remove the class.
+- [ ] If it duplicates utilities and is used often, convert it to a component class using `@apply`.
+- [ ] If it hard-codes values available as tokens, replace with Tailwind tokens (utilities or CSS vars).
+- [ ] If it encodes a domain concept (e.g., `article-header`, `toc`, `api-method`), keep it but ensure it composes Tailwind utilities via `@apply` and supports responsive variants.
+
+Structure and placement
+
+- [ ] Global resets/utilities: keep within Tailwind or minimal theme reset; avoid ad-hoc global element styles unless necessary.
+- [ ] Component styles live in `@layer components` (same file). Group by component with clear headings.
+- [ ] Avoid deep selectors and descendant chains; prefer class hooks on elements.
+
+Responsiveness and quality checks
+
+- [ ] Verify the component at `sm`, `md`, `lg`, `xl` breakpoints using Tailwind variants.
+- [ ] Check interactive states: `hover`, `focus`, `active`, `disabled`, relevant `aria-*`.
+- [ ] Validate dark mode contrast using theme tokens.
+- [ ] Respect `prefers-reduced-motion` when animations are involved.
+
+Example component composition
+
+```css
+@layer components {
+  /* Table of contents card */
+  .toc-card {
+    @apply rounded-lg border border-zinc-200 bg-white p-4 shadow-sm md:p-6 dark:bg-zinc-900;
+  }
+  .toc-card__title {
+    @apply text-sm font-semibold text-zinc-800 dark:text-zinc-100;
+  }
+  .toc-card__link {
+    @apply block rounded px-2 py-1 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white;
+  }
+}
+```
+
+Notes
+
+- Tailwind is our utility and token engine; component classes are our semantic API. Keep the split clean.
+- Prefer deletions/simplifications over adding new abstraction layers.

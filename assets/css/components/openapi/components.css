@@ -36,7 +36,12 @@
   border: 1px solid var(--color-border-primary);
   border-radius: 0.75rem;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .component-item:hover {
@@ -251,7 +256,7 @@
 }
 
 .component-item[data-schema-type="array"] .component-header {
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
+  background: linear-gradient(135deg, rgba(var(--color-info-rgb), 0.05), rgba(var(--color-accent-rgb), 0.05));
 }
 
 .component-item[data-schema-type="string"] .component-icon {
@@ -268,15 +273,15 @@
 }
 
 .component-item[data-param-in="path"] .component-header {
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(192, 57, 43, 0.05));
+  background: linear-gradient(135deg, rgba(var(--color-danger-rgb), 0.05), rgba(var(--color-danger-rgb), 0.05));
 }
 
 .component-item[data-param-in="query"] .component-header {
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.05));
+  background: linear-gradient(135deg, rgba(var(--color-info-rgb), 0.05), rgba(var(--color-info-rgb), 0.05));
 }
 
 .component-item[data-param-in="header"] .component-header {
-  background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(142, 68, 173, 0.05));
+  background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.05), rgba(var(--color-accent-rgb), 0.05));
 }
 
 /* Enhanced hover effects based on content */
