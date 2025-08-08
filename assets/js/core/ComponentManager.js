@@ -112,9 +112,18 @@ class ComponentManager {
    * Load a component (register if needed, then create instance)
    */
   static async load(name, config = {}) {
-    // Check if already registered
+    // If not registered yet, try lazy-importing via the component loader
     if (!this.components.has(name)) {
-      log.warn(`Component "${name}" not registered`);
+      try {
+        const componentsIndex = await import('../components/index.js');
+        if (typeof componentsIndex.loadComponent === 'function') {
+          return componentsIndex.loadComponent(name, config);
+        }
+      } catch (e) {
+        // Reduce noise when components simply aren't present on the page
+        log.debug(`Deferred load failed or component not present for: ${name}`);
+        return null;
+      }
       return null;
     }
 
@@ -240,25 +249,36 @@ class ComponentManager {
     const brokenInstances = Array.from(this.instances.values()).filter(instance => {
       // Check if the component's DOM element still exists and is functional
       if (!instance.element || !document.contains(instance.element)) {
+        log.debug(`Component ${instance.id} element no longer exists`);
         return true; // Element doesn't exist anymore
       }
       
       // Check if component is in a failed state
       if (instance.state === 'failed' || instance.state === 'destroyed') {
+        log.debug(`Component ${instance.id} is in failed/destroyed state`);
         return true;
       }
       
-      // For sidebar components, check if event listeners are still working
+      // Enhanced detection for specific component types
       if (instance.name === 'navigation-sidebar-left') {
-        // Check if toggles are still responsive
-        const toggles = instance.element.querySelectorAll('.expand-toggle');
-        if (toggles.length > 0 && !toggles[0].onclick && !toggles[0].addEventListener) {
-          return true; // Event listeners might be broken
+        // Check if sidebar functionality is working
+        if (this.isSidebarBroken(instance)) {
+          log.debug(`Sidebar component ${instance.id} appears broken`);
+          return true;
         }
+      }
+      
+      // Generic check for any component that might have lost its event listeners
+      if (this.hasLostEventListeners(instance)) {
+        log.debug(`Component ${instance.id} appears to have lost event listeners`);
+        return true;
       }
       
       return false;
     });
+    
+    // Also look for DOM elements that should have components but don't
+    const missingComponents = this.findMissingComponents();
     
     // Destroy broken instances
     brokenInstances.forEach(instance => {
@@ -269,35 +289,199 @@ class ComponentManager {
     // Re-discover and load components
     this.discoverAndLoadComponents();
     
-    log.info(`Reinitialized ${brokenInstances.length} broken components`);
+    const totalFixed = brokenInstances.length + missingComponents;
+    log.info(`Reinitialized ${brokenInstances.length} broken components, found ${missingComponents} missing components`);
     
-    return brokenInstances.length;
+    return totalFixed;
   }
 
   /**
-   * Discover and load components from DOM
+   * Check if sidebar component is broken
+   */
+  static isSidebarBroken(instance) {
+    try {
+      const toggles = instance.element.querySelectorAll('.expand-toggle');
+      if (toggles.length === 0) return false;
+      
+      // Test if click handler exists
+      const firstToggle = toggles[0];
+      
+      // Check if the toggle has the expected event listeners
+      // Note: We can't directly check addEventListener, but we can test if the component has its toggles array
+      if (instance.toggles && instance.toggles.length === 0) {
+        return true;
+      }
+      
+      // Check if the element has proper aria attributes that would indicate it's initialized
+      if (!firstToggle.hasAttribute('aria-expanded')) {
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      log.warn(`Error checking sidebar component ${instance.id}:`, error);
+      return true;
+    }
+  }
+
+  /**
+   * Check if component has lost its event listeners (enhanced detection)
+   */
+  static hasLostEventListeners(instance) {
+    try {
+      // If the component has specific methods to check its state, use them
+      if (typeof instance.isHealthy === 'function') {
+        return !instance.isHealthy();
+      }
+      
+      // 🔧 ENHANCED: Check for tracked event listeners
+      if (instance.eventListeners && instance.eventListeners.size === 0) {
+        log.debug(`Component ${instance.id} has no tracked event listeners`);
+        return true;
+      }
+      
+      // 🔧 ENHANCED: For sidebar components, verify critical functionality
+      if (instance.name === 'navigation-sidebar-left') {
+        return this.isSidebarListenersBroken(instance);
+      }
+      
+      // 🔧 ENHANCED: Check DOM element listener tracking
+      if (instance.element && instance.element.dataset.componentListeners) {
+        const componentIds = instance.element.dataset.componentListeners.split(',');
+        if (!componentIds.includes(instance.id)) {
+          log.debug(`Component ${instance.id} not tracked on its DOM element`);
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (error) {
+      log.debug(`Error checking event listeners for ${instance.id}:`, error);
+      return true;
+    }
+  }
+
+  /**
+   * Enhanced sidebar listener health check
+   */
+  static isSidebarListenersBroken(instance) {
+    try {
+      if (!instance.element || !instance.toggles) {
+        return true;
+      }
+      
+      // Check if toggles have proper event listener tracking
+      for (const toggle of instance.toggles) {
+        if (!toggle.dataset.componentListeners || 
+            !toggle.dataset.componentListeners.includes(instance.id)) {
+          log.debug(`Sidebar toggle missing listener tracking from ${instance.id}`);
+          return true;
+        }
+      }
+      
+      // Check if eventListeners map has entries for toggles
+      if (instance.eventListeners) {
+        const toggleClickListeners = Array.from(instance.eventListeners.values())
+          .filter(listener => listener.event === 'click' && 
+                            instance.toggles.includes(listener.element));
+        
+        if (toggleClickListeners.length !== instance.toggles.length) {
+          log.debug(`Sidebar has ${toggleClickListeners.length} click listeners but ${instance.toggles.length} toggles`);
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (error) {
+      log.debug(`Error checking sidebar listeners for ${instance.id}:`, error);
+      return true;
+    }
+  }
+
+  /**
+   * Find DOM elements that should have components but don't
+   */
+  static findMissingComponents() {
+    const elementsWithComponents = document.querySelectorAll('[data-component]');
+    let missingCount = 0;
+    
+    elementsWithComponents.forEach(element => {
+      const componentName = element.getAttribute('data-component');
+      if (componentName && this.components.has(componentName)) {
+        // Check if this element has a component instance
+        const hasInstance = Array.from(this.instances.values()).some(instance => 
+          instance.element === element && instance.name === componentName
+        );
+        
+        if (!hasInstance) {
+          missingCount++;
+          log.debug(`Found element without component instance: ${componentName}`);
+        }
+      }
+    });
+    
+    return missingCount;
+  }
+
+  /**
+   * Discover and load components from DOM with enhanced cleanup
    */
   static discoverAndLoadComponents() {
+    // 🔧 ENHANCED: Clean up orphaned listeners before loading new components
+    this.cleanupOrphanedListeners();
+    
     const elementsWithComponents = document.querySelectorAll('[data-component]');
     const discoveredComponents = new Set();
 
     elementsWithComponents.forEach(element => {
       const componentName = element.getAttribute('data-component');
-      if (componentName && this.components.has(componentName)) {
-        discoveredComponents.add(componentName);
-      }
+      if (!componentName) return;
+      // Previously required pre-registration; relax to allow lazy import on demand
+      // if (componentName && this.components.has(componentName)) {
+      //   discoveredComponents.add(componentName);
+      // }
+      discoveredComponents.add(componentName);
     });
 
     if (discoveredComponents.size > 0) {
       log.info(`Discovered ${discoveredComponents.size} components: [${Array.from(discoveredComponents).join(', ')}]`);
     }
 
-    // Load discovered components
+    // Load discovered components lazily (will import on demand)
     Array.from(discoveredComponents).forEach(componentName => {
       this.load(componentName);
     });
 
     log.info(`Auto-discovered and loaded ${discoveredComponents.size} components`);
+  }
+
+  /**
+   * Clean up orphaned event listener tracking from destroyed components
+   */
+  static cleanupOrphanedListeners() {
+    const elementsWithListeners = document.querySelectorAll('[data-component-listeners]');
+    let cleanedCount = 0;
+    
+    elementsWithListeners.forEach(element => {
+      const listenerIds = element.dataset.componentListeners.split(',');
+      const validIds = listenerIds.filter(componentId => {
+        const instance = this.instances.get(componentId);
+        return instance && instance.state !== 'destroyed';
+      });
+      
+      if (validIds.length !== listenerIds.length) {
+        cleanedCount++;
+        if (validIds.length > 0) {
+          element.dataset.componentListeners = validIds.join(',');
+        } else {
+          delete element.dataset.componentListeners;
+        }
+      }
+    });
+    
+    if (cleanedCount > 0) {
+      log.info(`Cleaned up orphaned listeners from ${cleanedCount} elements`);
+    }
   }
 
   /**
@@ -360,7 +544,7 @@ class ComponentManager {
           if (node.nodeType === 1) { // Element node
             // Check if the node itself has a component
             const componentName = node.getAttribute?.('data-component');
-            if (componentName && this.components.has(componentName) && 
+            if (componentName && 
                 !node.hasAttribute('data-component-id') && 
                 !node.hasAttribute('data-component-processing')) {
               enhancedElements.add(node);
@@ -385,7 +569,7 @@ class ComponentManager {
         const element = mutation.target;
         const componentName = element.getAttribute('data-component');
         
-        if (componentName && this.components.has(componentName) && 
+        if (componentName && 
             !element.hasAttribute('data-component-id') && 
             !element.hasAttribute('data-component-processing')) {
           enhancedElements.add(element);
@@ -469,10 +653,12 @@ class ComponentManager {
    * Get component instances by name
    */
   static getInstances(componentName) {
-    if (!this.instances.has(componentName)) {
-      return [];
-    }
-    return this.instances.get(componentName);
+    // if (!this.instances.has(componentName)) {
+    //   return [];
+    // }
+    // return this.instances.get(componentName);
+    // Use a filtered list from the instances map values
+    return Array.from(this.instances.values()).filter(instance => instance.name === componentName);
   }
 
   /**

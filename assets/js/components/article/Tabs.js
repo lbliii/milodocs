@@ -29,7 +29,7 @@ export class ArticleTabs extends Component {
       });
     }
     
-    this.tabContainers = Array.from(document.querySelectorAll('[data-component="tabs"], [data-component="article-tabs"]'));
+    this.tabContainers = Array.from(document.querySelectorAll('[data-component="article-tabs"]'));
     
     if (this.tabContainers.length === 0) {
       console.warn('ArticleTabs: No tab containers found');

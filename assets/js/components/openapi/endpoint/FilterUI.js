@@ -4,6 +4,7 @@
  */
 
 import { Component } from '../../../core/Component.js';
+import { sanitizeHTML, escapeHTML } from '../../../utils/sanitize.js';
 
 export class FilterUI extends Component {
   constructor(config = {}) {
@@ -189,16 +190,18 @@ export class FilterUI extends Component {
     if (currentFilters.search) activeFilters.push(`Search: "${currentFilters.search}"`);
     if (currentFilters.status !== 'all') activeFilters.push(`Status: ${currentFilters.status}`);
 
-    container.innerHTML = `
+    const active = activeFilters.map(escapeHTML).join(', ');
+    const html = `
       <div class="filter-status__count">
         Showing ${visibleCount} of ${totalCount} endpoints
       </div>
       ${activeFilters.length > 0 ? `
         <div class="filter-status__active">
-          Active filters: ${activeFilters.join(', ')}
+          Active filters: ${active}
         </div>
       ` : ''}
     `;
+    container.innerHTML = sanitizeHTML(html);
   }
 
   /**
@@ -324,10 +327,11 @@ export class FilterUI extends Component {
     filters.forEach(filter => {
       const breadcrumb = document.createElement('span');
       breadcrumb.className = 'filter-breadcrumb';
-      breadcrumb.innerHTML = `
-        ${filter.label}
-        <button class="filter-breadcrumb__remove" aria-label="Remove ${filter.label}">×</button>
-      `;
+      const safeLabel = escapeHTML(filter.label);
+      breadcrumb.innerHTML = sanitizeHTML(`
+        ${safeLabel}
+        <button class="filter-breadcrumb__remove" aria-label="Remove ${safeLabel}">×</button>
+      `);
       
       const removeButton = breadcrumb.querySelector('.filter-breadcrumb__remove');
       removeButton.addEventListener('click', () => {

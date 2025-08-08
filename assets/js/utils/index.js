@@ -99,6 +99,23 @@ export {
   initFeatureDetection
 } from './FeatureDetection.js';
 
+// Navigation utilities
+export {
+  NavigationUtils,
+  normalizePath,
+  pathsMatch,
+  findCurrentLink,
+  getCurrentPath,
+  findParentNavigationItems,
+  getNavigationItemInfo
+} from './NavigationUtils.js';
+
+// Current page detection utilities
+export {
+  CurrentPageDetection,
+  detectCurrentPage
+} from './CurrentPageDetection.js';
+
 // Common utility patterns
 export const utils = {
   // Generate unique IDs

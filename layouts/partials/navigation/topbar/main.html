@@ -18,7 +18,7 @@
     <div class="topbar__controls">
         {{- partial "navigation/language-switcher.html" . -}}
         
-        <div id="chatTocToggle" class="chat-toc-toggle" role="group" aria-label="Switch between Chat and Table of Contents">
+        <div id="chatTocToggle" class="chat-toc-toggle" role="group" aria-label="Switch between Chat and Table of Contents" data-component="chat-toc-toggle">
             <button class="chat-toc-toggle__option" data-mode="chat" aria-label="Switch to Chat" title="Chat Panel">
                 <img src="{{ "icons/light/robot.svg" | relURL }}" alt="Chat" class="icon chat-toc-toggle__icon">
             </button>
@@ -56,7 +56,7 @@
         })();
         </script>
         
-        <button id="darkModeToggle" aria-label="Toggle Darkmode" class="topbar__button">
+        <button id="darkModeToggle" aria-label="Toggle Darkmode" class="topbar__button" data-component="theme-toggle">
             <img id="moon" src="{{ "icons/light/dark.svg" | relURL }}" alt="moon" class="icon hidden" title="Dark Mode">
             <img id="sun" src="{{ "icons/light/light.svg" | relURL }}" alt="sun" class="icon hidden" title="Light Mode">
         </button>

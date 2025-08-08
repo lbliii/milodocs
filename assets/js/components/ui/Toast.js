@@ -1,3 +1,4 @@
+import { escapeHTML, sanitizeHTML } from '../../utils/sanitize.js';
 /**
  * Toast Notification Component
  * Dedicated, clean toast notification system
@@ -20,22 +21,22 @@ export class Toast extends Component {
   }
 
   async onInit() {
-    // Set up global toast function
-    if (!window.toast) {
-      window.toast = (message, type = 'info', duration = this.defaultDuration) => {
-        return this.show(message, type, duration);
-      };
-    }
+    // Prefer centralized NotificationManager toast; keep this as a delegating fallback
+    // if (!window.toast) {
+    //   window.toast = (message, type = 'info', duration = this.defaultDuration) => {
+    //     return this.show(message, type, duration);
+    //   };
+    // }
     
   
     if (!window.MiloUX) {
       window.MiloUX = {};
     }
-    window.MiloUX.showNotification = (message, type = 'info', duration = this.defaultDuration) => {
-      return this.show(message, type, duration);
-    };
+    // window.MiloUX.showNotification = (message, type = 'info', duration = this.defaultDuration) => {
+    //   return this.show(message, type, duration);
+    // };
     
-    console.log('Toast: Notification system ready');
+    // console.log('Toast: Notification system ready');
   }
 
   /**
@@ -110,10 +111,10 @@ export class Toast extends Component {
       </svg>`
     };
     
-    toast.innerHTML = `
+    const html = `
       <div class="toast-notification__content">
         ${icons[type] || icons.info}
-        <div class="toast-notification__message">${message}</div>
+        <div class="toast-notification__message">${escapeHTML(message)}</div>
         <button class="toast-notification__close" aria-label="Close notification">
           <svg fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -121,6 +122,7 @@ export class Toast extends Component {
         </button>
       </div>
     `;
+    toast.innerHTML = sanitizeHTML(html);
     
     // Add close button functionality
     const closeButton = toast.querySelector('.toast-notification__close');

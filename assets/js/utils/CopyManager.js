@@ -284,7 +284,7 @@ export class CopyManager {
     const originalClasses = button.className;
 
     // Update button appearance
-    button.innerHTML = options.successMessage;
+    button.textContent = options.successMessage;
     button.classList.add('copy-button--success', 'bg-green-600');
     button.classList.remove('copy-button--error', 'bg-red-600', 'bg-zinc-600');
 
@@ -305,7 +305,7 @@ export class CopyManager {
     const originalClasses = button.className;
 
     // Update button appearance
-    button.innerHTML = options.errorMessage;
+    button.textContent = options.errorMessage;
     button.classList.add('copy-button--error', 'bg-red-600');
     button.classList.remove('copy-button--success', 'bg-green-600', 'bg-zinc-600');
 

@@ -3613,6 +3613,7 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 
 .sidebar-container {
   container-name: sidebar;
+  container-type: inline-size;
 }
 
 .topbar {
@@ -3869,16 +3870,29 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 
 /* Desktop sidebar styling */
 
+/*
 @container sidebar (min-width: 768px) {
   .sidebar-container {
     background-color: transparent;
     border-inline-end: none;
-    /* Ensure it's always visible on desktop */
     transform: translateX(0) !important;
     position: sticky !important;
     display: flex !important;
   }
 }
+*/
+
+/* FALLBACK: Media query for desktop sidebar visibility */
+
+/*
+@media (min-width: 768px) {
+  .sidebar-container {
+    transform: translateX(0) !important;
+    position: sticky !important;
+    display: flex !important;
+  }
+}
+*/
 
 /* Mobile sidebar styling */
 
@@ -3987,13 +4001,29 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 
 /* Prevent layout shift during initialization */
 
+/*
 #linkTree:not(.initialized) {
   opacity: 0;
   transition: opacity var(--timing-fast) var(--easing-standard);
 }
+*/
 
 #linkTree.initialized {
   opacity: 1;
+}
+
+/* Robust expansion using :has() based on aria-expanded (fallback if JS state desyncs) */
+
+li:has(> .sidebar-item > .expand-toggle[aria-expanded="true"]) > .nested-content {
+  max-height: var(--collapse-height-expanded);
+  opacity: var(--collapse-opacity-expanded);
+  overflow: visible;
+}
+
+li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-content {
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
 }
 
 /* ✅ NEW ANIMATION SYSTEM - Use data attributes for consistent behavior */
@@ -17677,6 +17707,20 @@ main {
   font-family: NVIDIA, Arial, Helvetica, sans-serif;
 }
 
+/* Improve font loading consistency between dev and production */
+
+html {
+    font-synthesis: none; /* Prevent synthetic font generation */
+  }
+
+/* Ensure consistent font metrics during font loading */
+
+body, main {
+    font-optical-sizing: auto;
+    font-feature-settings: "kern" 1;
+    text-rendering: optimizeLegibility;
+  }
+
 /* Enhanced Body Text Typography */
 
 body {
@@ -19853,6 +19897,12 @@ button:focus-visible,
     --tw-space-x-reverse: 0;
     margin-right: calc(1rem * var(--tw-space-x-reverse));
     margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
   .md\:px-0 {

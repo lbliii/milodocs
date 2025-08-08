@@ -12,6 +12,7 @@
 
 .sidebar-container {
   container-name: sidebar;
+  container-type: inline-size;
 }
 
 .topbar {

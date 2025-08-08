@@ -29,6 +29,16 @@
 {{- end -}}
 <meta name="description" content="{{ $description }}" />
 
+{{/* JS environment marker: swap no-js -> js early */}}
+<script>
+  (function(){
+    try {
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+    } catch (e) {}
+  })();
+  </script>
+
 {{/* Immediate theme application to prevent flash */}}
 <script>
   (function() {

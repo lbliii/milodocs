@@ -6,6 +6,7 @@
 
 import { Component } from '../../core/Component.js';
 import { animationBridge } from '../../core/AnimationBridge.js';
+import { localStorage as safeLocalStorage } from '../../utils/storage.js';
 
 class Collapse extends Component {
   constructor(config = {}) {
@@ -212,7 +213,7 @@ class Collapse extends Component {
   saveState(targetId, isExpanded) {
     try {
       const key = `${this.options.namespace}-${targetId}`;
-      localStorage.setItem(key, isExpanded ? 'expanded' : 'collapsed');
+      safeLocalStorage.set(key, isExpanded ? 'expanded' : 'collapsed');
     } catch (error) {
       console.warn(`[${this.name}] Could not save state:`, error);
     }
@@ -224,7 +225,7 @@ class Collapse extends Component {
   restoreState(collapseData) {
     try {
       const key = `${this.options.namespace}-${collapseData.targetId}`;
-      const savedState = localStorage.getItem(key);
+      const savedState = safeLocalStorage.get(key);
       
       if (savedState === 'expanded' && !collapseData.isExpanded) {
         this.expand(collapseData);

@@ -142,6 +142,8 @@ export function findScrollableParent(element) {
 /**
  * Create element with attributes and content
  */
+import { setSafeHTML } from '../../utils/sanitize.js';
+
 export function createElement(tag, attributes = {}, content = '') {
   const element = document.createElement(tag);
   
@@ -159,7 +161,11 @@ export function createElement(tag, attributes = {}, content = '') {
   
   if (content) {
     if (typeof content === 'string') {
-      element.innerHTML = content;
+      try {
+        setSafeHTML(element, content);
+      } catch {
+        element.textContent = content;
+      }
     } else {
       element.appendChild(content);
     }

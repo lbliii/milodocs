@@ -5,6 +5,7 @@
 
 import { motion } from './accessibility.js';
 import { animationBridge } from '../core/AnimationBridge.js';
+import { sanitizeHTML } from './sanitize.js';
 
 /**
  * @typedef {Object} LoadingOptions
@@ -116,7 +117,7 @@ export class LoadingStateManager {
     } else {
       if (newContent) {
         if (typeof newContent === 'string') {
-          element.innerHTML = newContent;
+          element.innerHTML = sanitizeHTML(newContent);
         } else {
           element.innerHTML = '';
           element.appendChild(newContent);
@@ -403,7 +404,7 @@ export class LoadingStateManager {
           ${config.animate ? 'animation: progress-shimmer 2s infinite;' : ''}
         " role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      ${config.message ? `<div class="loading-message" style="margin-top: 0.75rem; text-align: center; font-size: 0.875rem;">${config.message}</div>` : ''}
+      ${config.message ? `<div class=\"loading-message\" style=\"margin-top: 0.75rem; text-align: center; font-size: 0.875rem;\">${sanitizeHTML(config.message)}</div>` : ''}
       <div class="loading-progress-text" style="margin-top: 0.5rem; text-align: center; font-size: 0.75rem; color: var(--color-text-secondary);">${Math.round(progress)}%</div>
     `;
 
@@ -495,7 +496,7 @@ export class LoadingStateManager {
     setTimeout(() => {
       // Update content
       if (typeof content === 'string') {
-        element.innerHTML = content;
+        element.innerHTML = sanitizeHTML(content);
       } else {
         element.innerHTML = '';
         element.appendChild(content);

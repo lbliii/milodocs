@@ -244,13 +244,13 @@ export class Component {
 
 
   /**
-   * 🚀 Modern event listener with AbortController
+   * 🚀 Enhanced event listener with robust cleanup for navigation scenarios
    * 
    * Benefits:
-   * - Automatic cleanup on component destruction (no manual tracking)
-   * - Better memory management (native browser optimization)
-   * - Simpler code (no cleanup functions to manage)
-   * - More reliable (AbortController is native and battle-tested)
+   * - Defensive cleanup (explicit + AbortController)
+   * - Navigation-safe event binding
+   * - Better memory management with explicit tracking
+   * - Handles edge cases in static deployments
    * 
    * @param {Element} element - Target element
    * @param {string} event - Event name
@@ -261,19 +261,88 @@ export class Component {
   addEventListener(element, event, handler, options = {}) {
     if (!element || !event || !handler) return null;
     
-    element.addEventListener(event, handler, {
-      ...options,
+    // Track listeners for defensive cleanup
+    if (!this.eventListeners) {
+      this.eventListeners = new Map();
+    }
+    
+    // Create unique key for this listener
+    const listenerKey = `${element.tagName}-${element.id || element.className}-${event}-${Date.now()}`;
+    
+    // Store listener info for explicit cleanup
+    const listenerInfo = {
+      element,
+      event,
+      handler,
+      options: { ...options },
       signal: this.signal
-    });
+    };
+    
+    // 🔧 DEFENSIVE CLEANUP: Remove any existing listeners on this element/event combo first
+    this.removeExistingListeners(element, event);
+    
+    // Add the new listener with AbortController
+    const passiveEvents = new Set(['scroll', 'wheel', 'mousewheel', 'touchstart', 'touchmove', 'touchend']);
+    const finalOptions = {
+      ...options,
+      ...(options.passive === undefined && passiveEvents.has(event) ? { passive: true } : {}),
+      signal: this.signal
+    };
+    element.addEventListener(event, handler, finalOptions);
+    
+    // Track for explicit cleanup if needed
+    this.eventListeners.set(listenerKey, listenerInfo);
+    
+    // Mark element as having listeners from this component (only for DOM elements)
+    if (element && element.dataset) {
+      if (!element.dataset.componentListeners) {
+        element.dataset.componentListeners = this.id;
+      } else if (!element.dataset.componentListeners.includes(this.id)) {
+        element.dataset.componentListeners += `,${this.id}`;
+      }
+    }
     
     return {
       remove: () => {
-        // AbortController handles cleanup automatically, but provide manual option
-        if (!this.signal.aborted) {
-          element.removeEventListener(event, handler, options);
-        }
+        this.removeSpecificListener(listenerKey);
       }
     };
+  }
+
+  /**
+   * Remove existing listeners on element to prevent conflicts
+   */
+  removeExistingListeners(element, event) {
+    if (!this.eventListeners) return;
+    
+    // Find and remove conflicting listeners
+    for (const [key, listenerInfo] of this.eventListeners.entries()) {
+      if (listenerInfo.element === element && listenerInfo.event === event) {
+        this.removeSpecificListener(key);
+      }
+    }
+  }
+
+  /**
+   * Remove a specific listener by key
+   */
+  removeSpecificListener(listenerKey) {
+    if (!this.eventListeners || !this.eventListeners.has(listenerKey)) return;
+    
+    const listenerInfo = this.eventListeners.get(listenerKey);
+    
+    try {
+      // Explicit removal (works even if AbortController was called)
+      listenerInfo.element.removeEventListener(
+        listenerInfo.event, 
+        listenerInfo.handler, 
+        listenerInfo.options
+      );
+    } catch (error) {
+      log.trace(`Non-critical cleanup error for ${this.name}:`, error);
+    }
+    
+    this.eventListeners.delete(listenerKey);
   }
 
   /**
@@ -603,6 +672,33 @@ export class Component {
   }
 
   /**
+   * Enhanced health check for navigation scenarios
+   * Override this method in subclasses to provide component-specific health checks
+   */
+  isHealthy() {
+    // Basic health check
+    if (this.state !== 'ready') return false;
+    if (!this.element || !document.contains(this.element)) return false;
+    
+    // Check if event listeners are properly tracked
+    if (this.eventListeners && this.eventListeners.size === 0) {
+      log.debug(`Component ${this.id} has no tracked event listeners`);
+      return false;
+    }
+    
+    // Check if element still has listener tracking for this component
+    if (this.element && this.element.dataset && this.element.dataset.componentListeners) {
+      const componentIds = this.element.dataset.componentListeners.split(',');
+      if (!componentIds.includes(this.id)) {
+        log.debug(`Component ${this.id} not tracked on its DOM element`);
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  /**
    * Get current state
    */
   getState() {
@@ -629,12 +725,17 @@ export class Component {
   }
 
   /**
-   * Cleanup component resources
+   * Cleanup component resources with enhanced navigation safety
    */
   destroy() {
     if (this.state === 'destroyed') return;
     
-    // Cleanup event listeners (AbortController)
+    log.debug(`Destroying component ${this.name} (${this.id})`);
+    
+    // 🔧 ENHANCED: Explicit cleanup of tracked listeners first
+    this.cleanupExplicitListeners();
+    
+    // Cleanup event listeners (AbortController) - secondary safety net
     try {
       this.abortController.abort();
       log.trace(`Aborted all event listeners for ${this.name}`);
@@ -653,16 +754,50 @@ export class Component {
     // Remove global event listener
     eventBus.off('component:destroy-all', this.handleDestroy);
     
-    // Clean up DOM references
+    // Clean up DOM references and component tracking
     if (this.element) {
       this.element.removeAttribute('data-component');
       this.element.removeAttribute('data-component-id');
+      
+      // Clean up listener tracking
+      if (this.element.dataset && this.element.dataset.componentListeners) {
+        const listeners = this.element.dataset.componentListeners.split(',');
+        const filteredListeners = listeners.filter(id => id !== this.id);
+        if (filteredListeners.length > 0) {
+          this.element.dataset.componentListeners = filteredListeners.join(',');
+        } else {
+          delete this.element.dataset.componentListeners;
+        }
+      }
     }
     
     this.state = 'destroyed';
     this.emit('destroyed');
     
-    log.debug(`Component ${this.name} destroyed`);
+    log.debug(`Component ${this.name} destroyed successfully`);
+  }
+
+  /**
+   * Explicitly cleanup tracked event listeners
+   */
+  cleanupExplicitListeners() {
+    if (!this.eventListeners) return;
+    
+    log.trace(`Cleaning up ${this.eventListeners.size} tracked listeners for ${this.name}`);
+    
+    for (const [key, listenerInfo] of this.eventListeners.entries()) {
+      try {
+        listenerInfo.element.removeEventListener(
+          listenerInfo.event, 
+          listenerInfo.handler, 
+          listenerInfo.options
+        );
+      } catch (error) {
+        log.trace(`Non-critical cleanup error for listener ${key}:`, error);
+      }
+    }
+    
+    this.eventListeners.clear();
   }
 }
 

@@ -8,16 +8,28 @@
 }
 
 /* Desktop sidebar styling */
+/*
 @container sidebar (min-width: 768px) {
   .sidebar-container {
     background-color: transparent;
     border-inline-end: none;
-    /* Ensure it's always visible on desktop */
     transform: translateX(0) !important;
     position: sticky !important;
     display: flex !important;
   }
 }
+*/
+
+/* FALLBACK: Media query for desktop sidebar visibility */
+/*
+@media (min-width: 768px) {
+  .sidebar-container {
+    transform: translateX(0) !important;
+    position: sticky !important;
+    display: flex !important;
+  }
+}
+*/
 
 /* Mobile sidebar styling */
 @container sidebar (max-width: 767px) {
@@ -117,13 +129,28 @@
 }
 
 /* Prevent layout shift during initialization */
+/*
 #linkTree:not(.initialized) {
   opacity: 0;
   transition: opacity var(--timing-fast) var(--easing-standard);
 }
+*/
 
 #linkTree.initialized {
   opacity: 1;
+}
+
+/* Robust expansion using :has() based on aria-expanded (fallback if JS state desyncs) */
+li:has(> .sidebar-item > .expand-toggle[aria-expanded="true"]) > .nested-content {
+  max-height: var(--collapse-height-expanded);
+  opacity: var(--collapse-opacity-expanded);
+  overflow: visible;
+}
+
+li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-content {
+  max-height: var(--collapse-height-collapsed);
+  opacity: var(--collapse-opacity-collapsed);
+  overflow: hidden;
 }
 
 /* ✅ NEW ANIMATION SYSTEM - Use data attributes for consistent behavior */

@@ -1,11 +1,13 @@
 /**
- * Sidebar Component
- * Handles sidebar navigation with expand/collapse functionality
+ * Sidebar Component - Refactored with modular architecture
+ * Uses mixins and utilities for expandable and responsive functionality
  */
 
 import { Component } from '../../core/Component.js';
-import { animationBridge } from '../../core/AnimationBridge.js';
 import ComponentManager from '../../core/ComponentManager.js';
+import { ExpandableMixin, ResponsiveMixin } from '../index.js';
+import { CurrentPageDetection } from '../../utils/CurrentPageDetection.js';
+import { animationBridge } from '../../core/AnimationBridge.js';
 
 export class Sidebar extends Component {
   constructor(config = {}) {
@@ -15,17 +17,9 @@ export class Sidebar extends Component {
       ...config
     });
     
-    this.toggles = [];
-    this.currentPath = window.location.pathname;
-    this.isInitialized = false;
-    
-    // Normalize current path for static deployments
-    if (this.currentPath.endsWith('/')) {
-      this.currentPath += 'index.html';
-    }
     this.linkTreeElement = null;
-    this.isOpen = false; // Track mobile sidebar state
-    this.resizeTimeout = null; // For debouncing resize events
+    this.isInitialized = false;
+    this.currentPageDetector = null;
   }
 
   async onInit() {
@@ -33,10 +27,6 @@ export class Sidebar extends Component {
       console.warn('Sidebar: Sidebar element not found');
       return;
     }
-
-    // 🚀 NEW: Enhanced initialization with loading states
-    this.setLoadingState(true);
-    this.updateComponentState('initializing');
 
     // Find the linkTree element within the sidebar
     this.linkTreeElement = this.findChild('#linkTree');
@@ -46,139 +36,151 @@ export class Sidebar extends Component {
     }
 
     console.log('Sidebar: Sidebar and LinkTree elements found');
-    this.toggles = Array.from(this.linkTreeElement.querySelectorAll('.expand-toggle'));
-    
-    if (this.toggles.length === 0) {
-      console.warn('Sidebar: No toggle elements found');
-      return;
+    // Reveal contents immediately to avoid opacity gating if later steps fail
+    // (CSS has #linkTree:not(.initialized){opacity:0})
+    if (!this.linkTreeElement.classList.contains('initialized')) {
+      this.linkTreeElement.classList.add('initialized');
     }
+    
+    // 🚀 REFACTORED: Initialize mixins for modular functionality
+    this.initExpandable({
+      toggleSelector: '.expand-toggle',
+      contentSelector: '.nested-content',
+      animationTiming: 'medium'
+    });
+    
+    this.initResponsive({
+      mobileBreakpoint: 768,
+      overlaySelector: '#mobileNavOverlay'
+    });
+    
+    // Ensure all nested-content start with a known state for consistent CSS behavior
+    const nestedContents = this.linkTreeElement.querySelectorAll('.nested-content');
+    nestedContents.forEach((content) => {
+      if (!content.hasAttribute('data-collapse-state')) {
+        animationBridge.setCollapseState(content, 'collapsed');
+      }
+    });
 
-    this.setupEventListeners();
-    this.expandCurrentPath();
-    this.setupAccessibility();
+    // 🚀 REFACTORED: Use CurrentPageDetection utility
+    this.currentPageDetector = new CurrentPageDetection({
+      activeClass: 'sidebar-link--active',
+      parentItemSelector: 'li',
+      toggleSelector: '.expand-toggle'
+    });
     
-    // Initialize mobile sidebar state based on current CSS classes
-    this.initializeMobileState();
+    // Detect and highlight current page
+    const found = this.currentPageDetector.init(this.linkTreeElement);
+    // Expand ancestor sections of the active page using mixin methods
+    if (found) {
+      await this.currentPageDetector.expandParentSections(async (toggle, expand) => {
+        await this.setToggleState(toggle, expand);
+      });
+    }
     
-    // Ensure sidebar is closed on desktop view and properly positioned
-    this.ensureProperState();
+    this.setupKeyboardNavigation();
     
     // Mark as initialized for animations
     this.element.classList.add('initialized');
-    this.linkTreeElement.classList.add('initialized');
+    // this.linkTreeElement.classList.add('initialized'); // already added early
     this.isInitialized = true;
     
-    // 🚀 NEW: Initialization complete
-    this.setLoadingState(false);
+    // Set ready state
     this.updateComponentState('ready');
     
-    console.log(`Sidebar: Initialized with ${this.toggles.length} toggles`);
+    console.log(`Sidebar: Initialized with ${this.toggles?.length || 0} toggles`);
   }
 
   /**
-   * Setup event listeners for toggles
+   * Setup keyboard navigation for accessibility
    */
-  setupEventListeners() {
-    this.toggles.forEach(toggle => {
-      this.addEventListener(toggle, 'click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // ✅ FIXED: Handle async animation properly
-        await this.handleToggleClick(toggle);
-      });
+  setupKeyboardNavigation() {
+    this.addEventListener(this.linkTreeElement, 'keydown', async (e) => {
+      const focusedElement = document.activeElement;
+      
+      if (e.key === 'ArrowRight') {
+        const toggle = focusedElement.querySelector('.expand-toggle');
+        if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
+          e.preventDefault();
+          await this.handleToggleClick(toggle);
+        }
+      } else if (e.key === 'ArrowLeft') {
+        const toggle = focusedElement.querySelector('.expand-toggle');
+        if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
+          e.preventDefault();
+          await this.handleToggleClick(toggle);
+        }
+      }
     });
   }
 
+  // Note: Toggle functionality now handled by ExpandableMixin
+  // Mobile functionality now handled by ResponsiveMixin
+  // Current page detection now handled by CurrentPageDetection utility
+
   /**
-   * Handle toggle button clicks - FIXED for async animation handling
+   * Reset sidebar to clean state before setting current path
    */
-  async handleToggleClick(toggle) {
-    const listItem = toggle.closest('li');
-    const nestedContent = listItem.querySelector('.nested-content');
-    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-    
-    // ✅ FIXED: Await the animation completion for better state management
-    await this.toggleContent(toggle, !isExpanded);
-    
-    this.emit('sidebar:toggled', {
-      toggle,
-      expanded: !isExpanded,
-      listItem
+  resetSidebarState() {
+    // Remove any existing active classes
+    const existingActiveLinks = this.linkTreeElement.querySelectorAll('.sidebar-link--active');
+    existingActiveLinks.forEach(link => {
+      link.classList.remove('sidebar-link--active');
     });
-  }
-
-  /**
-   * Toggle content visibility with animation - FIXED for better performance
-   */
-  async toggleContent(toggle, expand) {
-    const listItem = toggle.closest('li');
-    const nestedContent = listItem.querySelector('.nested-content');
-    const svg = toggle.querySelector('svg');
-
-    if (!nestedContent) return;
-
-    // Update ARIA and visual state immediately for better UX
-    toggle.setAttribute('aria-expanded', expand.toString());
-    if (expand) {
-      svg?.classList.add('rotate-90');
-    } else {
-      svg?.classList.remove('rotate-90');
-    }
-
-    if (expand) {
-      // ✅ FIXED: Use proper animation bridge methods for smoother expansion
-      if (this.isInitialized) {
-        await animationBridge.expand(nestedContent, { timing: 'medium' });
-      } else {
-        // Instant expansion during initialization
-        animationBridge.setCollapseState(nestedContent, 'expanded');
+    
+    // Collapse all sections to start fresh
+    const allToggles = this.linkTreeElement.querySelectorAll('.expand-toggle');
+    allToggles.forEach(toggle => {
+      if (toggle.getAttribute('aria-expanded') === 'true') {
+        // this.toggleContent(toggle, false);
+        this.collapseToggle(toggle);
       }
-    } else {
-      // ✅ FIXED: Use proper animation bridge methods for smoother collapse
-      if (this.isInitialized) {
-        await animationBridge.collapse(nestedContent, { timing: 'medium' });
-      } else {
-        // Instant collapse during initialization
-        animationBridge.setCollapseState(nestedContent, 'collapsed');
-      }
-    }
+    });
+    
+    console.debug('Sidebar: Reset to clean state');
   }
 
   /**
    * Expand the path to current page
    */
   expandCurrentPath() {
-    // Try multiple approaches to find the current link
-    let currentLink = null;
+    console.debug('Sidebar: Expanding path for current page:', this.currentPath);
     
-    // First, try exact match with current path
-    currentLink = this.linkTreeElement.querySelector(`a[href="${this.currentPath}"]`);
+    // 🔧 ENHANCED: Use data-current="true" as primary method
+    // Hugo should be setting this attribute on the current page link
+    let currentLink = this.linkTreeElement.querySelector('a[data-current="true"]');
     
-    // If not found, try with relative path format (for static deployments)
-    if (!currentLink) {
-      const relativePath = `.${this.currentPath}`;
-      currentLink = this.linkTreeElement.querySelector(`a[href="${relativePath}"]`);
-    }
-    
-    // If still not found, try without leading slash
-    if (!currentLink && this.currentPath.startsWith('/')) {
-      const pathWithoutSlash = this.currentPath.substring(1);
-      currentLink = this.linkTreeElement.querySelector(`a[href="${pathWithoutSlash}"]`);
-    }
-    
-    // If still not found, try finding by data-current="true" attribute (fallback)
-    if (!currentLink) {
-      currentLink = this.linkTreeElement.querySelector('a[data-current="true"]');
-    }
-    
-    // If still not found, try matching based on ending paths
-    if (!currentLink) {
-      const allLinks = this.linkTreeElement.querySelectorAll('a[href]');
-      for (const link of allLinks) {
-        const linkPath = link.getAttribute('href');
-        if (this.pathsMatch(this.currentPath, linkPath)) {
-          currentLink = link;
-          break;
+    if (currentLink) {
+      console.debug('Sidebar: Found current link via data-current attribute:', currentLink.href);
+    } else {
+      // Fallback: Try multiple approaches to find the current link
+      console.debug('Sidebar: No data-current link found, trying path matching...');
+      
+      // First, try exact match with current path
+      currentLink = this.linkTreeElement.querySelector(`a[href="${this.currentPath}"]`);
+      
+      // If not found, try with relative path format (for static deployments)
+      if (!currentLink) {
+        const relativePath = `.${this.currentPath}`;
+        currentLink = this.linkTreeElement.querySelector(`a[href="${relativePath}"]`);
+      }
+      
+      // If still not found, try without leading slash
+      if (!currentLink && this.currentPath.startsWith('/')) {
+        const pathWithoutSlash = this.currentPath.substring(1);
+        currentLink = this.linkTreeElement.querySelector(`a[href="${pathWithoutSlash}"]`);
+      }
+      
+      // If still not found, try matching based on ending paths (most permissive)
+      if (!currentLink) {
+        const allLinks = this.linkTreeElement.querySelectorAll('a[href]');
+        for (const link of allLinks) {
+          const linkPath = link.getAttribute('href');
+          if (this.pathsMatch(this.currentPath, linkPath)) {
+            currentLink = link;
+            console.debug('Sidebar: Found current link via path matching:', linkPath);
+            break;
+          }
         }
       }
     }
@@ -188,22 +190,35 @@ export class Sidebar extends Component {
       return;
     }
     
-    console.debug('Sidebar: Found current link:', currentLink.href);
+    console.debug('Sidebar: Found current link:', currentLink.href, currentLink.textContent.trim());
     
-    // Mark current link as active
-    currentLink.classList.add('sidebar-link--active');
+    // 🔧 ENHANCED: Only mark as active if not already marked
+    if (!currentLink.classList.contains('sidebar-link--active')) {
+      currentLink.classList.add('sidebar-link--active');
+    }
     
-    // Expand parent sections
+    // 🔧 ENHANCED: Only expand parent sections that aren't already expanded
     let parent = currentLink.closest('li');
+    let expandedCount = 0;
+    
     while (parent) {
-      const parentToggle = parent.querySelector('.expand-toggle');
-      if (parentToggle) {
-        this.toggleContent(parentToggle, true);
+      const parentToggle = parent.querySelector(':scope > .sidebar-item > .expand-toggle');
+      if (parentToggle && parentToggle.getAttribute('aria-expanded') !== 'true') {
+        const sectionName = parentToggle.getAttribute('aria-label') || parent.querySelector('a')?.textContent?.trim() || 'unknown section';
+        console.debug(`Sidebar: Expanding parent section: ${sectionName}`);
+        // this.toggleContent(parentToggle, true);
+        this.expandToggle(parentToggle);
+        expandedCount++;
+      } else if (parentToggle) {
+        const sectionName = parentToggle.getAttribute('aria-label') || parent.querySelector('a')?.textContent?.trim() || 'unknown section';
+        console.debug(`Sidebar: Parent section already expanded: ${sectionName}`);
       }
       
-      // Move up to parent li
+      // Move up to parent li (skip nested ul)
       parent = parent.parentElement?.closest('li');
     }
+    
+    console.debug(`Sidebar: Expanded ${expandedCount} new parent sections for current page`);
   }
 
   /**
@@ -247,7 +262,8 @@ export class Sidebar extends Component {
     // Use Promise.all for parallel expansion for better performance
     const expandPromises = this.toggles.map(toggle => {
       if (toggle.getAttribute('aria-expanded') === 'false') {
-        return this.toggleContent(toggle, true);
+        // return this.toggleContent(toggle, true);
+        return this.expandToggle(toggle);
       }
       return Promise.resolve();
     });
@@ -263,7 +279,8 @@ export class Sidebar extends Component {
     // Use Promise.all for parallel collapse for better performance
     const collapsePromises = this.toggles.map(toggle => {
       if (toggle.getAttribute('aria-expanded') === 'true') {
-        return this.toggleContent(toggle, false);
+        // return this.toggleContent(toggle, false);
+        return this.collapseToggle(toggle);
       }
       return Promise.resolve();
     });
@@ -317,32 +334,73 @@ export class Sidebar extends Component {
   }
 
   /**
-   * Initialize mobile sidebar state
+   * Initialize mobile sidebar state without interfering with desktop CSS
    */
   initializeMobileState() {
-    // Check if sidebar is currently open based on CSS classes
-    this.isOpen = this.element.classList.contains('translate-x-0') && 
-                  !this.element.classList.contains('-translate-x-full');
+    // 🔧 FIXED: Only detect mobile state, don't assume desktop behavior
+    // Desktop visibility is handled by CSS responsive classes: md:translate-x-0
+    const isMobile = window.innerWidth < 768;
     
-    console.log('Sidebar: Initial mobile state -', this.isOpen ? 'open' : 'closed');
+    if (isMobile) {
+      // On mobile, check if sidebar is currently open
+      this.isOpen = this.element.classList.contains('translate-x-0') && 
+                    !this.element.classList.contains('-translate-x-full');
+    } else {
+      // On desktop, sidebar visibility is handled by CSS, just track mobile overlay state
+      this.isOpen = false; // No mobile overlay should be active on desktop
+    }
+    
+    console.log(`Sidebar: Initial state (${isMobile ? 'mobile' : 'desktop'}) -`, this.isOpen ? 'mobile overlay open' : 'normal');
     console.log('Sidebar: Current classes -', this.element.className);
   }
 
   /**
-   * Ensure proper sidebar state based on screen size
+   * Setup responsive handling without forcing initial state
    */
-  ensureProperState() {
-    // Force proper state based on screen size
-    this.checkAndSetProperState();
-    
+  setupResponsiveHandling() {
     // Listen for window resize to handle responsive behavior
+    // But don't force any initial state - let CSS handle it
     this.addEventListener(window, 'resize', () => {
       // Debounce resize events
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
-        this.checkAndSetProperState();
+        this.handleResponsiveChange();
       }, 150);
     });
+  }
+
+  /**
+   * Handle responsive changes without forcing initial desktop state
+   */
+  handleResponsiveChange() {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // On mobile: ensure any open overlay is closed
+      this.closeOverlayIfOpen();
+      console.log('Sidebar: Responsive change to mobile');
+    } else {
+      // On desktop: just ensure overlays are hidden, but don't touch sidebar visibility
+      this.closeOverlayIfOpen();
+      console.log('Sidebar: Responsive change to desktop');
+    }
+  }
+
+  /**
+   * Close overlay and clean up mobile-specific state without touching sidebar visibility
+   */
+  closeOverlayIfOpen() {
+    // Hide overlay if it exists
+    const overlay = document.getElementById('mobileNavOverlay');
+    if (overlay && !overlay.classList.contains('hidden')) {
+      overlay.classList.add('hidden');
+    }
+    
+    // Reset body overflow
+    document.body.style.overflow = '';
+    
+    // Reset mobile open state
+    this.isOpen = false;
   }
 
   /**
@@ -366,8 +424,19 @@ export class Sidebar extends Component {
    * Ensure sidebar is properly visible on desktop
    */
   ensureDesktopVisible() {
-    // Remove mobile transform classes
-    this.element.classList.remove('-translate-x-full', 'translate-x-0');
+    // 🔧 FIXED: Don't touch the core responsive classes!
+    // The sidebar has: transform -translate-x-full md:translate-x-0
+    // These classes handle responsive behavior automatically via CSS
+    // We should only remove temporary mobile state classes
+    
+    // Remove any temporary mobile state classes (added by open/close methods)
+    // but keep the original responsive classes intact
+    if (this.element.classList.contains('translate-x-0') && 
+        !this.element.classList.contains('md:translate-x-0')) {
+      // Only remove if it's a temporary class, not the responsive one
+      this.element.classList.remove('translate-x-0');
+    }
+    
     // Set open state to false (no mobile overlay needed)
     this.isOpen = false;
     
@@ -468,12 +537,101 @@ export class Sidebar extends Component {
   }
 
   /**
+   * Enhanced health check for sidebar component
+   * Uses modular health checks from mixins
+   */
+  isHealthy() {
+    // Call parent health check first
+    if (!super.isHealthy()) {
+      return false;
+    }
+    
+    // Sidebar-specific health checks
+    if (!this.linkTreeElement || !document.contains(this.linkTreeElement)) {
+      console.debug('Sidebar: LinkTree element missing');
+      return false;
+    }
+    
+    // Use expandable mixin health check
+    if (!this.isExpandableHealthy()) {
+      console.debug('Sidebar: Expandable functionality unhealthy');
+      return false;
+    }
+    
+    // Check current page detection
+    if (this.currentPageDetector && !this.currentPageDetector.getCurrentPageInfo().found) {
+      console.debug('Sidebar: Current page not detected');
+      // This is not necessarily unhealthy, just log it
+    }
+    
+    return true;
+  }
+
+  /**
    * Component cleanup
    */
   onDestroy() {
     console.log('Sidebar: Component destroyed');
   }
+
+  /**
+   * Synchronize the sidebar to the current page
+   * - Collapse all sections
+   * - Expand ancestor sections of the current link
+   * - Ensure current link is highlighted
+   */
+  async syncToCurrentPage() {
+    try {
+      if (!this.linkTreeElement) return false;
+
+      // Update current page detection
+      if (this.currentPageDetector) {
+        this.currentPageDetector.updateCurrentPath();
+      }
+
+      // Find the current link
+      let currentLink = this.linkTreeElement.querySelector('a.sidebar-item__link--active');
+      if (!currentLink) {
+        currentLink = this.linkTreeElement.querySelector('a[data-current="true"]');
+      }
+      if (!currentLink) {
+        return false;
+      }
+
+      // Collapse all first to avoid mixed states
+      if (typeof this.collapseAll === 'function') {
+        await this.collapseAll();
+      }
+
+      // Collect ancestor toggles and expand from root downward
+      const togglesToExpand = [];
+      let parent = currentLink.closest('li');
+      while (parent) {
+        const toggle = parent.querySelector(':scope > .sidebar-item > .expand-toggle');
+        if (toggle) togglesToExpand.push(toggle);
+        parent = parent.parentElement?.closest('li');
+      }
+
+      for (let i = togglesToExpand.length - 1; i >= 0; i--) {
+        const toggle = togglesToExpand[i];
+        if (typeof this.expandToggle === 'function') {
+          await this.expandToggle(toggle);
+        } else if (typeof this.setToggleState === 'function') {
+          await this.setToggleState(toggle, true);
+        }
+      }
+
+      return true;
+    } catch (e) {
+      console.debug('Sidebar: syncToCurrentPage failed', e);
+      return false;
+    }
+  }
 }
+
+// Apply mixins to Sidebar prototype
+Object.assign(Sidebar.prototype, ExpandableMixin);
+Object.assign(Sidebar.prototype, ResponsiveMixin);
 
 // Auto-register component
 ComponentManager.register('navigation-sidebar-left', Sidebar);

@@ -5,6 +5,7 @@
 
 import { announceToScreenReader, motion } from './accessibility.js';
 import { animationBridge } from '../core/AnimationBridge.js';
+import { sanitizeHTML, escapeHTML } from './sanitize.js';
 
 /**
  * @typedef {Object} NotificationOptions
@@ -223,8 +224,8 @@ export class NotificationManager {
     
     // Add action button if specified
     const actionButton = options.action ? `
-      <button class="notification__action" aria-label="${options.action}">
-        ${options.action}
+      <button class="notification__action" aria-label="${escapeHTML(options.action)}">
+        ${escapeHTML(options.action)}
       </button>
     ` : '';
 
@@ -238,16 +239,18 @@ export class NotificationManager {
       </button>
     ` : '';
 
-    notification.innerHTML = `
+    // Build inner content safely
+    const contentHTML = `
       <div class="notification__content">
         <div class="notification__icon">${icon}</div>
-        <div class="notification__message">${message}</div>
+        <div class="notification__message">${escapeHTML(message)}</div>
       </div>
       <div class="notification__actions">
         ${actionButton}
         ${dismissButton}
       </div>
     `;
+    notification.innerHTML = sanitizeHTML(contentHTML);
 
     // Bind event handlers
     this.bindEventHandlers(notification, id, options);
@@ -716,4 +719,15 @@ if (typeof window !== 'undefined' && !window.toast) {
   console.log('NotificationManager: Global toast function registered');
 } else if (typeof window !== 'undefined') {
   console.log('NotificationManager: Global toast already exists, skipping registration');
+}
+
+// Provide MiloUX.showNotification alias for compatibility
+if (typeof window !== 'undefined') {
+  if (!window.MiloUX) {
+    window.MiloUX = {};
+  }
+  if (!window.MiloUX.showNotification) {
+    window.MiloUX.showNotification = (message, type = 'info', duration = null) => 
+      NotificationManager.show(message, type, duration);
+  }
 }

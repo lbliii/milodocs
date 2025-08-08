@@ -4,6 +4,7 @@
  */
 
 import { showLoading, hideLoading } from '../../utils/index.js';
+import { sanitizeHTML, escapeHTML } from '../../utils/sanitize.js';
 
 export class ChatBubbles {
   constructor(chatManager) {
@@ -31,7 +32,8 @@ export class ChatBubbles {
     
     // Format the text properly for AI responses
     const formattedText = this.formatChatText(text, sender);
-    bubble.innerHTML = formattedText;
+    // Sanitize final HTML before insertion
+    bubble.innerHTML = sanitizeHTML(formattedText);
     
     // Add accessibility attributes
     bubble.setAttribute('role', sender === 'bot' ? 'log' : 'status');
@@ -131,16 +133,14 @@ export class ChatBubbles {
       
       return formatted;
     }
-    return this.escapeHtml(text); // User text should be escaped
+    return escapeHTML(text); // User text should be escaped
   }
 
   /**
    * Escape HTML to prevent XSS
    */
   escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return escapeHTML(text);
   }
 
   /**
@@ -206,7 +206,7 @@ export class ChatBubbles {
   createSystemMessage(message, type = 'info') {
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble system chat-bubble--${type}`;
-    bubble.innerHTML = `<em>${this.escapeHtml(message)}</em>`;
+    bubble.innerHTML = `<em>${escapeHTML(message)}</em>`;
     bubble.setAttribute('role', 'status');
     bubble.setAttribute('aria-live', 'polite');
     return bubble;

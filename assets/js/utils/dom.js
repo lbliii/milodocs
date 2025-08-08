@@ -2,6 +2,7 @@
  * DOM utilities - Common DOM operations and helpers
  * Consolidates patterns from main.js, performance-optimizations.js and other files
  */
+import { setSafeHTML } from './sanitize.js';
 
 /**
  * DOM ready utility - single point for DOMContentLoaded handling
@@ -230,7 +231,13 @@ export function createElement(tag, attributes = {}, content = '') {
   
   if (content) {
     if (typeof content === 'string') {
-      element.innerHTML = content;
+      // Use sanitized HTML when string content is provided
+      try {
+        setSafeHTML(element, content);
+      } catch {
+        // Fallback to textContent if sanitizer import fails unexpectedly
+        element.textContent = content;
+      }
     } else if (content instanceof Element) {
       element.appendChild(content);
     } else if (Array.isArray(content)) {

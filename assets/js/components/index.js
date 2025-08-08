@@ -7,11 +7,23 @@ import ComponentManager from '../core/ComponentManager.js';
 import { logger } from '../utils/Logger.js';
 import { requestIdleTime, logFeatureSupport } from '../utils/FeatureDetection.js';
 
+// Re-export mixins for easy component access
+export { ExpandableMixin } from '../mixins/ExpandableMixin.js';
+export { ResponsiveMixin } from '../mixins/ResponsiveMixin.js';
+export { ModalMixin } from '../mixins/ModalMixin.js';
+export { ScrollTrackingMixin } from '../mixins/ScrollTrackingMixin.js';
+export { FormValidationMixin } from '../mixins/FormValidationMixin.js';
+export { MixinManager, MixinApplicators, withMixins } from '../mixins/MixinManager.js';
+
+// Re-export MixinBase utilities for mixin creators
+export { MixinUtilities, MixinPatterns, validateMixinInterface } from '../mixins/MixinBase.js';
+
 const log = logger.component('ComponentLoader');
 
 // Component registration with lazy loading
 export const componentRegistry = {
   // Article components
+  'tab-aggregator': () => import('./article/TabAggregator.js'),
   'article-clipboard': () => import('./article/Clipboard.js'),
   'article-collapse': () => import('./article/Collapse.js'),
   'article-chat': () => import('./chat/index.js'),
@@ -59,35 +71,56 @@ export const componentRegistry = {
   'performance-optimizer': () => import('./features/PerformanceOptimizer.js')
 };
 
+// Register no-op components for purely structural markers used in templates
+import { registerNoop } from './ui/Noop.js';
+registerNoop('navigation-topbar');
+registerNoop('navigation-mobile-overlay');
+registerNoop('navigation-sidebar-right');
+registerNoop('quicklinks-shortcode');
+
 /**
  * Lazy load a component
  */
-export async function loadComponent(name) {
+// Lightweight DOM presence check to avoid importing components not used on the page
+function hasComponentInDOM(name, config = {}) {
+  if (config.element) return true;
+  if (typeof document !== 'undefined') {
+    // Rely solely on data-component markers for discovery
+    if (document.querySelector(`[data-component="${name}"]`)) return true;
+  }
+  return false;
+}
+
+export async function loadComponent(name, config = {}) {
   const loader = componentRegistry[name];
   if (!loader) {
-    log.warn(`Component "${name}" not found in registry`);
+    log.debug(`Component "${name}" not found in registry`);
     return null;
   }
-  
+
+  // Skip importing if the component is not present on this page
+  if (!config.force && !hasComponentInDOM(name, config)) {
+    log.debug(`Skipping component not present on page: ${name}`);
+    return null;
+  }
+
   try {
     log.debug(`Loading component module: ${name}`);
     const module = await loader();
     log.trace(`Component module loaded: ${name}`, module);
-    
 
-    
     // Component should be auto-registered when module loads
-    const instance = await ComponentManager.create(name);
+    const instance = await ComponentManager.create(name, config);
     if (instance) {
       log.trace(`Component instance created and initialized: ${name}`);
       return instance;
     } else {
-      log.error(`Failed to create instance for: ${name}`);
+      // Not an error if the component isn't applicable to this DOM
+      log.debug(`Component not applicable or had no target elements: ${name}`);
       return null;
     }
   } catch (error) {
     log.error(`Failed to load component "${name}":`, error);
-
     return null;
   }
 }
@@ -111,10 +144,11 @@ export async function loadComponents(names) {
 export function registerAllComponents() {
   // Critical components that should be registered immediately
   const critical = [
+    'tab-aggregator',           // Build tabs from simple tab shortcodes
     'toast',                     // Must be first for notifications
     'theme-toggle',              // Must be early for theme application
     'navigation-sidebar-left',   // Essential for navigation
-    'search',                    // Essential search functionality
+    // 'search',                 // Commented: search component not present; re-enable when implemented
     'navigation-mobile-toggle',  // Mobile navigation
     'article-clipboard',         // Code copying
     'article-collapse',          // Content collapsing
@@ -158,7 +192,8 @@ export function registerAllComponents() {
   // Register critical components first
   return Promise.all(critical.map(name => {
     log.debug(`Loading critical component: ${name}`);
-    return loadComponent(name);
+    const options = name === 'tab-aggregator' ? { force: true } : {};
+    return loadComponent(name, options);
   }))
     .then((criticalResults) => {
       const successfulCritical = criticalResults.filter(r => r).length;
