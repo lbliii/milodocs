@@ -8,3 +8,15 @@ txt:
   rel: alternate
   baseName: index
   weight: 0
+
+# Dynamic Web App Manifest
+manifest:
+  mediaType: application/manifest+json
+  isPlainText: true
+  isHTML: false
+  noUgly: true
+  notAlternative: true
+  rel: manifest
+  baseName: manifest
+  suffix: webmanifest
+  weight: 0
