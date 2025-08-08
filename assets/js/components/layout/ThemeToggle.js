@@ -46,8 +46,6 @@ export class ThemeToggle extends Component {
     this.setupEventListeners();
     this.updateUI();
     this.updateIconSources();
-    
-    console.log('ThemeToggle: Initialized successfully');
   }
 
   /**
@@ -78,8 +76,7 @@ export class ThemeToggle extends Component {
       }
     });
 
-    // Example: Multiple events can be added easily
-    // this.addMultipleEventListeners(this.elements.toggle, ['focus', 'blur'], this.handleFocusChange);
+    
   }
 
   /**
@@ -171,7 +168,6 @@ export class ThemeToggle extends Component {
         detail: { isDarkMode } 
       }));
       
-      console.log(`🎨 Theme switched to: ${isDarkMode ? 'dark' : 'light'} (optimized)`);
     });
   }
 
@@ -295,7 +291,7 @@ export class ThemeToggle extends Component {
    * Component cleanup
    */
   onDestroy() {
-    console.log('ThemeToggle: Component destroyed');
+    // no-op
   }
 }
 

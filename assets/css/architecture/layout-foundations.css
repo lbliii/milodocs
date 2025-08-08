@@ -98,6 +98,7 @@
   --z-sticky-header: var(--z-high);
   --z-sidebar: var(--z-medium);
   --z-loading-overlay: var(--z-modal);
+  --z-toast: var(--z-overlay);
 
   /* ✨ MAX WIDTH SCALE */
   --max-width-xs: 20rem;     /* 320px */

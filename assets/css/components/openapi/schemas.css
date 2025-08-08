@@ -523,13 +523,22 @@
   text-transform: lowercase;
 }
 
-.type-badge--string { background: rgba(34, 197, 94, 0.1); color: #059669; }
+/* Old hex-based type colors commented out in favor of tokens per themes/milodocs/init */
+/* .type-badge--string { background: rgba(34, 197, 94, 0.1); color: #059669; }
 .type-badge--number,
 .type-badge--integer { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
 .type-badge--boolean { background: rgba(168, 85, 247, 0.1); color: #7c3aed; }
 .type-badge--array { background: rgba(245, 158, 11, 0.1); color: #d97706; }
 .type-badge--object { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
-.type-badge--null { background: rgba(107, 114, 128, 0.1); color: #4b5563; }
+.type-badge--null { background: rgba(107, 114, 128, 0.1); color: #4b5563; } */
+
+.type-badge--string { background: var(--type-string-bg); color: var(--type-string-text); }
+.type-badge--number { background: var(--type-number-bg); color: var(--type-number-text); }
+.type-badge--integer { background: var(--type-integer-bg); color: var(--type-integer-text); }
+.type-badge--boolean { background: var(--type-boolean-bg); color: var(--type-boolean-text); }
+.type-badge--array { background: var(--type-array-bg); color: var(--type-array-text); }
+.type-badge--object { background: var(--type-object-bg); color: var(--type-object-text); }
+.type-badge--null { background: var(--type-null-bg); color: var(--type-null-text); }
 
 .type-format {
   font-size: 0.75rem;

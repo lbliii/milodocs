@@ -30,41 +30,30 @@
 }
 
 /* GET - Green */
-.http-method-badge--get {
-  background: #10b981;
-  color: white;
-}
+/* Old hex-based method colors commented out in favor of tokens per themes/milodocs/init */
+/* .http-method-badge--get { background: #10b981; color: white; } */
+.http-method-badge--get { background: var(--http-get-bg); color: var(--http-get-text); }
 
 /* POST - Blue */
-.http-method-badge--post {
-  background: #3b82f6;
-  color: white;
-}
+/* .http-method-badge--post { background: #3b82f6; color: white; } */
+.http-method-badge--post { background: var(--http-post-bg); color: var(--http-post-text); }
 
 /* PUT - Orange */
-.http-method-badge--put {
-  background: #f59e0b;
-  color: white;
-}
+/* .http-method-badge--put { background: #f59e0b; color: white; } */
+.http-method-badge--put { background: var(--http-put-bg); color: var(--http-put-text); }
 
 /* PATCH - Purple */
-.http-method-badge--patch {
-  background: #8b5cf6;
-  color: white;
-}
+/* .http-method-badge--patch { background: #8b5cf6; color: white; } */
+.http-method-badge--patch { background: var(--http-patch-bg); color: var(--http-patch-text); }
 
 /* DELETE - Red */
-.http-method-badge--delete {
-  background: #ef4444;
-  color: white;
-}
+/* .http-method-badge--delete { background: #ef4444; color: white; } */
+.http-method-badge--delete { background: var(--http-delete-bg); color: var(--http-delete-text); }
 
 /* HEAD, OPTIONS - Gray */
+/* .http-method-badge--head, .http-method-badge--options { background: #6b7280; color: white; } */
 .http-method-badge--head,
-.http-method-badge--options {
-  background: #6b7280;
-  color: white;
-}
+.http-method-badge--options { background: var(--http-head-bg); color: var(--http-head-text); }
 
 /* ==========================================================================
    API Endpoint Path and Summary
@@ -108,30 +97,19 @@
    Hover and Active States
    ========================================================================== */
 
-.sidebar-item__link:hover .http-method-badge--get {
-  background: #059669;
-}
+/* Hover states are implicitly handled by dark-mode tokens; leaving hover overrides minimal */
+.sidebar-item__link:hover .http-method-badge--get { background: var(--http-get-bg); }
 
-.sidebar-item__link:hover .http-method-badge--post {
-  background: #2563eb;
-}
+.sidebar-item__link:hover .http-method-badge--post { background: var(--http-post-bg); }
 
-.sidebar-item__link:hover .http-method-badge--put {
-  background: #d97706;
-}
+.sidebar-item__link:hover .http-method-badge--put { background: var(--http-put-bg); }
 
-.sidebar-item__link:hover .http-method-badge--patch {
-  background: #7c3aed;
-}
+.sidebar-item__link:hover .http-method-badge--patch { background: var(--http-patch-bg); }
 
-.sidebar-item__link:hover .http-method-badge--delete {
-  background: #dc2626;
-}
+.sidebar-item__link:hover .http-method-badge--delete { background: var(--http-delete-bg); }
 
 .sidebar-item__link:hover .http-method-badge--head,
-.sidebar-item__link:hover .http-method-badge--options {
-  background: #4b5563;
-}
+.sidebar-item__link:hover .http-method-badge--options { background: var(--http-head-bg); }
 
 /* Active state enhancements */
 .sidebar-item__link--active .api-endpoint-path {
@@ -171,27 +149,7 @@
    Dark Mode Support
    ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
-  .http-method-badge--get {
-    background: #059669;
-  }
-  
-  .http-method-badge--post {
-    background: #2563eb;
-  }
-  
-  .http-method-badge--put {
-    background: #d97706;
-  }
-  
-  .http-method-badge--patch {
-    background: #7c3aed;
-  }
-  
-  .http-method-badge--delete {
-    background: #dc2626;
-  }
-}
+/* Dark mode handled via CSS variables in :root/.dark */
 
 /* ==========================================================================
    Focus States for Accessibility

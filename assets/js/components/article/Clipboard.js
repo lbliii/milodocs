@@ -34,13 +34,7 @@ export class ArticleClipboard extends Component {
     
     // Find all copy buttons on the page
     this.copyButtons = [...$$('.copy-btn'), ...$$('.copy-code')];
-    
-    if (this.copyButtons.length === 0) {
-      console.log('No copy buttons found on page');
-      return;
-    }
-    
-    console.log(`Found ${this.copyButtons.length} copy buttons`);
+    if (this.copyButtons.length === 0) return;
     
     // Setup each button
     this.copyButtons.forEach(button => this.setupButton(button));
@@ -115,9 +109,7 @@ export class ArticleClipboard extends Component {
    */
   addButton(button) {
     if (this.buttons.has(button)) return;
-    
     this.setupButton(button);
-    console.log('Added new copy button');
   }
 
   /**
@@ -125,10 +117,8 @@ export class ArticleClipboard extends Component {
    */
   removeButton(button) {
     if (!this.buttons.has(button)) return;
-    
     button.removeAttribute('data-clipboard-component');
     this.buttons.delete(button);
-    console.log('Removed copy button');
   }
 
   /**

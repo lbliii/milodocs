@@ -29,8 +29,6 @@ export class Glossary extends Component {
 
     this.setupEventListeners();
     this.startAnimation();
-    
-    console.log(`Glossary: Initialized with ${this.cards.length} entries`);
   }
 
   /**
@@ -162,7 +160,7 @@ export class Glossary extends Component {
   onDestroy() {
     this.stopAnimation();
     this.resetCards();
-    console.log('Glossary: Component destroyed');
+    // no-op
   }
 }
 

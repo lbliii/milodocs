@@ -45,8 +45,6 @@ export class NotebookProgressiveReveal extends Component {
     // 🚀 NEW: Enhanced initialization with loading states
     this.setLoadingState(true);
     this.updateComponentState('initializing');
-
-    console.log('📓 NotebookProgressiveReveal: Starting initialization...');
     
     this.loadMetadata();
     this.collectCells();
@@ -59,8 +57,6 @@ export class NotebookProgressiveReveal extends Component {
     // 🚀 NEW: Initialization complete
     this.setLoadingState(false);
     this.updateComponentState('ready');
-    
-    console.log(`📓 Progressive reveal initialized: ${this.visibleCount}/${this.allCells.length} cells visible`);
     
     this.emit('notebook:initialized', { 
       visibleCells: this.visibleCount,
@@ -81,7 +77,6 @@ export class NotebookProgressiveReveal extends Component {
 
     try {
       this.metadata = JSON.parse(metadataScript.textContent);
-      console.log('📊 Metadata loaded:', this.metadata);
     } catch (error) {
       console.error('NotebookProgressiveReveal: Failed to parse metadata', error);
       this.metadata = { totalCells: 0, initiallyVisible: 5, batchSize: 10 };
@@ -93,11 +88,6 @@ export class NotebookProgressiveReveal extends Component {
    */
   collectCells() {
     this.allCells = Array.from(this.element.querySelectorAll('.notebook-cell-wrapper'));
-    console.log(`📊 Collected ${this.allCells.length} cell wrappers`);
-    
-    // Debug: Show how many are initially hidden
-    const hiddenCount = this.allCells.filter(cell => cell.classList.contains('notebook-cell--hidden')).length;
-    console.log(`📊 ${hiddenCount} cells are initially hidden`);
   }
 
   /**
@@ -191,7 +181,7 @@ export class NotebookProgressiveReveal extends Component {
     const batchSize = Math.min(this.options.batchSize, hiddenCells.length);
     const cellsToReveal = hiddenCells.slice(0, batchSize);
     
-    console.log(`🔄 Revealing next batch: ${batchSize} cells`);
+    
     
     // Reveal cells with fast staggered animation
     cellsToReveal.forEach((cell, index) => {
@@ -215,8 +205,6 @@ export class NotebookProgressiveReveal extends Component {
     setTimeout(() => {
       this.setupLoadTrigger();
       this.isRevealing = false;
-      
-      console.log(`✅ Revealed batch: ${cellsToReveal.length} cells (${this.visibleCount}/${this.allCells.length} total)`);
       
       this.emit('notebook:batch-revealed', { 
         batchSize: cellsToReveal.length,
@@ -284,7 +272,7 @@ export class NotebookProgressiveReveal extends Component {
       return;
     }
     
-    console.log(`🚀 Revealing all ${hiddenCells.length} remaining cells...`);
+    
     
     // Reveal all cells with very fast staggered animation
     hiddenCells.forEach((cell, index) => {

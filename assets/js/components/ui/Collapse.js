@@ -41,8 +41,6 @@ class Collapse extends Component {
    */
   setupCollapseElements() {
     const headers = this.findElements();
-    
-    console.log(`[${this.name}] Found ${headers.length} collapse headers`);
 
     headers.forEach(header => {
       this.initializeCollapseHeader(header);
@@ -92,7 +90,7 @@ class Collapse extends Component {
       this.restoreState(collapseData);
     }
 
-    console.log(`[${this.name}] Initialized: ${target}`);
+    
   }
 
   /**
@@ -119,8 +117,6 @@ class Collapse extends Component {
    */
   toggle(collapseData) {
     const newState = !collapseData.isExpanded;
-    
-    console.log(`[${this.name}] Toggle: ${collapseData.targetId} -> ${newState ? 'expanded' : 'collapsed'}`);
 
     if (newState) {
       this.expand(collapseData);

@@ -133,8 +133,7 @@ class OpenAPICollapse extends Collapse {
       this.sectionGroups.get(section).push(targetId);
     });
 
-    console.log(`[${this.name}] Organized into sections:`, 
-      Object.fromEntries(this.sectionGroups.entries()));
+    
   }
 
   /**

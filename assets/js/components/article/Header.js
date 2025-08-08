@@ -39,8 +39,6 @@ export class ArticleHeader extends Component {
 
     this.setupEventListeners();
     this.initializeState();
-    
-    console.log('ArticleHeader: Initialized successfully');
   }
 
   /**
@@ -294,7 +292,7 @@ export class ArticleHeader extends Component {
     // Reset state
     this.isExpanded = false;
     
-    console.log('ArticleHeader: Component destroyed');
+    // no-op
   }
 }
 

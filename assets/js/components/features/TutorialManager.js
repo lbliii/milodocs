@@ -42,8 +42,6 @@ export class TutorialManager extends Component {
 
     // Initialize all tutorial features
     await this.initializeTutorial();
-    
-    console.log(`TutorialManager: Initialized for tutorial "${this.tutorialId}" (Step ${this.currentStep}/${this.totalSteps})`);
   }
 
   /**
@@ -161,7 +159,6 @@ export class TutorialManager extends Component {
         this.progressData = saved; // SafeStorage already handles JSON parsing
         this.updateUIFromProgress(this.progressData);
         this.emit('tutorial:progressLoaded', { tutorialId: this.tutorialId, progress: this.progressData });
-        console.log('TutorialManager: Loaded progress', this.progressData);
       } catch (error) {
         console.error('TutorialManager: Error loading progress:', error);
       }
@@ -528,7 +525,8 @@ export class TutorialManager extends Component {
     if (window.MiloUX && window.MiloUX.showNotification) {
       window.MiloUX.showNotification(message, type, duration);
     } else {
-      console.log(`Notification (${type}): ${message}`);
+      // Fallback to console when NotificationManager is unavailable
+      // (reduced verbosity)
     }
   }
 

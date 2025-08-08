@@ -224,35 +224,27 @@
   text-align: center;
 }
 
-.method-badge--get {
-  background: #10b981;
-  color: white;
-}
+/* Old hex-based method colors commented out in favor of tokens per themes/milodocs/init */
+/* .method-badge--get { background: #10b981; color: white; } */
+.method-badge--get { background: var(--http-get-bg); color: var(--http-get-text); }
 
-.method-badge--post {
-  background: #3b82f6;
-  color: white;
-}
+/* .method-badge--post { background: #3b82f6; color: white; } */
+.method-badge--post { background: var(--http-post-bg); color: var(--http-post-text); }
 
-.method-badge--put {
-  background: #f59e0b;
-  color: white;
-}
+/* .method-badge--put { background: #f59e0b; color: white; } */
+.method-badge--put { background: var(--http-put-bg); color: var(--http-put-text); }
 
-.method-badge--patch {
-  background: #8b5cf6;
-  color: white;
-}
+/* .method-badge--patch { background: #8b5cf6; color: white; } */
+.method-badge--patch { background: var(--http-patch-bg); color: var(--http-patch-text); }
 
-.method-badge--delete {
-  background: #ef4444;
-  color: white;
-}
+/* .method-badge--delete { background: #ef4444; color: white; } */
+.method-badge--delete { background: var(--http-delete-bg); color: var(--http-delete-text); }
 
+/* .method-badge--head, .method-badge--options { background: #6b7280; color: white; } */
 .method-badge--head,
 .method-badge--options {
-  background: #6b7280;
-  color: white;
+  background: var(--http-head-bg);
+  color: var(--http-head-text);
 }
 
 /* ==========================================================================
@@ -308,24 +300,4 @@
    Dark Mode Adjustments
    ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
-  .method-badge--get {
-    background: #059669;
-  }
-  
-  .method-badge--post {
-    background: #2563eb;
-  }
-  
-  .method-badge--put {
-    background: #d97706;
-  }
-  
-  .method-badge--patch {
-    background: #7c3aed;
-  }
-  
-  .method-badge--delete {
-    background: #dc2626;
-  }
-}
+/* Dark mode handled via CSS variables in :root/.dark */

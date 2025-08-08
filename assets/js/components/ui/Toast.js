@@ -21,22 +21,9 @@ export class Toast extends Component {
   }
 
   async onInit() {
-    // Prefer centralized NotificationManager toast; keep this as a delegating fallback
-    // if (!window.toast) {
-    //   window.toast = (message, type = 'info', duration = this.defaultDuration) => {
-    //     return this.show(message, type, duration);
-    //   };
-    // }
-    
-  
     if (!window.MiloUX) {
       window.MiloUX = {};
     }
-    // window.MiloUX.showNotification = (message, type = 'info', duration = this.defaultDuration) => {
-    //   return this.show(message, type, duration);
-    // };
-    
-    // console.log('Toast: Notification system ready');
   }
 
   /**

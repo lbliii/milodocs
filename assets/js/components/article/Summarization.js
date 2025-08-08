@@ -33,7 +33,6 @@ export class ArticleSummarization extends Component {
     }
 
     this.setupKeyboardShortcuts();
-    console.log('ArticleSummarization: Initialized with keyboard shortcut Ctrl/Cmd + /');
   }
 
   /**
@@ -209,7 +208,7 @@ export class ArticleSummarization extends Component {
    */
   onDestroy() {
     this.isLoading = false;
-    console.log('ArticleSummarization: Component destroyed');
+    // no-op
   }
 }
 

@@ -193,7 +193,7 @@ async function handlePageInitialization() {
   await initializeMiloDocs();
   
   // System ready
-  console.log('🚀 MiloDocs enhanced system ready!');
+  // (info already logged via logger in initializeMiloDocs)
 }
 
 /**
@@ -468,21 +468,7 @@ if (typeof window !== 'undefined') {
     handleStaticNavigation({ type: 'manual_test' });
   };
   
-  // Local helper that dispatches to the Sidebar component API
-  function syncSidebarComponent() {
-    try {
-      const instance = Array.from(ComponentManager.instances.values())
-        .find(inst => inst.name === 'navigation-sidebar-left');
-      if (instance && typeof instance.syncToCurrentPage === 'function') {
-        instance.syncToCurrentPage();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      log.debug('syncSidebarComponent failed:', e);
-      return false;
-    }
-  }
+  // Use module-scope syncSidebarComponent
   
   // Debug function to check component health
   window.checkComponentHealth = async () => {

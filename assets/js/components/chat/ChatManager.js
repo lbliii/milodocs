@@ -66,8 +66,6 @@ export class ChatManager extends Component {
     
     // Load chat history
     await this.history.loadChatHistory();
-    
-    console.log('ChatManager: Initialized successfully');
   }
 
   /**
@@ -237,7 +235,7 @@ export class ChatManager extends Component {
     this.history.saveChatHistory();
     
     // Clean up any ongoing animations or timers
-    console.log('ChatManager: Component destroyed');
+    // no-op
   }
 }
 

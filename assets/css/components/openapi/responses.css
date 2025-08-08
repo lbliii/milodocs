@@ -100,11 +100,18 @@
   min-width: 3rem;
 }
 
-.status-code--2xx { background: #22c55e; color: white; }
+/* Old hex-based status colors commented out in favor of tokens per themes/milodocs/init */
+/* .status-code--2xx { background: #22c55e; color: white; }
 .status-code--3xx { background: #3b82f6; color: white; }
 .status-code--4xx { background: #f59e0b; color: white; }
 .status-code--5xx { background: #ef4444; color: white; }
-.status-code--dxx { background: #6b7280; color: white; }
+.status-code--dxx { background: #6b7280; color: white; } */
+
+.status-code--2xx { background: var(--status-2xx-bg); color: var(--status-2xx-text); }
+.status-code--3xx { background: var(--status-3xx-bg); color: var(--status-3xx-text); }
+.status-code--4xx { background: var(--status-4xx-bg); color: var(--status-4xx-text); }
+.status-code--5xx { background: var(--status-5xx-bg); color: var(--status-5xx-text); }
+.status-code--dxx { background: var(--status-dxx-bg); color: var(--status-dxx-text); }
 
 /* Response Content */
 .response-content {

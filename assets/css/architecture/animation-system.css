@@ -153,55 +153,8 @@
   opacity: var(--collapse-opacity-expanded);
 }
 
-/* ✅ UNIVERSAL COMPONENT STATES
- * ==============================
- * Use data attributes for consistent state management
- */
-
-/* Component initialization states */
-[data-component-state="loading"] {
-  opacity: var(--opacity-faded);
-  pointer-events: none;
-  transition: opacity var(--timing-fast) var(--easing-standard);
-}
-
-[data-component-state="ready"] {
-  opacity: var(--opacity-visible);
-  pointer-events: auto;
-  transition: opacity var(--timing-fast) var(--easing-standard);
-}
-
-[data-component-state="disabled"] {
-  opacity: var(--opacity-faded);
-  pointer-events: none;
-  filter: grayscale(50%);
-  transition: 
-    opacity var(--timing-fast) var(--easing-standard),
-    filter var(--timing-fast) var(--easing-standard);
-}
-
-/* Collapse states with data attributes */
-[data-collapse-state="collapsed"] {
-  max-height: var(--collapse-height-collapsed);
-  opacity: var(--collapse-opacity-collapsed);
-  overflow: hidden;
-  transition: 
-    max-height var(--collapse-timing) var(--collapse-easing),
-    opacity var(--collapse-timing) var(--collapse-easing);
-}
-
-[data-collapse-state="transitioning"] {
-  overflow: hidden; /* Ensure no content spillage during animation */
-}
-
-[data-collapse-state="expanded"] {
-  max-height: var(--collapse-height-expanded);
-  opacity: var(--collapse-opacity-expanded);
-  overflow: visible; /* Allow content to be fully visible when expanded */
-  transition: 
-    max-height var(--collapse-timing) var(--collapse-easing),
-    opacity var(--collapse-timing) var(--collapse-easing);
-}
+/* Duplicated component/data state rules moved to architecture/component-states.css */
+/* Keeping this section intentionally empty to avoid divergence. */
 
 /* ✅ PERFORMANCE-OPTIMIZED HOVER STATES
  * ======================================

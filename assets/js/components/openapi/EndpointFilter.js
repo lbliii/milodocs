@@ -46,11 +46,7 @@ export class EndpointFilter extends Component {
     
     // Find all filterable endpoints
     this.endpoints = $$('.endpoint-item');
-    
-    if (this.endpoints.length === 0) {
-      console.log('No filterable endpoints found');
-      return;
-    }
+    if (this.endpoints.length === 0) return;
     
     // Setup filter buttons
     this.tagFilters = $$('.tag-filter');
@@ -76,7 +72,7 @@ export class EndpointFilter extends Component {
       this.loadSavedFilters();
     }
     
-    console.log(`Initialized endpoint filter with ${this.endpoints.length} endpoints`);
+    
   }
 
   /**

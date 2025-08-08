@@ -44,7 +44,7 @@ export class ArticleTabs extends Component {
     this.setLoadingState(false);
     this.updateComponentState('ready');
     
-    console.log(`ArticleTabs: Initialized ${this.tabContainers.length} tab containers`);
+    
   }
 
   /**
@@ -352,7 +352,7 @@ export class ArticleTabs extends Component {
    * Component cleanup
    */
   onDestroy() {
-    console.log('ArticleTabs: Component destroyed');
+    // no-op
   }
 }
 

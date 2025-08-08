@@ -34,13 +34,7 @@ export class OpenAPIViewer extends Component {
     
     // Find all endpoints
     this.endpointElements = $$('.endpoint-item');
-    
-    if (this.endpointElements.length === 0) {
-      console.log('No OpenAPI endpoints found');
-      return;
-    }
-    
-    console.log(`Found ${this.endpointElements.length} OpenAPI endpoints`);
+    if (this.endpointElements.length === 0) return;
     
     // Setup endpoints
     this.endpointElements.forEach(endpoint => this.setupEndpoint(endpoint));
@@ -111,7 +105,6 @@ export class OpenAPIViewer extends Component {
     if (metadataScript) {
       try {
         this.metadata = JSON.parse(metadataScript.textContent);
-        console.log('Loaded OpenAPI metadata:', this.metadata);
       } catch (error) {
         console.warn('Failed to parse OpenAPI metadata:', error);
       }

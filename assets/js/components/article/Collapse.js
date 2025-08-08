@@ -35,13 +35,7 @@ export class ArticleCollapse extends Component {
     
     // Find all collapse toggles
     this.collapseToggles = $$('.toggle-collapse');
-    
-    if (this.collapseToggles.length === 0) {
-      console.log('No collapse toggles found on page');
-      return;
-    }
-    
-    console.log(`Found ${this.collapseToggles.length} collapse toggles`);
+    if (this.collapseToggles.length === 0) return;
     
     // Setup each toggle
     this.collapseToggles.forEach(toggle => this.setupToggle(toggle));

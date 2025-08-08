@@ -49,8 +49,6 @@ export class ArticleTOC extends Component {
     
     // Initial highlight
     this.highlightInView();
-    
-    console.log(`ArticleTOC: Initialized with ${this.tocLinks.length} links and ${this.sections.length} sections`);
   }
 
   /**
@@ -101,7 +99,7 @@ export class ArticleTOC extends Component {
     this.progressText = document.getElementById('progress-text');
     
     if (this.progressBar && this.progressText) {
-      // 🚀 NEW: Professional initialization sequence
+      // Initialize sequence
       this.updateComponentState('initializing-progress');
       
       // Start hidden for smooth reveal
@@ -124,7 +122,7 @@ export class ArticleTOC extends Component {
         }, 150);
       });
       
-      console.log('ArticleTOC: Reading progress initialized');
+      
     }
   }
 

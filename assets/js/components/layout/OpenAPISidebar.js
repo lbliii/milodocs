@@ -1,7 +1,4 @@
-/**
- * OpenAPI Sidebar Component - Refactored with modular architecture
- * Uses ExpandableMixin for tag toggles and ScrollTrackingMixin for active state tracking
- */
+/** OpenAPI Sidebar Component */
 
 import { Component } from '../../core/Component.js';
 import ComponentManager from '../../core/ComponentManager.js';
@@ -27,7 +24,6 @@ export class OpenAPISidebar extends Component {
       return;
     }
 
-    // 🚀 REFACTORED: Initialize mixins for modular functionality
     this.initExpandable({
       toggleSelector: '.openapi-sidebar-tag-toggle',
       contentSelector: '.openapi-sidebar-endpoints-list',
@@ -45,7 +41,7 @@ export class OpenAPISidebar extends Component {
     this.setupOpenAPISpecificBehavior();
     this.isInitialized = true;
     
-    log.info('OpenAPI Sidebar initialized with mixins');
+    log.info('OpenAPI Sidebar initialized');
   }
 
   /**
@@ -69,7 +65,7 @@ export class OpenAPISidebar extends Component {
       this.handleOpenAPIToggle(data.toggle, data.expanded);
     });
     
-    log.debug(`OpenAPI-specific behavior setup complete`);
+    
   }
 
   /**
@@ -99,7 +95,7 @@ export class OpenAPISidebar extends Component {
       this.expandParentTagGroup(link);
     }
     
-    log.debug(`OpenAPI active link updated: ${targetId} (${isEndpointLink ? 'endpoint' : 'section'})`);
+    
   }
 
   /**
@@ -110,7 +106,7 @@ export class OpenAPISidebar extends Component {
     // Apply OpenAPI-specific styling
     toggle.classList.toggle('openapi-sidebar-tag-toggle--expanded', expanded);
     
-    log.debug(`OpenAPI tag toggle: ${expanded ? 'expanded' : 'collapsed'}`);
+    
   }
 
   /**

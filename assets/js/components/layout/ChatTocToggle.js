@@ -50,7 +50,6 @@ export class ChatTocToggle extends Component {
     } else {
       // Inline script already set button state, ensure containers match
       const currentMode = this.getCurrentMode();
-      console.log(`ChatTocToggle: Already initialized by inline script with mode: ${currentMode}`);
       
       // Apply container state if containers exist and aren't already set correctly
       if (this.elements.chatContainer && this.elements.tocContainer) {
@@ -63,7 +62,6 @@ export class ChatTocToggle extends Component {
           (currentMode === 'toc' && tocHidden);
           
         if (needsUpdate) {
-          console.log('ChatTocToggle: Syncing container state with button state');
           this.setActiveMode(currentMode, false);
         }
       }
@@ -75,8 +73,6 @@ export class ChatTocToggle extends Component {
     }
 
     this.setupEventListeners();
-    
-    console.log('ChatTocToggle: Initialized successfully');
   }
 
   /**
@@ -89,19 +85,12 @@ export class ChatTocToggle extends Component {
     this.elements.chatContainer = document.getElementById('chatContainer');
     this.elements.tocContainer = document.getElementById('tocContainer');
     
-    console.log('ChatTocToggle: Cached elements:', {
-      container: !!this.elements.container,
-      chatButton: !!this.elements.chatButton,
-      tocButton: !!this.elements.tocButton,
-      chatContainer: !!this.elements.chatContainer, 
-      tocContainer: !!this.elements.tocContainer
-    });
+    
     
     // Verify we have both buttons
     if (!this.elements.chatButton || !this.elements.tocButton) {
       console.error('ChatTocToggle: Required toggle buttons not found!');
-      console.log('Expected elements: [data-mode="chat"] and [data-mode="toc"]');
-      console.log('Toggle container contents:', this.elements.container?.innerHTML);
+      
       return false;
     }
     
@@ -114,13 +103,11 @@ export class ChatTocToggle extends Component {
   setupEventListeners() {
     // Chat button click
     this.elements.chatButton.addEventListener('click', (e) => {
-      console.log('ChatTocToggle: Chat button clicked');
       this.setActiveMode('chat');
     });
 
     // TOC button click
     this.elements.tocButton.addEventListener('click', (e) => {
-      console.log('ChatTocToggle: TOC button clicked');
       this.setActiveMode('toc');
     });
 
@@ -128,7 +115,6 @@ export class ChatTocToggle extends Component {
     this.elements.chatButton.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        console.log('ChatTocToggle: Chat button keyboard activated');
         this.setActiveMode('chat');
       }
     });
@@ -136,12 +122,10 @@ export class ChatTocToggle extends Component {
     this.elements.tocButton.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        console.log('ChatTocToggle: TOC button keyboard activated');
         this.setActiveMode('toc');
       }
     });
     
-    console.log('ChatTocToggle: Event listeners setup complete');
   }
 
 
@@ -203,7 +187,7 @@ export class ChatTocToggle extends Component {
    * Component cleanup
    */
   onDestroy() {
-    console.log('ChatTocToggle: Component destroyed');
+    // no-op
   }
 }
 

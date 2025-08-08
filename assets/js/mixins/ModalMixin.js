@@ -266,30 +266,7 @@ export const ModalMixin = {
     }
   },
 
-  // /**
-  //  * Check if modal functionality is healthy
-  //  * @returns {boolean} Whether modal functionality is working
-  //  */
-  // isModalHealthy() {
-  //   if (!this.element) return false;
-  //   
-  //   // Check if modal has proper ARIA attributes
-  //   if (!this.element.hasAttribute('role') || !this.element.hasAttribute('aria-modal')) {
-  //     return false;
-  //   }
-  //   
-  //   // Check if close buttons have event listeners (if any exist)
-  //   if (this.closeButtons && this.closeButtons.length > 0) {
-  //     for (const button of this.closeButtons) {
-  //       if (button.dataset && button.dataset.componentListeners && 
-  //           !button.dataset.componentListeners.includes(this.id)) {
-  //         return false;
-  //       }
-  //     }
-  //   }
-  //   
-  //   return true;
-  // },
+  
 
   /**
    * Check if modal functionality is healthy using standardized checks

@@ -427,7 +427,6 @@ class ComponentManager {
    * Discover and load components from DOM with enhanced cleanup
    */
   static discoverAndLoadComponents() {
-    // 🔧 ENHANCED: Clean up orphaned listeners before loading new components
     this.cleanupOrphanedListeners();
     
     const elementsWithComponents = document.querySelectorAll('[data-component]');
@@ -436,10 +435,6 @@ class ComponentManager {
     elementsWithComponents.forEach(element => {
       const componentName = element.getAttribute('data-component');
       if (!componentName) return;
-      // Previously required pre-registration; relax to allow lazy import on demand
-      // if (componentName && this.components.has(componentName)) {
-      //   discoveredComponents.add(componentName);
-      // }
       discoveredComponents.add(componentName);
     });
 
@@ -653,10 +648,6 @@ class ComponentManager {
    * Get component instances by name
    */
   static getInstances(componentName) {
-    // if (!this.instances.has(componentName)) {
-    //   return [];
-    // }
-    // return this.instances.get(componentName);
     // Use a filtered list from the instances map values
     return Array.from(this.instances.values()).filter(instance => instance.name === componentName);
   }

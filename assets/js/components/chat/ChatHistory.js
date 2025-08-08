@@ -59,7 +59,6 @@ export class ChatHistory {
       }).filter(Boolean); // Remove null entries
       
       localStorage.set(this.storageKey, chatHistory);
-      console.log(`Chat history saved: ${chatHistory.length} conversations`);
     } catch (error) {
       console.error('Failed to save chat history:', error);
     }
@@ -121,7 +120,6 @@ export class ChatHistory {
     if (chatHistory.length > maxEntries) {
       const prunedHistory = chatHistory.slice(-maxEntries);
       localStorage.set(this.storageKey, prunedHistory);
-      console.log(`Chat history pruned to ${maxEntries} entries`);
     }
   }
 

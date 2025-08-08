@@ -207,13 +207,22 @@
   min-width: 4rem;
 }
 
-.http-method--get { background: #22c55e; color: white; }
+/* Old hex-based method colors commented out in favor of tokens per themes/milodocs/init */
+/* .http-method--get { background: #22c55e; color: white; }
 .http-method--post { background: #3b82f6; color: white; }
 .http-method--put { background: #f59e0b; color: white; }
 .http-method--patch { background: #8b5cf6; color: white; }
 .http-method--delete { background: #ef4444; color: white; }
 .http-method--head { background: #6b7280; color: white; }
-.http-method--options { background: #9333ea; color: white; }
+.http-method--options { background: #9333ea; color: white; } */
+
+.http-method--get { background: var(--http-get-bg); color: var(--http-get-text); }
+.http-method--post { background: var(--http-post-bg); color: var(--http-post-text); }
+.http-method--put { background: var(--http-put-bg); color: var(--http-put-text); }
+.http-method--patch { background: var(--http-patch-bg); color: var(--http-patch-text); }
+.http-method--delete { background: var(--http-delete-bg); color: var(--http-delete-text); }
+.http-method--head { background: var(--http-head-bg); color: var(--http-head-text); }
+.http-method--options { background: var(--http-options-bg); color: var(--http-options-text); }
 
 /* Endpoint Details */
 .endpoint-details {

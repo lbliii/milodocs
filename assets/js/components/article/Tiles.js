@@ -31,8 +31,6 @@ export class ArticleTiles extends Component {
     this.setupEventListeners();
     this.setupStaggeredEntryAnimations();
     this.startGradientAnimation();
-    
-    console.log(`ArticleTiles: Initialized with ${this.tiles.length} tiles`);
   }
 
   /**
@@ -215,7 +213,7 @@ export class ArticleTiles extends Component {
   onDestroy() {
     this.stopGradientAnimation();
     this.resetTiles();
-    console.log('ArticleTiles: Component destroyed');
+    // no-op
   }
 }
 
