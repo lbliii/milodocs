@@ -63,6 +63,12 @@ export class ArticleClipboard extends Component {
         e.preventDefault();
         this.handleCopyClick(button);
       }
+
+      const askButton = e.target.closest('.ask-ai');
+      if (askButton) {
+        e.preventDefault();
+        this.handleAskAIClick(askButton);
+      }
     });
   }
 
@@ -140,6 +146,39 @@ export class ArticleClipboard extends Component {
       button.removeAttribute('data-clipboard-component');
     });
     this.buttons.clear();
+  }
+
+  /**
+   * Handle Ask AI button: copy code then send to chat
+   */
+  async handleAskAIClick(button) {
+    try {
+      const prompt = button.getAttribute('data-ai-prompt') || 'Explain this code snippet';
+
+      const result = await CopyManager.copyCode(button, {
+        button,
+        successMessage: 'Sent to chat',
+        announceMessage: 'Sent to chat',
+        analytics: { component: 'article-clipboard', action: 'ask-ai' },
+        onSuccess: async (codeText) => {
+          const question = `${prompt}\n\n${codeText}`;
+          let chat = ComponentManager.getInstances('article-chat')[0];
+          if (!chat) {
+            chat = await ComponentManager.load('article-chat');
+          }
+          if (chat) {
+            chat.show();
+            chat.focus();
+            await chat.handleQuestionSubmit(question);
+          }
+        }
+      });
+
+      return result;
+    } catch (error) {
+      this.emit('ask-ai-error', { button, error });
+      return { success: false, error };
+    }
   }
 }
 

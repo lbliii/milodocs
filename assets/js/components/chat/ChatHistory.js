@@ -47,6 +47,10 @@ export class ChatHistory {
     try {
       const chatMessages = Array.from(this.chat.chatMessages.children);
       const chatHistory = chatMessages.map((pair) => {
+        // Ignore pairs that are pending (e.g., user asked, bot not answered yet)
+        if (pair.dataset && pair.dataset.pending === 'true') {
+          return null;
+        }
         const bubbles = Array.from(pair.children);
         if (bubbles.length >= 2) {
           return { 

@@ -121,9 +121,9 @@ export class CopyManager {
     if (element.hasAttribute('data-copy-text')) {
       text = element.getAttribute('data-copy-text');
     }
-    // Strategy 2: Check for data-copy-target attribute
-    else if (element.hasAttribute('data-copy-target')) {
-      const targetSelector = element.getAttribute('data-copy-target');
+    // Strategy 2: Check for data-copy-target (legacy) or data-clipboard-target (current) attribute
+    else if (element.hasAttribute('data-copy-target') || element.hasAttribute('data-clipboard-target')) {
+      const targetSelector = element.getAttribute('data-copy-target') || element.getAttribute('data-clipboard-target');
       const targetElement = document.querySelector(targetSelector);
       if (targetElement) {
         text = this.getElementText(targetElement);

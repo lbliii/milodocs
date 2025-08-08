@@ -1,6 +1,6 @@
 # Hugo Global Settings 
 ## Site Details
-baseURL: '/'
+baseURL: 'https://milodocs-theme.netlify.app/'
 languageCode: 'en-us'
 title: 'MiloDocs'
 theme: milodocs

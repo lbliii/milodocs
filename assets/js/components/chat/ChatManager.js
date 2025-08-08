@@ -66,6 +66,19 @@ export class ChatManager extends Component {
     
     // Load chat history
     await this.history.loadChatHistory();
+
+    // If there was a pending request from a previous page, show a system notice with retry
+    try {
+      const pending = (await import('../../utils/index.js')).localStorage.get('chat.pendingRequest', null);
+      if (pending && pending.question) {
+        const message = 'Previous response was interrupted. Would you like to retry?';
+        const bubble = this.bubbles.createSystemMessage(message, 'info');
+        this.bubbles.addChatBubble(bubble, 'bot');
+        this.bubbles.addRetryButton(pending.question);
+        // clear the marker so we do not duplicate on next load
+        (await import('../../utils/index.js')).localStorage.remove('chat.pendingRequest');
+      }
+    } catch { /* no-op */ }
   }
 
   /**

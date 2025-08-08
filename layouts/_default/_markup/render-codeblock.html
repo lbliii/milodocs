@@ -11,7 +11,10 @@
                 <svg class="btn__icon check-icon w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <span class="copy-text">Copy</span>
+                {{/* <span class="copy-text">Copy</span> */}}
+            </button>
+            <button class="btn btn--sm btn--ghost ask-ai" type="button" aria-label="Ask AI about this code" data-clipboard-target="#{{$codeId}}" data-ai-prompt="Explain this code snippet">
+                <img src="{{ "icons/light/assistant.svg" | relURL }}" alt="Ask AI" class="btn__icon w-4 h-4 icon" />
             </button>
         </div>
     </div>

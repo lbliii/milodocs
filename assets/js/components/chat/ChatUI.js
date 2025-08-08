@@ -15,6 +15,9 @@ export class ChatUI {
     this.sendButton = null;
     this.clearAllButton = null;
     this.expandButton = null;
+    this.overlay = null;
+    this.previousActiveElement = null;
+    this._focusTrapHandler = null;
   }
 
   /**
@@ -57,6 +60,16 @@ export class ChatUI {
 
     // Handle window resize for expanded state
     window.addEventListener('resize', () => this.handleWindowResize());
+
+    // Close on Escape when expanded
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const container = this.chat.element;
+        if (container && container.classList.contains('chat-expanded')) {
+          this.toggleExpanded();
+        }
+      }
+    });
   }
 
   /**
@@ -173,26 +186,53 @@ export class ChatUI {
     
     if (isExpanded) {
       // Collapse back to normal size with smooth transition
-              // Use data attributes instead of classes
+      // Avoid setting a global collapsed state on the container, which hides it
+      // animationBridge.setCollapseState(container, 'collapsed');
+      // Clean up any legacy collapse markers that might have been set during expand
+      container.removeAttribute('data-collapse-state');
+      container.classList.remove('expanded', 'collapsed');
+      container.classList.remove('chat-expanded');
+
+      // Remove dialog semantics
+      container.removeAttribute('role');
+      container.removeAttribute('aria-modal');
+      container.removeAttribute('aria-label');
+
+      // Remove overlay and restore scrolling
+      this.destroyOverlay();
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+
+      // Teardown focus trap and restore focus
+      this.teardownFocusTrap();
+      if (this.previousActiveElement) {
+        try { this.previousActiveElement.focus(); } catch {}
+        this.previousActiveElement = null;
+      }
       
-      // Add a slight delay to let the scale animation finish, then restore original positioning
+      // Add a slight delay to let any animation finish, then restore original positioning
       setTimeout(() => {
         container.style.width = '';
         container.style.maxWidth = '';
         container.style.right = '';
         container.style.top = '';
+        container.style.bottom = '';
+        container.style.height = '';
+        container.style.maxHeight = '';
         container.style.position = '';
         container.style.zIndex = '';
-      }, 150); // Half of transition time
+        container.style.overflow = '';
+      }, 150);
       
     } else {
       // Expand leftward while keeping right edge anchored
-              animationBridge.setCollapseState(container, 'expanded');
+      container.classList.add('chat-expanded');
+      animationBridge.setCollapseState(container, 'expanded');
       
       // Get current positioning
       const rect = container.getBoundingClientRect();
       const rightEdgeFromViewport = window.innerWidth - rect.right;
-      const currentTop = rect.top;
+      const currentTop = 16; // consistent top margin for sheet
       
       // Calculate expanded width with better responsive logic
       const maxViewportWidth = window.innerWidth * 0.6; // Use 60% for better UX
@@ -206,11 +246,27 @@ export class ChatUI {
       
       // Apply smooth expansion with preserved positioning
       container.style.position = 'fixed';
-      container.style.top = `${currentTop}px`; // Preserve original top position
+      container.style.top = `${currentTop}px`;
+      container.style.bottom = '16px'; // hard stop at viewport bottom
       container.style.right = `${rightEdgeFromViewport}px`; // Keep right edge anchored
       container.style.width = `${finalWidth}px`;
       container.style.maxWidth = `${finalWidth}px`;
+      container.style.height = 'auto';
+      container.style.overflow = 'visible';
       container.style.zIndex = '60'; // Ensure it's above other elements
+
+      // Create overlay and prevent background scroll
+      this.createOverlay();
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+
+      // Add dialog semantics and focus trap
+      this.previousActiveElement = document.activeElement;
+      container.setAttribute('role', 'dialog');
+      container.setAttribute('aria-modal', 'true');
+      container.setAttribute('aria-label', 'Assistant');
+      this.setupFocusTrap(container);
+      this.focusInput();
     }
     
     // Update expand button icon with smooth transition
@@ -218,6 +274,76 @@ export class ChatUI {
     
     // Emit event for other components to respond
     this.chat.emit('chat:toggleExpanded', { expanded: !isExpanded });
+  }
+
+  /**
+   * Setup a simple focus trap within the container
+   */
+  setupFocusTrap(container) {
+    const getFocusable = () => Array.from(container.querySelectorAll(
+      'a[href], area[href], input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+    )).filter(el => !el.hasAttribute('disabled') && el.tabIndex !== -1 && el.offsetParent !== null);
+
+    this._focusTrapHandler = (e) => {
+      if (e.key !== 'Tab') return;
+      const focusables = getFocusable();
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          last.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === last) {
+          first.focus();
+          e.preventDefault();
+        }
+      }
+    };
+    container.addEventListener('keydown', this._focusTrapHandler);
+  }
+
+  /**
+   * Teardown focus trap
+   */
+  teardownFocusTrap() {
+    const container = this.chat.element;
+    if (this._focusTrapHandler && container) {
+      container.removeEventListener('keydown', this._focusTrapHandler);
+      this._focusTrapHandler = null;
+    }
+  }
+
+  /**
+   * Create modal overlay behind the expanded chat
+   */
+  createOverlay() {
+    if (this.overlay) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'chatOverlay';
+    overlay.className = 'chat-overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.addEventListener('click', () => this.toggleExpanded());
+    document.body.appendChild(overlay);
+    // allow CSS transition to fade in
+    requestAnimationFrame(() => overlay.classList.add('visible'));
+    this.overlay = overlay;
+  }
+
+  /**
+   * Destroy modal overlay
+   */
+  destroyOverlay() {
+    if (!this.overlay) return;
+    const overlay = this.overlay;
+    overlay.classList.remove('visible');
+    // wait for fade-out then remove
+    setTimeout(() => {
+      overlay.remove();
+    }, 200);
+    this.overlay = null;
   }
 
   /**

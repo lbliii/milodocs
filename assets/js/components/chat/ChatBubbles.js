@@ -47,7 +47,7 @@ export class ChatBubbles {
    */
   createLoadingBubble() {
     const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble bot p-2 rounded-lg text-black font-regular text-sm';
+    bubble.className = 'chat-bubble bot p-2 rounded-lg text-black font-regular text-sm is-loading';
     
     // Use LoadingStateManager for consistent loading display
     const loaderId = showLoading(bubble, {
@@ -75,7 +75,17 @@ export class ChatBubbles {
     pair.appendChild(bubble);
     
     this.handleAnimationsAndCleanup(bubble, sender, pair);
-    this.chat.history.saveChatHistory();
+
+    // Skip saving when adding a loading bubble; mark pair as pending
+    if (bubble.classList.contains('is-loading')) {
+      pair.dataset.pending = 'true';
+    } else {
+      // If this was the bot message following a pending state, clear the flag
+      if (pair.dataset && pair.dataset.pending) {
+        delete pair.dataset.pending;
+      }
+      this.chat.history.saveChatHistory();
+    }
   }
 
   /**

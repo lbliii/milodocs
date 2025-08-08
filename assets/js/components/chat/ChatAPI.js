@@ -3,7 +3,7 @@
  * Handles all API interactions and response processing
  */
 
-import { showLoading, hideLoading, handleError } from '../../utils/index.js';
+import { showLoading, hideLoading, handleError, localStorage } from '../../utils/index.js';
 
 export class ChatAPI {
   constructor(chatManager, config = {}) {
@@ -16,8 +16,16 @@ export class ChatAPI {
    * Fetch answer from AI endpoint
    */
   async fetchAnswer(question) {
+    // Persist a pending request marker so we can resume or inform on reload
+    localStorage.set('chat.pendingRequest', { question, startedAt: Date.now() });
+
     const loadingBubble = this.chat.bubbles.createLoadingBubble();
     this.chat.bubbles.addChatBubble(loadingBubble, 'bot');
+    // Mark the latest pair as pending so it is not saved mid-response
+    const latestPair = this.chat.chatMessages.lastElementChild;
+    if (latestPair) {
+      latestPair.dataset.pending = 'true';
+    }
     
     try {
       const controller = new AbortController();
@@ -54,6 +62,13 @@ export class ChatAPI {
       const botBubble = this.chat.bubbles.createChatBubble(answer, 'bot');
       this.chat.bubbles.addChatBubble(botBubble, 'bot');
       await this.chat.bubbles.animateTyping(botBubble);
+      localStorage.remove('chat.pendingRequest');
+      // Ensure pending flag cleared and history saved after completion
+      const completedPair = this.chat.chatMessages.lastElementChild;
+      if (completedPair && completedPair.dataset && completedPair.dataset.pending) {
+        delete completedPair.dataset.pending;
+      }
+      this.chat.history.saveChatHistory();
       
       // Announce to screen readers
       this.announceToScreenReader(`AI response: ${answer.substring(0, 100)}...`);
@@ -71,6 +86,13 @@ export class ChatAPI {
       
       // Handle different error types
       await this.handleFetchError(error, question);
+      localStorage.remove('chat.pendingRequest');
+      // Clear pending state on error as well, and save history
+      const erroredPair = this.chat.chatMessages.lastElementChild;
+      if (erroredPair && erroredPair.dataset && erroredPair.dataset.pending) {
+        delete erroredPair.dataset.pending;
+      }
+      this.chat.history.saveChatHistory();
       
       // Emit error event
       this.chat.emit('chat:error', { question, error: error.message });
