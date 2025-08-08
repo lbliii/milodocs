@@ -71,7 +71,9 @@ class ComponentManager {
         const existingInstance = this.findInstanceBySelector(name, tempInstance.selector);
         if (existingInstance) {
           const isSingleton = tempInstance.isSingleton || this.isSingletonSelector(tempInstance.selector);
-          const logLevel = isSingleton ? 'warn' : 'debug';
+          // Duplicate creations for singleton targets are expected during auto/re-active discovery.
+          // Reduce noise by logging at debug for singletons; warn for true multi-instance conflicts only.
+          const logLevel = isSingleton ? 'debug' : 'warn';
           
           log[logLevel](`Component "${name}" instance already exists for selector "${tempInstance.selector}". Returning existing instance.`);
           return existingInstance;

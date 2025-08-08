@@ -116,7 +116,9 @@
 /* Heading Level Variations */
 .toc-link--h1 {
   font-weight: 600;
-  font-size: 0.95em;
+  /* Slightly reduce H1 TOC size for a lighter hierarchy */
+  /* font-size: 0.95em; */
+  font-size: 0.9em;
   color: var(--color-text-primary);
 }
 
@@ -127,7 +129,9 @@
 }
 
 .toc-link--h3 {
-  font-size: 0.85em;
+  /* Slightly reduce H3 TOC size in tandem with sidebar tightening */
+  /* font-size: 0.85em; */
+  font-size: 0.8em;
   color: var(--color-text-tertiary);
   font-weight: 400;
 }

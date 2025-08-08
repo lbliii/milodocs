@@ -208,7 +208,9 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 }
 
 .sidebar-item__icon {
-  @apply w-5 h-5 mr-3 flex-shrink-0;
+  /* Reduced icon size for tighter look */
+  /* @apply w-5 h-5 mr-3 flex-shrink-0; */
+  @apply w-4 h-4 mr-3 flex-shrink-0;
 }
 
 .sidebar-item__text {
@@ -236,7 +238,9 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 
 /* Level-specific styling */
 .sidebar-item--level-1 .sidebar-item__text {
-  @apply text-lg font-brand font-bold;
+  /* Step down one size from text-lg and slightly reduce weight */
+  /* @apply text-lg font-brand font-bold; */
+  @apply text-base font-brand font-semibold;
 }
 
 .sidebar-item--level-1 {
@@ -248,7 +252,9 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 }
 
 .sidebar-item--level-2 .sidebar-item__text {
-  @apply font-normal text-base;
+  /* Step down one size from text-base */
+  /* @apply font-normal text-base; */
+  @apply font-normal text-sm;
 }
 
 .sidebar-item--level-3 {
@@ -256,7 +262,9 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 }
 
 .sidebar-item--level-3 .sidebar-item__text {
-  @apply font-light text-sm;
+  /* Step down one size from text-sm */
+  /* @apply font-light text-sm; */
+  @apply font-light text-xs;
 }
 
 .sidebar-item--level-4 {
@@ -264,7 +272,9 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 }
 
 .sidebar-item--level-4 .sidebar-item__text {
-  @apply text-sm;
+  /* Step down one size from text-sm */
+  /* @apply text-sm; */
+  @apply text-xs;
 }
 
 .sidebar-item--level-default {

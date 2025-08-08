@@ -25,7 +25,7 @@ export class ArticleTOC extends Component {
 
   async onInit() {
     if (!this.element) {
-      console.warn('ArticleTOC: No table of contents found');
+      // TOC not present on page; this is normal for many pages
       return;
     }
 
@@ -33,7 +33,7 @@ export class ArticleTOC extends Component {
     this.sections = Array.from(document.querySelectorAll('h2, h3'));
     
     if (this.tocLinks.length === 0 || this.sections.length === 0) {
-      console.warn('ArticleTOC: No TOC links or sections found');
+      // Nothing to activate for TOC
       return;
     }
 

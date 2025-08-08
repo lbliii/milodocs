@@ -1,4 +1,6 @@
-<aside id="sidebar-right" class="hidden lg:block w-1/5 max-w-sm" data-component="navigation-sidebar-right">
+<!-- Tight mid-widths felt cramped. Show right sidebar at xl+ instead of lg. -->
+<!-- <aside id="sidebar-right" class="hidden lg:block w-1/5 max-w-sm" data-component="navigation-sidebar-right"> -->
+<aside id="sidebar-right" class="hidden xl:block w-1/5 max-w-sm" data-component="navigation-sidebar-right">
   {{if .Site.Params.article.toc.display}}
     {{partial "article/toc.html" . }}
   {{end}}

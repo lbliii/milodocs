@@ -105,6 +105,14 @@ export function deepClone(obj) {
     return obj;
   }
 
+  // Explicitly avoid cloning AbortController/AbortSignal which are not cloneable
+  if (typeof AbortController !== 'undefined' && obj instanceof AbortController) {
+    return obj;
+  }
+  if (typeof AbortSignal !== 'undefined' && obj instanceof AbortSignal) {
+    return obj;
+  }
+
   // Handle DOM elements - don't clone them, just return reference
   if (obj instanceof Element || obj instanceof Node) {
     log.trace('Preserving DOM element reference instead of cloning');
@@ -147,7 +155,7 @@ export function deepClone(obj) {
     }
 
     // Try modern structuredClone for complex objects without DOM elements
-    return withFallback(
+      return withFallback(
       'structuredClone',
       () => {
         try {
