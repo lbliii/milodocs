@@ -45,7 +45,11 @@
   border: 1px solid var(--color-border-primary);
   background: var(--color-surface);
   color: var(--color-text-primary);
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .endpoint-search:focus {
@@ -74,7 +78,11 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tag-filter:hover,

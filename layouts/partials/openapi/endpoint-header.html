@@ -3,7 +3,7 @@
 {{- $operation := .operation -}}
 {{- $endpointId := .endpointId -}}
 
-<div class="endpoint-header collapse__header" 
+<div class="endpoint-header collapse__header focus-ring hit-target" 
      data-target="{{ $endpointId }}-details"
      role="button"
      tabindex="0"
@@ -46,7 +46,7 @@
     {{ end }}
   </div>
   
-  <div class="endpoint-header__toggle">
+  <div class="endpoint-header__toggle hit-target">
     <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M9 18l6-6-6-6"></path>
     </svg>

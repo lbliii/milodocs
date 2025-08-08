@@ -153,7 +153,7 @@ h1[id] {
   padding-bottom: 0.5rem;
   border-bottom: 3px solid var(--color-brand);
   position: relative;
-  scroll-margin-top: 2rem;
+  scroll-margin-top: var(--header-offset, 64px);
 }
 
 h1[id] a {

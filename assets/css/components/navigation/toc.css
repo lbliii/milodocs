@@ -108,9 +108,13 @@
   outline: 2px solid transparent;
   outline-offset: 2px;
   color: var(--color-brand);
-  box-shadow: 
+  /* box-shadow:
     0 0 0 2px var(--color-brand),
-    0 0 0 4px rgba(var(--color-brand-rgb), 0.15); /* Enhanced double focus ring */
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.15); */ /* Enhanced double focus ring */
+  box-shadow:
+    var(--elevation-brand-focus),
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.15);
 }
 
 /* Heading Level Variations */
@@ -142,7 +146,8 @@
   color: var(--color-text-inverse);
   font-weight: 500;
   transform: translateX(2px);
-  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
+  /* box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3); */
+  box-shadow: var(--elevation-brand-subtle);
 }
 
 .toc-link.active::before {

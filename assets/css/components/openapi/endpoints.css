@@ -22,7 +22,11 @@
   background: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -102,7 +106,11 @@
   border-radius: 0;
   margin-bottom: 0;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition:
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
 }
 
 .endpoint-item:last-child {
@@ -120,7 +128,19 @@
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard);
+}
+
+/* Keyboard focus visibility */
+.endpoint-group-header:focus-visible,
+.endpoint-header:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
 }
 
 .endpoint-header:hover {
@@ -291,19 +311,19 @@
 
 /* Method-specific styling enhancements */
 .openapi-spec[data-method="GET"]:has([data-has-parameters="true"]) .api-endpoint-header {
-  border-left: 4px solid rgba(52, 152, 219, 0.5);
+  border-left: 4px solid rgba(var(--color-info-rgb), 0.5);
 }
 
 .openapi-spec[data-method="POST"]:has([data-has-request-body="true"]) .api-endpoint-header {
-  border-left: 4px solid rgba(46, 204, 113, 0.5);
+  border-left: 4px solid rgba(var(--color-success-rgb), 0.5);
 }
 
 .openapi-spec[data-method="PUT"]:has([data-has-request-body="true"]) .api-endpoint-header {
-  border-left: 4px solid rgba(241, 196, 15, 0.5);
+  border-left: 4px solid rgba(var(--color-warning-rgb), 0.5);
 }
 
 .openapi-spec[data-method="DELETE"]:has([data-has-responses="true"]) .api-endpoint-header {
-  border-left: 4px solid rgba(231, 76, 60, 0.5);
+  border-left: 4px solid rgba(var(--color-danger-rgb), 0.5);
 }
 
 /* Enhanced endpoint header based on content */
@@ -375,9 +395,9 @@
 /* Enhanced hover effects for content-rich endpoints */
 .endpoint-item:has([data-has-examples="true"]):hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 8px 20px rgba(var(--color-brand-rgb), 0.15),
-    0 4px 8px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    var(--elevation-hover-2),
+    var(--elevation-brand-subtle);
 }
 
 /* Responsive adaptations for endpoints */
@@ -392,5 +412,14 @@
     position: static;
     display: inline-block;
     margin: 0.25rem;
+  }
+}
+
+/* Reduced motion: remove transitions for interactive rows/headers */
+@media (prefers-reduced-motion: reduce) {
+  .endpoint-group-header,
+  .endpoint-item,
+  .endpoint-header {
+    transition: none !important;
   }
 }

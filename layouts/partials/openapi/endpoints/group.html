@@ -5,7 +5,7 @@
 {{- $dataTag := .dataTag | default ($tag | urlize) -}}
 
 <div class="endpoint-group" data-tag="{{ $dataTag }}">
-  <div class="endpoint-group-header collapse__header" 
+  <div class="endpoint-group-header collapse__header focus-ring hit-target" 
        data-target="tag-{{ $dataTag }}-endpoints"
        role="button"
        tabindex="0"

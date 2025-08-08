@@ -28,6 +28,10 @@
 @tailwind base;
 
 @layer base {
+  :root {
+    /* Used for scroll anchoring above headings */
+    --header-offset: 64px;
+  }
 
   /* ✅ FIXED: Use animation tokens instead of hardcoded values */
   html:not(.no-transitions) {
@@ -119,39 +123,47 @@
   /*  Article Content Styles */ 
 
   /* Margins */
-  #articleContent > * {
+  .article-content > * {
     @apply my-3;
   }
 
   /* Font Color & Thickness */
-  #articleContent {
+  .article-content {
     color: var(--color-text-primary);
-    font-size: 1.125rem; /* 18px for improved readability */
-    line-height: 1.6;
+    font-size: 1rem; /* mobile-first */
+    line-height: 1.65; /* mobile-first */
     letter-spacing: 0.01em;
   }
 
-  #articleContent p {
+  /* Bump article typography at md and up (replaces mobile max-width overrides) */
+  @screen md {
+    .article-content {
+      font-size: 1.125rem; /* 18px for improved readability */
+      line-height: 1.6;
+    }
+  }
+
+  .article-content p {
     font-size: inherit;
     line-height: inherit;
     letter-spacing: inherit;
   }
 
-  #articleContent strong {
+  .article-content strong {
     @apply font-brand font-semibold;
   }
 
   /* List Styles */
-  #articleContent li li {
+  .article-content li li {
     @apply ml-12 py-1;
   }
-  #articleContent ul {
+  .article-content ul {
     @apply list-disc ml-6;
   }
 
   /* Handles the anchor placement issue for TOC links */
-  #articleContent [id]:target {
-    scroll-margin-top: 50px;
+  .article-content [id]:target {
+    scroll-margin-top: var(--header-offset, 64px);
   }
 
   /* Nested Code, Tables, Notices in Ordered Lists*/
@@ -166,11 +178,11 @@
   }
 
   /* Enhanced Numbered Lists */
-  #articleContent ol {
+  .article-content ol {
     list-style: none;
     counter-reset: item;
   }
-  #articleContent ol > li {
+  .article-content ol > li {
     @apply py-3;
     counter-increment: item;
     position: relative;
@@ -179,12 +191,12 @@
   }
   
   /* Enhanced List Item Hover Effect */
-  #articleContent ol > li:hover {
+  .article-content ol > li:hover {
     transform: translateX(2px);
   }
   
   /* Enhanced Primary Level Numbers (Rounded Squares) */
-  #articleContent ol > li::before {
+  .article-content ol > li::before {
     content: counter(item);
     width: 2rem;
     height: 2rem;
@@ -212,7 +224,7 @@
   }
   
   /* Enhanced Primary Level Hover */
-  #articleContent ol > li:hover::before {
+  .article-content ol > li:hover::before {
     transform: scale(1.1);
     box-shadow: 
       0 4px 16px rgba(var(--color-brand-rgb), 0.3),
@@ -220,7 +232,7 @@
   }
   
   /* Enhanced Nested Level Numbers (Circles) */
-  #articleContent li > ol > li::before {
+  .article-content li > ol > li::before {
     content: counter(item);
     border-radius: 50%;
     width: 1.75rem;
@@ -249,7 +261,7 @@
   }
   
   /* Enhanced Nested Level Hover */
-  #articleContent li > ol > li:hover::before {
+  .article-content li > ol > li:hover::before {
     background: var(--color-brand);
     color: var(--color-text-inverse);
     transform: scale(1.1);
@@ -258,7 +270,7 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   /* Single Line Code (not syntax highlighted blocks) */
-  #articleContent code:not(pre code) {
+  .article-content code:not(pre code) {
     @apply p-1 rounded font-light;
     font-size: 0.9em; /* Relative to parent for better scaling */
     background-color: var(--color-bg-secondary);
@@ -268,24 +280,24 @@
   }
 
   /* Dark mode: use lighter brand color for better contrast */
-  .dark #articleContent code:not(pre code) {
+  .dark .article-content code:not(pre code) {
     color: var(--color-brand);
   }
 
   /* Syntax Highlighted Code - Let Hugo handle colors */
-  #articleContent pre {
+  .article-content pre {
     @apply overflow-x-auto overflow-y-visible;
     /* Remove color: unset to allow Hugo's syntax colors */
   }
-  #articleContent .highlight pre {
+  .article-content .highlight pre {
     @apply p-2;
   }
-  #articleContent .highlight pre code {
+  .article-content .highlight pre code {
     @apply p-0 bg-transparent !important;
     /* Don't override Hugo's syntax highlighting colors */
     color: inherit !important;
   }
-  #articleContent pre code {
+  .article-content pre code {
     @apply p-0 m-0;
     font-family: var(--font-family-mono, RobotoMono, monospace);
     font-size: 0.875rem; /* 14px for code blocks */
@@ -309,16 +321,16 @@
   }
 
   /* Link Styles - NVIDIA Style */
-  #articleContent a:not(#quick-install a),
+  .article-content a:not(#quick-install a),
   .notebook-cell__markdown-content a {
     @apply underline;
     text-decoration-color: var(--color-brand);
   }
-  #articleContent a:hover:not(#quick-install a),
+  .article-content a:hover:not(#quick-install a),
   .notebook-cell__markdown-content a:hover {
     @apply text-brand-1 transition duration-300;
   }
-  #articleContent a.headerlink {
+  .article-content a.headerlink {
     color: var(--color-brand-1);
   }
 
@@ -350,29 +362,7 @@
     @apply ml-4;
   }
 
-  /* Enhanced Dark Theme Support */
-  .dark .bg-white {
-    background-color: var(--color-bg-primary);
-  }
-  .dark .bg-black {
-    background-color: var(--color-surface-hover);
-  }
-  .dark .bg-zinc-100 {
-    background-color: var(--color-bg-secondary);
-  }
-  .dark .bg-zinc-200 {
-    background-color: var(--color-surface-hover);
-  }
-  .dark .text-black {
-    color: var(--color-text-primary);
-  }
-  .dark .text-zinc {
-    color: var(--color-text-primary);
-  }
-  .dark .text-zinc-900 {
-    color: var(--color-text-secondary);
-  }
-  /* Legacy dark notice styles - removed in favor of enhanced notices */
+  /* Dark theme utility overrides removed. Use semantic classes or Tailwind dark: variants in markup. */
 }
 
 @tailwind components;
@@ -413,14 +403,11 @@
 
   /* Fade-in animation classes */
   .fade-in-on-scroll {
-    opacity: 0;
-    transform: translateY(20px);
-    @apply transition-all duration-700;
+    @apply opacity-0 translate-y-5 transition-all duration-700;
   }
 
   .fade-in-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
+    @apply opacity-100 translate-y-0;
   }
 
   /* Enhanced focus states for accessibility */
@@ -429,9 +416,8 @@
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-    @apply rounded;
+    @apply outline-2 outline-offset-2 rounded;
+    outline-color: var(--color-brand);
   }
 
   /* :has() Form & Input Enhancements */
@@ -503,32 +489,15 @@
     background: var(--color-brand-1);
   }
 
-  /* Mobile-specific enhancements */
-  @media (max-width: 768px) {
-    /* Larger touch targets */
-    button, a {
-      min-height: 44px;
-      min-width: 44px;
-    }
-    
-    /* Improved mobile typography */
-    #articleContent {
-      font-size: 1rem; /* Slightly smaller on mobile but still readable */
-      line-height: 1.65; /* Slightly increased line height for mobile */
-    }
-    
-    /* Ensure headings remain readable on mobile */
-    h1 { font-size: clamp(1.375rem, 5vw, 1.75rem); }
-    h2 { font-size: clamp(1.25rem, 4.5vw, 1.5rem); }
-    h3 { font-size: clamp(1.125rem, 4vw, 1.375rem); }
-    
-    /* Reduced motion for users who prefer it */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
+  /* Mobile-specific overrides removed; prefer mobile-first + @screen md and utilities.
+     Use `.hit-target` on interactive elements as needed. */
+
+  /* Reduced motion for users who prefer it (global) */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
   }
 
@@ -548,5 +517,19 @@
 
   .h-screen-dynamic {
     height: calc(var(--vh, 1vh) * 100);
+  }
+
+  /* Utility helpers aligned with design tokens */
+  .focus-ring {
+    @apply outline-2 outline-offset-2 rounded;
+    outline-color: var(--color-brand);
+  }
+
+  .hit-target {
+    @apply min-h-11 min-w-11;
+  }
+
+  .scroll-anchor {
+    @apply scroll-mt-16 md:scroll-mt-20;
   }
 }

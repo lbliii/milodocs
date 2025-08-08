@@ -37,7 +37,7 @@
 
 {{- define "content" -}}
 <article id="articleContent" 
-         class="openapi-spec api-tag"
+         class="openapi-spec api-tag article-content"
          data-component="openapi-viewer">
   
   {{- $apiData := .Params.api_data -}}
@@ -68,7 +68,7 @@
       <div class="endpoints-list">
         {{/* Get all child endpoint pages */}}
         {{ range .Pages }}
-          <div class="endpoint-summary-card">
+          <div class="endpoint-summary-card focus-ring">
             <div class="endpoint-summary-header">
               <span class="method-badge method-badge--{{ lower .Params.endpoint.method }}">
                 {{ upper .Params.endpoint.method }}

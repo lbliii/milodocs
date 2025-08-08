@@ -12,7 +12,7 @@
 
   <div class="notebook__launch relative" data-component="notebook-launch">
     <button 
-      class="notebook__nav-btn notebook__launch-toggle" 
+      class="notebook__nav-btn notebook__launch-toggle focus-ring hit-target" 
       type="button"
       aria-expanded="false"
       aria-haspopup="true"
@@ -28,7 +28,7 @@
     </button>
     
     <div 
-      class="notebook__launch-dropdown absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 hidden"
+      class="notebook__launch-dropdown absolute right-0 mt-2 w-56 bg-surface dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 hidden"
       data-launch-dropdown>
       <div class="p-1">
         {{/* Launch Platforms Section Header */}}
@@ -41,7 +41,7 @@
           href="https://colab.research.google.com/github/{{ $user }}/{{ $repo }}/blob/{{ $branch }}/{{ $notebookPath }}"
           target="_blank"
           rel="noopener noreferrer"
-          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md focus-ring">
           <img src="{{ "icons/light/star.svg" | relURL }}" alt="Colab" class="w-4 h-4 icon">
           Open in Colab
         </a>
@@ -51,7 +51,7 @@
           href="https://mybinder.org/v2/gh/{{ $user }}/{{ $repo }}/{{ $branch }}?filepath={{ $notebookPath }}"
           target="_blank"
           rel="noopener noreferrer"
-          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md focus-ring">
           <img src="{{ "icons/light/layers.svg" | relURL }}" alt="Binder" class="w-4 h-4 icon">
           Launch Binder
         </a>
@@ -61,7 +61,7 @@
           href="https://nbviewer.jupyter.org/github/{{ $user }}/{{ $repo }}/blob/{{ $branch }}/{{ $notebookPath }}"
           target="_blank"
           rel="noopener noreferrer"
-          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md focus-ring">
           <img src="{{ "icons/light/note.svg" | relURL }}" alt="NBViewer" class="w-4 h-4 icon">
           View in NBViewer
         </a>
@@ -78,7 +78,7 @@
           href="https://github.dev/{{ $user }}/{{ $repo }}/blob/{{ $branch }}/{{ $notebookPath }}"
           target="_blank"
           rel="noopener noreferrer"
-          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md focus-ring">
           <img src="{{ "icons/light/code_inspect.svg" | relURL }}" alt="GitHub.dev" class="w-4 h-4 icon">
           Edit in GitHub.dev
         </a>
@@ -88,7 +88,7 @@
           href="{{ $repoUrl }}/blob/{{ $branch }}/{{ $notebookPath }}"
           target="_blank"
           rel="noopener noreferrer"
-          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
+          class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md focus-ring">
           <img src="{{ "icons/light/copy.svg" | relURL }}" alt="View Source" class="w-4 h-4 icon">
           View Source
         </a>

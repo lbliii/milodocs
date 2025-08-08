@@ -15,25 +15,40 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   color: var(--color-text-primary);
   font-family: var(--font-family-brand, inherit);
   backdrop-filter: blur(10px);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
+  /* transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); */
+  transition:
+    background-color var(--timing-fast) var(--easing-standard),
+    color var(--timing-fast) var(--easing-standard),
+    border-color var(--timing-fast) var(--easing-standard),
+    transform var(--timing-fast) var(--easing-standard),
+    box-shadow var(--timing-fast) var(--easing-standard);
+  /* box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow:
+    var(--elevation-1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   
   /* Search icon using brand color */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%238ac195' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+  /* Use currentColor for icon stroke; color is set via CSS variable for themeability */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
   background-position: left 0.75rem center;
   background-repeat: no-repeat;
   background-size: 1.125rem 1.125rem;
+  color: var(--color-text-primary);
 }
 
 .search-input:hover {
   border-color: var(--color-brand);
   background-color: var(--color-surface-hover);
   transform: var(--transform-lift-subtle);
-  box-shadow: 
+  /* box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.1),
     0 0 20px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15); */
+  box-shadow:
+    var(--elevation-hover-2),
+    var(--elevation-brand-subtle),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -43,10 +58,15 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   border-color: var(--color-brand);
   background-color: var(--color-surface);
   transform: var(--transform-lift-subtle);
-  box-shadow: 
+  /* box-shadow:
     0 0 0 2px var(--color-brand),
     0 0 0 4px rgba(var(--color-brand-rgb), 0.15),
     0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2); */
+  box-shadow:
+    0 0 0 2px var(--color-brand),
+    0 0 0 4px rgba(var(--color-brand-rgb), 0.15),
+    var(--elevation-hover-2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -67,10 +87,19 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   );
   border: 1px solid var(--color-border-primary);
   backdrop-filter: blur(10px);
-  box-shadow: 
+  /* box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow:
+    var(--elevation-2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+  transition:
+    background-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
 }
 
 .search-container::before {
@@ -87,7 +116,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
     rgba(var(--color-brand-rgb), 0.02) 100%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  /* transition: opacity 0.3s ease; */
+  transition: opacity var(--timing-medium) var(--easing-standard);
   pointer-events: none;
   border-radius: 0.875rem;
 }
@@ -117,10 +147,14 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   border-radius: 0.875rem;
   border: 1px solid var(--color-border-primary);
   backdrop-filter: blur(10px);
-  box-shadow: 
+  /* box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow:
+    var(--elevation-2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  animation: search-container-enter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* animation: search-container-enter 0.5s cubic-bezier(0.4, 0, 0.2, 1); */
+  animation: search-container-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
   overflow: hidden;
 }
@@ -178,10 +212,19 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   border-radius: 0.875rem;
   border: 1px solid var(--color-border-primary);
   padding: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+  transition:
+    background-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
   backdrop-filter: blur(10px);
-  box-shadow: 
+  /* box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow:
+    var(--elevation-2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
 }
@@ -200,7 +243,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
     rgba(var(--color-brand-rgb), 0.02) 100%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  /* transition: opacity 0.3s ease; */
+  transition: opacity var(--timing-medium) var(--easing-standard);
   pointer-events: none;
 }
 
@@ -213,16 +257,21 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   height: 3px;
   background: linear-gradient(90deg, var(--color-brand), var(--color-brand-2));
   transform: scaleX(0);
-  transition: transform 0.3s ease;
+  /* transition: transform 0.3s ease; */
+  transition: transform var(--timing-medium) var(--easing-standard);
   transform-origin: left;
 }
 
 .search-hit:hover .search-hit-content {
   transform: var(--transform-lift-dramatic);
   border-color: var(--color-brand);
-  box-shadow: 
+  /* box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.12),
     0 0 20px rgba(var(--color-brand-rgb), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15); */
+  box-shadow:
+    var(--elevation-hover-2),
+    var(--elevation-brand-subtle),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -271,7 +320,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   color: var(--color-text-primary);
   font-family: var(--font-family-brand, inherit);
   margin: 0;
-  transition: color 0.2s ease;
+  /* transition: color 0.2s ease; */
+  transition: color var(--timing-fast) var(--easing-standard);
 }
 
 .search-hit:hover .search-hit-title {
@@ -326,7 +376,13 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 .search-section {
   margin-bottom: 2rem;
   border-radius: 0.875rem;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
+  transition:
+    background-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    transform var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
 }
 
 .search-section:hover {
@@ -360,13 +416,15 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   font-size: 0.875rem;
   font-weight: 600;
   margin-right: 0.75rem;
-  box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.2);
+  /* box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.2); */
+  box-shadow: var(--elevation-brand-subtle);
   transition: all 0.2s ease;
 }
 
 .search-section:hover .search-section-badge {
   transform: scale(1.1);
-  box-shadow: 0 4px 16px rgba(var(--color-brand-rgb), 0.3);
+  /* box-shadow: 0 4px 16px rgba(var(--color-brand-rgb), 0.3); */
+  box-shadow: var(--elevation-brand-medium);
 }
 
 .search-section-title {
@@ -412,7 +470,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   border: 1px solid var(--color-border-primary);
   border-left: 4px solid var(--color-brand);
   backdrop-filter: blur(10px);
-  animation: slideInUp 0.6s ease-out;
+  /* animation: slideInUp 0.6s ease-out; */
+  animation: slideInUp var(--timing-slow) var(--easing-standard);
 }
 
 .search-results-header h1 {
@@ -471,15 +530,18 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 /* Animation Classes */
 .animate-fadeIn {
-  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); */
+  animation: fadeIn var(--timing-fast) var(--easing-standard);
 }
 
 .animate-slideInUp {
-  animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); */
+  animation: slideInUp var(--timing-fast) var(--easing-standard);
 }
 
 .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
+  animation: pulse var(--timing-slow) var(--easing-emphasized) infinite;
 }
 
 /* Search Container Enhancements */

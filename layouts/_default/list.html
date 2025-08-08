@@ -13,10 +13,10 @@
 {{- end -}}
 
 {{- define "content" -}}
-  <header class="mb-8">
-    <h1 class="text-3xl font-bold text-black mb-4">{{ .Title }}</h1>
+  <header class="mb-8 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+   <h1 class="text-3xl font-bold text-text-primary mb-4">{{ .Title }}</h1>
     {{- with .Content -}}
-      <div class="prose max-w-none">
+      <div class="prose max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
         {{ . }}
       </div>
     {{- end -}}
@@ -24,10 +24,10 @@
 
   {{- $pages := .Pages -}}
   {{- if $pages -}}
-    <section aria-label="Page listings">
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <section aria-label="Page listings" class="mx-auto max-w-6xl 2xl:max-w-7xl">
+    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {{- range $pages -}}
-          <article class="tile bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+          <article class="tile bg-surface rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
             {{- with .Params.image -}}
               <div class="aspect-w-16 aspect-h-9">
                 <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="object-cover w-full h-48" loading="lazy">
@@ -36,8 +36,8 @@
             
             <div class="p-6">
               <h2 class="text-xl font-semibold mb-3">
-                <a href="{{ .RelPermalink }}" 
-                   class="text-black hover:text-blue-600 focus:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                 <a href="{{ .RelPermalink }}" 
+                    class="text-text-primary hover:text-blue-600 focus:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded focus-ring"
                    aria-describedby="{{ .RelPermalink | anchorize }}-summary">
                   {{ .LinkTitle }}
                 </a>
@@ -110,19 +110,19 @@
         <div class="flex items-center space-x-2">
           {{- if $paginator.HasPrev -}}
             <a href="{{ $paginator.Prev.URL }}" 
-               class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
               Previous
             </a>
           {{- end -}}
           
           {{- range $paginator.Pagers -}}
             {{- if eq . $paginator -}}
-              <span class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md" aria-current="page">
+             <span class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md" aria-current="page">
                 {{ .PageNumber }}
               </span>
             {{- else -}}
               <a href="{{ .URL }}" 
-                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
                 {{ .PageNumber }}
               </a>
             {{- end -}}
@@ -130,7 +130,7 @@
           
           {{- if $paginator.HasNext -}}
             <a href="{{ $paginator.Next.URL }}" 
-               class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
               Next
             </a>
           {{- end -}}
