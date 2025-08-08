@@ -19,8 +19,10 @@
     "bundleType": {{- .BundleType | jsonify }},
     "uri": "{{- .Permalink }}",
     "relURI": "{{- .RelPermalink }}",
-    "body": {{ .Plain | jsonify }},
-    "contentWithoutSummary": {{ .ContentWithoutSummary | plainify | jsonify }},
+    {{/* "body": {{ .Plain | jsonify }}, */}}
+    "body": {{ .Plain | htmlUnescape | jsonify }},
+    {{/* "contentWithoutSummary": {{ .ContentWithoutSummary | plainify | jsonify }}, */}}
+    "contentWithoutSummary": {{ .ContentWithoutSummary | plainify | htmlUnescape | jsonify }},
     "wordCount": {{ .WordCount }},
     "fuzzyWordCount": {{ .FuzzyWordCount }},
     "readingTime": {{ .ReadingTime }},

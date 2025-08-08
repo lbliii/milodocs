@@ -29,6 +29,8 @@ export class CopyPage extends Component {
     this.currentUrl = '';
     this.pageContent = null;
     this.jsonUrl = '';
+    this.txtUrl = '';
+    this.pageText = '';
   }
 
     /**
@@ -46,7 +48,9 @@ setupElements() {
     // Get the current page URL from the copy button
     if (this.copyUrlButton) {
       this.currentUrl = this.copyUrlButton.getAttribute('data-copy-url');
-      this.jsonUrl = this.currentUrl.replace(/\/$/, '') + '/index.json';
+      const base = this.currentUrl.replace(/\/$/, '');
+      this.jsonUrl = base + '/index.json';
+      this.txtUrl = base + '/index.txt';
     }
 
     if (!this.toggle || !this.dropdown) {
@@ -265,20 +269,33 @@ setupElements() {
   }
 
   /**
-   * Fetch page content from index.json for AI sharing
+   * Fetch page content from index.txt (preferred) and index.json for AI sharing
    */
   async fetchPageContent() {
+    const requests = [];
+    if (this.txtUrl) {
+      requests.push(
+        fetch(this.txtUrl)
+          .then(r => (r.ok ? r.text() : ''))
+          .then(text => { this.pageText = (text || '').trim(); })
+          .catch(() => {})
+      );
+    }
+    if (this.jsonUrl) {
+      requests.push(
+        fetch(this.jsonUrl)
+          .then(r => (r.ok ? r.json() : null))
+          .then(json => { this.pageContent = json; })
+          .catch(() => {})
+      );
+    }
+
     try {
-      const response = await fetch(this.jsonUrl);
-      if (response.ok) {
-        this.pageContent = await response.json();
-        this.updateAILinks();
-        log.debug('Page content fetched successfully');
-      } else {
-        log.warn('Failed to fetch page content:', response.status);
-      }
+      await Promise.allSettled(requests);
+      this.updateAILinks();
+      log.debug('Page content fetched (txt/json) for AI sharing');
     } catch (error) {
-      log.warn('Error fetching page content:', error);
+      log.warn('Error fetching AI share content:', error);
     }
   }
 
@@ -308,51 +325,60 @@ setupElements() {
    * Create AI prompt with page content
    */
   createAIPrompt() {
-    if (!this.pageContent) {
-      return `Please help me understand this documentation: ${this.currentUrl}`;
-    }
-
-    const { 
-      title, 
-      linkTitle, 
-      description, 
-      body,
-      contentWithoutSummary,
-      section,
-      parent
-    } = this.pageContent;
-    
-    // Use contentWithoutSummary if available, otherwise body, with truncation
+    // Prefer purpose-built txt output when available
     const maxContentLength = 4000;
-    let content = contentWithoutSummary || body || '';
-    
-    if (content.length > maxContentLength) {
-      content = content.substring(0, maxContentLength) + '...\n\n[Content truncated - see full content at URL]';
+
+    if (this.pageText && this.pageText.length > 0) {
+      let text = this.pageText;
+      if (text.length > maxContentLength) {
+        text = text.substring(0, maxContentLength) + '\n\n[Content truncated - see full content at URL]';
+      }
+      return [
+        'Please help me understand this documentation:',
+        '',
+        `**URL**: ${this.currentUrl}`,
+        '',
+        '**Content (LLM-optimized)**:',
+        text,
+        '',
+        'Please explain the key concepts and help me understand how to use this information.'
+      ].join('\n');
     }
 
-    // Build focused prompt with only relevant details
-    let prompt = `Please help me understand this documentation:
+    // Fallback to JSON fields if txt is not available
+    if (this.pageContent) {
+      const {
+        title,
+        linkTitle,
+        description,
+        body,
+        contentWithoutSummary,
+        section,
+        parent
+      } = this.pageContent;
 
-# ${title || linkTitle || 'Documentation Page'}`;
+      let content = contentWithoutSummary || body || '';
+      if (content.length > maxContentLength) {
+        content = content.substring(0, maxContentLength) + '...\n\n[Content truncated - see full content at URL]';
+      }
 
-    if (description) {
-      prompt += `\n\n${description}`;
+      let prompt = `Please help me understand this documentation:\n\n# ${title || linkTitle || 'Documentation Page'}`;
+      if (description) {
+        prompt += `\n\n${description}`;
+      }
+      if (section && parent && section !== parent) {
+        prompt += `\n\n*From: ${parent} > ${section}*`;
+      }
+      prompt += `\n\n**URL**: ${this.currentUrl}`;
+      if (content) {
+        prompt += `\n\n**Content**:\n${content}`;
+      }
+      prompt += `\n\nPlease explain the key concepts and help me understand how to use this information.`;
+      return prompt;
     }
 
-    // Only include section if it adds meaningful context
-    if (section && parent && section !== parent) {
-      prompt += `\n\n*From: ${parent} > ${section}*`;
-    }
-
-    prompt += `\n\n**URL**: ${this.currentUrl}`;
-
-    if (content) {
-      prompt += `\n\n**Content**:\n${content}`;
-    }
-
-    prompt += `\n\nPlease explain the key concepts and help me understand how to use this information.`;
-
-    return prompt;
+    // Last resort: just the URL
+    return `Please help me understand this documentation: ${this.currentUrl}`;
   }
 
   /**
