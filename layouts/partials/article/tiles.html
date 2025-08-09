@@ -3,12 +3,12 @@
 {{$descTrunc := .Site.Params.article.childArticles.descTrunc }}
 {{$count := .Site.Params.article.childArticles.count }}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-component="article-tiles">
+<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 md:gap-8 2xl:grid-cols-3" data-component="article-tiles">
     {{ range .Pages }}
         {{ if  .Params.hidden }}
             {{/* Do not show the hidden child page or its descendants */}}
         {{else}}
-        <div class="tile tile rounded-lg shadow-md p-6 transition duration-300 space-y-3">
+        <div class="tile rounded-lg p-6 space-y-4">
             <a href="{{ with .Params.externalRedirect}}{{.}}{{else}}{{.RelPermalink}}{{end}}" class="space-y-3 block">
                 <div class="flex items-start space-x-3">
                     {{with .Params.icon}}
@@ -30,8 +30,6 @@
                 {{ end }}
             </a>
             
-            
-            {{/* Use the dedicated child links component */}}
             {{- partial "article/child-links.html" (dict "page" . "count" $count) -}}
         </div>
         {{end}}

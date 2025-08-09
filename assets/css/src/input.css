@@ -26,6 +26,42 @@
 @import "../components/tabs-modern.css";
 
 @tailwind base;
+@tailwind components;
+
+@layer components {
+  /* Responsive auto-fit grid for cards/tiles */
+  .grid-autofit {
+    grid-template-columns: repeat(auto-fit, minmax(var(--grid-card-min, 280px), 1fr));
+  }
+  @screen md {
+    .grid-autofit {
+      gap: theme('spacing.8');
+    }
+  }
+
+  /* Layout shell: centralizes the app's three-column grid with tokens */
+  .layout-shell {
+    @apply w-full px-4 sm:px-6 lg:px-8 xl:px-0 transition-all duration-300 ease-in-out;
+  }
+  @screen xl {
+    .layout-shell {
+      display: grid;
+      grid-template-columns: var(--left-rail-width) minmax(0, 1fr) var(--right-rail-width);
+      gap: var(--layout-gap-xl);
+    }
+  }
+  @screen 2xl {
+    .layout-shell {
+      grid-template-columns: var(--left-rail-width-2xl) minmax(0, 1fr) var(--right-rail-width-2xl);
+      gap: var(--layout-gap-2xl);
+    }
+  }
+
+  /* Page container max-width controlled by token */
+  .page-container {
+    max-width: var(--max-width-content);
+  }
+}
 
 @layer base {
   :root {
@@ -59,22 +95,43 @@
   }
 
   /* Global Header Sizes & Thickness with Responsive Scaling */
+  /* h1 {
+    font-size: clamp(1.5rem, 4vw, 1.875rem); */ /* Responsive 24px-30px */
+  /*   line-height: 1.2;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    word-wrap: break-word;
+  } */
   h1 {
-    font-size: clamp(1.5rem, 4vw, 1.875rem); /* Responsive 24px-30px */
+    font-size: clamp(1.5rem, 3.5vw, 1.75rem); /* Responsive 24px-28px */
     line-height: 1.2;
     font-weight: 900;
     letter-spacing: -0.025em;
     word-wrap: break-word;
   }
+  /* h2 {
+    font-size: clamp(1.25rem, 3.5vw, 1.5rem); */ /* Responsive 20px-24px */
+  /*   line-height: 1.33;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    word-wrap: break-word;
+  } */
   h2 {
-    font-size: clamp(1.25rem, 3.5vw, 1.5rem); /* Responsive 20px-24px */
+    font-size: clamp(1.25rem, 3vw, 1.375rem); /* Responsive 20px-22px */
     line-height: 1.33;
     font-weight: 700;
     letter-spacing: -0.025em;
     word-wrap: break-word;
   }
+  /* h3 {
+    font-size: clamp(1.125rem, 3vw, 1.25rem); */ /* Responsive 18px-20px */
+  /*   line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    word-wrap: break-word;
+  } */
   h3 {
-    font-size: clamp(1.125rem, 3vw, 1.25rem); /* Responsive 18px-20px */
+    font-size: clamp(1.0625rem, 2.5vw, 1.1875rem); /* Responsive 17px-19px */
     line-height: 1.4;
     font-weight: 700;
     letter-spacing: -0.015em;
@@ -114,14 +171,19 @@
   }
   
   /* Enhanced Body Text Typography */
+  /* body {
+    font-size: clamp(1rem, 2.5vw, 1.125rem); */ /* Responsive 16px-18px */
+  /*   line-height: 1.6;
+    letter-spacing: 0.01em;
+  } */
   body {
-    font-size: clamp(1rem, 2.5vw, 1.125rem); /* Responsive 16px-18px */
+    font-size: clamp(1rem, 2vw, 1.0625rem); /* Responsive 16px-17px */
     line-height: 1.6;
     letter-spacing: 0.01em;
   }
 
   /*  Article Content Styles */ 
-
+  
   /* Margins */
   .article-content > * {
     @apply my-3;
@@ -134,11 +196,17 @@
     line-height: 1.65; /* mobile-first */
     letter-spacing: 0.01em;
   }
-
+  
   /* Bump article typography at md and up (replaces mobile max-width overrides) */
+  /* @screen md {
+    .article-content {
+      font-size: 1.125rem; */ /* 18px for improved readability */
+  /*     line-height: 1.6;
+    }
+  } */
   @screen md {
     .article-content {
-      font-size: 1.125rem; /* 18px for improved readability */
+      font-size: 1.0625rem; /* 17px for improved readability */
       line-height: 1.6;
     }
   }
@@ -157,379 +225,6 @@
   .article-content li li {
     @apply ml-12 py-1;
   }
-  .article-content ul {
-    @apply list-disc ml-6;
-  }
-
-  /* Handles the anchor placement issue for TOC links */
-  .article-content [id]:target {
-    scroll-margin-top: var(--header-offset, 64px);
-  }
-
-  /* Nested Code, Tables, Notices in Ordered Lists*/
-  #articleContent ol > li p:first-child {
-    @apply inline;
-  }
-  #articleContent ol > li p:not(:first-child),
-  ol > li > section,
-  ol > li > div,
-  ol > li > table {
-    @apply block ml-6 my-4;
-  }
-
-  /* Enhanced Numbered Lists */
-  .article-content ol {
-    list-style: none;
-    counter-reset: item;
-  }
-  .article-content ol > li {
-    @apply py-3;
-    counter-increment: item;
-    position: relative;
-    /* ✅ FIXED: Use animation tokens and specific properties */
-    transition: transform var(--timing-fast) var(--easing-standard);
-  }
-  
-  /* Enhanced List Item Hover Effect */
-  .article-content ol > li:hover {
-    transform: translateX(2px);
-  }
-  
-  /* Enhanced Primary Level Numbers (Rounded Squares) */
-  .article-content ol > li::before {
-    content: counter(item);
-    width: 2rem;
-    height: 2rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-right: 0.75rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    background: linear-gradient(
-      135deg,
-      var(--color-brand) 0%,
-      rgba(var(--color-brand-rgb), 0.8) 100%
-    );
-    color: var(--color-text-inverse);
-    box-shadow: 
-      0 2px 8px rgba(var(--color-brand-rgb), 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    /* ✅ FIXED: Use animation tokens and specific properties */
-    transition: transform var(--timing-fast) var(--easing-standard);
-    position: relative;
-    top: -1px;
-  }
-  
-  /* Enhanced Primary Level Hover */
-  .article-content ol > li:hover::before {
-    transform: scale(1.1);
-    box-shadow: 
-      0 4px 16px rgba(var(--color-brand-rgb), 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-  
-  /* Enhanced Nested Level Numbers (Circles) */
-  .article-content li > ol > li::before {
-    content: counter(item);
-    border-radius: 50%;
-    width: 1.75rem;
-    height: 1.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-right: 0.75rem;
-    font-weight: 500;
-    font-size: 0.8rem;
-    background: linear-gradient(
-      135deg,
-      var(--color-surface) 0%,
-      var(--color-bg-secondary) 100%
-    );
-    color: var(--color-brand);
-    border: 2px solid var(--color-brand);
-    box-shadow: 
-      0 2px 6px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    /* ✅ FIXED: Use animation tokens and specific properties */
-    transition: transform var(--timing-fast) var(--easing-standard);
-    position: relative;
-    top: -1px;
-  }
-  
-  /* Enhanced Nested Level Hover */
-  .article-content li > ol > li:hover::before {
-    background: var(--color-brand);
-    color: var(--color-text-inverse);
-    transform: scale(1.1);
-    box-shadow: 
-      0 4px 12px rgba(var(--color-brand-rgb), 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-  /* Single Line Code (not syntax highlighted blocks) */
-  .article-content code:not(pre code) {
-    @apply p-1 rounded font-light;
-    font-size: 0.9em; /* Relative to parent for better scaling */
-    background-color: var(--color-bg-secondary);
-    color: var(--color-brand-1); /* Dark color for light mode readability */
-    font-family: var(--font-family-mono, RobotoMono, monospace);
-    line-height: 1.4;
-  }
-
-  /* Dark mode: use lighter brand color for better contrast */
-  .dark .article-content code:not(pre code) {
-    color: var(--color-brand);
-  }
-
-  /* Syntax Highlighted Code - Let Hugo handle colors */
-  .article-content pre {
-    @apply overflow-x-auto overflow-y-visible;
-    /* Remove color: unset to allow Hugo's syntax colors */
-  }
-  .article-content .highlight pre {
-    @apply p-2;
-  }
-  .article-content .highlight pre code {
-    @apply p-0 bg-transparent !important;
-    /* Don't override Hugo's syntax highlighting colors */
-    color: inherit !important;
-  }
-  .article-content pre code {
-    @apply p-0 m-0;
-    font-family: var(--font-family-mono, RobotoMono, monospace);
-    font-size: 0.875rem; /* 14px for code blocks */
-    line-height: 1.6;
-    /* Don't set color here - let Hugo's highlighting work */
-  }
-
-  /* Code block wrapper styling */
-  .codeblock-wrapper {
-    @apply relative;
-  }
-  .codeblock-wrapper .highlight {
-    @apply m-0;
-  }
-  .codeblock-wrapper .highlight pre {
-    @apply m-0 p-4 rounded;
-  }
-  /* Copy button positioning */
-  .codeblock-wrapper .copy-btn {
-    z-index: 10;
-  }
-
-  /* Link Styles - NVIDIA Style */
-  .article-content a:not(#quick-install a),
-  .notebook-cell__markdown-content a {
-    @apply underline;
-    text-decoration-color: var(--color-brand);
-  }
-  .article-content a:hover:not(#quick-install a),
-  .notebook-cell__markdown-content a:hover {
-    @apply text-brand-1 transition duration-300;
-  }
-  .article-content a.headerlink {
-    color: var(--color-brand-1);
-  }
-
-  /* Table styles moved to components/tables.css */
-
-  /* Legacy notice styles - removed in favor of enhanced notices */
-
-  .admonition {
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    @apply p-4 my-4;
-  }
-
-  /* .note, .tip, .caution, .warning {
-    @apply bg-zinc-100 p-4 my-4;
-  } */
-
-  .admonition-title {
-    @apply font-bold;
-  }
-
-  /* Table of Contents */
-
-  .toc > nav > ul > li > a {
-    @apply font-bold
-  }
-
-  #TableOfContents ul ul {
-    @apply ml-4;
-  }
-
-  /* Dark theme utility overrides removed. Use semantic classes or Tailwind dark: variants in markup. */
-}
-
-@tailwind components;
-
-@layer components {
-  
-  /* Component styles are now imported above - this layer contains only unique styles */
-  
-  /* Tile styles moved to components/navigation.css or other component files */
-  
-
-  
-  /* Chat styles moved to components/chat.css */
-  
-
-  
-  /* Navigation link and resource card styles moved to components/navigation.css */
-  
-  /* TOC styles moved to component files */
-  /* Navigation animations and sidebar styles moved to components/navigation.css */
-
-  /* Loading skeleton for content */
-  .content-skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: skeleton-loading 1.5s infinite;
-  }
-
-  @keyframes skeleton-loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Page transitions removed - caused flicker with static site navigation */
-
-  /* Button ripple effects moved to components/buttons.css */
-  /* Tile and card interactions moved to component files */
-
-  /* Fade-in animation classes */
-  .fade-in-on-scroll {
-    @apply opacity-0 translate-y-5 transition-all duration-700;
-  }
-
-  .fade-in-on-scroll.visible {
-    @apply opacity-100 translate-y-0;
-  }
-
-  /* Enhanced focus states for accessibility */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
-    @apply outline-2 outline-offset-2 rounded;
-    outline-color: var(--color-brand);
-  }
-
-  /* :has() Form & Input Enhancements */
-  
-  /* Form groups with valid inputs */
-  .form-group:has(input:valid:not(:placeholder-shown)) label {
-    color: var(--color-success);
-    font-weight: 500;
-  }
-  
-  .form-group:has(input:valid:not(:placeholder-shown)) {
-    border-left: 3px solid var(--color-success);
-    padding-left: 1rem;
-    background: rgba(var(--color-success-rgb, 34, 197, 94), 0.05);
-  }
-  
-  /* Form groups with invalid inputs */
-  .form-group:has(input:invalid:not(:placeholder-shown)) label {
-    color: var(--color-danger);
-    font-weight: 500;
-  }
-  
-  .form-group:has(input:invalid:not(:placeholder-shown)) {
-    border-left: 3px solid var(--color-danger);
-    padding-left: 1rem;
-    background: rgba(var(--color-danger-rgb, 239, 68, 68), 0.05);
-  }
-  
-  /* Search containers with content */
-  .search-container:has(input:not(:placeholder-shown)) {
-    background: rgba(var(--color-brand-rgb), 0.05);
-    border-color: var(--color-brand);
-    transform: scale(1.02);
-  }
-  
-  .search-container:has(input:not(:placeholder-shown)) .search-icon {
-    color: var(--color-brand);
-    transform: scale(1.1);
-  }
-
-  /* Notification styles */
-  .notification {
-    @apply fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300;
-  }
-
-  /* Loading states */
-  .loading-spinner {
-    border: 2px solid var(--color-border-primary);
-    border-top: 2px solid var(--color-brand);
-    @apply rounded-full w-5 h-5;
-    animation: spin 1s linear infinite;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: var(--color-bg-secondary);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-brand);
-    @apply rounded;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-brand-1);
-  }
-
-  /* Mobile-specific overrides removed; prefer mobile-first + @screen md and utilities.
-     Use `.hit-target` on interactive elements as needed. */
-
-  /* Reduced motion for users who prefer it (global) */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-
-  /* Dark mode enhancements */
-  .dark .content-skeleton {
-    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
-  }
 }
 
 @tailwind utilities;
-
-@layer utilities {
-  /* CSS custom properties for dynamic viewport height on mobile */
-  :root {
-    --vh: 1vh;
-  }
-
-  .h-screen-dynamic {
-    height: calc(var(--vh, 1vh) * 100);
-  }
-
-  /* Utility helpers aligned with design tokens */
-  .focus-ring {
-    @apply outline-2 outline-offset-2 rounded;
-    outline-color: var(--color-brand);
-  }
-
-  .hit-target {
-    @apply min-h-11 min-w-11;
-  }
-
-  .scroll-anchor {
-    @apply scroll-mt-16 md:scroll-mt-20;
-  }
-}

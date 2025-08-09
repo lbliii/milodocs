@@ -1,0 +1,20 @@
+{{/*
+  utils/title-guard.html
+  Returns a boolean `showFrontMatterTitle` to decide whether to render the front-matter Title.
+  Logic: If raw content starts with an H1 ('# '), don't render the front-matter H1; otherwise true.
+
+  Inputs (dict or page):
+    - page (optional) : the page object. If omitted, uses .
+
+  Returns (bool):
+    - true if we should render the front-matter title
+*/}}
+
+{{- $p := . -}}
+{{- if and (reflect.IsMap .) (isset . "page") -}}
+  {{- $p = .page -}}
+{{- end -}}
+
+{{- $raw := $p.RawContent | strings.TrimSpace -}}
+{{- $startsWithH1 := hasPrefix $raw "# " -}}
+{{- return (not $startsWithH1) -}} 

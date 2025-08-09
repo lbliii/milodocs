@@ -1,32 +1,31 @@
 {{/* Pure breadcrumbs navigation component */}}
-{{- $ancestors := .Ancestors.Reverse -}}
-{{- if gt (len $ancestors) 1 -}}
+{{- $data := partial "utils/breadcrumbs-data.html" . -}}
+{{- if gt (len $data.entries) 0 -}}
 <nav aria-label="Breadcrumb" class="breadcrumb" role="navigation" data-component="breadcrumbs">
   <ol class="breadcrumb__list" itemscope itemtype="https://schema.org/BreadcrumbList">
-    {{- range $index, $ancestor := after 1 $ancestors -}}
+    {{- range $i, $e := $data.entries -}}
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb__item">
-        <a href="{{ .Permalink }}" 
+        <a href="{{ $e.href }}" 
            class="breadcrumb__link" 
            itemprop="item"
-           aria-label="Navigate to {{ .Title }}">
-          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+           aria-label="Navigate to {{ $e.title }}">
+          <span itemprop="name">{{ $e.title | truncate 20 "…" }}</span>
         </a>
-        <meta itemprop="position" content="{{ add $index 1 }}" />
+        <meta itemprop="position" content="{{ $e.position }}" />
         <span class="breadcrumb__separator" aria-hidden="true">›</span>
       </li>
     {{- end -}}
     
     {{/* Current page - clickable if metadata available */}}
-    {{- $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
     <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb__item">
-      {{- if $hasMetadata -}}
+      {{- if $data.hasMetadata -}}
         <button class="breadcrumb__current breadcrumb__current--clickable" 
                 aria-current="page"
                 aria-expanded="false"
                 aria-controls="article-metadata-panel"
                 data-metadata-toggle
                 itemprop="item">
-          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+          <span itemprop="name">{{ $data.current.title | truncate 20 "…" }}</span>
           <svg class="breadcrumb__metadata-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
@@ -35,10 +34,10 @@
         <span class="breadcrumb__current" 
               aria-current="page"
               itemprop="item">
-          <span itemprop="name">{{ .Title | truncate 20 "…" }}</span>
+          <span itemprop="name">{{ $data.current.title | truncate 20 "…" }}</span>
         </span>
       {{- end -}}
-      <meta itemprop="position" content="{{ len $ancestors }}" />
+      <meta itemprop="position" content="{{ $data.current.position }}" />
     </li>
   </ol>
 </nav>

@@ -25,6 +25,10 @@
     </div>
 {{ end }}
 
+{{ define "home" }}
+  {{- template "content" . -}}
+{{ end }}
+
 {{- define "innerFooter" -}}
   {{/*  <div class="p-4">
       {{partial "article/next-prev.html" . }}

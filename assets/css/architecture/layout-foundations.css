@@ -125,6 +125,41 @@
   --max-width-sidebar: var(--max-width-xs);     /* Sidebar width */
   --max-width-modal: var(--max-width-2xl);      /* Modal dialogs */
   --max-width-form: var(--max-width-lg);        /* Form containers */
+
+  /* ✨ LAYOUT SHELL TOKENS (moved from input.css) */
+  --left-rail-width: 18rem;       /* xl left rail */
+  --right-rail-width: 22rem;      /* xl right rail */
+  --layout-gap-xl: var(--space-8);/* xl gap */
+  --left-rail-width-2xl: 20rem;   /* 2xl left rail */
+  --right-rail-width-2xl: 28rem;  /* 2xl right rail */
+  --layout-gap-2xl: var(--space-16); /* 2xl gap */
+
+  /* ✨ GRID/TILE TOKENS (moved from input.css) */
+  --grid-card-min: 280px;         /* minimum card width for auto-fit grids */
+  --tile-glass-blur: 12px;        /* tile glass blur amount */
+  --tile-glass-saturate: 140%;    /* tile glass saturation */
+}
+
+/* Right-rail presence attribute hook */
+main.layout-shell[data-has-right-rail="false"] {
+  /* Slightly increase center column breathing room when right rail is hidden */
+  --layout-gap-xl: var(--space-8);
+  --layout-gap-2xl: var(--space-12);
+  --max-width-content: var(--max-width-5xl);
+}
+
+/* Density presets
+   Apply by adding a class on <body> or <main>, or via future param-driven mapping */
+.layout-density--compact {
+  --grid-card-min: 320px;          /* wider cards to reduce row count */
+  --layout-gap-xl: var(--space-6); /* slightly tighter gap */
+  --layout-gap-2xl: var(--space-10);
+}
+
+.layout-density--comfortable {
+  --grid-card-min: 280px;
+  --layout-gap-xl: var(--space-8);
+  --layout-gap-2xl: var(--space-16);
 }
 
 /* ✅ SPACING UTILITY CLASSES

@@ -20,12 +20,10 @@
     {{- end -}}
 
     <header class="mb-8 not-prose">
-      {{/* Only show frontmatter title if content doesn't start with H1 */}}
-      {{- $rawContent := .RawContent -}}
-      {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
-      {{- if not $startsWithH1 -}}
-        <h1 class="text-3xl font-bold mb-4" style="color: var(--color-text-primary);">{{ .Title }}</h1>
-      {{- end -}}
+        {{/* Show front matter title only if content does not start with H1 */}}
+  {{- if partial "utils/title-guard.html" . -}}
+    <h1 class="text-3xl font-bold mb-4" style="color: var(--color-text-primary);">{{ .Title }}</h1>
+  {{- end -}}
       
       {{- with .Description -}}
         <div class="article-description not-prose mb-8 flex items-center gap-6">

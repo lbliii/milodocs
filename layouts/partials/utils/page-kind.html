@@ -1,0 +1,30 @@
+{{/*
+  utils/page-kind.html
+  Returns a dict of page kind booleans for the given page.
+
+  Inputs (dict or page):
+    - page (optional) : the page object. If omitted, uses .
+
+  Returns (dict):
+    - isHome
+    - isSection
+    - isTaxonomy
+    - isTerm
+    - isSingle
+*/}}
+
+{{- $p := . -}}
+{{- if and (reflect.IsMap .) (isset . "page") -}}
+  {{- $p = .page -}}
+{{- end -}}
+
+{{- $kind := $p.Kind -}}
+{{- $result := dict
+  "isHome" $p.IsHome
+  "isSection" (eq $kind "section")
+  "isTaxonomy" (eq $kind "taxonomy")
+  "isTerm" (eq $kind "term")
+  "isSingle" (eq $kind "page")
+-}}
+
+{{- return $result -}} 

@@ -1,0 +1,41 @@
+{{/*
+  utils/layout-config.html
+  Merges site-level and page-level layout configuration into a single dict.
+
+  Inputs (dict):
+    - site: .Site
+    - page: . (the current page)
+
+  Returns (dict):
+    - rightRail (bool)
+    - leftRailWidth (string)
+    - rightRailWidth (string)
+    - skeleton (bool)
+    - density (string) // 'comfortable' (default) | 'compact'
+*/}}
+
+{{- $site := .site -}}
+{{- $page := .page -}}
+
+{{- $defaults := dict
+  "rightRail" true
+  "leftRailWidth" ""
+  "rightRailWidth" ""
+  "skeleton" false
+  "density" "comfortable"
+-}}
+
+{{- $siteCfg := dict -}}
+{{- with $site.Params.layout -}}
+  {{- $siteCfg = . -}}
+{{- end -}}
+
+{{- $pageCfg := dict -}}
+{{- with $page.Params.layoutConfig -}}
+  {{- $pageCfg = . -}}
+{{- end -}}
+
+{{- $merged := merge $defaults $siteCfg -}}
+{{- $merged = merge $merged $pageCfg -}}
+
+{{- return $merged -}} 

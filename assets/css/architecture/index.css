@@ -28,6 +28,12 @@
  */
 @import './layout-foundations.css';
 
+/* ✅ STEP 3.5: TYPOGRAPHY SYSTEM
+ * ===============================
+ * Global type rules and article typography.
+ */
+@import './typography-system.css';
+
 /* ✅ STEP 4: ELEVATION SYSTEM
  * ============================
  * Independent shadow system. Provides elevation tokens that interaction

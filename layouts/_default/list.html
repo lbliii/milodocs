@@ -12,7 +12,7 @@
   </div>
 {{- end -}}
 
-{{- define "content" -}}
+{{- define "list" -}}
   <header class="mb-8 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
    <h1 class="text-3xl font-bold text-text-primary mb-4">{{ .Title }}</h1>
     {{- with .Content -}}
@@ -25,7 +25,8 @@
   {{- $pages := .Pages -}}
   {{- if $pages -}}
     <section aria-label="Page listings" class="mx-auto max-w-6xl 2xl:max-w-7xl">
-    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+    {{/* <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"> */}}
+    <div class="grid grid-autofit gap-6 2xl:grid-cols-3">
         {{- range $pages -}}
           <article class="tile bg-surface rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
             {{- with .Params.image -}}
@@ -118,13 +119,12 @@
           {{- range $paginator.Pagers -}}
             {{- if eq . $paginator -}}
              <span class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md" aria-current="page">
-                {{ .PageNumber }}
-              </span>
+               {{ .PageNumber }}
+             </span>
             {{- else -}}
-              <a href="{{ .URL }}" 
-                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
-                {{ .PageNumber }}
-              </a>
+             <a href="{{ .URL }}" class="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
+               {{ .PageNumber }}
+             </a>
             {{- end -}}
           {{- end -}}
           
@@ -137,16 +137,8 @@
         </div>
       </nav>
     {{- end -}}
-  {{- else -}}
-    <div class="text-center py-12">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No pages found</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by creating your first page in this section.</p>
-    </div>
   {{- end -}}
-{{ end }}
+{{- end -}}
 
 {{- define "sidebar-right" -}}
   {{- partial "navigation/sidebar-right.html" . -}}
