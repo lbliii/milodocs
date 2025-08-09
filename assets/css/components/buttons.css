@@ -72,8 +72,11 @@
 }
 
 .btn--sm {
-  @apply px-3 py-1 text-sm;
+  /* @apply px-3 py-1 text-sm; */
+  @apply text-sm;
   min-height: 2rem;
+  min-width: 2rem;
+  padding: 0.375rem 0.5rem; /* tighter, more square */
 }
 
 .btn--lg {
@@ -82,7 +85,17 @@
 }
 
 .btn__icon {
-  @apply w-4 h-4 mr-2;
+  /* @apply w-4 h-4 mr-2; */
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.375rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Icon-only small buttons: remove right margin for centering */
+.btn--sm .btn__icon:only-child {
+  margin-right: 0;
 }
 
 .btn__icon--right {

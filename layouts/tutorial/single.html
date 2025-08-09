@@ -22,10 +22,10 @@
             {{- $rawContent := .RawContent -}}
             {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
             {{- if not $startsWithH1 -}}
-              <header class="mb-8 not-prose">
+              <header class="mb-6 not-prose">
                 <h1 class="text-3xl font-bold mb-4" style="color: var(--color-text-primary);">{{ .Title }}</h1>
                 {{- with .Description -}}
-                  <div class="article-description not-prose mb-8 flex items-center gap-6">
+                  <div class="article-description not-prose mb-6 flex items-center gap-4">
                     <div class="w-1 h-16 rounded-full flex-shrink-0" style="background-color: var(--color-brand); opacity: 0.3;"></div>
                     <div class="flex-1">
                       <p class="text-xl font-light leading-relaxed" style="color: var(--color-text-secondary); font-weight: 300;">{{ . }}</p>

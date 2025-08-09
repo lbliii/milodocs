@@ -5,8 +5,12 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: var(--color-bg-primary);
-  border-bottom: 1px solid var(--color-border-primary);
+  /* background-color: var(--color-bg-primary); */
+  /* border-bottom: 1px solid var(--color-border-primary); */
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Specific properties for better performance */
   transition: 
     background-color var(--timing-medium) var(--easing-standard),
@@ -19,8 +23,11 @@
   grid-template-areas: "logo navigation search controls";
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 1.5rem;
-  min-height: 4rem;
+  /* padding: 0.75rem 1.5rem; */
+  padding: 0.5rem 0.75rem;
+  /* min-height: 4rem; */
+  min-height: 3rem;
+  box-shadow: var(--glass-shadow);
 }
 
 /* Grid Areas */
@@ -87,8 +94,8 @@
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "logo search controls";
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    min-height: 3.5rem;
+    padding: 0.5rem 0.5rem;
+    min-height: 2.75rem;
   }
   
   /* Hide navigation on mobile - it should be in a hamburger menu */

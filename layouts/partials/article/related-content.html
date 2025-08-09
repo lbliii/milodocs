@@ -3,7 +3,7 @@
   {{- $relatedPages := .RegularPages | first 6 -}}
   {{- $relatedPages = $relatedPages | complement (slice $.Page) -}}
   {{- if $relatedPages -}}
-    <aside class="related-content mt-8 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
+    <aside class="related-content mt-6 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
       <div class="related-header flex items-center justify-between mb-4">
         <div class="flex items-center">
           <svg class="w-4 h-4 mr-2" style="color: var(--color-text-secondary);" fill="currentColor" viewBox="0 0 20 20">

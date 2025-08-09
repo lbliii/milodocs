@@ -138,6 +138,20 @@
   --grid-card-min: 280px;         /* minimum card width for auto-fit grids */
   --tile-glass-blur: 12px;        /* tile glass blur amount */
   --tile-glass-saturate: 140%;    /* tile glass saturation */
+
+  /* ✨ GLASSMORPHISM TOKENS (unified) */
+  --glass-blur: 8px;
+  --glass-saturate: 1.15;
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border-color: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode glass adjustments */
+.dark {
+  --glass-bg: rgba(17, 17, 17, 0.5);
+  --glass-border-color: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Right-rail presence attribute hook */

@@ -877,6 +877,21 @@
   --grid-card-min: 280px;         /* minimum card width for auto-fit grids */
   --tile-glass-blur: 12px;        /* tile glass blur amount */
   --tile-glass-saturate: 140%;    /* tile glass saturation */
+
+  /* ✨ GLASSMORPHISM TOKENS (unified) */
+  --glass-blur: 8px;
+  --glass-saturate: 1.15;
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border-color: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode glass adjustments */
+
+.dark {
+  --glass-bg: rgba(17, 17, 17, 0.5);
+  --glass-border-color: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Right-rail presence attribute hook */
@@ -1477,23 +1492,38 @@ main { font-family: var(--font-family-brand, inherit); }
 :root {
   /* ✨ ELEVATION LEVELS (0-24dp equivalent) */
   --elevation-0: none;
-  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.1);
-  --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.1);
-  --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.15);
+  /* --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.06);
+  /* --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  --elevation-2: 0 1px 3px rgba(0, 0, 0, 0.08);
+  /* --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.1); */
+  --elevation-3: 0 2px 5px rgba(0, 0, 0, 0.08);
+  /* --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.1); */
+  --elevation-4: 0 2px 6px rgba(0, 0, 0, 0.1);
+  /* --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  --elevation-6: 0 3px 10px rgba(0, 0, 0, 0.12);
+  /* --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.1); */
+  --elevation-8: 0 4px 14px rgba(0, 0, 0, 0.12);
+  /* --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.1); */
+  --elevation-12: 0 6px 20px rgba(0, 0, 0, 0.14);
+  /* --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.1); */
+  --elevation-16: 0 8px 24px rgba(0, 0, 0, 0.14);
+  /* --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.15); */
+  --elevation-24: 0 12px 28px rgba(0, 0, 0, 0.16);
   
   /* ✨ INTERACTIVE ELEVATION (hover states) */
-  --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.15);
-  --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.15);
-  --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.15);
-  --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.15);
-  --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.2);
+  /* --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-1: 0 3px 8px rgba(0, 0, 0, 0.12);
+  /* --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-2: 0 4px 10px rgba(0, 0, 0, 0.14);
+  /* --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-3: 0 5px 14px rgba(0, 0, 0, 0.14);
+  /* --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-4: 0 6px 18px rgba(0, 0, 0, 0.16);
+  /* --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-6: 0 8px 22px rgba(0, 0, 0, 0.18);
+  /* --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.2); */
+  --elevation-hover-8: 0 10px 28px rgba(0, 0, 0, 0.2);
   
   /* ✨ BRAND-COLORED ELEVATIONS */
   --elevation-brand-subtle: 0 2px 8px rgba(var(--color-brand-rgb), 0.1);
@@ -1525,23 +1555,38 @@ main { font-family: var(--font-family-brand, inherit); }
 
 .dark {
   /* Stronger shadows for dark mode */
-  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.4);
-  --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.6);
-  --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.7);
+  /* --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3); */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  /* --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3); */
+  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.28);
+  /* --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.4); */
+  --elevation-3: 0 2px 5px rgba(0, 0, 0, 0.34);
+  /* --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.4); */
+  --elevation-4: 0 2px 6px rgba(0, 0, 0, 0.36);
+  /* --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.4); */
+  --elevation-6: 0 3px 10px rgba(0, 0, 0, 0.4);
+  /* --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.5); */
+  --elevation-8: 0 4px 14px rgba(0, 0, 0, 0.48);
+  /* --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.5); */
+  --elevation-12: 0 6px 20px rgba(0, 0, 0, 0.5);
+  /* --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.6); */
+  --elevation-16: 0 8px 24px rgba(0, 0, 0, 0.56);
+  /* --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.7); */
+  --elevation-24: 0 12px 28px rgba(0, 0, 0, 0.6);
   
   /* Enhanced hover states for dark mode */
-  --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.5);
-  --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.6);
-  --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.6);
-  --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.7);
-  --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.8);
+  /* --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.5); */
+  --elevation-hover-1: 0 3px 8px rgba(0, 0, 0, 0.44);
+  /* --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.5); */
+  --elevation-hover-2: 0 4px 10px rgba(0, 0, 0, 0.48);
+  /* --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.6); */
+  --elevation-hover-3: 0 5px 14px rgba(0, 0, 0, 0.5);
+  /* --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.6); */
+  --elevation-hover-4: 0 6px 18px rgba(0, 0, 0, 0.54);
+  /* --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.7); */
+  --elevation-hover-6: 0 8px 22px rgba(0, 0, 0, 0.58);
+  /* --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.8); */
+  --elevation-hover-8: 0 10px 28px rgba(0, 0, 0, 0.62);
   
   /* Enhanced brand elevations for dark mode */
   --elevation-brand-subtle: 0 2px 8px rgba(var(--color-brand-rgb), 0.15);
@@ -2946,13 +2991,12 @@ main { font-family: var(--font-family-brand, inherit); }
 }
 
 .btn--sm {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  /* @apply px-3 py-1 text-sm; */
   font-size: 0.875rem;
   line-height: 1.5;
   min-height: 2rem;
+  min-width: 2rem;
+  padding: 0.375rem 0.5rem; /* tighter, more square */
 }
 
 .btn--lg {
@@ -2966,9 +3010,18 @@ main { font-family: var(--font-family-brand, inherit); }
 }
 
 .btn__icon {
-  margin-right: 0.5rem;
-  height: 1rem;
+  /* @apply w-4 h-4 mr-2; */
   width: 1rem;
+  height: 1rem;
+  margin-right: 0.375rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Icon-only small buttons: remove right margin for centering */
+
+.btn--sm .btn__icon:only-child {
+  margin-right: 0;
 }
 
 .btn__icon--right {
@@ -3338,7 +3391,8 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
     box-shadow var(--timing-medium) var(--easing-standard);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Use animation tokens */
   animation: notice-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
@@ -3360,7 +3414,8 @@ body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
 .notice__container {
   display: flex;
   align-items: flex-start;
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
+  padding: 1rem;
   position: relative;
 }
 
@@ -4418,8 +4473,11 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: var(--color-bg-primary);
-  border-bottom: 1px solid var(--color-border-primary);
+  /* background-color: var(--color-bg-primary); */
+  /* border-bottom: 1px solid var(--color-border-primary); */
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border-color);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Specific properties for better performance */
   transition: 
     background-color var(--timing-medium) var(--easing-standard),
@@ -4432,8 +4490,11 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   grid-template-areas: "logo navigation search controls";
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 1.5rem;
-  min-height: 4rem;
+  /* padding: 0.75rem 1.5rem; */
+  padding: 0.5rem 0.75rem;
+  /* min-height: 4rem; */
+  min-height: 3rem;
+  box-shadow: var(--glass-shadow);
 }
 
 /* Grid Areas */
@@ -4503,8 +4564,8 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "logo search controls";
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    min-height: 3.5rem;
+    padding: 0.5rem 0.5rem;
+    min-height: 2.75rem;
   }
   
   /* Hide navigation on mobile - it should be in a hamburger menu */
@@ -4879,16 +4940,16 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms; padding: var(--space-2); position: absolute; border-radius: var(--radius-xl);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  /* background-color: var(--color-surface); */
+  background: var(--glass-bg);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px) scale(0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.15),
-    0 0 20px rgba(var(--color-brand-rgb), 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 20px rgba(var(--color-brand-rgb), 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
 }
 
 .group:hover .dropdown {
@@ -4905,8 +4966,10 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   left: 20px;
   width: 12px;
   height: 12px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  /* background-color: var(--color-surface); */
+  background: var(--glass-bg);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   border-bottom: none;
   border-right: none;
   transform: rotate(45deg);
@@ -5205,7 +5268,8 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-lg);
-  padding: 0.5rem 0.75rem;
+  /* padding: 0.5rem 0.75rem; */
+  padding: 0.25rem 0.5rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: transparent;
   color: var(--color-text-secondary);
@@ -5234,9 +5298,9 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 
 .breadcrumb__link:hover {
   color: var(--color-brand);
-  background-color: var(--color-surface-hover);
-  transform: var(--transform-lift-subtle);
-  box-shadow: var(--elevation-4);
+  /* background-color: var(--color-surface-hover); */
+  /* transform: var(--transform-lift-subtle); */
+  /* box-shadow: var(--elevation-4); */
 }
 
 .breadcrumb__link:hover:before {
@@ -5274,10 +5338,14 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-lg);
-  padding: 0.5rem 0.75rem;
+  /* padding: 0.5rem 0.75rem; */
+  padding: 0.25rem 0.5rem;
   font-weight: 600;
-  background-color: var(--color-brand);
-  color: var(--color-text-inverse);
+  /* background-color: var(--color-brand); */
+  /* color: var(--color-text-inverse); */
+  background: var(--glass-bg);
+  color: var(--color-text-primary);
+  border: 1px solid var(--glass-border-color);
   position: relative;
   overflow: hidden;
 }
@@ -5286,7 +5354,7 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 
 .breadcrumb__current--clickable {
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.2s ease, background-color 0.2s ease;
   border: none;
   gap: 0.5rem;
   font-family: inherit;
@@ -5295,9 +5363,7 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 }
 
 .breadcrumb__current--clickable:hover {
-  background-color: var(--color-brand-1);
-  transform: var(--transform-lift-subtle);
-  box-shadow: 0 4px 12px rgba(var(--color-brand-rgb), 0.4);
+  background-color: var(--color-surface-hover);
 }
 
 .breadcrumb__current--clickable:focus {
@@ -5492,9 +5558,10 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.3);
 }
 
-Search Component - Sophisticated search interface with NVIDIA styling and complex grouping
+/* Search Component - Sophisticated search interface with NVIDIA styling and complex grouping */
 
 /* SOPHISTICATED SEARCH INPUT - Matching design system */
+
 .search-input {
   position: relative;
   z-index: 10;
@@ -5505,9 +5572,11 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   border: 1px solid var(--color-border-primary);
   font-size: 0.875rem;
   font-weight: 500;
-  background: var(--color-surface);
+  /* background: var(--color-surface); */
+  background: var(--glass-bg);
   font-family: var(--font-family-brand, inherit);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); */
   transition:
     background-color var(--timing-fast) var(--easing-standard),
@@ -5518,9 +5587,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   /* box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: var(--elevation-1), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   
   /* Search icon using brand color */
   /* Use currentColor for icon stroke; color is set via CSS variable for themeability */
@@ -5539,28 +5607,23 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
     0 4px 8px rgba(0, 0, 0, 0.1),
     0 0 20px rgba(var(--color-brand-rgb), 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.15); */
-  box-shadow:
-    var(--elevation-hover-2),
-    var(--elevation-brand-subtle),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  /* box-shadow: var(--elevation-hover-2), var(--elevation-brand-subtle), inset 0 1px 0 rgba(255, 255, 255, 0.15); */
+  box-shadow: var(--glass-shadow);
 }
 
 .search-input:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
   border-color: var(--color-brand);
-  background-color: var(--color-surface);
+  background-color: var(--glass-bg);
   transform: var(--transform-lift-subtle);
   /* box-shadow:
     0 0 0 2px var(--color-brand),
     0 0 0 4px rgba(var(--color-brand-rgb), 0.15),
     0 4px 12px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2); */
-  box-shadow:
-    0 0 0 2px var(--color-brand),
-    0 0 0 4px rgba(var(--color-brand-rgb), 0.15),
-    var(--elevation-hover-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  /* box-shadow: 0 0 0 2px var(--color-brand), 0 0 0 4px rgba(var(--color-brand-rgb), 0.15), var(--elevation-hover-2), inset 0 1px 0 rgba(255, 255, 255, 0.2); */
+  box-shadow: 0 0 0 2px var(--color-brand), 0 0 0 4px rgba(var(--color-brand-rgb), 0.15), var(--glass-shadow);
 }
 
 .search-input::-moz-placeholder {
@@ -5578,20 +5641,16 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 .search-container {
   position: relative;
   border-radius: 0.875rem;
-  padding: 1rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  padding: 0.75rem;
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-color);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
   transition:
     background-color var(--timing-medium) var(--easing-standard),
@@ -5639,20 +5698,18 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 #searchResultsContainer {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: 0.875rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   /* animation: search-container-enter 0.5s cubic-bezier(0.4, 0, 0.2, 1); */
   animation: search-container-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
@@ -5705,13 +5762,11 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 .search-hit-content {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: 0.875rem;
-  border: 1px solid var(--color-border-primary);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   padding: 1.25rem;
   /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
   transition:
@@ -5720,13 +5775,13 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
     border-color var(--timing-medium) var(--easing-standard),
     transform var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
 }
 
@@ -5898,14 +5953,13 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   align-items: center;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
 }
 
 .search-section-badge {
@@ -5956,8 +6010,10 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   font-family: var(--font-family-brand, inherit);
   margin: 0 -1rem 1rem -1rem;
   padding: 0.75rem 1rem;
-  background: var(--color-surface);
-  backdrop-filter: blur(10px);
+  /* background: var(--color-surface); */
+  background: var(--glass-bg);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-bottom: 1px solid var(--color-border-secondary);
   border-radius: 0.5rem 0.5rem 0 0;
 }
@@ -5967,15 +6023,14 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 .search-results-header {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: 0.875rem;
-  border: 1px solid var(--color-border-primary);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   border-left: 4px solid var(--color-brand);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* animation: slideInUp 0.6s ease-out; */
   animation: slideInUp var(--timing-slow) var(--easing-standard);
 }
@@ -6145,16 +6200,20 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 #filterSelect {
   position: relative;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  /* background: var(--color-surface); */
+  background: var(--glass-bg);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   border-radius: var(--radius-lg);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text-primary);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  box-shadow: var(--glass-shadow);
   cursor: pointer;
 }
 
@@ -6469,7 +6528,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 /* Chat Header */
 
 .chat-header {
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-radius: 0.75rem 0.75rem 0 0; /* Top corners rounded to match design system */
 }
 
@@ -6586,14 +6646,12 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 .chat-expanded {
   /* Lighter translucent surface */
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(24px) saturate(1.2);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border-color);
   border-left-width: 3px;
-  box-shadow:
-    0 18px 60px rgba(0, 0, 0, 0.08),
-    0 8px 28px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  /* box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08), 0 8px 28px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.18); */
+  box-shadow: var(--glass-shadow);
   transform: translateY(-2px);
   overflow: visible;
   display: flex;
@@ -6603,8 +6661,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 /* Dark theme tuning: slightly lighter sheet */
 
 .dark .chat-expanded {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: var(--glass-bg);
+  border-color: var(--glass-border-color);
 }
 
 /* Ensure messages area scrolls within viewport when expanded */
@@ -6687,14 +6745,11 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 /* Liquid Glass Hover Effect */
 
 #chatContainer:not(.chat-expanded):hover {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(24px) saturate(1.3);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateX(-1px); /* Subtle hint of leftward growth */
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-color: var(--glass-border-color);
+  /* transform: translateX(-1px); */
+  box-shadow: var(--glass-shadow);
 }
 
 /* Auto-resize textarea styling with liquid glass focus */
@@ -6716,7 +6771,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 
 .chat-input:focus {
   background: rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(12px) !important;
+  /* backdrop-filter: blur(12px) !important; */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
   box-shadow: 
     0 0 0 2px rgba(var(--color-brand-rgb), 0.1),
@@ -7210,7 +7266,8 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   font-size: 0.75rem;
   line-height: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
+  /* backdrop-filter: blur(8px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
 }
 
 .chat-delete:hover {
@@ -7252,28 +7309,22 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
   border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* padding: 1rem 1.25rem; */
+  padding: 0.5rem 0.75rem;
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  background: var(--glass-bg);
+  box-shadow: var(--glass-shadow);
+  transition: background-color var(--timing-medium) var(--easing-standard), border-color var(--timing-medium) var(--easing-standard);
 }
 
+/* Reduced hover effect to keep things airy */
+
 .article-header__navigation:hover {
-  transform: translateY(-1px);
-  box-shadow: 
-    0 8px 20px rgba(0, 0, 0, 0.1),
-    0 0 20px rgba(var(--color-brand-rgb), 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  /* transform: translateY(-1px); */
 }
 
 /* Actions Container - holds copy page and metadata toggle */
@@ -7328,13 +7379,17 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   right: 0;
   margin-top: 0.5rem;
   width: 14rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  /* background: var(--color-surface); */
+  background: var(--glass-bg);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); */
+  box-shadow: var(--glass-shadow);
   z-index: 999;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -7484,14 +7539,16 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
   top: 100%;
   margin-top: 0.5rem;
   width: 14rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  /* background: var(--color-surface); */
+  background: var(--glass-bg);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   border-radius: 0.75rem;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.15),
-    0 4px 6px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1); */
+  box-shadow: var(--glass-shadow);
   z-index: 50;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   overflow: hidden;
 }
 
@@ -7612,17 +7669,15 @@ Search Component - Sophisticated search interface with NVIDIA styling and comple
 /* Enhanced UX styles for horizontal metadata flow within article header */
 
 .article-header__metadata-panel .metadata {
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   margin-top: 0.75rem;
 }
 
@@ -7853,16 +7908,16 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
   background: var(--tile-base-bg);
   border-radius: var(--radius-card);
   border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(var(--tile-glass-blur)) saturate(var(--tile-glass-saturate));
+  /* backdrop-filter: blur(var(--tile-glass-blur)) saturate(var(--tile-glass-saturate)); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   transition: 
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard),
     background var(--timing-medium) var(--easing-standard);
   overflow: hidden;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   will-change: transform, filter;
   isolation: isolate;
 }
@@ -8016,16 +8071,12 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 
 .dark .tile {
   border-color: var(--color-border-secondary);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05); */
+  box-shadow: var(--glass-shadow);
 }
 
 .dark .tile:hover {
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(var(--color-brand-rgb), 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(var(--color-brand-rgb), 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
 }
 
 /* Animation improvements */
@@ -8209,26 +8260,21 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 
 .card {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: var(--radius-card);
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition:
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard);
   overflow: hidden;
-  /* box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
 }
 
 .card::before {
@@ -8272,26 +8318,21 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 .resource-card {
   /* Use .interact-medium or .interact-dramatic class instead of custom transforms */
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: var(--radius-card);
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition:
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard);
   overflow: hidden;
-  /* box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1)
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow)
 }
 
 .resource-card::before {
@@ -8403,8 +8444,9 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 }
 
 .resource-card {
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  /* padding: 1.5rem; */
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .resource-card h3 {
@@ -8475,23 +8517,20 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 /* Content Metadata Styles */
 
 .content-metadata {
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: var(--radius-card);
-  border: 1px solid var(--color-border-primary);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
   padding: 1rem 1.25rem;
   font-size: 0.875rem;
   color: var(--color-text-secondary);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: var(--glass-shadow);
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
     background-color var(--timing-fast) var(--easing-standard),
@@ -8538,26 +8577,21 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 .article-card {
   /* Use .interact-medium or .interact-dramatic class instead of custom transforms */
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: var(--radius-card);
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition:
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard);
   overflow: hidden;
-  /* box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-  box-shadow:
-    var(--elevation-2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1)
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow)
 }
 
 .article-card::before {
@@ -8915,24 +8949,22 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 
 .glossary-entry {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
   border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard);
   overflow: hidden;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  margin-bottom: 1.5rem;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
+  margin-bottom: 1rem;
 }
 
 .glossary-entry::before {
@@ -8956,12 +8988,8 @@ body:has(.article-header__copy-dropdown:not(.hidden)) h1[id]::before {
 /* Enhanced hover states */
 
 .glossary-entry:hover {
-  transform: translateY(-3px);
   border-color: var(--color-brand);
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.12),
-    0 0 20px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  /* box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 0 20px rgba(var(--color-brand-rgb), 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15); */
 }
 
 .glossary-entry:hover::before {
@@ -9174,11 +9202,14 @@ h1[id]::before {
 .glossary-nav {
   position: sticky;
   top: 2rem;
-  background: var(--color-surface);
+  /* background: var(--color-surface); */
+  background: var(--glass-bg);
   border-radius: var(--radius-xl);
   padding: 1rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   margin-bottom: 2rem;
 }
 
@@ -10820,8 +10851,8 @@ h1[id]::before {
   border-radius: 0.75rem;
   border: 1px solid var(--color-border-primary);
   overflow: hidden;
-  margin: 1.5rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin: 1rem 0;
+  box-shadow: var(--glass-shadow);
 }
 
 .code-content {
@@ -10835,7 +10866,7 @@ h1[id]::before {
 
 .code-content code {
   background: transparent;
-  padding: 1.5rem;
+  padding: 0.75rem;
   display: block;
   overflow-x: auto;
 }
@@ -10844,7 +10875,7 @@ h1[id]::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.875rem 1.25rem;
+  padding: 0.5rem 0.75rem;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border-primary);
 }
@@ -10856,13 +10887,13 @@ h1[id]::before {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   background-color: var(--color-bg-tertiary);
-  padding: 0.25rem 0.5rem;
+  padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
 }
 
 .code-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.375rem;
 }
 
 .copy-code {
@@ -11348,15 +11379,13 @@ h1[id]::before {
 
 .toast-notification {
   /* Enhanced backdrop blur for modern glass effect */
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  /* backdrop-filter: blur(20px) saturate(180%); */
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   
   /* Smooth shadow that matches notice components */
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    
+  /* box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
+  
   /* Ensure proper font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -16310,7 +16339,7 @@ html {
 .code-tab {
   background: transparent;
   border: none;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-text-secondary);
@@ -16350,7 +16379,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: 0.625rem 1rem;
   background: var(--color-bg-tertiary);
   border-bottom: 1px solid var(--color-border-primary);
 }
@@ -16365,8 +16394,8 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-primary);
   border-radius: 0.375rem;
@@ -16386,13 +16415,13 @@ html {
 }
 
 .copy-button svg {
-  width: 1rem;
-  height: 1rem;
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 .code-example pre {
   margin: 0;
-  padding: 1.5rem;
+  padding: 0.875rem 1rem;
   background: var(--color-bg-code);
   overflow-x: auto;
 }
@@ -18338,10 +18367,6 @@ body {
   inset: 0px;
 }
 
-.-left-2 {
-  left: -0.5rem;
-}
-
 .bottom-\[9px\] {
   bottom: 9px;
 }
@@ -18372,10 +18397,6 @@ body {
 
 .top-16 {
   top: 4rem;
-}
-
-.top-2 {
-  top: 0.5rem;
 }
 
 .top-20 {
@@ -18512,8 +18533,8 @@ body {
   margin-top: 1rem;
 }
 
-.mt-8 {
-  margin-top: 2rem;
+.mt-6 {
+  margin-top: 1.5rem;
 }
 
 .line-clamp-2 {
@@ -18572,6 +18593,10 @@ body {
 
 .h-1\.5 {
   height: 0.375rem;
+}
+
+.h-10 {
+  height: 2.5rem;
 }
 
 .h-16 {
@@ -18917,12 +18942,6 @@ body {
   margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 
-.space-y-12 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(3rem * var(--tw-space-y-reverse));
-}
-
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
@@ -19245,11 +19264,6 @@ body {
   padding: 2rem;
 }
 
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
 .px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -19263,11 +19277,6 @@ body {
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-.py-0\.5 {
-  padding-top: 0.125rem;
-  padding-bottom: 0.125rem;
 }
 
 .py-1 {
@@ -19300,10 +19309,6 @@ body {
   padding-bottom: 2rem;
 }
 
-.pb-8 {
-  padding-bottom: 2rem;
-}
-
 .pl-0 {
   padding-left: 0px;
 }
@@ -19314,10 +19319,6 @@ body {
 
 .pl-4 {
   padding-left: 1rem;
-}
-
-.pl-8 {
-  padding-left: 2rem;
 }
 
 .pr-1 {
@@ -19344,8 +19345,8 @@ body {
   padding-top: 1rem;
 }
 
-.pt-6 {
-  padding-top: 1.5rem;
+.pt-5 {
+  padding-top: 1.25rem;
 }
 
 .text-left {
@@ -19588,12 +19589,6 @@ body {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.shadow-md {
-  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
 .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
@@ -19658,12 +19653,6 @@ body {
   transition-duration: 150ms;
 }
 
-.transition-shadow {
-  transition-property: box-shadow;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
 .transition-transform {
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -19688,10 +19677,6 @@ body {
 
 .hover\:border-brand:hover {
   border-color: var(--color-brand);
-}
-
-.hover\:bg-brand:hover {
-  background-color: var(--color-brand);
 }
 
 .hover\:bg-brand-1:hover {
@@ -19742,33 +19727,12 @@ body {
   color: rgb(153 27 27 / var(--tw-text-opacity, 1));
 }
 
-.hover\:text-white:hover {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
 .hover\:opacity-100:hover {
   opacity: 1;
 }
 
 .hover\:opacity-80:hover {
   opacity: 0.8;
-}
-
-.hover\:shadow-lg:hover {
-  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.hover\:transition:hover {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.hover\:duration-300:hover {
-  transition-duration: 300ms;
 }
 
 .focus\:border-blue-500:focus {
@@ -19905,8 +19869,8 @@ body {
     flex-direction: row;
   }
 
-  .md\:gap-8 {
-    gap: 2rem;
+  .md\:gap-5 {
+    gap: 1.25rem;
   }
 
   .md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {

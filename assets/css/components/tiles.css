@@ -12,16 +12,17 @@
   background: var(--tile-base-bg);
   border-radius: var(--radius-card);
   border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(var(--tile-glass-blur)) saturate(var(--tile-glass-saturate));
+  /* backdrop-filter: blur(var(--tile-glass-blur)) saturate(var(--tile-glass-saturate)); */
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   transition: 
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard),
     background var(--timing-medium) var(--easing-standard);
   overflow: hidden;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
   will-change: transform, filter;
   isolation: isolate;
 }
@@ -164,16 +165,12 @@
 /* Dark mode enhancements */
 .dark .tile {
   border-color: var(--color-border-secondary);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05); */
+  box-shadow: var(--glass-shadow);
 }
 
 .dark .tile:hover {
-  box-shadow: 
-    0 12px 28px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(var(--color-brand-rgb), 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(var(--color-brand-rgb), 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
 }
 
 /* Animation improvements */
