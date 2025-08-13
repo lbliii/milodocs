@@ -117,6 +117,11 @@
     0 0 0 4px rgba(var(--color-brand-rgb), 0.15);
 }
 
+/* Reading progress bar animation */
+#progress-bar {
+  transition: width 0.3s ease-out;
+}
+
 /* Heading Level Variations */
 .toc-link--h1 {
   font-weight: 600;

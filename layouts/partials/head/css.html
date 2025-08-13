@@ -65,13 +65,7 @@
   {{- $cssResources = $cssResources | append $colorCSS -}}
 {{- end -}}
 
-{{/* Add page enhancement styles */}}
-{{- $enhancementCSS := resources.Get "css/page-enhancements.css" -}}
-{{- if $enhancementCSS -}}
-  {{- $cssResources = $cssResources | append $enhancementCSS -}}
-{{- else -}}
-  {{- warnf "Enhancement CSS: page-enhancements.css not found" -}}
-{{- end -}}
+{{/* page-enhancements.css removed: styles migrated into component CSS per element-style strategy */}}
 
 {{/* ==== MODULAR COMPONENT CSS ARCHITECTURE ==== */}}
 {{/* Load all component CSS files in dependency order */}}
@@ -180,13 +174,9 @@
   {{- warnf "Component CSS: collapse.css not found" -}}
 {{- end -}}
 
-{{/* 4. Article Components - Content-specific layout elements */}}
-{{- $articleHeaderCSS := resources.Get "css/components/article-header.css" -}}
-{{- if $articleHeaderCSS -}}
-  {{- $cssResources = $cssResources | append $articleHeaderCSS -}}
-{{- else -}}
-  {{- warnf "Component CSS: article-header.css not found" -}}
-{{- end -}}
+{{/* 4. Article Components - Content-specific layout elements
+     NOTE: Component CSS is bundled via main.css (compiled from src/input.css). 
+     Avoid re-appending here to prevent duplication. */}}
 
 {{/* Tiles CSS - only for list/section pages */}}
 {{- if or .IsSection .IsHome -}}

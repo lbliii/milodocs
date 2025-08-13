@@ -1,0 +1,8 @@
+/* Page Resources component minor rules */
+
+/* Hide resources block in print to reduce clutter */
+@media print {
+  [data-component="article-page-resources"] { display: none; }
+}
+
+

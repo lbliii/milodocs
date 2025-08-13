@@ -4,7 +4,7 @@
   {{- $relatedPages = $relatedPages | complement (slice $.Page) -}}
   {{- if $relatedPages -}}
     <aside class="related-content mt-6 not-prose" data-component="article-related-content" data-section="{{ .Title | urlize }}">
-      <div class="related-header flex items-center justify-between mb-4">
+      <div class="related-content__header flex items-center justify-between mb-4">
         <div class="flex items-center">
           <svg class="w-4 h-4 mr-2" style="color: var(--color-text-secondary);" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
@@ -13,17 +13,17 @@
         </div>
         
         <div class="flex items-center space-x-2">
-          <button class="view-toggle-btn active" data-view="compact" title="Compact view">
+          <button class="related-content__view-toggle active" data-view="compact" title="Compact view">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
             </svg>
           </button>
-          <button class="view-toggle-btn" data-view="cards" title="Card view">
+          <button class="related-content__view-toggle" data-view="cards" title="Card view">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
             </svg>
           </button>
-          <button class="collapse-toggle" data-collapsed="false" title="Collapse section">
+          <button class="related-content__collapse-toggle" data-collapsed="false" title="Collapse section">
             <svg class="w-4 h-4 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path>
             </svg>
@@ -31,12 +31,12 @@
         </div>
       </div>
 
-      <div class="related-content-container">
+      <div class="related-content__container">
         <!-- Compact List View (default) -->
-        <div class="compact-view" data-view="compact">
+        <div class="related-content__view related-content__view--compact" data-view="compact">
           <div class="space-y-2">
             {{- range $relatedPages -}}
-              <div class="compact-item group flex items-center justify-between p-3 rounded-lg transition-all duration-200" 
+              <div class="related-content__item group flex items-center justify-between p-3 rounded-lg transition-all duration-200" 
                    data-related-article="{{ .RelPermalink }}" 
                    data-article-title="{{ .LinkTitle | urlize }}">
                 <a href="{{ .RelPermalink }}" class="flex-1 min-w-0 flex items-center space-x-3 text-decoration-none">
@@ -62,10 +62,10 @@
         </div>
 
         <!-- Card Grid View -->
-        <div class="card-view hidden" data-view="cards">
+        <div class="related-content__view related-content__view--cards hidden" data-view="cards">
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {{- range $relatedPages -}}
-              <article class="card card--resource p-5" 
+              <article class="related-content__card card card--resource p-5" 
                        data-related-article="{{ .RelPermalink }}" 
                        data-article-title="{{ .LinkTitle | urlize }}">
                 <a href="{{ .RelPermalink }}" class="space-y-3 block" aria-describedby="{{ .RelPermalink | anchorize }}-card-summary">

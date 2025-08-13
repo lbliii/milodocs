@@ -1,0 +1,18 @@
+/* Language Switcher transitions migrated from page-enhancements.css */
+
+.language-switcher .hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.language-switcher .block {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .language-switcher { position: relative; }
+}
+
+

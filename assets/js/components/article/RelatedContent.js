@@ -38,13 +38,13 @@ export class ArticleRelatedContent extends Component {
     super.setupElements();
     
     this.viewButtons.clear();
-    this.element.querySelectorAll('.view-toggle-btn').forEach(btn => {
+    this.element.querySelectorAll('.related-content__view-toggle').forEach(btn => {
       const view = btn.getAttribute('data-view');
       this.viewButtons.set(view, btn);
     });
     
-    this.collapseButton = this.element.querySelector('.collapse-toggle');
-    this.contentContainer = this.element.querySelector('.related-content-container');
+    this.collapseButton = this.element.querySelector('.related-content__collapse-toggle');
+    this.contentContainer = this.element.querySelector('.related-content__container');
     
     if (!this.contentContainer) {
       log.warn('Related content container not found');
@@ -117,7 +117,7 @@ export class ArticleRelatedContent extends Component {
     // Hide all view containers first with fade-out
     const allViews = this.element.querySelectorAll('[data-view]');
     allViews.forEach(viewEl => {
-      if (viewEl.classList.contains('view-toggle-btn')) return; // Skip buttons
+      if (viewEl.classList.contains('related-content__view-toggle')) return; // Skip buttons
       viewEl.style.opacity = '0';
       setTimeout(() => {
         viewEl.classList.add('hidden');
@@ -125,7 +125,7 @@ export class ArticleRelatedContent extends Component {
     });
 
     // Show selected view with smooth fade-in
-    const targetView = this.element.querySelector(`[data-view="${view}"]:not(.view-toggle-btn)`);
+    const targetView = this.element.querySelector(`[data-view="${view}"]:not(.related-content__view-toggle)`);
     if (targetView) {
       setTimeout(() => {
         targetView.classList.remove('hidden');
@@ -217,7 +217,7 @@ export class ArticleRelatedContent extends Component {
       // Show correct view
       const targetView = this.element.querySelector(`[data-view="${preferences.view}"]:not(.view-toggle-btn)`);
       if (targetView) {
-        this.element.querySelectorAll('[data-view]:not(.view-toggle-btn)').forEach(v => v.classList.add('hidden'));
+        this.element.querySelectorAll('[data-view]:not(.related-content__view-toggle)').forEach(v => v.classList.add('hidden'));
         targetView.classList.remove('hidden');
       }
     }

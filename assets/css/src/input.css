@@ -1,6 +1,6 @@
+/* This file is used to compile the main.css file. */
 /* Import component CSS files - MUST be first! */
 
-/* ✅ ARCHITECTURE: Complete architectural system */
 @import "../architecture/index.css";
 
 @import "../components/buttons.css";
@@ -12,6 +12,8 @@
 @import "../components/search.css";
 @import "../components/chat.css";
 @import "../components/article-header.css";
+@import "../components/article/related-content.css";
+@import "../components/article/page-resources.css";
 @import "../components/tiles.css";
 @import "../components/child-links.css";
 @import "../components/cards.css";
