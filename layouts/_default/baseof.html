@@ -30,7 +30,7 @@
       
       <!-- Main content area -->
       <div id="mainContent" class="transition-opacity duration-300">
-        {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}} 
+        {{- if and (eq .Kind "page") (ne hugo.Environment "offline") -}}{{- partial "article/summarization.html" . -}}{{- end -}} 
         {{- if .IsHome}}{{ block "home" . }}{{ end }}{{- end}} 
         {{ block "breadcrumbs" . }}{{- end -}}
         {{ block "content" . }}{{- end -}}

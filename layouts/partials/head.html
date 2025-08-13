@@ -11,10 +11,10 @@
 {{- $appleTouchIcon := site.Params.favicon.appleTouchIcon | default "/apple-touch-icon.png" -}}
 {{- $manifest := site.Params.favicon.manifest | default "/manifest.webmanifest" -}}
 
-<link rel="icon" href="{{ $faviconIco }}" sizes="32x32">
-<link rel="icon" href="{{ $faviconSvg }}" type="image/svg+xml">  
-<link rel="apple-touch-icon" href="{{ $appleTouchIcon }}">
-<link rel="manifest" href="{{ $manifest }}">
+<link rel="icon" href="{{ $faviconIco | relURL }}" sizes="32x32">
+<link rel="icon" href="{{ $faviconSvg | relURL }}" type="image/svg+xml">  
+<link rel="apple-touch-icon" href="{{ $appleTouchIcon | relURL }}">
+<link rel="manifest" href="{{ $manifest | relURL }}">
 
 {{/* SEO Meta Tags */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
@@ -133,7 +133,7 @@
 <meta property="og:url" content="{{ .Permalink }}" />
 <meta property="og:site_name" content="{{ site.Title }}" />
 <meta property="og:locale" content="{{ .Language.Lang | default "en" }}" />
-{{ with .Params.image }}<meta property="og:image" content="{{ . | absURL }}" />{{ end }}
+{{ with .Params.image }}<meta property="og:image" content="{{ if eq hugo.Environment "offline" }}{{ . | relURL }}{{ else }}{{ . | absURL }}{{ end }}" />{{ end }}
 {{- if .IsPage -}}
   {{- with .Date -}}
     <meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />
@@ -158,12 +158,14 @@
 <meta name="twitter:card" content="summary{{ with .Params.image }}_large_image{{ end }}" />
 <meta name="twitter:title" content="{{ .Title }}" />
 <meta name="twitter:description" content="{{ $description }}" />
-{{ with .Params.image }}<meta name="twitter:image" content="{{ . | absURL }}" />{{ end }}
+{{ with .Params.image }}<meta name="twitter:image" content="{{ if eq hugo.Environment "offline" }}{{ . | relURL }}{{ else }}{{ . | absURL }}{{ end }}" />{{ end }}
 {{ with site.Params.social.twitter }}<meta name="twitter:site" content="@{{ . }}" />{{ end }}
 
-{{/* Canonical URL - Ensure absolute URL */}}
+{{/* Canonical URL - Prefer relative canonical for offline builds */}}
 {{- $canonicalURL := .Permalink -}}
-{{- if not (strings.HasPrefix $canonicalURL "http") -}}
+{{- if eq hugo.Environment "offline" -}}
+  {{- $canonicalURL = .RelPermalink -}}
+{{- else if not (strings.HasPrefix $canonicalURL "http") -}}
   {{- $canonicalURL = printf "%s%s" (site.BaseURL | strings.TrimSuffix "/") .RelPermalink -}}
 {{- end -}}
 <link rel="canonical" href="{{ $canonicalURL }}" />
@@ -200,7 +202,7 @@
     {{- with site.Params.logo -}}
       ,"logo": {
         "@type": "ImageObject",
-        "url": "{{ . | absURL }}"
+        "url": "{{ if eq hugo.Environment "offline" }}{{ . | relURL }}{{ else }}{{ . | absURL }}{{ end }}"
       }
     {{- end -}}
   }
@@ -210,9 +212,11 @@
 {{/* Generator */}}
 {{ hugo.Generator }}
 
-{{/* Resource hints for performance */}}
+{{/* Resource hints for performance (skip in offline) */}}
+{{- if ne hugo.Environment "offline" -}}
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="dns-prefetch" href="//unpkg.com">
+{{- end -}}
 
 {{ partialCached "head/css.html" . }}
 {{ partialCached "head/js.html" . }}

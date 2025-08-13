@@ -50,7 +50,7 @@
       
       {{/* Claude */}}
       <a 
-        href="https://claude.ai/chat?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"
+        {{ if ne hugo.Environment "offline" }}href="https://claude.ai/chat?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"{{ end }}
         target="_blank"
         rel="noopener noreferrer"
         class="copy-page-menu-item">
@@ -62,7 +62,7 @@
       
       {{/* ChatGPT */}}
       <a 
-        href="https://chat.openai.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"
+        {{ if ne hugo.Environment "offline" }}href="https://chat.openai.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"{{ end }}
         target="_blank"
         rel="noopener noreferrer"
         class="copy-page-menu-item">
@@ -74,7 +74,7 @@
       
       {{/* Copilot */}}
       <a 
-        href="https://copilot.microsoft.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"
+        {{ if ne hugo.Environment "offline" }}href="https://copilot.microsoft.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"{{ end }}
         target="_blank" 
         rel="noopener noreferrer"
         class="copy-page-menu-item">

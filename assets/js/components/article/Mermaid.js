@@ -25,13 +25,26 @@ class MermaidComponent extends Component {
 
   async ensureMermaidLoaded() {
     if (typeof window.mermaid !== 'undefined') return;
-    await new Promise((resolve, reject) => {
+    const isOffline = (window.HugoEnvironment && window.HugoEnvironment.environment === 'offline');
+    const tryLoad = (src) => new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
+      script.src = src;
       script.onload = resolve;
       script.onerror = reject;
       document.head.appendChild(script);
     });
+    try {
+      if (isOffline) {
+        // Expect a locally vendored mermaid at static/vendor/mermaid/mermaid.min.js
+        const localSrc = new URL('vendor/mermaid/mermaid.min.js', document.baseURI).toString();
+        await tryLoad(localSrc);
+      } else {
+        await tryLoad('https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js');
+      }
+    } catch {
+      // Final fallback: skip rendering if not available
+      console.warn('Mermaid: failed to load script. Diagrams will not render.');
+    }
   }
 
   async renderAll(elements) {

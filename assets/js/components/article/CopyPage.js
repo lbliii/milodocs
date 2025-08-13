@@ -312,11 +312,26 @@ setupElements() {
       const encodedPrompt = encodeURIComponent(prompt);
       
       if (link.href.includes('claude.ai')) {
-        link.href = `https://claude.ai/chat?q=${encodedPrompt}`;
+        if (window.HugoEnvironment?.environment !== 'offline') {
+          link.href = `https://claude.ai/chat?q=${encodedPrompt}`;
+        } else {
+          link.removeAttribute('href');
+          link.setAttribute('aria-disabled', 'true');
+        }
       } else if (link.href.includes('chat.openai.com')) {
-        link.href = `https://chat.openai.com/?q=${encodedPrompt}`;
+        if (window.HugoEnvironment?.environment !== 'offline') {
+          link.href = `https://chat.openai.com/?q=${encodedPrompt}`;
+        } else {
+          link.removeAttribute('href');
+          link.setAttribute('aria-disabled', 'true');
+        }
       } else if (link.href.includes('copilot.microsoft.com')) {
-        link.href = `https://copilot.microsoft.com/?q=${encodedPrompt}`;
+        if (window.HugoEnvironment?.environment !== 'offline') {
+          link.href = `https://copilot.microsoft.com/?q=${encodedPrompt}`;
+        } else {
+          link.removeAttribute('href');
+          link.setAttribute('aria-disabled', 'true');
+        }
       }
     });
   }

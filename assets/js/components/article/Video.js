@@ -33,7 +33,15 @@ class VideoComponent extends Component {
       const playerTarget = wrapper;
       const placeholder = wrapper.querySelector('.loading-placeholder');
 
-      const module = await import('https://cdn.jsdelivr.net/npm/@clappr/player@0.4.0/dist/clappr.min.js');
+      let module;
+      const isOffline = (window.HugoEnvironment && window.HugoEnvironment.environment === 'offline');
+      if (isOffline) {
+        // Expect local vendored copy at static/vendor/clappr/clappr.min.js
+        const localSrc = new URL('vendor/clappr/clappr.min.js', document.baseURI).toString();
+        module = await import(localSrc);
+      } else {
+        module = await import('https://cdn.jsdelivr.net/npm/@clappr/player@0.4.0/dist/clappr.min.js');
+      }
       const Clappr = module.default || module;
 
       const player = new Clappr.Player({

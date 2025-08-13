@@ -17,7 +17,11 @@
   {{- if $isProductionBuild -}}
     {{/* Production: Optimized bundle with integrity */}}
     {{- $jsBundle := $jsResources | resources.Concat $bundleName | js.Build $opts | fingerprint "sha512" -}}
-    <script type="module" src="{{ $jsBundle.RelPermalink }}" integrity="{{ $jsBundle.Data.Integrity }}" crossorigin="anonymous" defer></script>
+    {{- if eq hugo.Environment "offline" -}}
+      <script type="module" src="{{ $jsBundle.RelPermalink }}" defer></script>
+    {{- else -}}
+      <script type="module" src="{{ $jsBundle.RelPermalink }}" integrity="{{ $jsBundle.Data.Integrity }}" crossorigin="anonymous" defer></script>
+    {{- end -}}
   {{- else -}}
     {{/* Development: Fast builds with debugging */}}
     {{- $jsBundle := $jsResources | resources.Concat $bundleName | js.Build $opts -}}
@@ -45,7 +49,7 @@
   {{- warnf "JavaScript: No JS files found in assets/js/ for environment '%s'" hugo.Environment -}}
 {{- end -}}
 
-{{/* Search JavaScript temporarily disabled */}}
-{{- if false -}}
+{{/* Avoid loading any external scripts in offline env */}}
+{{- if and (ne hugo.Environment "offline") false -}}
   <script src="https://unpkg.com/lunr/lunr.js" crossorigin="anonymous" defer></script>
 {{- end -}}

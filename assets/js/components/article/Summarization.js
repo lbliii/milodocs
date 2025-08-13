@@ -67,6 +67,11 @@ export class ArticleSummarization extends Component {
    */
   async fetchAndDisplaySummary() {
     if (this.isLoading) return;
+    const isOffline = (window.HugoEnvironment && window.HugoEnvironment.environment === 'offline');
+    if (isOffline) {
+      this.displayError('Summarization is unavailable in offline mode.');
+      return;
+    }
     
     const articleText = this.articleContent.innerText;
     if (!articleText || articleText.trim().length < 100) {

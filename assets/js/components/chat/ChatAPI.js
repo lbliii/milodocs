@@ -8,7 +8,8 @@ import { showLoading, hideLoading, handleError, localStorage } from '../../utils
 export class ChatAPI {
   constructor(chatManager, config = {}) {
     this.chat = chatManager;
-    this.chatEndpoint = config.chatEndpoint || 'https://chat-2-lc4762co7a-uc.a.run.app/';
+    const isOffline = (window.HugoEnvironment && window.HugoEnvironment.environment === 'offline');
+    this.chatEndpoint = isOffline ? '' : (config.chatEndpoint || 'https://chat-2-lc4762co7a-uc.a.run.app/');
     this.requestTimeout = config.requestTimeout || 30000;
   }
 
@@ -31,6 +32,9 @@ export class ChatAPI {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
       
+      if (isOffline || !this.chatEndpoint) {
+        throw new Error('Offline mode: chat service unavailable');
+      }
       const response = await fetch(
         `${this.chatEndpoint}?query=${encodeURIComponent(question)}`,
         {
