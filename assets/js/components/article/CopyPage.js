@@ -44,11 +44,14 @@ setupElements() {
     this.dropdownArrow = this.element.querySelector('[data-dropdown-arrow]');
     this.copyUrlButton = this.element.querySelector('[data-copy-url]');
     this.copyContentButton = this.element.querySelector('[data-copy-content]');
+    this.copyTxtButton = this.element.querySelector('[data-copy-txt]');
 
     // Get the current page URL from the copy button
     if (this.copyUrlButton) {
-      this.currentUrl = this.copyUrlButton.getAttribute('data-copy-url');
-      const base = this.currentUrl.replace(/\/$/, '');
+      this.currentUrl = this.normalizeUrl(this.copyUrlButton.getAttribute('data-copy-url'));
+      // Normalize base URL: strip trailing slash and optional .html for uglyURLs
+      let base = this.currentUrl.replace(/\/$/, '');
+      base = base.replace(/\.html$/, '');
       this.jsonUrl = base + '/index.json';
       this.txtUrl = base + '/index.txt';
     }
@@ -77,6 +80,11 @@ setupElements() {
     // Copy content button
     if (this.copyContentButton) {
       this.addEventListener(this.copyContentButton, 'click', this.handleCopyContent.bind(this));
+    }
+
+    // Copy LLM text button
+    if (this.copyTxtButton) {
+      this.addEventListener(this.copyTxtButton, 'click', this.handleCopyTxt.bind(this));
     }
 
     // Close on outside click
@@ -152,6 +160,43 @@ setupElements() {
     } catch (error) {
       log.error('Copy content failed:', error);
       this.showCopyError('Failed to copy content', this.copyContentButton);
+    }
+  }
+
+  /**
+   * Handle copy LLM text button click
+   */
+  async handleCopyTxt(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const button = this.copyTxtButton;
+    const txtHref = button?.getAttribute('data-copy-txt') || this.txtUrl;
+
+    try {
+      let text = this.pageText;
+      if (!text && txtHref) {
+        const r = await fetch(txtHref);
+        if (r.ok) {
+          text = (await r.text()).trim();
+        }
+      }
+
+      if (!text) {
+        this.showCopyError('LLM text not available', button);
+        return;
+      }
+
+      const success = await copyToClipboard(text);
+      if (success) {
+        this.showCopySuccess('LLM text copied to clipboard', button);
+        this.closeDropdown();
+      } else {
+        this.showCopyError('Failed to copy LLM text', button);
+      }
+    } catch (error) {
+      log.error('Copy LLM text failed:', error);
+      this.showCopyError('Failed to copy LLM text', this.copyTxtButton);
     }
   }
 
@@ -303,37 +348,63 @@ setupElements() {
    * Update AI sharing links with page content
    */
   updateAILinks() {
-    if (!this.pageContent) return;
+    // Prefer txt; if absent, fall back to json-derived prompt. Still allow short URL-only prompts.
+    if (!this.pageText && !this.pageContent) return;
 
     const aiLinks = this.dropdown.querySelectorAll('a[href*="claude.ai"], a[href*="chat.openai.com"], a[href*="copilot.microsoft.com"]');
-    
+
     aiLinks.forEach(link => {
-      const prompt = this.createAIPrompt();
-      const encodedPrompt = encodeURIComponent(prompt);
-      
+      const fullPrompt = this.createAIPrompt();
+      const shortUrl = this.txtUrl || this.currentUrl;
+
+      const buildHref = (base, prompt) => `${base}?q=${encodeURIComponent(prompt)}`;
+
+      const isOffline = window.HugoEnvironment?.environment === 'offline';
+      if (isOffline) {
+        link.removeAttribute('href');
+        link.setAttribute('aria-disabled', 'true');
+        return;
+      }
+
+      if (link.href.includes('copilot.microsoft.com')) {
+        // Copilot links have practical URL length limits. Use a short, URL-only prompt.
+        const prompt = `Please help me understand this documentation: ${shortUrl}`;
+        link.href = buildHref('https://copilot.microsoft.com/', prompt);
+        return;
+      }
+
+      // For others, try full prompt but fall back to short if too long for common browser limits
+      const encodedFull = encodeURIComponent(fullPrompt);
+      if (encodedFull.length > 1800) {
+        const prompt = `Please help me understand this documentation: ${shortUrl}`;
+        if (link.href.includes('claude.ai')) {
+          link.href = buildHref('https://claude.ai/chat', prompt);
+        } else if (link.href.includes('chat.openai.com')) {
+          link.href = buildHref('https://chat.openai.com/', prompt);
+        }
+        return;
+      }
+
       if (link.href.includes('claude.ai')) {
-        if (window.HugoEnvironment?.environment !== 'offline') {
-          link.href = `https://claude.ai/chat?q=${encodedPrompt}`;
-        } else {
-          link.removeAttribute('href');
-          link.setAttribute('aria-disabled', 'true');
-        }
+        link.href = buildHref('https://claude.ai/chat', fullPrompt);
       } else if (link.href.includes('chat.openai.com')) {
-        if (window.HugoEnvironment?.environment !== 'offline') {
-          link.href = `https://chat.openai.com/?q=${encodedPrompt}`;
-        } else {
-          link.removeAttribute('href');
-          link.setAttribute('aria-disabled', 'true');
-        }
-      } else if (link.href.includes('copilot.microsoft.com')) {
-        if (window.HugoEnvironment?.environment !== 'offline') {
-          link.href = `https://copilot.microsoft.com/?q=${encodedPrompt}`;
-        } else {
-          link.removeAttribute('href');
-          link.setAttribute('aria-disabled', 'true');
-        }
+        link.href = buildHref('https://chat.openai.com/', fullPrompt);
       }
     });
+  }
+
+  /**
+   * Normalize possibly relative or protocol-relative URLs to absolute
+   */
+  normalizeUrl(url) {
+    if (!url) return url;
+    let u = String(url).trim();
+    if (u.startsWith('//')) {
+      u = `${window.location.protocol}${u}`;
+    } else if (u.startsWith('/')) {
+      u = `${window.location.origin}${u}`;
+    }
+    return u;
   }
 
   /**
