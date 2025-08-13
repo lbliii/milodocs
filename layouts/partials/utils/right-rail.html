@@ -1,0 +1,24 @@
+{{/*
+  utils/right-rail.html
+  Decides whether the right rail should render.
+  Outputs the string "true" or "false" for compatibility across Hugo versions.
+
+  Inputs (dict):
+    - site: .Site
+    - page: . (the current page)
+*/}}
+
+{{- $site := .site -}}
+{{- $page := .page -}}
+
+{{- $cfg := partial "utils/layout-config.html" (dict "site" $site "page" $page) -}}
+{{- if not $cfg.rightRail -}}
+  {{- print "false" -}}
+{{- else -}}
+  {{- $k := partial "utils/page-kind.html" (dict "page" $page) -}}
+  {{- if or $k.isSingle $k.isSection $k.isHome -}}
+    {{- print "true" -}}
+  {{- else -}}
+    {{- print "false" -}}
+  {{- end -}}
+{{- end -}} 

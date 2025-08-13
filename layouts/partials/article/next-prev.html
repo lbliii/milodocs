@@ -1,6 +1,6 @@
 {{- if .Site.Params.article.nextPrev.display -}}
 {{$trunc := .Site.Params.article.nextPrev.trunc}}
-<nav class="mt-8 flex justify-between items-center gap-4" data-component="article-next-prev">
+<nav class="mt-6 flex justify-between items-center gap-4" data-component="article-next-prev">
     {{with .PrevInSection }}
         <a href="{{.RelPermalink}}" class="nav-link flex-1 text-left" aria-label="Previous: {{.Title}}">
             <div class="flex items-center">

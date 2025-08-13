@@ -1,0 +1,34 @@
+{{/*
+  utils/breadcrumbs-data.html
+  Builds breadcrumb data for a page.
+
+  Inputs (page or dict with page):
+    - page (optional): the page object; defaults to current context
+
+  Returns (dict):
+    - entries: slice of { title, href, position } for ancestors (excluding site root)
+    - current: { title, position }
+    - hasMetadata: bool (whether current page has metadata panel)
+*/}}
+
+{{- $p := . -}}
+{{- if and (reflect.IsMap .) (isset . "page") -}}
+  {{- $p = .page -}}
+{{- end -}}
+
+{{- $anc := $p.Ancestors.Reverse -}}
+{{- $trimmed := slice -}}
+{{- if gt (len $anc) 1 -}}
+  {{- $trimmed = after 1 $anc -}}
+{{- end -}}
+
+{{- $entries := slice -}}
+{{- range $i, $a := $trimmed -}}
+  {{- $entry := dict "title" $a.Title "href" $a.Permalink "position" (add $i 1) -}}
+  {{- $entries = $entries | append $entry -}}
+{{- end -}}
+
+{{- $hasMetadata := or $p.Date $p.Params.author $p.ReadingTime $p.Lastmod $p.PublishDate $p.WordCount -}}
+{{- $current := dict "title" $p.Title "position" (len $anc) -}}
+
+{{- return (dict "entries" $entries "current" $current "hasMetadata" $hasMetadata) -}} 

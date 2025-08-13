@@ -1,0 +1,54 @@
+/* Typography System - Base type scales and article text
+   Centralizes type sizing tokens and base rules. */
+
+/* Global Headings */
+h1 {
+  font-size: clamp(1.5rem, 3.5vw, 1.75rem); /* 24px–28px */
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  word-wrap: break-word;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 3vw, 1.375rem); /* 20px–22px */
+  line-height: 1.33;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  word-wrap: break-word;
+}
+
+h3 {
+  font-size: clamp(1.0625rem, 2.5vw, 1.1875rem); /* 17px–19px */
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  word-wrap: break-word;
+}
+
+h4 { letter-spacing: -0.01em; }
+
+/* Body */
+body {
+  font-size: clamp(1rem, 2vw, 1.0625rem); /* 16px–17px */
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* Brand font on main */
+main { font-family: var(--font-family-brand, inherit); }
+
+/* Article Content Typography */
+.article-content {
+  color: var(--color-text-primary);
+  font-size: 1rem; /* mobile-first */
+  line-height: 1.65; /* mobile-first */
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 768px) {
+  .article-content {
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.6;
+  }
+} 

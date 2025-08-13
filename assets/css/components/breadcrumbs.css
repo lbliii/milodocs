@@ -26,7 +26,8 @@
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-lg);
-  padding: 0.5rem 0.75rem;
+  /* padding: 0.5rem 0.75rem; */
+  padding: 0.25rem 0.5rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: transparent;
   color: var(--color-text-secondary);
@@ -55,9 +56,9 @@
 
 .breadcrumb__link:hover {
   color: var(--color-brand);
-  background-color: var(--color-surface-hover);
-  transform: var(--transform-lift-subtle);
-  box-shadow: var(--elevation-4);
+  /* background-color: var(--color-surface-hover); */
+  /* transform: var(--transform-lift-subtle); */
+  /* box-shadow: var(--elevation-4); */
 }
 
 .breadcrumb__link:hover:before {
@@ -95,10 +96,14 @@
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-lg);
-  padding: 0.5rem 0.75rem;
+  /* padding: 0.5rem 0.75rem; */
+  padding: 0.25rem 0.5rem;
   font-weight: 600;
-  background-color: var(--color-brand);
-  color: var(--color-text-inverse);
+  /* background-color: var(--color-brand); */
+  /* color: var(--color-text-inverse); */
+  background: var(--glass-bg);
+  color: var(--color-text-primary);
+  border: 1px solid var(--glass-border-color);
   position: relative;
   overflow: hidden;
 }
@@ -106,7 +111,7 @@
 /* Clickable current breadcrumb for metadata toggle */
 .breadcrumb__current--clickable {
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.2s ease, background-color 0.2s ease;
   border: none;
   gap: 0.5rem;
   font-family: inherit;
@@ -115,9 +120,7 @@
 }
 
 .breadcrumb__current--clickable:hover {
-  background-color: var(--color-brand-1);
-  transform: var(--transform-lift-subtle);
-  box-shadow: 0 4px 12px rgba(var(--color-brand-rgb), 0.4);
+  background-color: var(--color-surface-hover);
 }
 
 .breadcrumb__current--clickable:focus {

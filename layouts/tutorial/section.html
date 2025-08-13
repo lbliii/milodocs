@@ -9,6 +9,7 @@
 {{- end -}}
 
 {{- define "sidebar-left" -}}
+  {{- partial "navigation/sidebar-left.html" . -}}
 {{- end -}}
 
 {{- define "content" -}}
@@ -26,7 +27,7 @@
             {{- if not $startsWithH1 -}}
                 <h1 class="text-4xl lg:text-5xl font-black text-text-primary mb-6">{{.Title}}</h1>
             {{- end -}}
-            <p class="text-xl text-text-primary/80 mb-8 max-w-3xl mx-auto leading-relaxed">{{.Description}}</p>
+            <p class="text-xl text-text-primary/80 mb-6 max-w-3xl mx-auto leading-relaxed">{{.Description}}</p>
             
             <!-- Tutorial Overview Stats -->
             <div class="flex flex-wrap justify-center gap-6 mb-8">

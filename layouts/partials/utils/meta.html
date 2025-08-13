@@ -1,0 +1,83 @@
+{{/*
+  utils/meta.html
+  Assembles SEO metadata for a page and returns a dict of normalized values.
+
+  Inputs (dict):
+    - site: .Site
+    - page: . (the current page)
+
+  Returns (dict):
+    - title: short page title
+    - fullTitle: page title combined with site title
+    - description: description string (<=160 chars where possible)
+    - canonicalURL: absolute canonical URL
+    - ogType: "article" | "website"
+    - image: absolute image URL if provided
+    - twitterCard: "summary" | "summary_large_image"
+    - keywords: []string
+    - robots: robots meta content
+*/}}
+
+{{- $site := .site -}}
+{{- $p := .page -}}
+
+{{- $title := $p.Title -}}
+{{- $fullTitle := cond $p.IsHome $site.Title (printf "%s | %s" $title $site.Title) -}}
+
+{{- $description := "" -}}
+{{- if $p.Description -}}
+  {{- $description = $p.Description -}}
+{{- else if $p.Summary -}}
+  {{- $description = ($p.Summary | plainify | truncate 160) -}}
+{{- else -}}
+  {{- $description = $site.Params.description -}}
+{{- end -}}
+
+{{- $canonical := $p.Permalink -}}
+{{- if not (strings.HasPrefix $canonical "http") -}}
+  {{- $canonical = printf "%s%s" ($site.BaseURL | strings.TrimSuffix "/") $p.RelPermalink -}}
+{{- end -}}
+
+{{- $ogType := cond $p.IsPage "article" "website" -}}
+
+{{- $image := "" -}}
+{{- with $p.Params.image -}}
+  {{- $image = (. | absURL) -}}
+{{- end -}}
+
+{{- $twitterCard := cond (ne $image "") "summary_large_image" "summary" -}}
+
+{{- $keywords := slice -}}
+{{- with $p.Keywords -}}
+  {{- $keywords = . -}}
+{{- else -}}
+  {{- with $p.Params.tags -}}
+    {{- $keywords = . -}}
+  {{- end -}}
+  {{- with $p.Section -}}
+    {{- $keywords = $keywords | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $robots := "index,follow" -}}
+{{- if and $p.Draft (ne hugo.Environment "production") -}}
+  {{- $robots = "noindex,nofollow" -}}
+{{- else if $p.Params.noindex -}}
+  {{- $robots = "noindex,follow" -}}
+{{- else if and $p.ExpiryDate ($p.ExpiryDate.Before now) -}}
+  {{- $robots = "noindex,follow" -}}
+{{- else if $p.Params.hidden -}}
+  {{- $robots = "noindex,nofollow" -}}
+{{- end -}}
+
+{{- return (dict
+  "title" $title
+  "fullTitle" $fullTitle
+  "description" $description
+  "canonicalURL" $canonical
+  "ogType" $ogType
+  "image" $image
+  "twitterCard" $twitterCard
+  "keywords" $keywords
+  "robots" $robots
+) -}} 

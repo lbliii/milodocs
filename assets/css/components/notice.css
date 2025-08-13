@@ -12,7 +12,9 @@
     box-shadow var(--timing-medium) var(--easing-standard);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   /* ✅ FIXED: Use animation tokens */
   animation: notice-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
@@ -32,7 +34,8 @@
 .notice__container {
   display: flex;
   align-items: flex-start;
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
+  padding: 1rem;
   position: relative;
 }
 

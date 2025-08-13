@@ -20,7 +20,7 @@
 .code-tab {
   background: transparent;
   border: none;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-text-secondary);
@@ -60,7 +60,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: 0.625rem 1rem;
   background: var(--color-bg-tertiary);
   border-bottom: 1px solid var(--color-border-primary);
 }
@@ -75,8 +75,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-primary);
   border-radius: 0.375rem;
@@ -96,13 +96,13 @@
 }
 
 .copy-button svg {
-  width: 1rem;
-  height: 1rem;
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 .code-example pre {
   margin: 0;
-  padding: 1.5rem;
+  padding: 0.875rem 1rem;
   background: var(--color-bg-code);
   overflow-x: auto;
 }

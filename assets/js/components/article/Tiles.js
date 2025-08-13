@@ -137,14 +137,10 @@ export class ArticleTiles extends Component {
         ((this.globalPosition.y - rect.top) / rect.height) * 100
       ));
       
-      // Enhanced gradient with 600px circle radius
-      tile.style.background = `
-        radial-gradient(
-          600px circle at ${mouseX}% ${mouseY}%, 
-          var(--primary-gradient-color, #3b82f6), 
-          var(--secondary-gradient-color, #1e40af)
-        )
-      `;
+      // Enhanced gradient layered over base background
+      const hoverGradient = `radial-gradient(600px circle at ${mouseX}% ${mouseY}%, var(--primary-gradient-color, #3b82f6), var(--secondary-gradient-color, rgba(30,64,175,0)))`;
+      const baseBg = getComputedStyle(tile).getPropertyValue('--tile-base-bg') || 'transparent';
+      tile.style.background = `${hoverGradient}, ${baseBg}`;
     });
     
     if (this.isAnimating) {
@@ -170,7 +166,6 @@ export class ArticleTiles extends Component {
       tile.style.opacity = '';
       tile.style.transform = '';
       tile.style.transition = '';
-      tile.style.background = '';
       tile.style.zIndex = '';
     });
     
@@ -197,7 +192,6 @@ export class ArticleTiles extends Component {
         tile.style.opacity = '0';
         tile.style.transform = 'translateY(20px)';
         setTimeout(() => {
-          // CSS handles transitions via animation tokens
           tile.style.opacity = '1';
           tile.style.transform = 'translateY(0)';
         }, 100);
@@ -213,7 +207,6 @@ export class ArticleTiles extends Component {
   onDestroy() {
     this.stopGradientAnimation();
     this.resetTiles();
-    // no-op
   }
 }
 

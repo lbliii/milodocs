@@ -9,23 +9,38 @@
 :root {
   /* ✨ ELEVATION LEVELS (0-24dp equivalent) */
   --elevation-0: none;
-  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.1);
-  --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.1);
-  --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.15);
+  /* --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.06);
+  /* --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  --elevation-2: 0 1px 3px rgba(0, 0, 0, 0.08);
+  /* --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.1); */
+  --elevation-3: 0 2px 5px rgba(0, 0, 0, 0.08);
+  /* --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.1); */
+  --elevation-4: 0 2px 6px rgba(0, 0, 0, 0.1);
+  /* --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  --elevation-6: 0 3px 10px rgba(0, 0, 0, 0.12);
+  /* --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.1); */
+  --elevation-8: 0 4px 14px rgba(0, 0, 0, 0.12);
+  /* --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.1); */
+  --elevation-12: 0 6px 20px rgba(0, 0, 0, 0.14);
+  /* --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.1); */
+  --elevation-16: 0 8px 24px rgba(0, 0, 0, 0.14);
+  /* --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.15); */
+  --elevation-24: 0 12px 28px rgba(0, 0, 0, 0.16);
   
   /* ✨ INTERACTIVE ELEVATION (hover states) */
-  --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.15);
-  --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.15);
-  --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.15);
-  --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.15);
-  --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.2);
+  /* --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-1: 0 3px 8px rgba(0, 0, 0, 0.12);
+  /* --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-2: 0 4px 10px rgba(0, 0, 0, 0.14);
+  /* --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-3: 0 5px 14px rgba(0, 0, 0, 0.14);
+  /* --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-4: 0 6px 18px rgba(0, 0, 0, 0.16);
+  /* --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.15); */
+  --elevation-hover-6: 0 8px 22px rgba(0, 0, 0, 0.18);
+  /* --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.2); */
+  --elevation-hover-8: 0 10px 28px rgba(0, 0, 0, 0.2);
   
   /* ✨ BRAND-COLORED ELEVATIONS */
   --elevation-brand-subtle: 0 2px 8px rgba(var(--color-brand-rgb), 0.1);
@@ -56,23 +71,38 @@
 /* 🌙 DARK MODE ELEVATION ADJUSTMENTS */
 .dark {
   /* Stronger shadows for dark mode */
-  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.4);
-  --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.6);
-  --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.7);
+  /* --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3); */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  /* --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3); */
+  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.28);
+  /* --elevation-3: 0 2px 6px rgba(0, 0, 0, 0.4); */
+  --elevation-3: 0 2px 5px rgba(0, 0, 0, 0.34);
+  /* --elevation-4: 0 2px 8px rgba(0, 0, 0, 0.4); */
+  --elevation-4: 0 2px 6px rgba(0, 0, 0, 0.36);
+  /* --elevation-6: 0 4px 12px rgba(0, 0, 0, 0.4); */
+  --elevation-6: 0 3px 10px rgba(0, 0, 0, 0.4);
+  /* --elevation-8: 0 4px 16px rgba(0, 0, 0, 0.5); */
+  --elevation-8: 0 4px 14px rgba(0, 0, 0, 0.48);
+  /* --elevation-12: 0 8px 24px rgba(0, 0, 0, 0.5); */
+  --elevation-12: 0 6px 20px rgba(0, 0, 0, 0.5);
+  /* --elevation-16: 0 12px 28px rgba(0, 0, 0, 0.6); */
+  --elevation-16: 0 8px 24px rgba(0, 0, 0, 0.56);
+  /* --elevation-24: 0 16px 32px rgba(0, 0, 0, 0.7); */
+  --elevation-24: 0 12px 28px rgba(0, 0, 0, 0.6);
   
   /* Enhanced hover states for dark mode */
-  --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.5);
-  --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.6);
-  --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.6);
-  --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.7);
-  --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.8);
+  /* --elevation-hover-1: 0 4px 8px rgba(0, 0, 0, 0.5); */
+  --elevation-hover-1: 0 3px 8px rgba(0, 0, 0, 0.44);
+  /* --elevation-hover-2: 0 4px 12px rgba(0, 0, 0, 0.5); */
+  --elevation-hover-2: 0 4px 10px rgba(0, 0, 0, 0.48);
+  /* --elevation-hover-3: 0 6px 16px rgba(0, 0, 0, 0.6); */
+  --elevation-hover-3: 0 5px 14px rgba(0, 0, 0, 0.5);
+  /* --elevation-hover-4: 0 8px 20px rgba(0, 0, 0, 0.6); */
+  --elevation-hover-4: 0 6px 18px rgba(0, 0, 0, 0.54);
+  /* --elevation-hover-6: 0 12px 28px rgba(0, 0, 0, 0.7); */
+  --elevation-hover-6: 0 8px 22px rgba(0, 0, 0, 0.58);
+  /* --elevation-hover-8: 0 16px 32px rgba(0, 0, 0, 0.8); */
+  --elevation-hover-8: 0 10px 28px rgba(0, 0, 0, 0.62);
   
   /* Enhanced brand elevations for dark mode */
   --elevation-brand-subtle: 0 2px 8px rgba(var(--color-brand-rgb), 0.15);
