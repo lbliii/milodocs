@@ -23,7 +23,7 @@
       if (!saved) {
         // Optional: derive a default from data-theme on <body>
         var body = document.body;
-        saved = body && body.dataset && body.dataset.theme ? body.dataset.theme : 'light';
+        saved = body && body.dataset && body.dataset.theme ? body.dataset.theme : 'dark';
       }
       if (saved === 'dark') {
         docEl.classList.add('dark');
@@ -31,8 +31,8 @@
         docEl.classList.remove('dark');
       }
     } catch (e) {
-      // Fail light by default
-      docEl.classList.remove('dark');
+      // Fail dark by default
+      docEl.classList.add('dark');
     }
 
     // Helper to re-enable transitions once CSS is definitely applied
