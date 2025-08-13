@@ -309,6 +309,6 @@
 
 /* Navigation items get subtle interactions */
 .nav-item,
-.sidebar-item {
+.sidebar__item {
   /* Use .interact-subtle class instead of custom transforms */
 }

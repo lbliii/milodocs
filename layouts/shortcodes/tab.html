@@ -2,10 +2,12 @@
 {{- $group := .Get "group" | default "default" -}}
 {{- $label := .Get "label" | default (.Get "option") -}}
 {{- $active := or (.Get "active") (eq (lower (.Get "state")) "active") -}}
+{{- $variant := .Get "variant" -}}
 
 <div data-component="tab-item"
      data-group="{{ $group | urlize }}"
      data-label="{{ $label }}"
+     {{ if $variant }}data-variant="{{ $variant }}"{{ end }}
      {{ if $active }}data-active="true"{{ end }}>
   {{- $.Page.RenderString .Inner -}}
   </div>

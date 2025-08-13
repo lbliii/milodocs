@@ -29,7 +29,9 @@ export class ArticleTabs extends Component {
       });
     }
     
-    this.tabContainers = Array.from(document.querySelectorAll('[data-component="article-tabs"]'));
+    this.tabContainers = Array.from(document.querySelectorAll('[data-component="article-tabs"], [data-component="tabs"]'));
+    // Filter out any containers that lack required structure
+    this.tabContainers = this.tabContainers.filter(c => c.querySelector('[data-tab-id]') && c.querySelector('[data-tabcontent]'));
     
     if (this.tabContainers.length === 0) {
       console.warn('ArticleTabs: No tab containers found');
@@ -187,6 +189,8 @@ export class ArticleTabs extends Component {
    * Update content visibility based on active buttons
    */
   updateContent(tabContainer, optionContent) {
+    const contentWrapper = tabContainer.querySelector('.tabs__content, .w-full');
+    const currentHeight = contentWrapper ? contentWrapper.offsetHeight : 0;
     // Get all active buttons
     const activeButtons = tabContainer.querySelectorAll('button.bg-brand');
     
@@ -209,7 +213,7 @@ export class ArticleTabs extends Component {
     
     optionContent.forEach(content => {
       const contentValue = content.getAttribute('data-tabcontent');
-      const isCurrentlyVisible = !content.classList.contains('hidden');
+      const isCurrentlyVisible = content.classList.contains('is-active');
       
       if (contentValue === convertedText) {
         visibleContent = content;
@@ -223,33 +227,32 @@ export class ArticleTabs extends Component {
       }
     });
     
-    // Smooth crossfade: hide old content first, then show new
-    if (contentToHide.length > 0 && contentToShow.length > 0) {
-      // Hide current content
-      contentToHide.forEach(content => {
-        this.hideContent(content);
-        content.setAttribute('aria-hidden', 'true');
+    // Smooth transition without overlap: hide old, then show new
+    const targetPanel = contentToShow[0] || visibleContent;
+    if (contentWrapper && targetPanel) {
+      const targetHeight = targetPanel.scrollHeight;
+      contentWrapper.style.height = currentHeight + 'px';
+      contentWrapper.offsetHeight;
+      requestAnimationFrame(() => {
+        contentWrapper.style.height = targetHeight + 'px';
       });
-      
-      // Show new content after a brief delay for crossfade effect
       setTimeout(() => {
-        contentToShow.forEach(content => {
-          this.showContent(content);
-          content.setAttribute('aria-hidden', 'false');
-        });
-      }, 100);
-    } else {
-      // Simple show/hide for initial load or when no crossfade needed
-      contentToHide.forEach(content => {
-        this.hideContent(content);
-        content.setAttribute('aria-hidden', 'true');
-      });
-      
-      contentToShow.forEach(content => {
-        this.showContent(content);
-        content.setAttribute('aria-hidden', 'false');
-      });
+        contentWrapper.style.removeProperty('height');
+      }, 300);
     }
+
+    // Hide outgoing first to avoid layered darkening during fade
+    contentToHide.forEach(panel => {
+      this.hideContent(panel);
+      panel.setAttribute('aria-hidden', 'true');
+    });
+    // Show incoming after a short delay for smoother perception
+    setTimeout(() => {
+      contentToShow.forEach(panel => {
+        this.showContent(panel);
+        panel.setAttribute('aria-hidden', 'false');
+      });
+    }, 60);
     
     this.emit('tabs:contentUpdated', { 
       container: tabContainer,
@@ -294,7 +297,7 @@ export class ArticleTabs extends Component {
     // Hide all content
     const allContent = tabContainer.querySelectorAll('[data-tabcontent]');
     allContent.forEach(content => {
-      content.classList.add('hidden');
+      content.classList.remove('is-active');
       content.setAttribute('aria-hidden', 'true');
     });
     
@@ -311,41 +314,14 @@ export class ArticleTabs extends Component {
    * Show content with smooth crossfade transition
    */
   showContent(element) {
-    // Remove hidden class and prepare for transition
-    element.classList.remove('hidden');
-    element.style.opacity = '0';
-    element.style.transform = 'translateY(8px) scale(0.98)';
-    element.style.filter = 'blur(1px)';
-    // CSS handles transitions via animation tokens
-    
-    // Force reflow to ensure initial state is applied
-    element.offsetHeight;
-    
-    // Animate to visible state
-    requestAnimationFrame(() => {
-      element.style.opacity = '1';
-      element.style.transform = 'translateY(0) scale(1)';
-      element.style.filter = 'blur(0px)';
-    });
+    element.classList.add('is-active');
   }
 
   /**
    * Hide content with smooth fade out
    */
   hideContent(element) {
-    // CSS handles transitions via animation tokens
-    element.style.opacity = '0';
-    element.style.transform = 'translateY(-4px) scale(1.02)';
-    element.style.filter = 'blur(0.5px)';
-    
-    setTimeout(() => {
-      element.classList.add('hidden');
-      // Clean up styles
-      element.style.removeProperty('opacity');
-      element.style.removeProperty('transform');
-      element.style.removeProperty('filter');
-      element.style.removeProperty('transition');
-    }, 250);
+    element.classList.remove('is-active');
   }
 
   /**

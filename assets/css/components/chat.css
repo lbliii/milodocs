@@ -1,7 +1,7 @@
 /* Chat Component - Enhanced chat interface with premium styling */
 
 /* Chat Header */
-.chat-header {
+.chat__header {
   /* backdrop-filter: blur(10px); */
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
@@ -9,11 +9,11 @@
 }
 
 /* Chat header icon styling for proper dark mode */
-.chat-header__icon {
+.chat__header-icon {
   filter: brightness(0) saturate(100%) invert(42%) sepia(15%) saturate(566%) hue-rotate(202deg) brightness(96%) contrast(87%);
 }
 
-.dark .chat-header__icon {
+.dark .chat__header-icon {
   filter: brightness(0) saturate(100%) invert(85%) sepia(8%) saturate(593%) hue-rotate(202deg) brightness(91%) contrast(92%);
 }
 
@@ -47,17 +47,17 @@
 }
 
 /* Enhanced Chat Interface - Clean transparent design */
-.chat-controls {
+.chat__controls {
   background: transparent;
   border: none;
   border-radius: 0 0 0.75rem 0.75rem; /* Bottom corners rounded to match container */
 }
 
-.chat-form {
+.chat__form {
   @apply w-full;
 }
 
-.chat-input {
+.chat__input {
   @apply focus:outline-none;
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
@@ -68,12 +68,12 @@
   line-height: 1.4;
 }
 
-.chat-input:hover {
+.chat__input:hover {
   border-color: var(--color-brand);
   box-shadow: var(--elevation-4);
 }
 
-.chat-input:focus {
+.chat__input:focus {
   border-color: var(--color-brand);
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.1),
@@ -146,31 +146,31 @@
 }
 
 /* Enhanced input styling for expanded state */
-.chat-expanded .chat-input {
+.chat-expanded .chat__input {
   @apply text-base;
   font-size: 15px; /* Slightly larger for better UX */
   line-height: 1.5;
 }
 
 /* Micro-interaction for expand button */
-.chat-header button {
+.chat__header button {
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
     transform var(--timing-fast) var(--easing-standard),
     background-color var(--timing-fast) var(--easing-standard);
 }
 
-.chat-header button:hover {
+.chat__header button:hover {
   transform: scale(1.1);
   background-color: var(--color-surface-hover);
 }
 
-.chat-header button:active {
+.chat__header button:active {
   transform: scale(0.95);
 }
 
 /* Enhanced focus states */
-.chat-expanded .chat-input:focus {
+.chat-expanded .chat__input:focus {
   box-shadow: 
     0 0 0 3px rgba(var(--color-brand-rgb), 0.12),
     0 4px 20px rgba(0, 0, 0, 0.1);
@@ -178,7 +178,7 @@
 }
 
 /* Subtle animation for chat messages in expanded state */
-.chat-expanded #chat-messages {
+.chat-expanded .chat__messages {
   /* ✅ FIXED: Use animation tokens */
   animation: subtle-fade-in var(--timing-medium) var(--easing-standard) var(--reveal-stagger-delay) both;
 }
@@ -245,7 +245,7 @@
 /* :has() Chat Interface Enhancements */
 
 /* Chat container responds to input focus (no scale to avoid clipping) */
-#chatContainer:has(.chat-input:focus) {
+#chatContainer:has(.chat__input:focus) {
   transform: translateY(-1px);
   box-shadow: 
     0 12px 40px rgba(0, 0, 0, 0.15),
@@ -256,24 +256,24 @@
 }
 
 /* Match header with lighter sheet while expanded */
-.chat-expanded .chat-header {
+.chat-expanded .chat__header {
   background: rgba(255, 255, 255, 0.08) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
-.dark .chat-expanded .chat-header {
+.dark .chat-expanded .chat__header {
   background: rgba(255, 255, 255, 0.05) !important;
   border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 /* Enhanced expanded state with input focus */
-.chat-expanded:has(.chat-input:focus) {
+.chat-expanded:has(.chat__input:focus) {
   border-left-width: 4px;
   border-color: var(--color-brand);
   background: rgba(255, 255, 255, 0.15);
 }
 
 /* Chat form with content gets enhanced styling */
-#chatContainer:has(.chat-input:not(:placeholder-shown)) .chat-header {
+#chatContainer:has(.chat__input:not(:placeholder-shown)) .chat__header {
   background: linear-gradient(135deg, 
     rgba(var(--color-brand-rgb), 0.1) 0%, 
     rgba(var(--color-brand-rgb), 0.05) 100%);
@@ -281,7 +281,7 @@
 }
 
 /* Send button activation based on input content */
-#chatContainer:has(.chat-input:not(:placeholder-shown)) #sendButton {
+#chatContainer:has(.chat__input:not(:placeholder-shown)) #sendButton {
   background-color: var(--color-brand) !important;
   color: var(--color-text-inverse) !important;
   transform: scale(1.05);
@@ -312,25 +312,25 @@
 }
 
 /* Chat input improvements */
-.chat-input:focus {
+.chat__input:focus {
   box-shadow: 
     0 0 0 3px rgba(var(--color-brand-rgb), 0.1),
     0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: var(--color-brand) !important;
 }
 
-.chat-input::placeholder {
+.chat__input::placeholder {
   color: var(--color-text-tertiary);
 }
 
 /* Header button hover effects with enhanced micro-interactions */
-.chat-header button:hover svg {
+.chat__header button:hover svg {
   transform: scale(1.15) rotate(2deg);
   transition: transform var(--timing-fast) var(--easing-standard);
 }
 
 /* Smooth state transitions for expand button icon */
-.chat-header button svg {
+.chat__header button svg {
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: transform var(--timing-medium) var(--easing-standard);
 }

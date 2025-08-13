@@ -1,3 +1,0 @@
-<!--tabs/tab.html -->
-{{- $state := .Get "state" | lower -}}
-<button data-tab-option="{{ .Parent.Get "id" | lower |urlize }}/{{ .Get "option" | lower | urlize }}" type="button" class="px-4 py-2 border rounded {{if eq $state "active"}}bg-brand text-white {{else}} bg-surface text-text-primary{{end}}">{{ .Get "option" }}</button>

@@ -1,29 +1,28 @@
 <!-- SidebarLeft Partial -->
 <!-- Mobile navigation toggle (visible < xl) -->
-<button id="mobileNavToggle" class="fixed top-4 left-4 z-50 xl:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
+<button type="button" class="fixed top-4 left-4 z-50 xl:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
 </button>
 
 <!-- Mobile navigation overlay -->
-<div id="mobileNavOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden xl:hidden" data-component="navigation-mobile-overlay"></div>
+<div class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden xl:hidden" data-navigation-overlay></div>
 
 <!-- Keep desktop width flexible to avoid squeezing content at medium widths -->
-<!-- <aside id="sidebar-left" class="sidebar-container fixed md:sticky left-0 top-0 md:top-16 z-40 h-full md:h-[calc(100vh-4rem)] w-80 md:w-1/5 md:max-w-80 shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:flex" data-component="navigation-sidebar-left"> -->
 <!-- Unified sidebar: mobile off-canvas (<xl) + desktop sticky (xl+) -->
-<aside id="sidebar-left" class="sidebar-container block fixed xl:sticky left-0 top-0 xl:top-16 z-40 h-full xl:h-[calc(100vh-4rem)] w-80 xl:w-auto -translate-x-full xl:translate-x-0 transition-all duration-300 ease-in-out overflow-y-auto pr-1" data-component="navigation-sidebar-left" role="navigation" aria-label="Primary">
+<aside id="sidebar-left" class="sidebar block fixed xl:sticky left-0 top-0 xl:top-16 z-40 h-full xl:h-[calc(100vh-4rem)] w-80 xl:w-auto -translate-x-full xl:translate-x-0 transition-all duration-300 ease-in-out overflow-y-auto pr-1" data-component="navigation-sidebar-left" role="navigation" aria-label="Primary">
     <!-- Mobile header -->
-    <div class="sidebar-header flex xl:hidden items-center justify-between p-4">
+    <div class="sidebar__header flex xl:hidden items-center justify-between p-4">
         <h2 class="text-lg font-semibold">Navigation</h2>
-        <button id="closeMobileNav" class="sidebar-close-btn p-2 rounded-lg" aria-label="Close navigation menu">
+        <button type="button" class="sidebar__close-button p-2 rounded-lg" aria-label="Close navigation menu" data-navigation-close>
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
     </div>
     
-    <div id="linkTree" class="pt-4 md:pt-4 px-4 md:px-0 h-full w-full">
+    <div class="sidebar__link-tree pt-4 md:pt-4 px-4 md:px-0 h-full w-full" data-link-tree>
         {{ $currentpg := . }}
         <!-- Include the Directory partial -->
         {{ partial "navigation/directory.html" (dict "dir" .Site.Sections "current" $currentpg "level" 1) }}

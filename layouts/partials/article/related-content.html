@@ -65,7 +65,7 @@
         <div class="card-view hidden" data-view="cards">
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {{- range $relatedPages -}}
-              <article class="resource-card-compact p-5" 
+              <article class="card card--resource p-5" 
                        data-related-article="{{ .RelPermalink }}" 
                        data-article-title="{{ .LinkTitle | urlize }}">
                 <a href="{{ .RelPermalink }}" class="space-y-3 block" aria-describedby="{{ .RelPermalink | anchorize }}-card-summary">

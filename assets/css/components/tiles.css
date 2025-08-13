@@ -1,7 +1,7 @@
 /* Tiles Component - Interactive content cards with enhanced UX */
 
 /* Base Tile Styles */
-.tile {
+.card--tile {
   position: relative;
   /* Use a CSS var for the base background so JS can layer gradients on hover */
   --tile-base-bg: linear-gradient(
@@ -27,7 +27,7 @@
   isolation: isolate;
 }
 
-.tile::before {
+.card--tile::before {
   content: '';
   position: absolute;
   top: 0;
@@ -46,7 +46,7 @@
 }
 
 /* Subtle inner highlight for glass edge */
-.tile::after {
+.card--tile::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -55,28 +55,28 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
-.tile:hover::before {
+.card--tile:hover::before {
   opacity: 1;
 }
 
 /* Focus states for accessibility */
-.tile:focus-within {
+.card--tile:focus-within {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
   transform: var(--transform-lift-medium);
 }
 
 /* Tile content spacing */
-.tile .space-y-3 > * + * {
+.card--tile .space-y-3 > * + * {
   margin-top: 0.75rem;
 }
 
-.tile .space-y-2 > * + * {
+.card--tile .space-y-2 > * + * {
   margin-top: 0.5rem;
 }
 
 /* Tile links - ensure they take full space */
-.tile a {
+.card--tile a {
   display: block;
   color: inherit;
   text-decoration: none;
@@ -84,12 +84,12 @@
   z-index: 2;
 }
 
-.tile a:hover {
+.card--tile a:hover {
   color: inherit;
 }
 
 /* Tile headers */
-.tile h3 {
+.card--tile h3 {
   color: var(--color-text-primary);
   font-weight: 600;
   line-height: 1.3;
@@ -97,19 +97,19 @@
   transition: color 0.2s ease;
 }
 
-.tile:hover h3 {
+.card--tile:hover h3 {
   color: var(--color-brand);
 }
 
 /* Tile descriptions */
-.tile p {
+.card--tile p {
   color: var(--color-text-secondary);
   line-height: 1.5;
   font-size: 0.875rem;
 }
 
 /* Tile icons */
-.tile .icon {
+.card--tile .icon {
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0;
@@ -119,13 +119,13 @@
   filter: brightness(0.8);
 }
 
-.tile:hover .icon {
+.card--tile:hover .icon {
   filter: brightness(1);
   transform: scale(1.05);
 }
 
 /* Tile tag/badge styles */
-.tile .inline-block {
+.card--tile .inline-block {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border-primary);
   color: var(--color-text-secondary);
@@ -139,7 +139,7 @@
   text-decoration: none;
 }
 
-.tile .inline-block:hover {
+.card--tile .inline-block:hover {
   background-color: var(--color-brand);
   border-color: var(--color-brand);
   color: var(--color-text-inverse);
@@ -148,38 +148,36 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .tile {
+  .card--tile {
     margin-bottom: 1rem;
   }
   
-  .tile:hover {
+  .card--tile:hover {
     transform: var(--transform-lift-medium);
   }
 }
 
 /* Grid layout enhancements - simplified for child links component */
-.grid .tile {
+.grid .card--tile {
   height: 100%;
 }
 
 /* Dark mode enhancements */
-.dark .tile {
+.dark .card--tile {
   border-color: var(--color-border-secondary);
   /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05); */
   box-shadow: var(--glass-shadow);
 }
 
-.dark .tile:hover {
-  /* box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(var(--color-brand-rgb), 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
-}
+.dark .card--tile:hover { box-shadow: var(--glass-shadow); }
 
 /* Animation improvements */
-.tile {
-  animation: tile-enter 0.4s ease-out;
+.card--tile {
+  animation: card-tile-enter 0.4s ease-out;
   animation-fill-mode: both;
 }
 
-@keyframes tile-enter {
+@keyframes card-tile-enter {
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -191,9 +189,9 @@
 }
 
 /* Stagger animation for grids */
-.grid .tile:nth-child(1) { animation-delay: 0s; }
-.grid .tile:nth-child(2) { animation-delay: 0.1s; }
-.grid .tile:nth-child(3) { animation-delay: 0.2s; }
-.grid .tile:nth-child(4) { animation-delay: 0.3s; }
-.grid .tile:nth-child(5) { animation-delay: 0.4s; }
-.grid .tile:nth-child(6) { animation-delay: 0.5s; }
+.grid .card--tile:nth-child(1) { animation-delay: 0s; }
+.grid .card--tile:nth-child(2) { animation-delay: 0.1s; }
+.grid .card--tile:nth-child(3) { animation-delay: 0.2s; }
+.grid .card--tile:nth-child(4) { animation-delay: 0.3s; }
+.grid .card--tile:nth-child(5) { animation-delay: 0.4s; }
+.grid .card--tile:nth-child(6) { animation-delay: 0.5s; }

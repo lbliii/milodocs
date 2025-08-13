@@ -22,8 +22,8 @@
 @import "../components/toast.css";
 @import "../components/notebook.css";
 @import "../components/openapi/index.css";
-@import "../components/tabs-enhanced.css";
-@import "../components/tabs-modern.css";
+@import "../components/tabs.css";
+@import "../components/code.css";
 
 @tailwind base;
 @tailwind components;

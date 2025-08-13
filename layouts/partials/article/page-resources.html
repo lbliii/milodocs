@@ -26,7 +26,7 @@
           </h3>
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {{- range $images -}}
-              <div class="resource-card group relative">
+              <div class="card card--resource group relative">
                 <img src="{{ .RelPermalink }}" 
                      alt="{{ .Title | default "Resource image" }}" 
                      class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-200"
@@ -56,7 +56,7 @@
           </h3>
           <div class="space-y-3">
             {{- range $documents -}}
-              <div class="resource-card flex items-center justify-between p-4">
+              <div class="card card--resource flex items-center justify-between p-4">
                 <div class="flex items-center flex-1 min-w-0">
                   <svg class="w-5 h-5 mr-3 opacity-60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>

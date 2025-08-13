@@ -25,7 +25,7 @@ export class Sidebar extends Component {
       return;
     }
 
-    this.linkTreeElement = this.findChild('#linkTree');
+    this.linkTreeElement = this.findChild('[data-link-tree]');
     if (!this.linkTreeElement) {
       console.warn('Sidebar: LinkTree element not found within sidebar');
       return;
@@ -37,7 +37,7 @@ export class Sidebar extends Component {
     }
     
     this.initExpandable({
-      toggleSelector: '.expand-toggle',
+      toggleSelector: '.sidebar__toggle',
       contentSelector: '.nested-content',
       // Prefer snappier interactions in the sidebar
       // animationTiming: 'medium'
@@ -45,8 +45,8 @@ export class Sidebar extends Component {
     });
     
     this.initResponsive({
-      mobileBreakpoint: 768,
-      overlaySelector: '#mobileNavOverlay'
+      mobileBreakpoint: 1280,
+      overlaySelector: '[data-navigation-overlay]'
     });
     
     const nestedContents = this.linkTreeElement.querySelectorAll('.nested-content');
@@ -59,7 +59,7 @@ export class Sidebar extends Component {
     this.currentPageDetector = new CurrentPageDetection({
       activeClass: 'sidebar-link--active',
       parentItemSelector: 'li',
-      toggleSelector: '.expand-toggle'
+      toggleSelector: '.sidebar__toggle'
     });
     
     const found = this.currentPageDetector.init(this.linkTreeElement);
@@ -70,6 +70,17 @@ export class Sidebar extends Component {
     }
     
     this.setupKeyboardNavigation();
+
+    // Close the mobile sidebar when a link is clicked
+    if (this.linkTreeElement) {
+      this.addEventListener(this.linkTreeElement, 'click', (event) => {
+        const anchor = event.target.closest('a');
+        if (!anchor) return;
+        if (typeof this.isMobileViewport === 'function' && this.isMobileViewport()) {
+          this.closeMobile();
+        }
+      });
+    }
     
     this.element.classList.add('initialized');
     this.isInitialized = true;
@@ -85,13 +96,13 @@ export class Sidebar extends Component {
       const focusedElement = document.activeElement;
       
       if (e.key === 'ArrowRight') {
-        const toggle = focusedElement.querySelector('.expand-toggle');
+        const toggle = focusedElement.querySelector('.sidebar__toggle');
         if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
           e.preventDefault();
           await this.handleToggleClick(toggle);
         }
       } else if (e.key === 'ArrowLeft') {
-        const toggle = focusedElement.querySelector('.expand-toggle');
+        const toggle = focusedElement.querySelector('.sidebar__toggle');
         if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
           e.preventDefault();
           await this.handleToggleClick(toggle);
@@ -206,7 +217,7 @@ export class Sidebar extends Component {
       const togglesToExpand = [];
       let parent = currentLink.closest('li');
       while (parent) {
-        const toggle = parent.querySelector(':scope > .sidebar-item > .expand-toggle');
+        const toggle = parent.querySelector(':scope > .sidebar__item > .sidebar__toggle');
         if (toggle) togglesToExpand.push(toggle);
         parent = parent.parentElement?.closest('li');
       }

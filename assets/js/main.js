@@ -211,7 +211,7 @@ if (typeof window !== 'undefined') {
     log.info(`Sidebar transform: ${sidebarStyle.transform}`);
     log.info(`Sidebar component state: ${sidebarElement.dataset.componentState || 'none'}`);
     
-    const toggles = sidebarElement.querySelectorAll('.expand-toggle');
+    const toggles = sidebarElement.querySelectorAll('.sidebar-item__toggle');
     log.info(`Found ${toggles.length} sidebar toggles`);
     
     if (toggles.length === 0) {

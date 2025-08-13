@@ -43,7 +43,7 @@
       <div class="endpoint-groups-grid">
         {{/* Get all child pages (tag sections) */}}
         {{ range .Pages }}
-          <div class="endpoint-group-card focus-ring">
+          <div class="card card--endpoint-group focus-ring">
             <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
             <p>{{ .Description }}</p>
             <div class="endpoint-count">

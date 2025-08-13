@@ -302,7 +302,7 @@ class ComponentManager {
    */
   static isSidebarBroken(instance) {
     try {
-      const toggles = instance.element.querySelectorAll('.expand-toggle');
+      const toggles = instance.element.querySelectorAll('.sidebar-item__toggle');
       if (toggles.length === 0) return false;
       
       // Test if click handler exists

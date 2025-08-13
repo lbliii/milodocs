@@ -96,11 +96,7 @@
   {{- $cssResources = $cssResources | append $designTokensCSS -}}
 {{- end -}}
 
-{{/* Performance Enhancements - Native browser optimizations */}}
-{{- $performanceCSS := resources.Get "css/components/performance-enhancements.css" -}}
-{{- if $performanceCSS -}}
-  {{- $cssResources = $cssResources | append $performanceCSS -}}
-{{- end -}}
+{{/* Performance Enhancements: moved rules into component CSS per element-style strategy */}}
 
 {{/* Enhanced Animations - State-driven animations */}}
 {{- $enhancedAnimationsCSS := resources.Get "css/components/enhanced-animations.css" -}}

@@ -1,15 +1,20 @@
 /* Sidebar Navigation - Main navigation sidebar with responsive behavior */
 
 /* Sidebar Container Styling */
+.sidebar,
 .sidebar-container {
   background-color: transparent;
   color: var(--color-text-primary);
   border-inline-end: none;
+  /* Enable named container for container queries in this file */
+  container-type: inline-size;
+  container-name: sidebar;
 }
 
 /* Desktop sidebar styling */
 /*
 @container sidebar (min-width: 768px) {
+  .sidebar,
   .sidebar-container {
     background-color: transparent;
     border-inline-end: none;
@@ -46,6 +51,7 @@
     transition: transform var(--timing-medium) var(--easing-standard);
   }
   
+  .sidebar.translate-x-0,
   .sidebar-container.translate-x-0 {
     transform: translateX(0) !important;
   }
@@ -61,6 +67,7 @@
 
 /* Force hide sidebar header on desktop */
 @container sidebar (min-width: 768px) {
+  .sidebar__header,
   .sidebar-header {
     display: none !important;
   }
@@ -68,22 +75,25 @@
 
 /* Fallback: Hide mobile navigation elements on desktop */
 @media (min-width: 768px) {
+  .sidebar__header,
   .sidebar-header {
     display: none !important;
   }
   
-  #mobileNavToggle {
+  [data-component="navigation-mobile-toggle"] {
     display: none !important;
   }
 }
 
 /* Ensure sidebar starts hidden on mobile */
 @container sidebar (max-width: 767px) {
+  .sidebar:not(.translate-x-0),
   .sidebar-container:not(.translate-x-0) {
     transform: translateX(-100%) !important;
   }
 }
 
+.sidebar__close-button,
 .sidebar-close-btn {
   color: var(--color-text-secondary);
   /* ✅ FIXED: Specific properties for better performance */
@@ -95,18 +105,21 @@
   cursor: pointer;
 }
 
+.sidebar__close-button:hover,
 .sidebar-close-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text-primary);
   border-radius: var(--radius-lg);
 }
 
+.sidebar__close-button:focus,
 .sidebar-close-btn:focus {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
 }
 
 /* LinkTree Styling */
+[data-link-tree],
 #linkTree {
   background-color: transparent;
   color: var(--color-text-primary);
@@ -115,6 +128,7 @@
 
 /* Desktop linkTree padding adjustment */
 @container sidebar (min-width: 768px) {
+  [data-link-tree],
   #linkTree {
     padding-inline-start: 4px; /* Add space for focus ring to prevent clipping */
     padding-inline-end: 0;
@@ -123,6 +137,7 @@
 
 /* Mobile linkTree styling */
 @container sidebar (max-width: 767px) {
+  [data-link-tree],
   #linkTree {
     padding: 1rem;
   }
@@ -136,18 +151,19 @@
 }
 */
 
+[data-link-tree].initialized,
 #linkTree.initialized {
   opacity: 1;
 }
 
 /* Robust expansion using :has() based on aria-expanded (fallback if JS state desyncs) */
-li:has(> .sidebar-item > .expand-toggle[aria-expanded="true"]) > .nested-content {
+li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="true"]) > .nested-content {
   max-height: var(--collapse-height-expanded);
   opacity: var(--collapse-opacity-expanded);
   overflow: visible;
 }
 
-li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-content {
+li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested-content {
   max-height: var(--collapse-height-collapsed);
   opacity: var(--collapse-opacity-collapsed);
   overflow: hidden;
@@ -161,34 +177,37 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
 
 /* ✅ NEW ANIMATION SYSTEM - Use data attributes for consistent behavior */
 /* Ensure animations only work after initialization */
+[data-link-tree].initialized .nested-content[data-collapse-state="expanded"],
 #linkTree.initialized .nested-content[data-collapse-state="expanded"] {
   max-height: var(--collapse-height-expanded);
   opacity: var(--collapse-opacity-expanded);
   overflow: visible; /* Allow content to be fully visible */
 }
 
+[data-link-tree].initialized .nested-content[data-collapse-state="collapsed"],
 #linkTree.initialized .nested-content[data-collapse-state="collapsed"] {
   max-height: var(--collapse-height-collapsed);
   opacity: var(--collapse-opacity-collapsed);
   overflow: hidden;
 }
 
+[data-link-tree].initialized .nested-content[data-collapse-state="transitioning"],
 #linkTree.initialized .nested-content[data-collapse-state="transitioning"] {
   overflow: hidden; /* Prevent content spillage during animation */
 }
 
 /* Sidebar Navigation Components - Cohesive Design */
-.sidebar-item {
+.sidebar__item {
   @apply flex items-center rounded-md transition-all duration-200;
   background-color: transparent;
   margin: 1px 0;
 }
 
-.sidebar-item:hover {
+.sidebar__item:hover {
   background-color: var(--color-surface-hover);
 }
 
-.sidebar-item__link {
+.sidebar__link {
   @apply flex items-center flex-grow p-2 transition-all duration-200 
          focus:outline-none focus:ring-2 rounded-l-md;
   color: var(--color-text-primary);
@@ -197,27 +216,27 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   min-height: 2.5rem; /* Consistent touch target */
 }
 
-.sidebar-item__link:hover,
-.sidebar-item__link:focus {
+.sidebar__link:hover,
+.sidebar__link:focus {
   color: var(--color-brand);
 }
 
-.sidebar-item__link--active {
+.sidebar__link--active {
   color: var(--color-brand);
   background-color: var(--color-hover);
 }
 
-.sidebar-item__icon {
+.sidebar__icon {
   /* Reduced icon size for tighter look */
   /* @apply w-5 h-5 mr-3 flex-shrink-0; */
   @apply w-4 h-4 mr-3 flex-shrink-0;
 }
 
-.sidebar-item__text {
+.sidebar__text {
   @apply flex-grow;
 }
 
-.sidebar-item__expander {
+.sidebar__expander {
   @apply p-2 transition-all duration-200 focus:outline-none focus:ring-2 
          rounded-r-md flex items-center justify-center;
   color: var(--color-text-secondary);
@@ -226,75 +245,82 @@ li:has(> .sidebar-item > .expand-toggle[aria-expanded="false"]) > .nested-conten
   --tw-ring-color: var(--color-brand);
 }
 
-.sidebar-item__expander:hover,
-.sidebar-item__expander:focus {
+.sidebar__expander:hover,
+.sidebar__expander:focus {
   color: var(--color-brand);
   background-color: var(--color-surface-active);
 }
 
-.sidebar-item__chevron {
+.sidebar__chevron {
   @apply w-4 h-4 transition-transform duration-200;
 }
 
 /* Level-specific styling */
-.sidebar-item--level-1 .sidebar-item__text {
+.sidebar__item--level-1 .sidebar__text {
   /* Step down one size from text-lg and slightly reduce weight */
   /* @apply text-lg font-brand font-bold; */
   @apply text-base font-brand font-semibold;
 }
 
-.sidebar-item--level-1 {
+.sidebar__item--level-1 {
   @apply mb-1;
 }
 
-.sidebar-item--level-2 {
+.sidebar__item--level-2 {
   @apply ml-4;
 }
 
-.sidebar-item--level-2 .sidebar-item__text {
+.sidebar__item--level-2 .sidebar__text {
   /* Step down one size from text-base */
   /* @apply font-normal text-base; */
   @apply font-normal text-sm;
 }
 
-.sidebar-item--level-3 {
+.sidebar__item--level-3 {
   @apply ml-6;
 }
 
-.sidebar-item--level-3 .sidebar-item__text {
+.sidebar__item--level-3 .sidebar__text {
   /* Step down one size from text-sm */
   /* @apply font-light text-sm; */
   @apply font-light text-xs;
 }
 
-.sidebar-item--level-4 {
+.sidebar__item--level-4 {
   @apply ml-8;
 }
 
-.sidebar-item--level-4 .sidebar-item__text {
+.sidebar__item--level-4 .sidebar__text {
   /* Step down one size from text-sm */
   /* @apply text-sm; */
   @apply text-xs;
 }
 
-.sidebar-item--level-default {
+.sidebar__item--level-default {
   @apply ml-10;
 }
 
-.sidebar-item--level-default .sidebar-item__text {
+.sidebar__item--level-default .sidebar__text {
   @apply text-xs;
 }
 
 /* Ensure text-brand utility works with sidebar items */
-.sidebar-item__link.text-brand {
+.sidebar__link.text-brand {
   color: var(--color-brand) !important;
 }
 
 /* Enhanced active state for the whole item */
-.sidebar-item:has(.sidebar-item__link--active) {
+.sidebar__item:has(.sidebar__link--active) {
   background-color: var(--color-hover);
   /* box-shadow: 0 2px 8px rgba(var(--color-brand-rgb), 0.2); */
   box-shadow: var(--elevation-brand-subtle);
+}
+
+/* Performance hints for hover states (localize former global rules) */
+.sidebar:has(.sidebar__item:hover),
+.sidebar-container:has(.sidebar__item:hover) {
+  will-change: transform;
+  contain: layout;
 }
 
 /* Right Sidebar Styling - Remove background in dark mode */

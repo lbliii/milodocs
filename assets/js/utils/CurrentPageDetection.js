@@ -22,7 +22,7 @@ export class CurrentPageDetection {
       containerSelector: null, // Must be provided
       activeClass: 'sidebar-link--active',
       parentItemSelector: 'li',
-      toggleSelector: '.expand-toggle',
+      toggleSelector: '.sidebar__toggle',
       linkSelector: 'a',
       ...options
     };

@@ -7,6 +7,12 @@ class TabAggregator extends Component {
     this.isSingleton = false;
   }
 
+  // Override to avoid mutating source tab items' data-component attribute
+  setupElements() {
+    // no-op: we don't want to change [data-component="tab-item"] to tab-aggregator
+    this.element = null;
+  }
+
   async onInit() {
     // Work on all tab items in the document once
     const items = Array.from(document.querySelectorAll('[data-component="tab-item"]'));
@@ -22,21 +28,32 @@ class TabAggregator extends Component {
 
     // For each group, build a single article-tabs container before the first item
     groups.forEach((groupItems, groupName) => {
-      // Skip if already aggregated
+      // Skip if already aggregated (per group)
       const first = groupItems[0];
-      if (first.closest('[data-component="article-tabs"]')) return;
+      if (document.querySelector(`[data-component="article-tabs"][data-tab-group="${groupName}"]`)) return;
 
       const container = document.createElement('section');
-      container.className = 'bg-zinc-100 p-2 my-2 rounded-md';
+      container.className = 'tabs';
       container.setAttribute('data-component', 'article-tabs');
+      container.setAttribute('data-tab-group', groupName);
+
+      // Optional variant from first item: data-variant
+      const variant = first.getAttribute('data-variant');
+      // Default visuals are header-aligned; support opt-out variants
+      if (variant === 'subtle') {
+        container.classList.add('tabs--subtle');
+      }
+      if (variant === 'brand-active') {
+        container.classList.add('tabs--brand-active');
+      }
 
       const tabId = `tabs-${groupName}`;
       const buttons = document.createElement('div');
-      buttons.className = 'flex flex-col md:flex-row ml-1 mt-2 md:space-x-3';
+      buttons.className = 'tabs__nav';
       buttons.setAttribute('data-tab-id', tabId);
 
       const contents = document.createElement('div');
-      contents.className = 'w-full p-2';
+      contents.className = 'tabs__content';
 
       // Build buttons and content blocks
       groupItems.forEach((item, index) => {
@@ -47,12 +64,12 @@ class TabAggregator extends Component {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.setAttribute('data-tab-option', key);
-        btn.className = `px-3 py-2 border rounded ${isActive ? 'bg-brand text-white' : 'bg-white text-black'}`;
+        btn.className = `tabs__button ${isActive ? 'bg-brand' : ''}`;
         btn.textContent = label;
         buttons.appendChild(btn);
 
         const content = document.createElement('div');
-        content.className = `p-2 mb-2${isActive ? '' : ' hidden'}`;
+        content.className = `tabs__panel${isActive ? ' is-active' : ''}`;
         content.setAttribute('data-tabcontent', key);
         // Move item's inner HTML into content
         content.innerHTML = item.innerHTML;

@@ -10,7 +10,7 @@ export class MobileNav extends Component {
   constructor(config = {}) {
     super({
       name: 'navigation-mobile-toggle',
-      selector: config.selector || '#mobileNavToggle',
+      selector: config.selector || '[data-component="navigation-mobile-toggle"]',
       ...config
     });
     
@@ -25,8 +25,17 @@ export class MobileNav extends Component {
       return;
     }
 
-    this.overlay = document.getElementById('mobileNavOverlay');
-    this.closeButton = document.getElementById('closeMobileNav');
+    this.overlay = document.querySelector('[data-navigation-overlay]');
+    this.closeButton = document.querySelector('[data-navigation-close]');
+    // Ensure a11y attributes on the toggle
+    try {
+      if (!this.element.hasAttribute('aria-expanded')) {
+        this.element.setAttribute('aria-expanded', 'false');
+      }
+      if (!this.element.hasAttribute('aria-controls')) {
+        this.element.setAttribute('aria-controls', 'sidebar-left');
+      }
+    } catch {}
     
     // Try to find sidebar component
     this.findSidebarComponent();
@@ -93,6 +102,7 @@ export class MobileNav extends Component {
     document.body.style.overflow = 'hidden';
     
     this.closeButton?.focus();
+    try { this.element.setAttribute('aria-expanded', 'true'); } catch {}
     this.announceToScreenReader('Navigation menu opened');
     this.emit('mobileNav:opened');
   }
@@ -110,6 +120,7 @@ export class MobileNav extends Component {
     document.body.style.overflow = '';
 
     this.element.focus();
+    try { this.element.setAttribute('aria-expanded', 'false'); } catch {}
     this.announceToScreenReader('Navigation menu closed');
     this.emit('mobileNav:closed');
   }

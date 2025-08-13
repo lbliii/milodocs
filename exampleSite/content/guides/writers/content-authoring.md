@@ -40,29 +40,21 @@ icon: rocket.svg  # from /static/icons/light/
 - Collapsible sections:
 
 ```markdown
-{{< collapse summary="Show details" >}}
+{{</* collapse summary="Show details"  */>}}
 Content inside the collapsible.
-{{< /collapse >}}
+{{</* /collapse  */>}}
 ```
 
 - Tabs:
 
 ```markdown
-{{< tabs/container >}}
-{{< tabs/tabButtons id="lang" >}}
-  {{< tabs/tab option="Curl" state="active" >}}
-  {{< tabs/tab option="Python" >}}
-{{< /tabs/tabButtons >}}
+{{</* tab group="lang" label="Curl" active="true" */>}}
+... curl example ...
+{{</* /tab */>}}
 
-{{< tabs/tabContentsContainer >}}
-  {{< tabs/tabContent id="lang" option="Curl" state="active" >}}
-  ... curl example ...
-  {{< /tabs/tabContent >}}
-  {{< tabs/tabContent id="lang" option="Python" >}}
-  ... python example ...
-  {{< /tabs/tabContent >}}
-{{< /tabs/tabContentsContainer >}}
-{{< /tabs/container >}}
+{{</* tab group="lang" label="Python" */>}}
+... python example ...
+{{</* /tab */>}}
 ```
 
 - Ascii / Asciinema: see `content/guides/shortcodes/` for examples.

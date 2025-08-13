@@ -1,12 +1,12 @@
 <!-- LinkItem Partial -->
-<div class="sidebar-item
-    {{ if eq .level 1 }}sidebar-item--level-1
-    {{ else if eq .level 2 }}sidebar-item--level-2  
-    {{ else if eq .level 3 }}sidebar-item--level-3
-    {{ else if eq .level 4 }}sidebar-item--level-4
-    {{ else }}sidebar-item--level-default{{ end }}">
+<div class="sidebar__item
+    {{ if eq .level 1 }}sidebar__item--level-1
+    {{ else if eq .level 2 }}sidebar__item--level-2  
+    {{ else if eq .level 3 }}sidebar__item--level-3
+    {{ else if eq .level 4 }}sidebar__item--level-4
+    {{ else }}sidebar__item--level-default{{ end }}">
     
-    <a class="sidebar-item__link {{ if eq .page.RelPermalink .current.RelPermalink }}sidebar-item__link--active{{ end }}" 
+    <a class="sidebar__link {{ if eq .page.RelPermalink .current.RelPermalink }}sidebar__link--active{{ end }}" 
         href="{{ .page.RelPermalink }}" 
         data-level="{{ .level }}" 
         data-current="{{ if eq .page.RelPermalink .current.RelPermalink }}true{{ else }}false{{ end }}" 
@@ -14,10 +14,10 @@
         data-section="{{ .page.IsSection }}">
         
         {{ with .page.Params.icon }}
-            <img src="{{ printf "icons/light/%s" . | relURL }}" alt="" class="icon sidebar-item__icon">
+            <img src="{{ printf "icons/light/%s" . | relURL }}" alt="" class="icon sidebar__icon">
         {{ end }}
         
-        <span class="sidebar-item__text">
+        <span class="sidebar__text">
             {{/* Check if this is an API endpoint page */}}
             {{ if .page.Params.endpoint }}
                 {{ $endpoint := .page.Params.endpoint }}
@@ -39,10 +39,10 @@
     </a>
     
     {{ if .page.IsSection }}
-        <button class="sidebar-item__expander expand-toggle" 
+        <button class="sidebar__expander sidebar__toggle" 
                 aria-expanded="false"
                 aria-label="Expand {{ .page.Title | default (path.Base .page | humanize) }} section">
-            <svg class="sidebar-item__chevron" viewBox="0 0 20 20" fill="currentColor">
+            <svg class="sidebar__chevron" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
             </svg>
         </button>

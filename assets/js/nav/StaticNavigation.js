@@ -67,7 +67,7 @@ export function checkComponentHealth() {
 
       const sidebarElement = document.getElementById('sidebar-left');
       if (sidebarElement) {
-        const toggles = sidebarElement.querySelectorAll('.expand-toggle');
+      const toggles = sidebarElement.querySelectorAll('.sidebar__toggle');
         if (toggles.length > 0) {
           const firstToggle = toggles[0];
           if (!firstToggle.hasAttribute('aria-expanded')) {

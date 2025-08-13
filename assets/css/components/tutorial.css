@@ -843,17 +843,6 @@
   color: var(--color-text-inverse);
 }
 
-.copy-code .check-icon {
-  display: none;
-}
-
-.copy-code.copied .copy-icon {
-  display: none;
-}
-
-.copy-code.copied .check-icon {
-  display: block;
-}
 
 /* Collapsible Sections */
 .tutorial-section {

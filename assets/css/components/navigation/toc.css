@@ -27,18 +27,18 @@
 }
 
 /* Enhanced Right Sidebar TOC */
-.toc-sidebar {
+.toc {
   @apply p-6 text-sm;
   background: transparent;
   border-radius: var(--radius-xl);
   color: var(--color-text-primary);
 }
 
-.toc-sidebar nav {
+.toc__nav {
   position: relative;
 }
 
-.toc-sidebar nav::before {
+.toc__nav::before {
   content: '';
   position: absolute;
   top: 0;
@@ -54,12 +54,12 @@
   border-radius: 2px;
 }
 
-.toc-sidebar ul {
+.toc ul {
   @apply list-none pl-4 space-y-1;
   margin: 0;
 }
 
-.toc-sidebar ul ul {
+.toc ul ul {
   @apply pl-4 mt-2 border-l border-opacity-20;
   border-color: var(--color-border-primary);
 }
@@ -172,7 +172,7 @@
 }
 
 /* Enhanced animations */
-.toc-sidebar {
+.toc {
   /* ✅ FIXED: Use animation tokens */
   animation: toc-enter var(--timing-medium) var(--easing-standard);
   animation-fill-mode: both;
@@ -191,7 +191,7 @@
 
 /* Responsive adjustments */
 @container (max-width: 1024px) {
-  .toc-sidebar {
+  .toc {
     @apply p-4 text-xs;
   }
   
@@ -201,12 +201,12 @@
 }
 
 /* Remove TOC sidebar background in dark mode */
-.dark .toc-sidebar {
+.dark .toc {
   background: transparent !important;
 }
 
 /* Enhanced active state context */
-.toc-sidebar:has(.toc-link.active) nav::before {
+.toc:has(.toc-link.active) .toc__nav::before {
   opacity: 1;
   transform: scaleY(1.1);
   background: linear-gradient(
@@ -215,4 +215,10 @@
     rgba(var(--color-brand-rgb), 0.5) 50%,
     transparent 100%
   );
+}
+
+/* Localized performance hint for hover state */
+.toc:has(.toc-link:hover) {
+  will-change: transform;
+  contain: layout;
 }

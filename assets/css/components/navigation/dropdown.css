@@ -1,6 +1,6 @@
 /* Dropdown Navigation - Dropdown menus for navigation links */
 
-.dropdown {
+.topbar__dropdown {
   @apply absolute left-0 mt-2 w-52 rounded-xl overflow-hidden 
          shadow-xl p-2 transition-all duration-300;
   /* background-color: var(--color-surface); */
@@ -16,14 +16,14 @@
   box-shadow: var(--glass-shadow);
 }
 
-.group:hover .dropdown {
+.group:hover .topbar__dropdown {
   @apply block;
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
 }
 
-.dropdown::before {
+.topbar__dropdown::before {
   content: '';
   position: absolute;
   top: -6px;
@@ -40,7 +40,7 @@
   z-index: -1;
 }
 
-.dropdown-link {
+.topbar__dropdown-link {
   @apply flex items-center px-4 py-3 text-sm rounded-lg 
          transition-all duration-200 focus:outline-none focus:ring-2
          relative overflow-hidden;
@@ -50,7 +50,7 @@
   margin: 2px 0;
 }
 
-.dropdown-link::before {
+.topbar__dropdown-link::before {
   content: '';
   position: absolute;
   top: 0;
@@ -67,8 +67,8 @@
   pointer-events: none;
 }
 
-.dropdown-link:hover,
-.dropdown-link:focus {
+.topbar__dropdown-link:hover,
+.topbar__dropdown-link:focus {
   background-color: var(--color-surface-hover);
   color: var(--color-brand);
   transform: translateX(4px);
@@ -76,7 +76,7 @@
   padding-inline-start: calc(1rem - 3px);
 }
 
-.dropdown-link:hover::before,
-.dropdown-link:focus::before {
+.topbar__dropdown-link:hover::before,
+.topbar__dropdown-link:focus::before {
   opacity: 1;
 }

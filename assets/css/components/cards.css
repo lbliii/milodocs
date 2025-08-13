@@ -49,14 +49,14 @@
 }
 
 /* Resource Card Styles */
-.resource-card {
+.card--resource {
   @apply card;
   /* padding: 1.5rem; */
   padding: 1rem;
   margin-bottom: 1rem;
 }
 
-.resource-card h3 {
+.card--resource h3 {
   color: var(--color-text-primary);
   font-weight: 600;
   font-size: 1.125rem;
@@ -65,18 +65,18 @@
   transition: color 0.2s ease;
 }
 
-.resource-card:hover h3 {
+.card--resource:hover h3 {
   color: var(--color-brand);
 }
 
-.resource-card p {
+.card--resource p {
   color: var(--color-text-secondary);
   line-height: 1.6;
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
 
-.resource-card a {
+.card--resource a {
   color: var(--color-brand);
   text-decoration: none;
   font-weight: 500;
@@ -88,7 +88,7 @@
   position: relative;
 }
 
-.resource-card a::after {
+.card--resource a::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -100,11 +100,11 @@
   transition: width var(--timing-medium) var(--easing-standard);
 }
 
-.resource-card a:hover::after {
+.card--resource a:hover::after {
   width: 100%;
 }
 
-.resource-card .icon {
+.card--resource .icon {
   width: 1.5rem;
   height: 1.5rem;
   margin-bottom: 0.75rem;
@@ -116,7 +116,7 @@
     transform var(--timing-fast) var(--easing-standard);
 }
 
-.resource-card:hover .icon {
+.card--resource:hover .icon {
   filter: brightness(1);
   transform: scale(1.05);
 }
@@ -366,11 +366,11 @@
 }
 
 /* Resource cards with descriptions get enhanced spacing */
-.resource-card:has(.card__description) {
+.card--resource:has(.card__description) {
   min-height: 180px;
 }
 
-.resource-card:has(.card__description) .card__footer {
+.card--resource:has(.card__description) .card__footer {
   margin-top: auto;
   border-top: 1px solid var(--color-border-primary);
   padding-top: 1rem;

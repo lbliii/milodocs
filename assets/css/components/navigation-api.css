@@ -83,13 +83,13 @@
    ========================================================================== */
 
 /* Make API endpoint links have more vertical space */
-.sidebar-item__link:has(.api-endpoint-item) {
+.sidebar__link:has(.api-endpoint-item) {
   padding: 0.75rem;
   align-items: flex-start;
 }
 
 /* Ensure the text wrapper takes full width */
-.sidebar-item__text:has(.api-endpoint-item) {
+.sidebar__text:has(.api-endpoint-item) {
   width: 100%;
 }
 
@@ -98,26 +98,26 @@
    ========================================================================== */
 
 /* Hover states are implicitly handled by dark-mode tokens; leaving hover overrides minimal */
-.sidebar-item__link:hover .http-method-badge--get { background: var(--http-get-bg); }
+.sidebar__link:hover .http-method-badge--get { background: var(--http-get-bg); }
 
-.sidebar-item__link:hover .http-method-badge--post { background: var(--http-post-bg); }
+.sidebar__link:hover .http-method-badge--post { background: var(--http-post-bg); }
 
-.sidebar-item__link:hover .http-method-badge--put { background: var(--http-put-bg); }
+.sidebar__link:hover .http-method-badge--put { background: var(--http-put-bg); }
 
-.sidebar-item__link:hover .http-method-badge--patch { background: var(--http-patch-bg); }
+.sidebar__link:hover .http-method-badge--patch { background: var(--http-patch-bg); }
 
-.sidebar-item__link:hover .http-method-badge--delete { background: var(--http-delete-bg); }
+.sidebar__link:hover .http-method-badge--delete { background: var(--http-delete-bg); }
 
-.sidebar-item__link:hover .http-method-badge--head,
-.sidebar-item__link:hover .http-method-badge--options { background: var(--http-head-bg); }
+.sidebar__link:hover .http-method-badge--head,
+.sidebar__link:hover .http-method-badge--options { background: var(--http-head-bg); }
 
 /* Active state enhancements */
-.sidebar-item__link--active .api-endpoint-path {
+.sidebar__link--active .api-endpoint-path {
   color: var(--color-brand-primary);
   font-weight: 600;
 }
 
-.sidebar-item__link--active .api-endpoint-summary {
+.sidebar__link--active .api-endpoint-summary {
   color: var(--color-text-secondary);
 }
 
@@ -140,7 +140,7 @@
     font-size: 0.6875rem;
   }
   
-  .sidebar-item__link:has(.api-endpoint-item) {
+  .sidebar__link:has(.api-endpoint-item) {
     padding: 0.5rem;
   }
 }
@@ -155,7 +155,7 @@
    Focus States for Accessibility
    ========================================================================== */
 
-.sidebar-item__link:focus-visible:has(.api-endpoint-item) {
+.sidebar__link:focus-visible:has(.api-endpoint-item) {
   outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }

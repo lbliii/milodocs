@@ -28,7 +28,7 @@
     {{/* <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"> */}}
     <div class="grid grid-autofit gap-4 2xl:grid-cols-3">
         {{- range $pages -}}
-          <article class="tile bg-surface rounded-lg overflow-hidden">
+          <article class="card card--tile bg-surface rounded-lg overflow-hidden">
             {{- with .Params.image -}}
               <div class="aspect-w-16 aspect-h-9">
                 <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="object-cover w-full h-48" loading="lazy">

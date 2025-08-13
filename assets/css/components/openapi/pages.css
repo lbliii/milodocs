@@ -16,7 +16,7 @@
   margin-top: 1.5rem;
 }
 
-.endpoint-group-card {
+.card--endpoint-group {
   padding: 1.5rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-primary);
@@ -29,27 +29,27 @@
     box-shadow 0.2s ease;
 }
 
-.endpoint-group-card:hover {
+.card--endpoint-group:hover {
   border-color: var(--color-brand-primary);
   box-shadow: var(--elevation-hover-2);
 }
 
-.endpoint-group-card h3 {
+.card--endpoint-group h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1.125rem;
   font-weight: 600;
 }
 
-.endpoint-group-card h3 a {
+.card--endpoint-group h3 a {
   color: var(--color-text-primary);
   text-decoration: none;
 }
 
-.endpoint-group-card h3 a:hover {
+.card--endpoint-group h3 a:hover {
   color: var(--color-brand-primary);
 }
 
-.endpoint-group-card p {
+.card--endpoint-group p {
   margin: 0 0 1rem 0;
   color: var(--color-text-secondary);
   font-size: 0.875rem;
@@ -103,7 +103,7 @@
   line-height: 1.6;
 }
 
-.endpoint-summary-card {
+.card--endpoint-summary {
   padding: 1.25rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-primary);
@@ -117,7 +117,7 @@
     box-shadow 0.2s ease;
 }
 
-.endpoint-summary-card:hover {
+.card--endpoint-summary:hover {
   border-color: var(--color-brand-border);
   box-shadow: var(--elevation-hover-1);
 }

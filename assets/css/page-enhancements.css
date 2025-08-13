@@ -119,25 +119,26 @@
 /* Enhanced Related Content Styles */
 .related-content {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
-  border-radius: 0.875rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(10px);
+  background: var(--glass-bg);
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   padding: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: background-color var(--timing-medium) var(--easing-standard),
+              border-color var(--timing-medium) var(--easing-standard),
+              box-shadow var(--timing-medium) var(--easing-standard);
+  box-shadow: var(--glass-shadow);
 }
 
 .related-header {
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: 1px solid var(--glass-border-color);
   padding-bottom: 0.75rem;
   margin-bottom: 1rem;
+}
+
+@media (prefers-color-scheme: light) {
+  .related-header { border-bottom-color: var(--color-border-primary); }
 }
 
 .related-header h2 {
@@ -221,11 +222,14 @@
 /* Compact View Styles */
 .compact-view .compact-item {
   position: relative;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-color);
   border-radius: 0.5rem;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  box-shadow: var(--glass-shadow);
 }
 
 .compact-view .compact-item::before {
@@ -246,12 +250,10 @@
 }
 
 .compact-view .compact-item:hover {
-  border-color: var(--color-brand);
+  border-color: rgba(var(--color-brand-rgb), 0.45);
   background: var(--color-surface-hover);
   transform: translateY(-1px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 0 8px rgba(var(--color-brand-rgb), 0.1);
+  box-shadow: var(--elevation-2);
 }
 
 .compact-view .compact-item:hover::before {
@@ -281,19 +283,14 @@
 /* Enhanced Card View Styles */
 .resource-card-compact {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--color-surface) 0%,
-    var(--color-bg-secondary) 100%
-  );
+  background: var(--glass-bg);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border-primary);
-  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: var(--glass-shadow);
 }
 
 .resource-card-compact::before {
@@ -316,11 +313,8 @@
 
 .resource-card-compact:hover {
   transform: translateY(-3px);
-  border-color: var(--color-brand);
-  box-shadow: 
-    0 8px 20px rgba(0, 0, 0, 0.12),
-    0 0 15px rgba(var(--color-brand-rgb), 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(var(--color-brand-rgb), 0.45);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), var(--elevation-brand-subtle);
 }
 
 .resource-card-compact:hover::before {

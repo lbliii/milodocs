@@ -23,7 +23,7 @@ export const ExpandableMixin = {
   initExpandable: MixinUtilities.createInitFunction(
     'ExpandableMixin',
     {
-      toggleSelector: '.expand-toggle',
+      toggleSelector: '.sidebar__toggle',
       contentSelector: '.nested-content',
       animationTiming: 'medium',
       autoExpand: false

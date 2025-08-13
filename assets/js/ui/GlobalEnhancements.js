@@ -17,11 +17,11 @@ export async function setupGlobalEnhancements() {
   if (config.ripples) {
     const clickableElements = document.querySelectorAll(`
     button, .btn, .topbar__button,
-    .nav-link, .breadcrumb__link, .toc-link,
+    .article-next-prev__link, .breadcrumb__link, .toc-link,
     .quicklinks__link, .quicklinks__item,
     .tile, .card, .resource-card,
     .topbar__logo-link, .dropdown-link,
-    .sidebar-item__link, .expand-toggle
+    .sidebar__link, .sidebar__toggle
   `);
     clickableElements.forEach((element) => {
       element.addEventListener('click', (e) => createRipple(element, e));

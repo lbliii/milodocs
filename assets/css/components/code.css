@@ -1,0 +1,96 @@
+/* Code Blocks - align with header/tabs glass surface and tokens */
+
+.code-block-enhanced {
+  background: var(--glass-bg);
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
+/* Light mode: strengthen wrapper border for visibility */
+@media (prefers-color-scheme: light) {
+  .code-block-enhanced {
+    border-color: var(--color-border-primary);
+  }
+}
+
+.code-block-enhanced .code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border-color);
+}
+
+/* Light mode: strengthen header divider similar to article header */
+@media (prefers-color-scheme: light) {
+  .code-block-enhanced .code-header {
+    border-bottom-color: var(--color-border-primary);
+  }
+}
+
+.code-block-enhanced .code-language {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+}
+
+.code-block-enhanced .code-actions .btn {
+  border-radius: 0.5rem;
+}
+
+.code-block-enhanced .code-actions .btn.btn--ghost {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-color);
+}
+
+.code-block-enhanced .code-actions .btn.btn--ghost:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-brand);
+  border-color: rgba(var(--color-brand-rgb), 0.35);
+}
+
+.code-block-enhanced .code-content {
+  background: transparent;
+}
+
+.code-block-enhanced .code-content .highlight,
+.code-block-enhanced .code-content .highlight pre,
+.code-block-enhanced .code-content pre,
+.code-block-enhanced .code-content code {
+  background: transparent;
+}
+
+.code-block-enhanced .code-content pre {
+  margin: 0;
+  padding: 0.75rem 1rem;
+}
+
+.code-block-enhanced .code-content code {
+  display: block;
+}
+
+/* Dark mode glow tuning aligns with header action glow */
+@media (prefers-color-scheme: dark) {
+  .code-block-enhanced {
+    box-shadow: var(--elevation-4);
+  }
+}
+
+/* Copy button icon alignment and sizing
+   Ensure the single SVG icon in the copy button is visually centered and consistent */
+.code-block-enhanced .code-actions .copy-code .btn__icon {
+  margin-right: 0; /* no trailing space for icon-only buttons */
+  width: 1rem;    /* enforce square icon */
+  height: 1rem;
+  display: block; /* remove inline alignment quirks */
+}
+
+

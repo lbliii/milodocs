@@ -105,7 +105,7 @@
 }
 
 /* Updated Navigation Links for Grid Layout */
-.nav-links {
+.topbar__links {
   display: flex;
   align-items: center;
   gap: 0.5rem; /* Tighter spacing for minimal look */
@@ -117,7 +117,24 @@
 
 /* Hide navigation links on mobile */
 @container (max-width: 768px) {
-  .nav-link {
+  .topbar__link {
     display: none; /* Hidden on mobile, shown via hamburger menu */
   }
+}
+
+/* Topbar links */
+.topbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--timing-fast) var(--easing-standard);
+}
+
+.topbar__link:hover,
+.topbar__link:focus-visible {
+  color: var(--color-brand);
+  outline: none;
 }

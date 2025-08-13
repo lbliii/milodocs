@@ -5,17 +5,13 @@ description: learn how to use the tabs shortcode
 
 Tabs provide an effective way to organize content that varies in format or procedure, eliminating the need for separate pages. This combination of shortcodes enables you to create a tabbed interface. I first discovered this implementation strategy while reviewing the [MiniKube documentation](https://minikube.sigs.k8s.io/docs/start/).
 
-## How it works
+## How it works (simplified)
 
-5 shortcodes make up the tabs UX.
+Use the single `tab` shortcode; the theme aggregates tabs by group and renders the UI.
 
 | Shortcode | Description | Input |
 |---|---|---|
-| `{{</*tabs/container*/>}}` | Container for the entire tabs UX. | n/a |
-| `{{</*tabs/tabButtons*/>}}` | Container for the tab buttons. | `id` **string** |
-| `{{</*tabs/tab*/>}}` | Button to display the tab content. | `option` **string**; `state` **string** |
-| `{{</*tabs/tabContentsContainer*/>}}` | Container for the tab content. | n/a |
-| `{{</*tabs/tabContent*/>}}` | The content displayed on an active tab. | markdown |
+| `{{</* tab */>}}` | Defines one tab. Repeat for each tab in a group. | `group` (string), `label` (string), `active` (bool, optional) |
 
 {{<notice info "Set tab as default">}}
 When an option has the default state of `active`, it will be the first tab shown.
@@ -23,70 +19,24 @@ When an option has the default state of `active`, it will be the first tab shown
 
 ### Example 
 
-{{<tabs/container>}}
-{{<tabs/tabButtons id="launch-method">}}
-{{<tabs/tab option="Console" state="active">}}
-{{<tabs/tab option="CLI">}}
-{{</tabs/tabButtons>}}
-{{<tabs/tabContentsContainer>}}
-{{<tabs/tabContent val1="launch-method/console">}}
+{{< tab group="launch-method" label="Console" active="true" >}}
 1. Ensure your DemoTool server is running and connected.
 2. Navigate to Console.
-{{</tabs/tabContent>}}
-{{<tabs/tabContent val1="launch-method/cli">}}
+{{< /tab >}}
+
+{{< tab group="launch-method" label="CLI" >}}
 1. Run `demoCLI connect`.
-{{</tabs/tabContent>}}
-{{</tabs/tabContentsContainer>}}
-{{</tabs/container>}}
+{{< /tab >}}
 
-```html
-{{</*tabs/container*/>}}
-{{</*tabs/tabButtons id="launch-method"*/>}}
-{{</*tabs/tab option="Console" state="active"*/>}}
-{{</*tabs/tab option="CLI"*/>}}
-{{</*/tabs/tabButtons*/>}}
-{{</*tabs/tabContentsContainer*/>}}
-{{</*tabs/tabContent val1="launch-method/console"*/>}}
+## Source code
 
+```markdown
+{{</* tab group="launch-method" label="Console" active="true" */>}}
 1. Ensure your DemoTool server is running and connected.
 2. Navigate to Console.
+{{</* /tab */>}}
 
-{{</* /tabs/tabContent */>}}
-{{</* tabs/tabContent val1="launch-method/cli" */>}}
-
+{{</* tab group="launch-method" label="CLI" */>}}
 1. Run `demoCLI connect`.
-
-{{</*/tabs/tabContent*/>}}
-{{</*/tabs/tabContentsContainer*/>}}
-{{</*/tabs/container*/>}}
+{{</* /tab */>}}
 ```
-
-## Source code 
-
-{{<tabs/container>}}
-{{<tabs/tabButtons id="shortcode">}}
-{{<tabs/tab option="container" state="active">}}
-{{<tabs/tab option="tabButtons">}}
-{{<tabs/tab option="tab">}}
-{{<tabs/tab option="tabContentsContainer">}}
-{{<tabs/tab option="tabContent">}}
-{{</tabs/tabButtons>}}
-
-{{<tabs/tabContentsContainer>}}
-{{<tabs/tabContent val1="shortcode/container">}}
-{{%include "layouts/shortcodes/tabs/container.html" "golang" %}}
-{{</tabs/tabContent>}}
-{{<tabs/tabContent val1="shortcode/tabbuttons">}}
-{{%include "layouts/shortcodes/tabs/tabButtons.html" "golang" %}}
-{{</tabs/tabContent>}}
-{{<tabs/tabContent val1="shortcode/tab">}}
-{{%include "layouts/shortcodes/tabs/tab.html" "golang" %}}
-{{</tabs/tabContent>}}
-{{<tabs/tabContent val1="shortcode/tabcontentscontainer">}}
-{{%include "layouts/shortcodes/tabs/tabContentsContainer.html" "golang" %}}
-{{</tabs/tabContent>}}
-{{<tabs/tabContent val1="shortcode/tabcontent">}}
-{{%include "layouts/shortcodes/tabs/tabContent.html" "golang" %}}
-{{</tabs/tabContent>}}   
-{{</tabs/tabContentsContainer>}}
-{{</tabs/container>}}
