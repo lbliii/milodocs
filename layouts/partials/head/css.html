@@ -14,8 +14,8 @@
 {{- $env := hugo.Environment -}}
 
 {{/* Critical font preloading with environment-specific fonts */}}
-{{- if eq $env "nvidia" -}}
-  {{/* NVIDIA: Preload critical brand fonts for optimal performance */}}
+{{- if and (eq $env "nvidia") (ne $env "offline") -}}
+  {{/* NVIDIA: Preload critical brand fonts for optimal performance (skip in offline) */}}
   <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/var/NVIDIASansVF_W_Wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/NVIDIASans_W_Rg.woff2" as="font" type="font/woff2" crossorigin>
   
@@ -27,13 +27,19 @@
     {{- $fallbackFonts := resources.Get "css/fonts.css" -}}
     {{- if $fallbackFonts -}}{{- $cssResources = $cssResources | append $fallbackFonts -}}{{- end -}}
   {{- end -}}
-{{- else -}}
+{{- else if ne $env "offline" -}}
   {{/* Default: Load standard web fonts */}}
   {{- $defaultFonts := resources.Get "css/fonts.css" -}}
   {{- if $defaultFonts -}}
     {{- $cssResources = $cssResources | append $defaultFonts -}}
   {{- else -}}
     {{- warnf "Environment CSS: fonts.css not found" -}}
+  {{- end -}}
+{{- else -}}
+  {{/* Offline: Use system fonts only */}}
+  {{- $offlineFonts := resources.Get "css/fonts-offline.css" -}}
+  {{- if $offlineFonts -}}
+    {{- $cssResources = $cssResources | append $offlineFonts -}}
   {{- end -}}
 {{- end -}}
 
@@ -286,9 +292,12 @@
   {{- if $isProductionBuild -}}
     {{/* Production: Full optimization pipeline */}}
     {{- $cssOptimized := $cssBundle | minify | fingerprint "sha512" -}}
-    <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css">
+    {{- if eq hugo.Environment "offline" -}}
+      <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" id="main-css">
+    {{- else -}}
+      <link rel="stylesheet" href="{{ $cssOptimized.RelPermalink }}" integrity="{{ $cssOptimized.Data.Integrity }}" crossorigin="anonymous" id="main-css">
+    {{- end -}}
     {{- if eq hugo.Environment "development" -}}
-      {{/* Development mode with production flag - add source map reference */}}
       <!-- CSS Source: {{ $cssBundle.RelPermalink }} -->
     {{- end -}}
   {{- else -}}

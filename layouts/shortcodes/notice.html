@@ -1,9 +1,11 @@
 {{ $type := .Get 0 | default "info" }}
 {{ $title := .Get 1 }}
-<div class="notice notice--{{ $type }} group" 
+{{ $isAlert := or (eq $type "danger") (or (eq $type "warning") (eq $type "security")) }}
+{{ $role := cond $isAlert "alert" "note" }}
+<div class="notice notice--{{ $type }} group"
+     data-component="notice"
      data-notice-type="{{ $type }}"
-     role="alert"
-     aria-live="polite">
+     role="{{ $role }}"{{ if $isAlert }} aria-live="polite"{{ end }}>
       <div class="notice__container">
     <div class="notice__icon-wrapper">
            {{- $iconName := "" -}}
@@ -17,7 +19,7 @@
                 {{- else if eq . "snack" -}}{{ $iconName = "snack" }}
                 {{- end -}}
             {{- end -}}
-           <img src="{{ printf "icons/notice/%s.svg" $iconName | relURL }}" class="notice__icon" alt="{{ $type | title }} notice">
+           <img src="{{ printf "icons/notice/%s.svg" $iconName | relURL }}" class="notice__icon" alt="" aria-hidden="true">
         </div>
             <div class="notice__content">
       {{- if $title -}}

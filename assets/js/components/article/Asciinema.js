@@ -27,6 +27,13 @@ class AsciinemaEmbed extends Component {
   render(el) {
     const id = el.getAttribute('data-asciinema-id');
     if (!id) return;
+    const isOffline = (window.HugoEnvironment && window.HugoEnvironment.environment === 'offline');
+    if (isOffline) {
+      // Offline fallback: provide a link to the recording URL if known
+      const url = el.getAttribute('data-asciinema-url') || `https://asciinema.org/a/${id}`;
+      el.innerHTML = `<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-sm">Asciinema embed unavailable offline. <a class="underline" href="${url}" target="_blank" rel="noopener">Open recording</a> when online.</div>`;
+      return;
+    }
     const script = document.createElement('script');
     script.src = `https://asciinema.org/a/${id}.js`;
     script.id = `asciicast-${id}`;

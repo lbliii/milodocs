@@ -4,6 +4,8 @@
     {{partial "article/toc.html" . }}
   {{end}}
   {{if .Site.Params.article.chat.display}}
-    {{partial "article/chat.html" . }}
+   {{ if ne hugo.Environment "offline" }}
+     {{ partial "article/chat.html" . }}
+   {{ end }}
   {{end}}
 </aside>

@@ -11,7 +11,7 @@
   "name": "{{ $orgName }} {{ $productName }}",
   "short_name": "{{ $orgName }}", 
   "description": "{{ $productName }} - Modern Documentation Platform",
-  "start_url": "{{ "/" | relURL }}",
+  "start_url": "{{ "/index.html" | relURL }}",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "{{ $themeColor }}",

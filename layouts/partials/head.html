@@ -11,10 +11,10 @@
 {{- $appleTouchIcon := site.Params.favicon.appleTouchIcon | default "/apple-touch-icon.png" -}}
 {{- $manifest := site.Params.favicon.manifest | default "/manifest.webmanifest" -}}
 
-<link rel="icon" href="{{ $faviconIco }}" sizes="32x32">
-<link rel="icon" href="{{ $faviconSvg }}" type="image/svg+xml">  
-<link rel="apple-touch-icon" href="{{ $appleTouchIcon }}">
-<link rel="manifest" href="{{ $manifest }}">
+<link rel="icon" href="{{ $faviconIco | relURL }}" sizes="32x32">
+<link rel="icon" href="{{ $faviconSvg | relURL }}" type="image/svg+xml">  
+<link rel="apple-touch-icon" href="{{ $appleTouchIcon | relURL }}">
+<link rel="manifest" href="{{ $manifest | relURL }}">
 
 {{/* SEO Meta Tags */}}
 {{/* {{- $meta := partial "utils/meta.html" (dict "site" site "page" .) -}} */}}
@@ -191,7 +191,7 @@
     {{- with site.Params.logo -}}
       ,"logo": {
         "@type": "ImageObject",
-        "url": "{{ . | absURL }}"
+        "url": "{{ if eq hugo.Environment "offline" }}{{ . | relURL }}{{ else }}{{ . | absURL }}{{ end }}"
       }
     {{- end -}}
   }
@@ -201,9 +201,11 @@
 {{/* Generator */}}
 {{ hugo.Generator }}
 
-{{/* Resource hints for performance */}}
+{{/* Resource hints for performance (skip in offline) */}}
+{{- if ne hugo.Environment "offline" -}}
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="dns-prefetch" href="//unpkg.com">
+{{- end -}}
 
 {{ partialCached "head/css.html" . }}
 {{ partialCached "head/js.html" . }}

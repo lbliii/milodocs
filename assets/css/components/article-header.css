@@ -23,10 +23,7 @@
   transition: background-color var(--timing-medium) var(--easing-standard), border-color var(--timing-medium) var(--easing-standard);
 }
 
-/* Reduced hover effect to keep things airy */
-.article-header__navigation:hover {
-  /* transform: translateY(-1px); */
-}
+/* Reduced hover effect intentionally disabled to keep things airy */
 
 /* Actions Container - holds copy page and metadata toggle */
 .article-header__actions {
@@ -102,6 +99,13 @@
 
 .article-header__copy-dropdown-content {
   padding: 0.25rem;
+  /* Elevate glass on inner wrapper to ensure effect covers menu content */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-color);
+  border-radius: 0.75rem;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-shadow);
 }
 
 /* Dropdown Menu Items */
@@ -248,6 +252,29 @@
 
 .article-header__copy-dropdown .p-1 {
   padding: 0.25rem;
+}
+
+/* Stronger glassmorphism for dropdown readability over underlying text */
+.article-header__copy-dropdown {
+  /* Locally override glass tokens for this component */
+  --glass-blur: 14px;
+  --glass-saturate: 1.25;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border-color: rgba(255, 255, 255, 0.32);
+  --glass-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+
+  /* Ensure it visually floats above overlapping content */
+  z-index: 1000;
+  background-clip: padding-box;
+  /* Let inner content own the visual surface to avoid double borders */
+  background: transparent;
+  border: none;
+}
+
+.dark .article-header__copy-dropdown {
+  --glass-bg: rgba(17, 17, 17, 0.72);
+  --glass-border-color: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
 /* Responsive adjustments */

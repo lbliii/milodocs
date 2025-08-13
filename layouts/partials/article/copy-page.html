@@ -31,6 +31,31 @@
         Copy URL
       </button>
       
+      {{/* LLM-optimized plain text (index.txt) */}}
+      {{/* Normalize base URL: remove trailing slash and .html for uglyURLs */}}
+      {{ $noSlash := (replaceRE "/$" "" .Permalink) }}
+      {{ $base := (replaceRE "\\.html$" "" $noSlash) }}
+      {{ $txt := (printf "%s/index.txt" $base) }}
+      <a 
+        href="{{ $txt }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="copy-page-menu-item"
+        data-open-txt>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+        </svg>
+        Open LLM text
+      </a>
+      <button 
+        class="copy-page-menu-item"
+        data-copy-txt="{{ $txt }}">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        Copy LLM text
+      </button>
+
       {{/* Copy Content */}}
       <button 
         class="copy-page-menu-item"
@@ -50,7 +75,7 @@
       
       {{/* Claude */}}
       <a 
-        href="https://claude.ai/chat?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"
+        {{ if ne hugo.Environment "offline" }}href="https://claude.ai/chat?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"{{ end }}
         target="_blank"
         rel="noopener noreferrer"
         class="copy-page-menu-item">
@@ -62,7 +87,7 @@
       
       {{/* ChatGPT */}}
       <a 
-        href="https://chat.openai.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"
+        {{ if ne hugo.Environment "offline" }}href="https://chat.openai.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"{{ end }}
         target="_blank"
         rel="noopener noreferrer"
         class="copy-page-menu-item">
@@ -74,7 +99,7 @@
       
       {{/* Copilot */}}
       <a 
-        href="https://copilot.microsoft.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"
+        {{ if ne hugo.Environment "offline" }}href="https://copilot.microsoft.com/?q=Please%20help%20me%20understand%20this%20documentation%3A%20{{ .Permalink | urlquery }}"{{ end }}
         target="_blank" 
         rel="noopener noreferrer"
         class="copy-page-menu-item">

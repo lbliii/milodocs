@@ -18,7 +18,7 @@ export class ThemeToggle extends Component {
     // Initialize storage using the same approach as Theme.js
     this.storage = createNamespacedStorage('theme');
     this.themeKey = 'mode'; // Use 'mode' as the key since we're using namespaced storage
-    this.defaultTheme = 'light';
+    this.defaultTheme = 'dark';
     this.elements = {
       toggle: null,
       moon: null,

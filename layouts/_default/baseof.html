@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ or site.Language.LanguageCode site.Language.Lang }}" dir="{{ or site.Language.LanguageDirection `ltr` }}" class="no-js">
+<html lang="{{ or site.Language.LanguageCode site.Language.Lang }}" dir="{{ or site.Language.LanguageDirection `ltr` }}" class="no-js {{ if eq (site.Params.theme.mode | default "dark") "dark" }}dark{{ end }}">
 <head>
   {{ partial "head.html" . }}
   {{ block "head-extra" . }}{{ end }}
 </head>
 <body class="bg-bg-primary antialiased" 
       data-environment="{{ hugo.Environment }}" 
-      data-theme="{{ site.Params.theme.mode | default "light" }}"
+      data-theme="{{ site.Params.theme.mode | default "dark" }}"
       data-build="{{ cond (or hugo.IsProduction (in (slice "nvidia" "enterprise" "open-source") hugo.Environment)) "production" "development" }}"
       data-version="{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}"
       {{- if site.Params.debug }} data-debug="true"{{- end }}>

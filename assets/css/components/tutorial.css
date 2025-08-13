@@ -795,6 +795,13 @@
   overflow-x: auto;
 }
 
+/* Reduce default code font size; allow override via --code-font-size */
+.code-content pre,
+.code-content code {
+  font-size: var(--code-font-size, 0.875rem);
+  line-height: 1.55;
+}
+
 .code-header {
   display: flex;
   justify-content: space-between;
