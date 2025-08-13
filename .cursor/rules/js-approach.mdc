@@ -1,0 +1,126 @@
+---
+description: JavaScript architecture guidelines for MiloDocs Hugo theme (Hugo static docs)
+globs: *.js
+alwaysApply: false
+---
+Long-term JS strategy: Progressive enhancement with small, focused components.
+- Favor simple, declarative HTML hooks (`data-component`, `data-*`) and keep logic inside component classes.
+- Centralize cross-cutting concerns (animation, storage, logging, errors, copying, loading) in shared utilities.
+- Prefer composition over new abstractions. Replace old code in-place by commenting it out and adding the new code right below it (no "enhanced-"/"-new" forks).
+
+To-do checklist for any JS change
+
+- [ ] Component-first: If behavior is tied to a part of the UI, implement/extend a `Component` under `themes/milodocs/assets/js/components/**` and register it with `ComponentManager.register(name, Class)`.
+- [ ] Lifecycle: Use `setupElements` → `bindEvents` → `onInit`. Use `this.addEventListener(...)` for auto-cleanup; avoid raw `addEventListener`.
+- [ ] DOM access: Prefer `this.findElements`, `this.findChildren`, and utils (`$`, `$$`) over `document.querySelectorAll`.
+- [ ] State and animations: Use `animationBridge` for timing tokens, loading states, and collapse/expand. Do not hard-code ms or easings.
+- [ ] Accessibility: Announce key actions via `announceToScreenReader`; manage ARIA with `aria.setupExpandable`; add keyboard support.
+- [ ] Storage: Use `utils/storage` SafeStorage, not raw `localStorage`.
+- [ ] Errors: Route errors through `utils/ErrorHandler`; avoid bare `console.error` in production paths.
+- [ ] Logging: Use `utils/Logger` (`logger.component('YourComponent')`). Avoid stray `console.log`.
+- [ ] Performance: Prefer IntersectionObserver, throttling/debouncing helpers, `requestIdleTime`, and lazy imports.
+- [ ] Offline/CDN: If using a CDN, provide an offline fallback under `static/vendor/...`; check `window.HugoEnvironment?.environment === 'offline'`.
+- [ ] Copy/Share: Use `CopyManager` and `LoadingStateManager`; do not re-implement these patterns.
+- [ ] Events: Use `this.emit` and `EventBus` for cross-component communication; avoid ad-hoc globals.
+- [ ] Replacement policy: Comment out the old and replace it in-place; do not create suffixed parallel files.
+
+When evaluating or adding a component
+
+- [ ] Name and selector: Semantic `name`; stable `data-component="your-component"` selector.
+- [ ] Registration: `ComponentManager.register('your-component', YourComponent)`; use `autoInit` sparingly.
+- [ ] Isolation: Keep state on `this`; expose a minimal API (`show`, `hide`, `reset`, `getState`).
+- [ ] Cleanup: `onDestroy` must clear timers/observers/loops; rely on base cleanup for listeners.
+- [ ] Accessibility: Focus management and keyboard controls (Enter/Space).
+- [ ] Reduced motion: Respect `prefers-reduced-motion`.
+
+Structure and placement
+
+- [ ] Core primitives: `themes/milodocs/assets/js/core/**` (Component, ComponentManager, AnimationBridge).
+- [ ] Reusable helpers: `themes/milodocs/assets/js/utils/**` (CopyManager, Logger, LoadingStateManager, ErrorHandler, storage).
+- [ ] Feature areas under `themes/milodocs/assets/js/components/**`:
+  - Article UI: `components/article/**`
+  - Layout/navigation: `components/layout/**`
+  - OpenAPI docs: `components/openapi/**`
+  - Notebook UI: `components/notebook/**`
+  - Chat: `components/chat/**`
+  - Generic UI: `components/ui/**`
+- [ ] Keep files focused; if >~300 lines, consider splitting by concern (data/UI/interaction).
+
+Performance and loading
+
+- [ ] Use IntersectionObserver for offscreen init.
+- [ ] Use `requestIdleTime`/`requestAnimationFrame` for non-critical work.
+- [ ] Throttle scroll/resize via `utils/dom.throttle` or `Component#throttle`; debounce heavy work.
+- [ ] Lazy-load third-party libs with dynamic `import()`; add offline fallbacks.
+
+Accessibility and UX
+
+- [ ] Announce async operations/results to assistive tech.
+- [ ] Manage focus for open/close; Escape to close; sane tab order (see `accessibility.js`).
+- [ ] Ensure contrast/motion preferences; don’t rely solely on color.
+
+Error handling and observability
+
+- [ ] Wrap fetches with AbortController/timeouts; pass failures to `ErrorHandler`.
+- [ ] Record key actions via `Logger` and use `NotificationManager`/`toast` for user-facing events.
+
+Storage and preferences
+
+- [ ] Store via SafeStorage with namespaced keys; keep JSON-serializable.
+- [ ] Restore preferences after DOM ready with small defers to avoid jank.
+
+Events and cross-component communication
+
+- [ ] Prefer `this.emit('event', data)` and local listeners.
+- [ ] Use `EventBus` for broader pub/sub.
+
+Animation and tokens
+
+- [ ] Use `animationBridge.getTiming('fast'|'medium'|'slow')` and `getEasing('standard'|'emphasized')`; never hard-code durations/easings.
+- [ ] Use `animationBridge.setComponentState`/`setLoadingState` to reflect async/transitioning DOM states.
+
+Example: Minimal component skeleton
+
+```javascript
+import { Component } from '../core/Component.js';
+import ComponentManager from '../core/ComponentManager.js';
+import { announceToScreenReader } from '../utils/accessibility.js';
+import { animationBridge } from '../core/AnimationBridge.js';
+import { logger } from '../utils/Logger.js';
+
+const log = logger.component('Example');
+
+export class ExampleComponent extends Component {
+  constructor(config = {}) {
+    super({ name: 'example', selector: '[data-component="example"]', ...config });
+    this.isBusy = false;
+  }
+
+  setupElements() {
+    super.setupElements();
+    this.button = this.element.querySelector('[data-example-button]');
+  }
+
+  bindEvents() {
+    if (this.button) {
+      this.addEventListener(this.button, 'click', async () => {
+        if (this.isBusy) return;
+        this.isBusy = true;
+        animationBridge.setLoadingState(this.element, true);
+        try {
+          // ... do work (fetch, etc.)
+          announceToScreenReader('Action completed');
+          this.emit('example:completed');
+        } catch (error) {
+          log.error('Action failed', error);
+        } finally {
+          animationBridge.setLoadingState(this.element, false);
+          this.isBusy = false;
+        }
+      });
+    }
+  }
+}
+
+ComponentManager.register('example', ExampleComponent);
+```

@@ -10,7 +10,7 @@
     transform var(--timing-medium) var(--easing-standard),
     opacity var(--timing-medium) var(--easing-standard),
     box-shadow var(--timing-medium) var(--easing-standard);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   /* backdrop-filter: blur(10px); */
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
@@ -20,22 +20,13 @@
   animation-fill-mode: both;
 }
 
-/* Legacy Notice Override */
-.notice {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-}
+/* Removed legacy overrides that zeroed out spacing and styles */
 
 /* Enhanced Notice Container */
 .notice__container {
   display: flex;
   align-items: flex-start;
-  /* padding: 1.25rem; */
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   position: relative;
 }
 
@@ -44,11 +35,12 @@
   margin-right: 1rem;
   flex-shrink: 0;
   position: relative;
+  margin-top: 0.125rem;
 }
 
 .notice__icon {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.25rem;
+  width: 1.25rem;
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.2s;
@@ -62,10 +54,10 @@
 }
 
 .notice__title {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   font-family: "NVIDIA", Arial, Helvetica, sans-serif;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
   font-weight: 600;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,19 +73,19 @@
   font-family: var(--font-brand);
 }
 
-.enhanced-notice__text p {
+.notice__text p {
   margin-bottom: 0.5rem;
 }
 
-.enhanced-notice__text p:last-child {
+.notice__text p:last-child {
   margin-bottom: 0;
 }
 
-.enhanced-notice__text strong {
+.notice__text strong {
   font-weight: 600;
 }
 
-.enhanced-notice__text code {
+.notice__text code {
   border-radius: var(--radius-base);
   padding: 0.125rem 0.375rem;
   font-size: 0.75rem;
@@ -240,17 +232,8 @@
 }
 
 /* Hover Effects */
-.enhanced-notice:hover {
-  transform: translateY(-1px);
-}
-
-.enhanced-notice:hover .notice__icon {
-  transform: scale(1.1);
-}
-
-.enhanced-notice.group:hover .notice__title {
-  transform: translateX(2px);
-}
+/* Subtle hover only when interactive content is inside */
+.notice:has(a:hover) .notice__icon { transform: scale(1.03); }
 
 /* Entrance Animation */
 @keyframes notice-enter {
@@ -266,36 +249,9 @@
 
 /* Dark mode code styling */
 @media (prefers-color-scheme: dark) {
-  .enhanced-notice__text code {
+  .notice__text code {
     background-color: rgba(255, 255, 255, 0.1);
   }
 }
 
-/* :has() Notice Component Enhancements */
-
-/* Notices with titles get enhanced spacing */
-.notice:has(.notice__title) {
-  padding-top: 1.5rem;
-}
-
-.notice:has(.notice__title) .notice__content {
-  margin-top: 0.75rem;
-}
-
-/* Notices with icons get enhanced layout */
-.notice:has(.notice__icon) .notice__content {
-  margin-left: 2.5rem;
-}
-
-.notice:has(.notice__icon) .notice__title {
-  margin-left: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Interactive notices with links */
-.notice:has(a:hover) {
-  transform: translateY(-1px);
-  box-shadow: 
-    0 8px 16px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(var(--color-brand-rgb), 0.1);
-}
+/* Remove heavy :has() spacing shifts; container layout handles alignment */

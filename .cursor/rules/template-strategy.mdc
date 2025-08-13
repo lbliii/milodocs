@@ -1,0 +1,65 @@
+---
+description: HTML template strategy aligning CSS and JS rules across Hugo layouts, partials, and shortcodes
+globs: *.html,**/*.html
+alwaysApply: false
+---
+
+# HTML Template Strategy (Hugo layouts, partials, shortcodes)
+
+Align templates with our CSS and JS approaches:
+- CSS: [element-style.mdc](mdc:themes/milodocs/.cursor/rules/element-style.mdc)
+- JS: [js-approach.mdc](mdc:themes/milodocs/.cursor/rules/js-approach.mdc)
+
+Keep templates declarative, accessible, and token-driven. Use Tailwind utilities for layout/spacing and thin semantic classes for reusable patterns. Wire interactivity via `data-component` and `data-*` attributes.
+
+## To-do checklist for any HTML/template change
+
+- [ ] Structure first: Compose layout with Tailwind utilities. Introduce semantic component classes only for reusable or complex patterns.
+- [ ] Hooks for JS: Add stable `data-component="name"` on the root interactive element; use `data-*` attributes for configuration and child hooks.
+- [ ] Naming: Root is `component`; children are `component__element`; states use `is-*`/`has-*`. Avoid utility-like custom class names.
+- [ ] Tokens only: Never hard-code colors/sizes via inline styles. Use Tailwind tokens and theme CSS variables.
+- [ ] Accessibility: Appropriate roles/ARIA, keyboard affordances (Enter/Space), labels, focus order. Provide live-region messaging points where needed.
+- [ ] Dark mode: Prefer `dark:` variants; do not duplicate literal color values.
+- [ ] Responsiveness: Use Tailwind screen variants (`sm`, `md`, `lg`, `xl`); avoid hard-coded px media queries in templates.
+- [ ] Replacement policy: Comment out the old and replace in-place. Do not create `enhanced-` or `-new` forks.
+- [ ] CSS pipeline: Do not edit `themes/milodocs/assets/css/main.css`. It is generated; we run pnpm watch-tw.
+- [ ] Partial boundaries: Keep partials focused and data-driven. Pass a `dict` with explicit keys rather than relying on implicit globals.
+
+## How HTML connects CSS and JS
+
+- Tailwind utilities handle spacing/typography/layout; semantic classes map to component CSS under `@layer components`.
+- JS components discover roots via `data-component` and query children via `data-*` selectors. Avoid brittle descendant selectors.
+- Reflect state changes with classes (`is-open`, `is-loading`) so CSS and JS remain in sync.
+
+## Hugo practices
+
+- Prefer `partial`/`partialCached` for reusable fragments; keep inputs explicit: `{{ partial "path/to/partial" (dict "Ctx" . "Title" .Title) }}`.
+- Use `with` to guard optional data and keep DOM minimal.
+- Keep shortcodes semantic; avoid inline `<style>`/`<script>` unless absolutely necessary.
+
+## Example
+
+```html
+<section
+  class="article-card rounded-lg border border-zinc-200 bg-white p-4 shadow-sm md:p-6 dark:bg-zinc-900"
+  data-component="article-card"
+  data-article-id="{{ .Params.id }}"
+>
+  <h2 class="article-card__title text-base font-semibold text-zinc-800 dark:text-zinc-100">
+    {{ .Title }}
+  </h2>
+  <button
+    type="button"
+    class="article-card__cta inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+    aria-expanded="false"
+    data-article-card-button
+  >
+    Read more
+  </button>
+</section>
+```
+
+Notes:
+- Root carries `data-component` for JS and a semantic class for CSS composition.
+- Children use `component__element` naming and `data-*` hooks.
+- Utilities provide layout/spacing/states; no inline styles or hard-coded values.
