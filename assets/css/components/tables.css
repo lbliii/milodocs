@@ -1,56 +1,105 @@
-/* Tables Component - Enhanced table styling for NVIDIA brand */
+/* Tables Component - BEM, dense, and glass variants aligned to design tokens */
 
-/* Global Table Styles - Enhanced for NVIDIA */
-table {
-  @apply w-full border-collapse text-sm;
-  border-color: var(--color-border-primary);
-}
+@layer components {
+  /*
+   * Replacement policy: retire global element styles in favor of a semantic component API.
+   * Old global table selectors are intentionally removed to avoid leakage across the site.
+   */
 
-table th,
-table td {
-  @apply p-3 text-left align-top;
-  border-top: 1px solid var(--color-border-primary);
-  color: var(--color-text-primary);
-}
-
-table th {
-  background-color: var(--color-bg-inverse);
-  color: var(--color-text-inverse);
-  @apply font-semibold;
-}
-
-table tr:hover {
-  background-color: var(--color-hover);
-}
-
-/* Responsive Tables */
-@media (max-width: 640px) {
-  table {
-    @apply block;
+  /* Bridge default Markdown tables to component rules until all markup adopts .table */
+  :where(.table, .article-content table) {
+    @apply w-full text-sm;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--color-text-primary);
   }
-  table thead {
-    @apply hidden;
-  }
-  table tbody tr {
-    @apply block mb-4 shadow-md;
-  }
-  table tbody tr:last-child {
-    @apply mb-0;
-  }
-  table td {
-    @apply flex justify-between p-2;
-  }
-}
 
-/* NVIDIA-specific enhancements */
-.nvidia-accent {
-  color: var(--color-brand);
-}
+  /* Container (enables horizontal scroll when needed) */
+  .table__container {
+    @apply overflow-x-auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden; /* avoid clipping rounded headers within container */
+  }
+  /* Ensure rounded headers aren't visually clipped when inside a scroll container */
+  .table__container--rounded { border-radius: 0.75rem; }
+  /* Progressive enhancement: auto-round container if it has a rounded/glass table */
+  .table__container:has(> .table.table--rounded),
+  .table__container:has(> .table.table--glass) { border-radius: 0.75rem; }
 
-.nvidia-bg-accent {
-  background-color: var(--color-brand);
-}
+  /* Head */
+  :where(.table__head, .article-content table thead) th {
+    @apply text-left font-semibold uppercase tracking-wide text-xs;
+    background-color: var(--color-surface-active);
+    color: var(--color-text-primary);
+  }
 
-.nvidia-border-accent {
-  border-color: var(--color-brand);
+  /* Rows */
+  :where(.table__row, .article-content table tbody tr) {
+    @apply align-top;
+  }
+
+  /* Cells */
+  :where(.table__cell, .article-content table th, .article-content table td) {
+    @apply px-3 py-1.5;
+    border-top: 1px solid var(--color-border-primary);
+  }
+  .table__cell--numeric { @apply text-right; }
+  .table__cell--wrap { @apply whitespace-normal; }
+  .table__cell--nowrap { @apply whitespace-nowrap; }
+
+  /* Density variants */
+  .table--dense .table__cell { @apply py-1; }
+  .table--compact .table__cell { @apply py-0.5; }
+
+  /* Row states */
+  .table :where(.table__row:hover) { background-color: var(--color-surface-hover); }
+  :where(.article-content table tbody tr:hover) { background-color: var(--color-surface-hover); }
+  .table--zebra .table__body > .table__row:nth-child(even) { background-color: var(--color-surface); }
+  /* Ensure hover wins over zebra striping */
+  .table--zebra .table__body > .table__row:nth-child(even):hover { background-color: var(--color-surface-hover); }
+
+  /* Pinned header (opt-in) */
+  .table--sticky thead th { position: sticky; top: 0; z-index: 1; }
+
+  /* Glass morphism (opt-in) */
+  .table--glass {
+    @apply rounded-lg shadow-sm;
+    backdrop-filter: saturate(150%) blur(8px);
+    -webkit-backdrop-filter: saturate(150%) blur(8px);
+    /* Light: subtle translucent surface; Dark: stronger translucency */
+    @apply bg-white/60 dark:bg-zinc-900/40;
+    border: 1px solid var(--color-border-primary);
+  }
+
+  /* Inspired header: match code/tabs glass header visuals */
+  .table--header-glass .table__head,
+  .table--glass .table__head {
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border-color);
+    overflow: hidden; /* ensure rounded corners show */
+  }
+  .table--header-glass .table__head th,
+  .table--glass .table__head th {
+    @apply px-3 py-2 text-xs font-semibold uppercase tracking-wide;
+    background: var(--glass-bg);
+    border-top: none; /* avoid double border at the top */
+  }
+  /* Subtle separators between header cells (like tabs nav) */
+  .table--header-glass .table__head th + th,
+  .table--glass .table__head th + th {
+    border-left: 1px solid var(--glass-border-color);
+  }
+  /* Light mode: strengthen dividers for visibility */
+  @media (prefers-color-scheme: light) {
+    .table--header-glass .table__head,
+    .table--glass .table__head { border-bottom-color: var(--color-border-primary); }
+    .table--header-glass .table__head th + th,
+    .table--glass .table__head th + th { border-left-color: var(--color-border-primary); }
+  }
+  /* Rounded top corners when using glass/rounded variant */
+  .table--rounded .table__head th:first-child,
+  .table--glass .table__head th:first-child { border-top-left-radius: 0.75rem; }
+  .table--rounded .table__head th:last-child,
+  .table--glass .table__head th:last-child { border-top-right-radius: 0.75rem; }
+  .table--rounded .table__head { border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; overflow: hidden; }
 }

@@ -2716,102 +2716,7 @@ button, .btn {
   position: relative;
   overflow: hidden;
 }
-/* Tables Component - Enhanced table styling for NVIDIA brand */
-/* Global Table Styles - Enhanced for NVIDIA */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-[data-component="tabs"] table {
-  min-height: 200px;
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid var(--glass-border-color);
-  transition: height var(--timing-medium) var(--easing-standard);
-  isolation: isolate; /* prevent child blends from darkening surface */
-}
-table {
-  border-color: var(--color-border-primary);
-}
-table th,
-table td {
-  padding: 0.75rem;
-  text-align: left;
-  vertical-align: top; padding: var(--space-3);
-  border-top: 1px solid var(--color-border-primary);
-  color: var(--color-text-primary);
-}
-table th {
-  background-color: var(--color-bg-inverse);
-  color: var(--color-text-inverse);
-  font-weight: 600;
-}
-table tr:hover {
-  background-color: var(--color-hover);
-}
-/* Responsive Tables */
-@media (max-width: 640px) {
-  table {
-    display: block;
-  }
-.language-switcher table {
-  opacity: 1;
-  transform: translateY(0);
-}
-  table thead {
-    display: none;
-  }
-.language-switcher table thead {
-  opacity: 0;
-  transform: translateY(-8px);
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-}
-body:has(.article-header__copy-dropdown:not(table thead)) h1[id] {
-  position: static;
-}
-body:has(.article-header__copy-dropdown:not(table thead)) h1[id]::before {
-  display: none;
-}
-  table tbody tr {
-    margin-bottom: 1rem;
-    display: block;
-    --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  }
-.language-switcher table tbody tr {
-  opacity: 1;
-  transform: translateY(0);
-}
-  table tbody tr:last-child {
-    margin-bottom: 0px;
-  }
-  table td {
-    padding: 0.5rem; padding: var(--space-2);
-  display: flex;
-  justify-content: space-between;
-  }
-@media (max-width: 768px) {
-  
-  .search-results-header table td {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-}
-}
-/* NVIDIA-specific enhancements */
-.nvidia-accent {
-  color: var(--color-brand);
-}
-.nvidia-bg-accent {
-  background-color: var(--color-brand);
-}
-.nvidia-border-accent {
-  border-color: var(--color-brand);
-}
+/* Tables Component - BEM, dense, and glass variants aligned to design tokens */
 /* Enhanced Notice Component */
 /* Base Enhanced Notice Styles */
 .notice {
@@ -15659,6 +15564,348 @@ body {
     max-width: 1536px;
   }
 }
+/*
+   * Replacement policy: retire global element styles in favor of a semantic component API.
+   * Old global table selectors are intentionally removed to avoid leakage across the site.
+   */
+/* Bridge default Markdown tables to component rules until all markup adopts .table */
+:where(.table, .article-content table) {
+  width: 100%;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+[data-component="tabs"] :where(.table, .article-content table) {
+  min-height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--glass-border-color);
+  transition: height var(--timing-medium) var(--easing-standard);
+  isolation: isolate; /* prevent child blends from darkening surface */
+}
+:where(.table, .article-content table) {
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--color-text-primary);
+  }
+/* Container (enables horizontal scroll when needed) */
+.table__container {
+  overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden; /* avoid clipping rounded headers within container */
+}
+/* Ensure rounded headers aren't visually clipped when inside a scroll container */
+.table__container--rounded { border-radius: 0.75rem; }
+/* Progressive enhancement: auto-round container if it has a rounded/glass table */
+.table__container:has(> .table.table--rounded),
+  .table__container:has(> .table.table--glass) { border-radius: 0.75rem; }
+/* Head */
+:where(.table__head, .article-content table thead) th {
+  text-align: left;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+[data-component="article-next-prev"] .article-next-prev__link :where(.table__head, .article-content table thead) th {
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease;
+}
+[data-component="article-next-prev"] .article-next-prev__link:hover :where(.table__head, .article-content table thead) th {
+  color: var(--color-text-secondary);
+}
+[data-component="article-next-prev"] .article-next-prev__link--disabled :where(.table__head, .article-content table thead) th {
+  color: var(--color-text-tertiary);
+}
+@media (max-width: 768px) {
+  
+  [data-component="article-next-prev"] .article-next-prev__link :where(.table__head, .article-content table thead) th {
+    font-size: 0.6875rem;
+  }
+}
+:where(.table__head, .article-content table thead) th {
+    background-color: var(--color-surface-active);
+    color: var(--color-text-primary);
+  }
+/* Rows */
+:where(.table__row, .article-content table tbody tr) {
+  vertical-align: top;
+}
+/* Cells */
+:where(.table__cell, .article-content table th, .article-content table td) {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+    border-top: 1px solid var(--color-border-primary);
+}
+.table__cell--nowrap {
+  white-space: nowrap;
+}
+/* Density variants */
+.table--dense .table__cell {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.table--compact .table__cell {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+/* Row states */
+.table :where(.table__row:hover) { background-color: var(--color-surface-hover); }
+:where(.article-content table tbody tr:hover) { background-color: var(--color-surface-hover); }
+.table--zebra .table__body > .table__row:nth-child(even) { background-color: var(--color-surface); }
+/* Ensure hover wins over zebra striping */
+.table--zebra .table__body > .table__row:nth-child(even):hover { background-color: var(--color-surface-hover); }
+/* Pinned header (opt-in) */
+/* Glass morphism (opt-in) */
+.table--glass {
+  border-radius: 0.5rem;
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); border-radius: var(--radius-lg);
+    backdrop-filter: saturate(150%) blur(8px);
+    -webkit-backdrop-filter: saturate(150%) blur(8px);
+    /* Light: subtle translucent surface; Dark: stronger translucency */
+    background-color: rgb(255 255 255 / 0.6);
+}
+@media (prefers-color-scheme: dark) {
+  .table--glass {
+    background-color: rgb(24 24 27 / 0.4);
+  }
+}
+.table--glass {
+    border: 1px solid var(--color-border-primary);
+  }
+/* Inspired header: match code/tabs glass header visuals */
+.table--header-glass .table__head,
+  .table--glass .table__head {
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border-color);
+    overflow: hidden; /* ensure rounded corners show */
+  }
+.table--header-glass .table__head th,
+  .table--glass .table__head th {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+[data-component="article-next-prev"] .article-next-prev__link .table--header-glass .table__head th,[data-component="article-next-prev"] .article-next-prev__link 
+  .table--glass .table__head th {
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease;
+}
+[data-component="article-next-prev"] .article-next-prev__link:hover .table--header-glass .table__head th,[data-component="article-next-prev"] .article-next-prev__link:hover 
+  .table--glass .table__head th {
+  color: var(--color-text-secondary);
+}
+[data-component="article-next-prev"] .article-next-prev__link--disabled .table--header-glass .table__head th,[data-component="article-next-prev"] .article-next-prev__link--disabled 
+  .table--glass .table__head th {
+  color: var(--color-text-tertiary);
+}
+@media (max-width: 768px) {
+  
+  [data-component="article-next-prev"] .article-next-prev__link .table--header-glass .table__head th,[data-component="article-next-prev"] .article-next-prev__link 
+  .table--glass .table__head th {
+    font-size: 0.6875rem;
+  }
+}
+.table--header-glass .table__head th,
+  .table--glass .table__head th {
+    background: var(--glass-bg);
+    border-top: none; /* avoid double border at the top */
+  }
+/* Subtle separators between header cells (like tabs nav) */
+.table--header-glass .table__head th + th,
+  .table--glass .table__head th + th {
+    border-left: 1px solid var(--glass-border-color);
+  }
+/* Light mode: strengthen dividers for visibility */
+@media (prefers-color-scheme: light) {
+    .table--header-glass .table__head,
+    .table--glass .table__head { border-bottom-color: var(--color-border-primary); }
+    .table--header-glass .table__head th + th,
+    .table--glass .table__head th + th { border-left-color: var(--color-border-primary); }
+  }
+/* Rounded top corners when using glass/rounded variant */
+.table--rounded .table__head th:first-child,
+  .table--glass .table__head th:first-child { border-top-left-radius: 0.75rem; }
+.table--rounded .table__head th:last-child,
+  .table--glass .table__head th:last-child { border-top-right-radius: 0.75rem; }
+.table--rounded .table__head { border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; overflow: hidden; }
+/* Object Model Component */
+[data-component="object-model"] {
+    /* Align nested option text with summary text start: px-3 + chevron(1rem) + gap(0.5rem) */
+    --om-pad-x: 0rem; /* no outer horizontal padding on rows */
+    --om-chevron: 1rem;  /* h-4 w-4 */
+    --om-gap: 0.5rem;    /* gap-2 */
+    --om-indent: calc(var(--om-pad-x) + var(--om-chevron) + var(--om-gap));
+  }
+.object-model__title,
+  .object-model__heading {
+    scroll-margin-top: var(--header-offset);
+  }
+.object-model__heading,
+  .object-model__subheading {
+    color: var(--color-text-primary);
+  }
+/* Token-based badge for section headings (replaces hard-coded bg classes) */
+.object-model__heading-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem; /* px-2 py-1 */
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-primary);
+    color: var(--color-text-primary);
+  }
+.object-model__intro-text,
+  .object-model__summary {
+    color: var(--color-text-primary);
+  }
+.object-model__list {
+    /* Borderless, airy list; separation via spacing and summary hover */
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
+    color: var(--color-text-primary);
+    list-style: none;
+    padding-left: 0;
+  }
+/* Ensure inner text inherits proper token-based colors */
+.object-model__item,
+  .object-model__field,
+  .object-model__options {
+    color: inherit;
+  }
+.object-model__details {
+    /* Remove default marker for consistent chevron */
+  }
+.object-model__details > summary::-webkit-details-marker {
+    display: none;
+  }
+.object-model__details > summary {
+    list-style: none;
+  }
+/* Fine tune nested lists */
+.object-model__options {
+    /* Use only the explicit padding from markup; remove UA list padding/indent */
+    list-style: none;
+    padding-inline-start: 0;
+    margin-left: 0.5em;
+    padding-left: var(--om-indent);
+    padding-top: 0.25rem; /* tighter attach under summary */
+  }
+/* Override global article nested list indent for this component only */
+.article-content[data-component="object-model"] .object-model__list li,
+  .article-content[data-component="object-model"] .object-model__list li li {
+    margin-left: 0;
+    padding-left: 0;
+  }
+/* Ensure summary row has clear focus ring */
+.object-model__summary-row {
+  border-radius: 0.375rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px; border-radius: var(--radius-md);
+}
+.object-model__summary-row:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(99 102 241 / var(--tw-ring-opacity, 1));
+}
+@media (prefers-color-scheme: dark) {
+  .object-model__summary-row:focus-visible {
+    --tw-ring-opacity: 1;
+    --tw-ring-color: rgb(129 140 248 / var(--tw-ring-opacity, 1));
+  }
+}
+.object-model__summary-row:hover {
+    background-color: rgba(var(--color-brand-rgb), 0.03);
+  }
+/* Ensure names/descriptions use token text colors automatically */
+.object-model__name {
+    color: var(--color-text-primary);
+  }
+.object-model__description {
+    color: var(--color-text-primary);
+  }
+.object-model__chevron {
+    color: var(--color-text-secondary);
+  }
+.object-model__dash {
+    color: var(--color-border-primary);
+  }
+/* Option items typography */
+/* Keys and values color tokens */
+.object-model__option-key code {
+    color: var(--color-text-primary);
+    font-weight: 600; /* add visual weight to keys */
+  }
+.object-model__option-value,
+  .object-model__option-value p,
+  .object-model__option-value a {
+    color: var(--color-text-primary);
+  }
+.object-model__option-value { display: inline; margin-left: 0.375rem; }
+.object-model__option-value p { display: inline; margin: 0; }
+.object-model__option-value a:hover { color: var(--color-brand); }
+/* Option item in normal inline flow (avoid flex to prevent text splitting into multiple flex items) */
+.object-model__option-item {
+    display: block;
+    padding: 0.125rem 0;
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.45;
+  }
+.object-model__option-key {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+.object-model__option-value {
+    color: var(--color-text-primary);
+  }
+/* Strong label variant (for legacy markup without key/value wrappers) */
+.object-model__option-item > strong { 
+    margin-right: 0.375rem; 
+    font-weight: 600; 
+  }
+.object-model__option-item code { 
+    white-space: nowrap; 
+  }
+/* Compact spacing for rows in dense lists */
+.object-model__row,
+  .object-model__summary-row {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+@media (min-width: 768px) {
+  .object-model__row,
+  .object-model__summary-row {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+.object-model__details:not([open]) .object-model__summary-row { box-shadow: none; }
+.object-model__details[open] .object-model__summary-row { box-shadow: none; }
+/* Soft separation between items without borders */
+.object-model__item + .object-model__item { margin-top: 0.25rem; }
 /* Responsive auto-fit grid for cards/tiles */
 .grid-autofit {
     grid-template-columns: repeat(auto-fit, minmax(var(--grid-card-min, 280px), 1fr));
@@ -15812,6 +16059,10 @@ body {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
 }
+.my-10 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
 .my-2 {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -15882,6 +16133,9 @@ body {
 }
 .mt-6 {
   margin-top: 1.5rem;
+}
+.mt-8 {
+  margin-top: 2rem;
 }
 .line-clamp-2 {
   overflow: hidden;
@@ -16021,9 +16275,6 @@ body {
 .min-w-0 {
   min-width: 0px;
 }
-.min-w-full {
-  min-width: 100%;
-}
 .max-w-2xl {
   max-width: 42rem;
 }
@@ -16046,6 +16297,9 @@ body {
   flex-shrink: 1;
 }
 .flex-shrink-0 {
+  flex-shrink: 0;
+}
+.shrink-0 {
   flex-shrink: 0;
 }
 .flex-grow {
@@ -16216,15 +16470,8 @@ body {
   --tw-divide-opacity: 1;
   border-color: rgb(243 244 246 / var(--tw-divide-opacity, 1));
 }
-.divide-zinc-200 > :not([hidden]) ~ :not([hidden]) {
-  --tw-divide-opacity: 1;
-  border-color: rgb(228 228 231 / var(--tw-divide-opacity, 1));
-}
 .overflow-hidden {
   overflow: hidden;
-}
-.overflow-x-auto {
-  overflow-x: auto;
 }
 .overflow-y-auto {
   overflow-y: auto;
@@ -16232,9 +16479,6 @@ body {
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.whitespace-nowrap {
   white-space: nowrap;
 }
 .rounded {
@@ -16404,10 +16648,6 @@ body {
 .bg-zinc-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity, 1));
-}
-.bg-zinc-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 250 250 / var(--tw-bg-opacity, 1));
 }
 .bg-zinc-600 {
   --tw-bg-opacity: 1;
@@ -16586,9 +16826,6 @@ body {
 }
 .tracking-wide {
   letter-spacing: 0.025em;
-}
-.tracking-wider {
-  letter-spacing: 0.05em;
 }
 .text-black {
   --tw-text-opacity: 1;
@@ -16849,6 +17086,10 @@ body {
 .disabled\:opacity-50:disabled {
   opacity: 0.5;
 }
+.group[open] .group-open\:rotate-90 {
+  --tw-rotate: 90deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .group:hover .group-hover\:inline {
   display: inline;
 }
@@ -16935,6 +17176,12 @@ body {
   }
 }
 @media (min-width: 1024px) {
+  .lg\:mt-0 {
+    margin-top: 0px;
+  }
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -17007,6 +17254,10 @@ body {
   .dark\:border-yellow-800 {
     --tw-border-opacity: 1;
     border-color: rgb(133 77 14 / var(--tw-border-opacity, 1));
+  }
+  .dark\:border-zinc-800 {
+    --tw-border-opacity: 1;
+    border-color: rgb(39 39 42 / var(--tw-border-opacity, 1));
   }
   .dark\:bg-gray-800 {
     --tw-bg-opacity: 1;

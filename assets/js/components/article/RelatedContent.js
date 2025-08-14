@@ -215,9 +215,10 @@ export class ArticleRelatedContent extends Component {
         btn.classList.toggle('active', btnView === preferences.view);
       });
       // Show correct view
-      const targetView = this.element.querySelector(`[data-view="${preferences.view}"]:not(.view-toggle-btn)`);
+      const targetView = this.element.querySelector(`[data-view="${preferences.view}"]:not(.related-content__view-toggle)`);
       if (targetView) {
-        this.element.querySelectorAll('[data-view]:not(.related-content__view-toggle)').forEach(v => v.classList.add('hidden'));
+        this.element.querySelectorAll('[data-view]:not(.related-content__view-toggle)')
+          .forEach(v => v.classList.add('hidden'));
         targetView.classList.remove('hidden');
       }
     }

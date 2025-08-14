@@ -1,7 +1,7 @@
 {{- $filename := .Get 0 -}}
 {{- $delimiter := .Get 1 | default "," -}}
 {{- $skipColumns := split (.Get 2 | default "") "," -}}
-{{- $cssClass := .Get 3 | default "min-w-full divide-y divide-zinc-200" -}}
+{{- $cssClass := .Get 3 | default "table table--dense table--zebra table--glass table--rounded" -}}
 {{- $lazyQuotes := .Get 4 | default false -}}
 
 {{- $csvResource := resources.Get (printf "csv/%s.csv" $filename) -}}
@@ -56,23 +56,23 @@
             {{- end -}}
         {{- end -}}
         
-        <div class="overflow-x-auto">
+        <div class="table__container table__container--rounded">
             <table class="{{ $cssClass }}" role="table">
                 <caption class="sr-only">Data from {{ $filename }}</caption>
-                <thead>
+                <thead class="table__head">
                     <tr>
                     {{- range $filteredHeaders -}}
-                        <th scope="col" class="px-3 py-2 text-left text-sm font-semibold text-text-primary uppercase tracking-wider">
+                        <th scope="col" class="table__cell">
                             {{- . | markdownify -}}
                         </th>
                     {{- end -}}
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-zinc-200">
+                <tbody class="table__body">
                     {{- range $rowIndex, $row := after 1 $csvData -}}
-                        <tr class="{{ cond (modBool $rowIndex 2) "bg-zinc-50" "bg-surface" }}">
+                        <tr class="table__row">
                         {{- range $filteredIndices -}}
-                            <td class="px-3 py-2 whitespace-nowrap text-sm text-text-primary">
+                            <td class="table__cell table__cell--nowrap">
                                 {{- if lt . (len $row) -}}
                                     {{- index $row . | markdownify -}}
                                 {{- else -}}

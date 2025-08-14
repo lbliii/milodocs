@@ -7,149 +7,186 @@
 {{- end -}}
 
 {{- define "content" -}}
-<article id="articleContent" class="article-content container mx-auto px-4 py-8">
-    {{- $schemaPath := .Params.schema -}}
-    {{- $schema := index .Site.Data (replace $schemaPath ".yaml" "") -}}
-    {{- $objectModel := $schema.ObjectModel -}}
-    {{$id := .Page.Title | anchorize }}
+<article
+  id="articleContent"
+  class="article-content container mx-auto px-4 py-8"
+  data-component="object-model"
+  data-schema-path="{{ .Params.schema }}"
+>
+  {{- $schemaPath := .Params.schema -}}
+  {{- $schema := index .Site.Data (replace $schemaPath ".yaml" "") -}}
+  {{- $objectModel := $schema.ObjectModel -}}
 
-    <section class="space-y-4">
-        <h1 class="text-3xl font-bold">Object Model Reference Schema</h1>
-        <p>{{$objectModel.Description | markdownify }}</p>
-    </section>
-
-    {{ range $modelName, $model := $objectModel.Objects }}
-        <section class="py-4">
-            <div class="py-4 space-y-4">
-                <h2 id="{{ $modelName | urlize}}" class="text-2xl font-semibold mb-4">
-                    <span class="bg-zinc-100 p-2 rounded-lg">{{ $modelName }}</span>
-                </h2>
-                <p>{{$model.Description | markdownify}}</p>
-            </div>
-            <div class="ml-4">
-                <h3 id="{{ $modelName | urlize }}-input-attributes" class="text-xl font-semibold mb-2">Input Attributes</h3>
-                <ul class="list-none p-2 border rounded">
-                    {{ range $input := $model.Inputs }}
-                        <li class="mb-2 list-none">
-                            <div class="toggle-collapse space-x-2 {{ with $input.options }}cursor-pointer{{end}}">
-                                {{ with $input.options }}
-                                    <svg class="chevron transition-transform transform inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                {{else}}
-                                    {{/*  a straight line like an em dash  */}}
-                                    <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
-                                    </svg>
-                                {{- end -}}
-                                <strong>{{ $input.name }}</strong>:
-                                <span>{{ $input.description | markdownify }}</span>
-                            </div>
-                            
-                            {{ with $input.options }}
-                                <ul class="list-none ml-4 mt-1 hidden">
-                                    {{ range $mapNumber, $mapValue := . }}
-                                    {{ range $key, $value := . }}
-                                        <li>
-                                            <strong><code>{{ $key }}</code></strong>: {{ $value | markdownify}} 
-                                        </li>
-                                    {{ end }}
-                                    {{ end }}
-                                </ul>
-                            {{ end }}
-                        </li>
-                    {{ end }}
-                </ul>
-            </div>
-
-            {{ with $model.AioliManaged }}
-                <div class="mt-4 ml-4">
-                    <h3 id="{{ $modelName | urlize }}-managed-attributes" class="text-xl font-semibold mb-2">Managed Attributes</h3>
-                    <ul class="list-none p-2 border rounded">
-                        {{ range $managed := . }}
-                            <li class="mb-2 list-none">
-                                <div class="toggle-collapse space-x-2 {{ with $managed.options }}cursor-pointer{{end}}">
-                                    {{ with $managed.options }}
-                                        <svg class="chevron transition-transform transform inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    {{else}}
-                                        {{/*  a straight line like an em dash  */}}
-                                        <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
-                                        </svg>
-                                    {{- end -}}
-                                    <strong>{{ $managed.name }}</strong>:
-                                    <span>{{ $managed.description | markdownify }}</span>
-                                </div>
-                                
-                                {{ with $managed.options }}
-                                    <ul class="list-none ml-4 mt-1 hidden">
-                                        {{ range $mapNumber, $mapValue := . }}
-                                        {{ range $key, $value := . }}
-                                            <li>
-                                                <strong><code>{{ $key }}</code></strong>: {{ $value | markdownify}} 
-                                            </li>
-                                        {{ end }}
-                                        {{ end }}
-                                    </ul>
-                                {{ end }}
-                            </li>
-                        {{ end }}
-                    </ul>
-                </div>
-            {{ end }}
-        </section>
+  <section class="space-y-3 object-model__intro">
+    <h1 class="object-model__title text-3xl font-bold">Object Model Reference</h1>
+    {{ with $objectModel.Description }}
+      <div class="object-model__intro-text">{{ . | markdownify }}</div>
     {{ end }}
+  </section>
 
-    <hr>
-    {{ range $componentName, $component := $objectModel.Components }}
-    <section class="py-4">
-        <div class="py-4 space-y-4">
-            <h2 id="{{ $componentName | urlize}}" class="text-2xl font-semibold mb-4">
-                <span class="bg-zinc-100 p-2 rounded-lg">{{ $componentName }}</span>
-            </h2>
-            <p>{{$component.Description | markdownify}}</p>
+  {{ range $modelName, $model := $objectModel.Objects }}
+    <section class="object-model__section mt-8">
+      <header class="object-model__header mb-4">
+          <h2 id="{{ $modelName | urlize }}" class="object-model__heading text-2xl font-semibold">
+          <span class="object-model__heading-badge">{{ $modelName }}</span>
+        </h2>
+        {{ with $model.Description }}
+          <div class="object-model__summary mt-2">{{ . | markdownify }}</div>
+        {{ end }}
+      </header>
+
+      <div class="object-model__groups ml-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div class="object-model__group">
+          <h3 id="{{ $modelName | urlize }}-input-attributes" class="object-model__subheading text-xl font-semibold mb-2">Input Attributes</h3>
+          <ul class="object-model__list">
+          {{ range $input := $model.Inputs }}
+            <li class="object-model__item list-none">
+              {{ if $input.options }}
+                <details class="group object-model__details">
+                  <summary class="object-model__summary-row flex cursor-pointer items-start gap-2">
+                    <svg class="object-model__chevron mt-1 h-4 w-4 shrink-0 transition-transform group-open:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <div class="object-model__field">
+                      <strong class="object-model__name">{{ $input.name }}</strong>
+                      <span class="object-model__description ml-1">{{ $input.description | markdownify }}</span>
+                    </div>
+                  </summary>
+                  <ul class="object-model__options px-4 py-2">
+                    {{ range $mapNumber, $mapValue := $input.options }}
+                      {{ range $key, $value := . }}
+                        <li class="object-model__option-item py-1">
+                          <span class="object-model__option-key"><code>{{ $key }}</code></span>
+                          <div class="object-model__option-value">{{ $value | markdownify }}</div>
+                        </li>
+                      {{ end }}
+                    {{ end }}
+                  </ul>
+                </details>
+              {{ else }}
+                <div class="object-model__row flex items-start gap-2">
+                  <svg class="object-model__dash mt-1 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                  </svg>
+                  <div class="object-model__field">
+                    <strong class="object-model__name">{{ $input.name }}</strong>
+                    <span class="object-model__description ml-1">{{ $input.description | markdownify }}</span>
+                  </div>
+                </div>
+              {{ end }}
+            </li>
+          {{ end }}
+          </ul>
         </div>
-        <div class="ml-4">
-            <h3 id="{{ $componentName | urlize }}-attributes" class="text-xl font-semibold mb-2">Attributes</h3>
-            <ul class="list-none p-2 border rounded">
-                {{ range $attribute := $component.Attributes }}
-                    <li class="mb-2 list-none">
-                        <div class="toggle-collapse space-x-2 {{ with $attribute.options }}cursor-pointer{{end}}">
-                            {{ with $attribute.options }}
-                                <svg class="chevron transition-transform transform inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                                </svg>
-                            {{else}}
-                                {{/*  a straight line like an em dash  */}}
-                                <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
-                                </svg>
-                            {{- end -}}
-                            <strong>{{ $attribute.name }}</strong>:
-                            <span>{{ $attribute.description | markdownify }}</span>
-                        </div>
-                        
-                        {{ with $attribute.options }}
-                            <ul class="list-none ml-4 mt-1 hidden">
-                                {{ range $mapNumber, $mapValue := . }}
-                                {{ range $key, $value := . }}
-                                    <li>
-                                        <strong><code>{{ $key }}</code></strong>: {{ $value | markdownify}} 
-                                    </li>
-                                {{ end }}
-                                {{ end }}
-                            </ul>
+
+        {{ with $model.AioliManaged }}
+        <div class="object-model__group lg:mt-0">
+          <h3 id="{{ $modelName | urlize }}-managed-attributes" class="object-model__subheading text-xl font-semibold mb-2">Managed Attributes</h3>
+          <ul class="object-model__list">
+            {{ range $managed := . }}
+              <li class="object-model__item list-none">
+                {{ if $managed.options }}
+                  <details class="group object-model__details">
+                    <summary class="object-model__summary-row flex cursor-pointer items-start gap-2">
+                      <svg class="object-model__chevron mt-1 h-4 w-4 shrink-0 transition-transform group-open:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                      <div class="object-model__field">
+                        <strong class="object-model__name">{{ $managed.name }}</strong>
+                        <span class="object-model__description ml-1">{{ $managed.description | markdownify }}</span>
+                      </div>
+                    </summary>
+                    <ul class="object-model__options px-4 py-2">
+                      {{ range $mapNumber, $mapValue := $managed.options }}
+                        {{ range $key, $value := . }}
+                          <li class="object-model__option-item py-1">
+                            <span class="object-model__option-key"><code>{{ $key }}</code></span>
+                            <div class="object-model__option-value">{{ $value | markdownify }}</div>
+                          </li>
                         {{ end }}
-                    </li>
+                      {{ end }}
+                    </ul>
+                  </details>
+                {{ else }}
+                  <div class="object-model__row flex items-start gap-2">
+                    <svg class="object-model__dash mt-1 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                    </svg>
+                  <div class="object-model__field">
+                      <strong class="object-model__name">{{ $managed.name }}</strong>
+                      <span class="object-model__description ml-1">{{ $managed.description | markdownify }}</span>
+                    </div>
+                  </div>
                 {{ end }}
-            </ul>
+              </li>
+            {{ end }}
+          </ul>
         </div>
+        {{ end }}
+      </div>
     </section>
-    {{end}}
+  {{ end }}
 
-    {{/*  page end  */}}
+  {{ with $objectModel.Components }}
+    <hr class="my-10 border-zinc-200 dark:border-zinc-800" />
+    {{ range $componentName, $component := . }}
+      <section class="object-model__section mt-8">
+        <header class="object-model__header mb-4">
+          <h2 id="{{ $componentName | urlize }}" class="object-model__heading text-2xl font-semibold">
+            <span class="object-model__heading-badge">{{ $componentName }}</span>
+          </h2>
+           {{ with $component.Description }}
+            <div class="object-model__summary mt-2">{{ . | markdownify }}</div>
+          {{ end }}
+        </header>
+
+        <div class="object-model__group ml-4">
+          <h3 id="{{ $componentName | urlize }}-attributes" class="object-model__subheading text-xl font-semibold mb-2">Attributes</h3>
+          <ul class="object-model__list">
+            {{ range $attribute := $component.Attributes }}
+              <li class="object-model__item list-none">
+                {{ if $attribute.options }}
+                  <details class="group object-model__details">
+                  <summary class="object-model__summary-row flex cursor-pointer items-start gap-2">
+                      <svg class="object-model__chevron mt-1 h-4 w-4 shrink-0 transition-transform group-open:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                      <div class="object-model__field">
+                        <strong class="object-model__name">{{ $attribute.name }}</strong>
+                        <span class="object-model__description ml-1">{{ $attribute.description | markdownify }}</span>
+                      </div>
+                    </summary>
+                    <ul class="object-model__options px-4 py-2">
+                      {{ range $mapNumber, $mapValue := $attribute.options }}
+                        {{ range $key, $value := . }}
+                          <li class="object-model__option-item py-1">
+                            <span class="object-model__option-key"><code>{{ $key }}</code></span>
+                            <div class="object-model__option-value">{{ $value | markdownify }}</div>
+                          </li>
+                        {{ end }}
+                      {{ end }}
+                    </ul>
+                  </details>
+                {{ else }}
+                  <div class="object-model__row flex items-start gap-2">
+                    <svg class="object-model__dash mt-1 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                    </svg>
+                  <div class="object-model__field">
+                      <strong class="object-model__name">{{ $attribute.name }}</strong>
+                      <span class="object-model__description ml-1">{{ $attribute.description | markdownify }}</span>
+                    </div>
+                  </div>
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      </section>
+    {{ end }}
+  {{ end }}
+
+  {{/* page end */}}
 </article>
 {{- end -}}
 
