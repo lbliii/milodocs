@@ -41,8 +41,9 @@ export const componentRegistry = {
   'notebook-cell': () => import('./notebook/NotebookCell.js'),
   'notebook-navigation': () => import('./notebook/NotebookNavigation.js'),
   'notebook-state': () => import('./notebook/NotebookState.js'),
-  'notebook-density': () => import('./notebook/NotebookDensity.js'),
+  // 'notebook-density': () => import('./notebook/NotebookDensity.js'),
   'notebook-launch': () => import('./notebook/NotebookLaunch.js'),
+  'notebook-collapse': () => import('./notebook/NotebookCollapse.js'),
 
   
   // OpenAPI components
@@ -173,8 +174,9 @@ export function registerAllComponents() {
     'asciinema-embed',             // Initialize Asciinema embeds
     
     // Notebook components
-    'notebook-density',            // Notebook density toggle controls
+    // 'notebook-density',            // Notebook density toggle controls (removed)
     'notebook-launch',             // Notebook platform launcher dropdown
+    'notebook-collapse',           // Per-cell collapse/expand
     
     // OpenAPI components
     'openapi-viewer',

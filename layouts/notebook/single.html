@@ -9,8 +9,7 @@
 {{- define "content" -}}
 
       <article id="articleContent" class="article-content"
-               data-component="notebook-progressive-reveal"
-               data-view="normal">
+               data-component="notebook-progressive-reveal">
   
   {{- $notebookPath := .Params.notebook_path -}}
   {{- with resources.Get $notebookPath -}}
@@ -22,45 +21,21 @@
       {{ partial "notebook/header.html" . }}
       
       <!-- Notebook Toolbar -->
-      <div class="notebook__toolbar" data-component="notebook-density">
-        <div class="notebook__density-toggle">
-          <button class="notebook__density-btn notebook__density-btn--active" 
-                  data-density="normal">Normal</button>
-          <button class="notebook__density-btn" 
-                  data-density="compact">Compact</button>
-          <button class="notebook__density-btn" 
-                  data-density="comfortable">Comfortable</button>
-        </div>
-        
+      <div class="notebook__toolbar">
         <div class="notebook__cell-counter">
           <span data-visible-cells="5">5</span> / <span data-total-cells="{{ len $decodedNotebook.cells }}">{{ len $decodedNotebook.cells }}</span> cells
         </div>
         
                         <div class="notebook__actions">
-                  <button class="notebook__nav-btn" 
-                          data-action="collapse-all"
-                          title="Collapse all cells">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7-7m0 0l-7 7m7-7v18"/>
-                    </svg>
-                  </button>
-                  <button class="notebook__nav-btn" 
-                          data-action="expand-all"
-                          title="Expand all cells">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7 7m0 0l7-7m-7 7V3"/>
-                    </svg>
-                  </button>
-                  
                   {{/* Notebook Launch Dropdown */}}
                   {{ partial "notebook/launch-dropdown.html" $ }}
                 </div>
       </div>
       
       <div class="notebook__cells" 
+           data-component="notebook-collapse"
            data-notebook-id="{{ .Permalink | base64Encode }}"
-           data-cell-count="{{ len $decodedNotebook.cells }}"
-           data-density="normal">
+           data-cell-count="{{ len $decodedNotebook.cells }}">
           {{ range $index, $cell := $decodedNotebook.cells }}
             {{/* Add hidden class to all cells except first few */}}
             {{ $isInitiallyVisible := lt $index 5 }}

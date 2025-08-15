@@ -10204,12 +10204,12 @@ h1[id]::before {
   /* Simplified container - no shadow since cells have their own */
   max-width: 100%;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0;
   
   /* Layout for cells */
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   
   /* Performance optimizations */
   contain: layout style;
@@ -10232,15 +10232,29 @@ h1[id]::before {
    ======================================== */
 .notebook-cell.collapse {
   /* Notebook-specific styling for cells */
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-primary);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-color);
+  margin: 0 !important;
+  --collapse-padding-expanded: 0;
 }
 /* ========================================
    Cell Headers (extends existing collapse headers)
    ======================================== */
 .notebook-cell__header.collapse__header {
-  /* Notebook-specific header styling */
-  padding: 1rem 1.5rem;
+  /* Notebook-specific header styling: narrower, glassmorphism */
+  padding: 0.5rem 0.75rem;
+  background: var(--glass-bg);
+  border-color: var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-shadow);
+}
+/* Chevron/icon rotation synced to ARIA for notebook cells */
+.notebook-cell .collapse__header .collapse__icon {
+  transform: rotate(0deg);
+}
+.notebook-cell .collapse__header[aria-expanded="true"] .collapse__icon {
+  transform: rotate(90deg) !important;
 }
 /* Compact cell headers */
 [data-view="compact"] .notebook-cell__header.collapse__header {
@@ -10326,7 +10340,39 @@ h1[id]::before {
    Cell Content (extends existing collapse body)
    ======================================== */
 .notebook-cell .collapse__body-content {
-  padding: 1.5rem;
+  padding: 0;
+}
+/* Notebook cell body: align borders/background with glass style and avoid brand/green accents */
+.notebook-cell .collapse__body {
+  background: var(--glass-bg);
+  border-color: var(--glass-border-color);
+  /* Ensure body animates using data attributes on itself or parent */
+  --collapse-padding-expanded: 0.75rem;
+}
+.notebook-cell.collapse[data-collapse-state="expanded"] .collapse__body,
+.notebook-cell.collapse.expanded .collapse__body {
+  border-color: var(--glass-border-color);
+}
+/* Render Markdown cells as normal article content (less chrome) */
+.notebook-cell--markdown.collapse {
+  background: transparent;
+  border: none;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.notebook-cell--markdown.collapse:hover {
+  box-shadow: none !important;
+  transform: none !important;
+}
+.notebook-cell--markdown .notebook-cell__header {
+  display: none;
+}
+.notebook-cell--markdown .collapse__body {
+  background: transparent;
+  border: none;
+}
+.notebook-cell--markdown .collapse__body-content {
+  padding: 0;
 }
 /* Compact cell content */
 [data-view="compact"] .notebook-cell .collapse__body-content {
@@ -10426,7 +10472,7 @@ h1[id]::before {
    Cell Outputs
    ======================================== */
 .notebook-cell__outputs {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -10747,7 +10793,7 @@ h1[id]::before {
 }
 .notebook-cell-wrapper {
   /* Wrapper for lazy-loaded cells */
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
 }
 .notebook-cell--lazy {
   /* Hidden cells waiting to be loaded */
@@ -10842,7 +10888,7 @@ h1[id]::before {
 @container notebook (max-width: 768px) {
   .notebook__cells {
     margin: 0;
-    padding: 0.5rem;
+    padding: 0;
   }
   
   .notebook__header {
@@ -10858,21 +10904,21 @@ h1[id]::before {
   }
   
   .notebook__cells {
-    gap: 1rem;
+    gap: 0;
   }
   
   .notebook-cell .collapse__body-content {
-    padding: 1rem;
+    padding: 0;
   }
   
   /* Compact mode on mobile should be even more compact */
   [data-view="compact"] .notebook__cells {
-    padding: 0.25rem;
-    gap: 0.25rem;
+    padding: 0;
+    gap: 0;
   }
   
   [data-view="compact"] .notebook-cell .collapse__body-content {
-    padding: 0.5rem;
+    padding: 0;
   }
   
   /* Mobile code block styling handled by .code-block-enhanced */

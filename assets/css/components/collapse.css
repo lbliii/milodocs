@@ -409,7 +409,8 @@
  */
 
 /* Data-attribute collapsed state */
-.collapse[data-collapse-state="collapsed"] .collapse__body {
+.collapse[data-collapse-state="collapsed"] .collapse__body,
+.collapse__body[data-collapse-state="collapsed"] {
   max-height: var(--collapse-height-collapsed);
   opacity: var(--collapse-opacity-collapsed);
   overflow: hidden;
@@ -427,7 +428,8 @@
 }
 
 /* Data-attribute expanded state */
-.collapse[data-collapse-state="expanded"] .collapse__body {
+.collapse[data-collapse-state="expanded"] .collapse__body,
+.collapse__body[data-collapse-state="expanded"] {
   max-height: var(--collapse-height-expanded);
   opacity: var(--collapse-opacity-expanded);
   overflow: var(--collapse-overflow-expanded);
