@@ -126,12 +126,12 @@
   --max-width-modal: var(--max-width-2xl);      /* Modal dialogs */
   --max-width-form: var(--max-width-lg);        /* Form containers */
 
-  /* ✨ LAYOUT SHELL TOKENS (moved from input.css) */
-  --left-rail-width: 18rem;       /* xl left rail */
-  --right-rail-width: 22rem;      /* xl right rail */
+  /* ✨ LAYOUT SHELL TOKENS (synchronized with styles.css) */
+  --left-rail-width: 16rem;       /* xl left rail */
+  --right-rail-width: 14rem;      /* xl right rail */
   --layout-gap-xl: var(--space-8);/* xl gap */
-  --left-rail-width-2xl: 20rem;   /* 2xl left rail */
-  --right-rail-width-2xl: 28rem;  /* 2xl right rail */
+  --left-rail-width-2xl: 18rem;   /* 2xl left rail */
+  --right-rail-width-2xl: 16rem;  /* 2xl right rail */
   --layout-gap-2xl: var(--space-16); /* 2xl gap */
 
   /* ✨ GRID/TILE TOKENS (moved from input.css) */

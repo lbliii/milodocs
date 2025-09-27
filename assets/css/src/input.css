@@ -31,38 +31,7 @@
 /* Tailwind 4.x: @tailwind directives removed - using @import approach instead */
 
 @layer components {
-  /* Responsive auto-fit grid for cards/tiles */
-  .grid-autofit {
-    grid-template-columns: repeat(auto-fit, minmax(var(--grid-card-min, 280px), 1fr));
-  }
-  @screen md {
-    .grid-autofit {
-      gap: theme('spacing.8');
-    }
-  }
-
-  /* Layout shell: centralizes the app's three-column grid with tokens */
-  .layout-shell {
-    @apply w-full px-4 sm:px-6 lg:px-8 xl:px-0 transition-all duration-300 ease-in-out;
-  }
-  @screen xl {
-    .layout-shell {
-      display: grid;
-      grid-template-columns: var(--left-rail-width) minmax(0, 1fr) var(--right-rail-width);
-      gap: var(--layout-gap-xl);
-    }
-  }
-  @screen 2xl {
-    .layout-shell {
-      grid-template-columns: var(--left-rail-width-2xl) minmax(0, 1fr) var(--right-rail-width-2xl);
-      gap: var(--layout-gap-2xl);
-    }
-  }
-
-  /* Page container max-width controlled by token */
-  .page-container {
-    max-width: var(--max-width-content);
-  }
+  /* Layout components moved to styles.css - this file is legacy PostCSS */
 }
 
 @layer base {

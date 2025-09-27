@@ -79,7 +79,7 @@
 
   /* Ensure summary row has clear focus ring */
   .object-model__summary-row {
-    @apply rounded-md outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400;
+    @apply rounded-sm outline-hidden focus-visible:ring-3 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400;
   }
 
   .object-model__summary-row:hover {

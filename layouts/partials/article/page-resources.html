@@ -58,7 +58,7 @@
             {{- range $documents -}}
               <div class="card card--resource flex items-center justify-between p-4">
                 <div class="flex items-center flex-1 min-w-0">
-                  <svg class="w-5 h-5 mr-3 opacity-60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 mr-3 opacity-60 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
                   </svg>
                   <div class="flex-1 min-w-0">
@@ -99,7 +99,7 @@
           </h3>
           <div class="grid gap-4 md:grid-cols-2">
             {{- range $videos -}}
-              <div class="border border-gray-200 rounded-lg overflow-hidden bg-surface shadow-sm">
+              <div class="border border-gray-200 rounded-sm overflow-hidden bg-surface shadow-xs">
                 <video controls class="w-full h-48 bg-zinc-100">
                   <source src="{{ .RelPermalink }}" type="{{ .MediaType }}">
                   Your browser does not support the video tag.
@@ -131,7 +131,7 @@
             {{- range $others -}}
               <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-zinc-100 transition-colors">
                 <div class="flex items-center flex-1 min-w-0">
-                  <svg class="w-5 h-5 mr-3 opacity-60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 mr-3 opacity-60 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
                   </svg>
                   <div class="flex-1 min-w-0">
@@ -147,7 +147,7 @@
                   </div>
                 </div>
                 <a href="{{ .RelPermalink }}" 
-                   class="ml-4 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-brand hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand transition-colors">
+                   class="ml-4 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-xs text-white bg-brand hover:opacity-80 focus:outline-hidden focus:ring-3 focus:ring-offset-2 focus:ring-brand transition-colors">
                   View
                 </a>
               </div>

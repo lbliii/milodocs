@@ -38,7 +38,7 @@
             <div class="p-4">
               <h2 class="text-xl font-semibold mb-3">
                  <a href="{{ .RelPermalink }}" 
-                    class="text-text-primary hover:text-blue-600 focus:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded focus-ring"
+                    class="text-text-primary hover:text-blue-600 focus:text-blue-600 focus:outline-hidden focus:ring-3 focus:ring-blue-500 rounded-sm focus-ring"
                    aria-describedby="{{ .RelPermalink | anchorize }}-summary">
                   {{ .LinkTitle }}
                 </a>
@@ -82,18 +82,18 @@
         <div class="flex items-center space-x-2">
           {{- if $paginator.HasPrev -}}
             <a href="{{ $paginator.Prev.URL }}" 
-               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
+               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-sm hover:bg-gray-50 focus:outline-hidden focus:ring-3 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
               Previous
             </a>
           {{- end -}}
           
           {{- range $paginator.Pagers -}}
             {{- if eq . $paginator -}}
-             <span class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md" aria-current="page">
+             <span class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-sm" aria-current="page">
                {{ .PageNumber }}
              </span>
             {{- else -}}
-             <a href="{{ .URL }}" class="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
+             <a href="{{ .URL }}" class="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-sm hover:bg-gray-50 focus:outline-hidden focus:ring-3 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
                {{ .PageNumber }}
              </a>
             {{- end -}}
@@ -101,7 +101,7 @@
           
           {{- if $paginator.HasNext -}}
             <a href="{{ $paginator.Next.URL }}" 
-               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
+               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-sm hover:bg-gray-50 focus:outline-hidden focus:ring-3 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
               Next
             </a>
           {{- end -}}

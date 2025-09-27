@@ -11,7 +11,7 @@
   container-name: sidebar;
 }
 
-/* Desktop sidebar styling */
+/* Desktop sidebar styling - DISABLED: Conflicting with new layout */
 /*
 @container sidebar (min-width: 768px) {
   .sidebar,
@@ -25,7 +25,7 @@
 }
 */
 
-/* FALLBACK: Media query for desktop sidebar visibility */
+/* FALLBACK: Media query for desktop sidebar visibility - DISABLED */
 /*
 @media (min-width: 768px) {
   .sidebar-container {
@@ -36,26 +36,27 @@
 }
 */
 
-/* Mobile sidebar styling */
+/* Mobile sidebar styling - DISABLED: Now handled by Tailwind classes in HTML */
+/*
 @container sidebar (max-width: 767px) {
   .sidebar-container {
-    /* Ensure it starts hidden on mobile */
     position: fixed;
     z-index: 40;
-    width: 20rem; /* w-80 equivalent */
+    width: 20rem;
     height: 100vh;
     top: 0;
     left: 0;
     transform: translateX(-100%);
-    /* ✅ FIXED: Use animation tokens */
     transition: transform var(--timing-medium) var(--easing-standard);
   }
+}
   
+  /* DISABLED: Conflicting with new layout
   .sidebar.translate-x-0,
   .sidebar-container.translate-x-0 {
     transform: translateX(0) !important;
   }
-}
+  */
 
 /* Mobile Header Styling - Force hide on desktop */
 .sidebar-header {
@@ -87,10 +88,12 @@
 
 /* Ensure sidebar starts hidden on mobile */
 @container sidebar (max-width: 767px) {
+  /* DISABLED: Conflicting with new layout
   .sidebar:not(.translate-x-0),
   .sidebar-container:not(.translate-x-0) {
     transform: translateX(-100%) !important;
   }
+  */
 }
 
 .sidebar__close-button,
@@ -198,7 +201,7 @@ li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested
 
 /* Sidebar Navigation Components - Cohesive Design */
 .sidebar__item {
-  @apply flex items-center rounded-md transition-all duration-200;
+  @apply flex items-center rounded-sm transition-all duration-200;
   background-color: transparent;
   margin: 1px 0;
 }
@@ -208,8 +211,8 @@ li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested
 }
 
 .sidebar__link {
-  @apply flex items-center flex-grow p-2 transition-all duration-200 
-         focus:outline-none focus:ring-2 rounded-l-md;
+  @apply flex items-center grow p-2 transition-all duration-200 
+         focus:outline-hidden focus:ring-3 rounded-l-sm;
   color: var(--color-text-primary);
   text-decoration: none;
   --tw-ring-color: var(--color-brand);
@@ -233,11 +236,11 @@ li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested
 }
 
 .sidebar__text {
-  @apply flex-grow;
+  @apply grow;
 }
 
 .sidebar__expander {
-  @apply p-2 transition-all duration-200 focus:outline-none focus:ring-2 
+  @apply p-2 transition-all duration-200 focus:outline-hidden focus:ring-3 
          rounded-r-md flex items-center justify-center;
   color: var(--color-text-secondary);
   min-width: 2.5rem;

@@ -14,7 +14,7 @@
                     {{with .Params.icon}}
                         <img src="{{ printf "icons/light/%s" . | relURL }}" alt="" class="w-6 h-6 icon shrink-0 mt-1">
                     {{end}}
-                    <div class="flex-grow">
+                    <div class="grow">
                         <h3 class="text-xl font-semibold leading-tight" style="color: var(--color-text-primary); font-family: var(--font-brand);">
                             {{if .Params.linkTitle}} 
                                 {{.Params.linkTitle}} 

@@ -1,6 +1,6 @@
 <!-- SidebarLeft Partial -->
 <!-- Mobile navigation toggle (visible < xl) -->
-<button type="button" class="fixed top-4 left-4 z-50 xl:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
+<button type="button" class="fixed top-4 left-4 z-50 xl:hidden bg-brand text-white p-2 rounded-sm shadow-xs" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
@@ -9,9 +9,20 @@
 <!-- Mobile navigation overlay -->
 <div class="fixed inset-0 bg-black/50 z-40 hidden xl:hidden" data-navigation-overlay></div>
 
-<!-- Keep desktop width flexible to avoid squeezing content at medium widths -->
-<!-- Unified sidebar: mobile off-canvas (<xl) + desktop sticky (xl+) -->
-<aside id="sidebar-left" class="sidebar block fixed xl:sticky left-0 top-0 xl:top-16 z-40 h-full xl:h-[calc(100vh-4rem)] w-80 xl:w-auto -translate-x-full xl:translate-x-0 transition-all duration-300 ease-in-out overflow-y-auto pr-1" data-component="navigation-sidebar-left" role="navigation" aria-label="Primary">
+<!-- Simple sidebar: mobile off-canvas (<xl) + grid item (xl+) -->
+<aside id="sidebar-left" class="sidebar 
+  fixed xl:relative 
+  left-0 xl:left-auto 
+  top-0 xl:top-auto 
+  w-80 xl:w-full 
+  h-full xl:h-auto
+  min-h-screen xl:min-h-0
+  z-40 xl:z-0
+  -translate-x-full xl:translate-x-0 
+  transition-transform duration-300 ease-in-out xl:transition-none
+  bg-surface xl:bg-transparent
+  overflow-y-auto xl:overflow-visible" 
+  data-component="navigation-sidebar-left" role="navigation" aria-label="Primary">
     <!-- Mobile header -->
     <div class="sidebar__header flex xl:hidden items-center justify-between p-4">
         <h2 class="text-lg font-semibold">Navigation</h2>

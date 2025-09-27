@@ -39,7 +39,7 @@
     <!-- Left sidebar (present at all sizes; handles mobile off-canvas + xl sticky itself) -->
     {{- block "sidebar-left" . -}}{{- end -}}
     {{/* <div id="pageContainer" class="p-4 w-full md:flex-1 min-w-0 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl xl:px-8 2xl:px-12"> */}}
-    <div id="pageContainer" class="p-4 w-full md:flex-1 min-w-0 mx-auto page-container xl:px-8 2xl:px-12">
+    <div id="pageContainer" class="xl:min-w-0 p-4 xl:p-6 overflow-hidden">
       <!-- Loading skeleton for initial page load (opt-in) -->
       {{ block "loading-skeleton" . }}
         {{- $lc := partial "utils/layout-config.html" (dict "site" .Site "page" .) -}}
@@ -76,9 +76,10 @@
     {{- partial "searchResultsContainer.html" . -}}
     <!-- Right sidebar column (xl+) -->
     {{- if $rightRail -}}
-    <div class="hidden xl:block">
       {{- block "sidebar-right" . -}}{{- end -}}
-    </div>
+    {{- else -}}
+      <!-- Empty grid item to maintain 3-column structure -->
+      <div class="hidden xl:block"></div>
     {{- end -}}
   </main>
   <footer>

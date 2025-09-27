@@ -63,7 +63,7 @@
 
   /* Glass morphism (opt-in) */
   .table--glass {
-    @apply rounded-lg shadow-sm;
+    @apply rounded-sm shadow-xs;
     backdrop-filter: saturate(150%) blur(8px);
     -webkit-backdrop-filter: saturate(150%) blur(8px);
     /* Light: subtle translucent surface; Dark: stronger translucency */

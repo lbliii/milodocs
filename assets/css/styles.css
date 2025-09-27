@@ -233,23 +233,35 @@
 }
 
 @layer components {
-  /* Layout shell: centralizes the app's three-column grid with tokens */
+  /* Layout shell: simple 3-column grid that actually works */
   .layout-shell {
-    @apply w-full px-4 sm:px-6 lg:px-8 xl:px-0 transition-all duration-300 ease-in-out;
+    @apply w-full min-h-screen;
   }
   
-  @media (min-width: theme(--breakpoint-xl)) {
+  /* Mobile: single column, stack vertically */
+  @media (max-width: 1279px) {
     .layout-shell {
-      display: grid;
-      grid-template-columns: var(--left-rail-width) minmax(0, 1fr) var(--right-rail-width);
-      gap: var(--layout-gap-xl);
+      display: block;
     }
   }
   
-  @media (min-width: theme(--breakpoint-2xl)) {
+  /* Desktop xl+: 3-column CSS Grid */
+  @media (min-width: 1280px) {
     .layout-shell {
-      grid-template-columns: var(--left-rail-width-2xl) minmax(0, 1fr) var(--right-rail-width-2xl);
-      gap: var(--layout-gap-2xl);
+      display: grid;
+      grid-template-columns: 16rem 1fr 14rem;
+      gap: 1.5rem;
+      max-width: 100vw;
+      padding: 0 1rem;
+    }
+  }
+  
+  /* Large screens: slightly wider sidebars */
+  @media (min-width: 1536px) {
+    .layout-shell {
+      grid-template-columns: 18rem 1fr 16rem;
+      gap: 2rem;
+      padding: 0 1.5rem;
     }
   }
 

@@ -47,7 +47,7 @@
                     {{- end -}}
                   </div>
                   {{- if .Date -}}
-                    <time class="flex-shrink-0 text-xs" style="color: var(--color-text-tertiary);" datetime="{{ .Date.Format "2006-01-02" }}">
+                    <time class="shrink-0 text-xs" style="color: var(--color-text-tertiary);" datetime="{{ .Date.Format "2006-01-02" }}">
                       {{ .Date.Format "Jan 2" }}
                     </time>
                   {{- end -}}

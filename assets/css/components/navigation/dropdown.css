@@ -42,7 +42,7 @@
 
 .topbar__dropdown-link {
   @apply flex items-center px-4 py-3 text-sm rounded-lg 
-         transition-all duration-200 focus:outline-none focus:ring-2
+         transition-all duration-200 focus:outline-hidden focus:ring-3
          relative overflow-hidden;
   color: var(--color-text-primary);
   --tw-ring-color: var(--color-brand);

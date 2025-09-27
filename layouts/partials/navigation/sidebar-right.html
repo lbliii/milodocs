@@ -1,5 +1,5 @@
-<!-- Right Sidebar: sticky on xl+, consistent width managed by grid tracks in base layout -->
-<aside id="sidebar-right" class="sticky top-16 hidden xl:block h-[calc(100vh-4rem)] overflow-y-auto pr-2" data-component="navigation-sidebar-right" role="complementary" aria-label="On-page navigation">
+<!-- Right Sidebar: simple grid item that doesn't fight with layout -->
+<aside id="sidebar-right" class="hidden xl:flex flex-col h-screen sticky top-0 py-4" data-component="navigation-sidebar-right" role="complementary" aria-label="On-page navigation">
   {{if .Site.Params.article.toc.display}}
     {{partial "article/toc.html" . }}
   {{end}}

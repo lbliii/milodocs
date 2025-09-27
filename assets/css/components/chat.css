@@ -28,7 +28,7 @@
   filter: brightness(0) saturate(100%) invert(35%) sepia(96%) saturate(2067%) hue-rotate(346deg) brightness(89%) contrast(94%) !important;
 }
 
-/* Chat Container - Clean transparent design */
+/* Chat Container - Clean transparent design with proper flex behavior */
 #chatContainer {
   background: transparent;
   border: none;
@@ -37,6 +37,10 @@
   /* margin-right: 1.5rem;  Align with page container padding */
   /* Replaced: remove right margin on wide screens to avoid pinching */
   margin-top: 1rem; /* Match the pageContainer's top padding to align with content start */
+  /* Ensure proper flex behavior when sharing space with TOC */
+  flex-shrink: 1;
+  min-height: 0; /* Allow flex shrinking */
+  max-height: calc(100vh - 8rem); /* Constrain max height to prevent overflow */
 }
 
 /* On xl+, let chat use full sidebar column width */
@@ -58,7 +62,7 @@
 }
 
 .chat__input {
-  @apply focus:outline-none;
+  @apply focus:outline-hidden;
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
     border-color var(--timing-fast) var(--easing-standard),
@@ -337,7 +341,7 @@
 
 /* Chat bubble improvements - tighter spacing and better hierarchy */
 .chat-bubble {
-  @apply p-3 rounded-xl shadow-sm relative max-w-none; /* Reduced padding from p-4 to p-3 */
+  @apply p-3 rounded-xl shadow-xs relative max-w-none; /* Reduced padding from p-4 to p-3 */
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -372,9 +376,11 @@
 /* Enhanced Chat Messages */
 #chat-messages {
   @apply flex flex-col space-y-3 p-4; /* Tighter spacing */
-  max-height: calc(100vh - 12rem);
+  max-height: calc(100vh - 16rem); /* Adjusted for better space sharing */
   overflow-y: auto;
   scroll-behavior: smooth;
+  flex: 1 1 auto; /* Allow flexible sizing */
+  min-height: 0; /* Enable proper flex shrinking */
 }
 
 .chat-bubble--error {
@@ -490,7 +496,7 @@
   @apply absolute -top-1 -right-1 w-5 h-5 
          rounded-full flex items-center justify-center text-xs
          opacity-0 group-hover:opacity-100
-         focus:outline-none focus:ring-2 focus:ring-offset-1;
+         focus:outline-hidden focus:ring-3 focus:ring-offset-1;
   /* ✅ FIXED: Use animation tokens and specific properties */
   transition: 
     opacity var(--timing-fast) var(--easing-standard),
