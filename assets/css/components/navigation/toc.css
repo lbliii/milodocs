@@ -30,7 +30,7 @@
 .toc {
   @apply p-6 text-sm;
   background: transparent;
-  border-radius: var(--radius-xl);
+  @apply rounded-lg;
   color: var(--color-text-primary);
 }
 
@@ -105,8 +105,8 @@
 }
 
 .toc-link:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  @apply outline-hidden ring-3;
+  --tw-ring-color: var(--color-brand);
   color: var(--color-brand);
   /* box-shadow:
     0 0 0 2px var(--color-brand),

@@ -25,33 +25,20 @@
 
 /* Base navigation link styling */
 .nav-link {
-  position: relative;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-md);
-  font-weight: 400;
-  font-size: 0.875rem;
+  @apply relative px-3 py-2 rounded-sm font-normal text-sm min-h-9
+         text-text-primary no-underline whitespace-nowrap overflow-hidden
+         flex items-center cursor-pointer focus:outline-hidden focus:ring-3;
+  --tw-ring-color: var(--color-brand);
   line-height: 1.2;
-  min-height: 2.25rem;
-  color: var(--color-text-primary);
-  text-decoration: none;
   /* ✅ FIXED: Specific properties for better performance */
   transition: 
     background-color var(--timing-fast) var(--easing-standard),
     color var(--timing-fast) var(--easing-standard);
-  white-space: nowrap;
-  overflow: hidden; /* Essential for ripple containment */
-  display: flex;
-  align-items: center;
-  cursor: pointer;
 }
 
-/* Enhanced focus states for nav-links */
+/* Enhanced focus states for nav-links - handled by Tailwind utilities */
 .nav-link:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  box-shadow: 
-    0 0 0 2px var(--color-brand),
-    0 0 0 4px rgba(var(--color-brand-rgb), 0.2); /* Double focus ring */
+  color: var(--color-brand);
 }
 
 .nav-link::before {
@@ -102,9 +89,8 @@
 
 /* Expand toggle button - use animation tokens */
 .expand-toggle {
-  padding: 0.25rem;
-  border-radius: var(--radius-base);
-  color: var(--color-text-secondary);
+  @apply p-1 rounded-sm text-text-secondary focus:outline-hidden focus:ring-3;
+  --tw-ring-color: var(--color-brand);
   transition: 
     background-color var(--timing-fast) var(--easing-standard),
     color var(--timing-fast) var(--easing-standard);

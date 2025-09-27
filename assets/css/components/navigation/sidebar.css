@@ -112,13 +112,13 @@
 .sidebar-close-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text-primary);
-  border-radius: var(--radius-lg);
+  @apply rounded-sm;
 }
 
 .sidebar__close-button:focus,
 .sidebar-close-btn:focus {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 2px;
+  @apply outline-hidden ring-3;
+  --tw-ring-color: var(--color-brand);
 }
 
 /* LinkTree Styling */

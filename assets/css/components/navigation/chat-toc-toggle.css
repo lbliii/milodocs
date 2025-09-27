@@ -91,10 +91,8 @@
 
 /* Focus states for accessibility */
 .chat-toc-toggle__option:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--color-brand);
-  z-index: 1;
+  @apply outline-hidden ring-3 z-10;
+  --tw-ring-color: var(--color-brand);
 }
 
 /* Ripple effect on click */
