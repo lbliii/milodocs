@@ -46,4 +46,18 @@ notebook:
   defaultBranch: "main"
 
 # Development & Debug Settings
-debug: false  # Enable debugging to see what parameters are loaded
+debug: true  # Enable debugging to see what parameters are loaded
+
+# Performance & Build Settings
+useHugoNativeCSS: true  # Hugo native Tailwind CSS processing (Tailwind 4.x)
+
+# Theme performance features
+performance:
+  # Enable partial caching for navigation components
+  cacheNavigation: true
+  
+  # Use build stats for CSS optimization
+  useBuildStats: true
+  
+  # Preload critical resources
+  preloadFonts: true

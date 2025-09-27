@@ -11,7 +11,7 @@
       data-version="{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}"
       {{- if site.Params.debug }} data-debug="true"{{- end }}>
   <header>
-    {{- partial "header.html" . -}}
+    {{- partialCached "header.html" . .Section -}}
   </header>
   {{- block "top-bar" . -}}{{- end -}}
 

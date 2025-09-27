@@ -1,0 +1,258 @@
+@import "tailwindcss";
+
+/* Source Hugo stats for optimal CSS purging */
+@source "hugo_stats.json";
+
+/* Include Tailwind layers - required for Tailwind 4.x */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import component CSS files - Migrated to Tailwind 4.x */
+@import "architecture/index.css";
+
+@import "components/buttons.css";
+@import "components/tables.css";
+@import "components/notice.css";
+@import "components/navigation.css";
+@import "components/navigation-api.css";
+@import "components/breadcrumbs.css";
+@import "components/search.css";
+@import "components/chat.css";
+@import "components/article-header.css";
+@import "components/article/related-content.css";
+@import "components/article/page-resources.css";
+@import "components/tiles.css";
+@import "components/child-links.css";
+@import "components/cards.css";
+@import "components/glossary.css";
+@import "components/quicklinks.css";
+@import "components/next-prev.css";
+@import "components/tutorial.css";
+@import "components/toast.css";
+@import "components/notebook.css";
+@import "components/openapi/index.css";
+@import "components/tabs.css";
+@import "components/code.css";
+@import "components/object-model.css";
+
+@theme {
+  /* Breakpoints - Following Hugo docs pattern */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 68rem; /* Following Hugo docs adjustment */
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
+  /* Brand Colors - MiloDocs theme */
+  --color-primary: var(--color-brand-600);
+  --color-secondary: var(--color-gray-600);
+  --color-accent: var(--color-accent-500);
+  
+  /* Brand color palette */
+  --color-brand-50: #f0f9ff;
+  --color-brand-100: #e0f2fe;
+  --color-brand-200: #bae6fd;
+  --color-brand-300: #7dd3fc;
+  --color-brand-400: #38bdf8;
+  --color-brand-500: #0ea5e9;
+  --color-brand-600: #0284c7;
+  --color-brand-700: #0369a1;
+  --color-brand-800: #075985;
+  --color-brand-900: #0c4a6e;
+  --color-brand-950: #082f49;
+
+  /* Accent color palette */
+  --color-accent-50: #fdf4ff;
+  --color-accent-100: #fae8ff;
+  --color-accent-200: #f5d0fe;
+  --color-accent-300: #f0abfc;
+  --color-accent-400: #e879f9;
+  --color-accent-500: #d946ef;
+  --color-accent-600: #c026d3;
+  --color-accent-700: #a21caf;
+  --color-accent-800: #86198f;
+  --color-accent-900: #701a75;
+  --color-accent-950: #4a044e;
+
+  /* Typography - Tailwind 4.x font families */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  --font-brand: "NVIDIA", "Arial", "Helvetica", sans-serif;
+  
+  /* Layout tokens */
+  --max-width-content: 65rem;
+  --left-rail-width: 16rem;
+  --right-rail-width: 14rem;
+  --left-rail-width-2xl: 18rem;
+  --right-rail-width-2xl: 16rem;
+  --layout-gap-xl: 2rem;
+  --layout-gap-2xl: 3rem;
+  --grid-card-min: 280px;
+  
+  /* Animation tokens */
+  --timing-fast: 150ms;
+  --timing-medium: 250ms;
+  --timing-slow: 350ms;
+  --easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Header offset for scroll anchoring */
+  --header-offset: 64px;
+}
+
+@layer base {
+  /* Critical transitions and no-transition handling */
+  html:not(.no-transitions) {
+    transition: color-scheme var(--timing-medium) var(--easing-standard);
+  }
+  
+  /* Apply transitions only to specific elements that need them */
+  html:not(.no-transitions) .btn,
+  html:not(.no-transitions) .nav-link,
+  html:not(.no-transitions) .card,
+  html:not(.no-transitions) .collapse__header,
+  html:not(.no-transitions) .search-container,
+  html:not(.no-transitions) .toast-notification,
+  html:not(.no-transitions) .theme-transition {
+    transition: 
+      background-color var(--timing-medium) var(--easing-standard), 
+      color var(--timing-medium) var(--easing-standard), 
+      border-color var(--timing-medium) var(--easing-standard);
+  }
+  
+  /* Disable transitions during page load to prevent flash */
+  html.no-transitions,
+  html.no-transitions * {
+    transition: none !important;
+  }
+
+  /* Enhanced typography using clamp for responsive scaling */
+  h1 {
+    font-size: clamp(1.5rem, 3.5vw, 1.75rem);
+    line-height: 1.2;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    word-wrap: break-word;
+  }
+  
+  h2 {
+    font-size: clamp(1.25rem, 3vw, 1.375rem);
+    line-height: 1.33;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    word-wrap: break-word;
+  }
+  
+  h3 {
+    font-size: clamp(1.0625rem, 2.5vw, 1.1875rem);
+    line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    word-wrap: break-word;
+  }
+  
+  h4 {
+    @apply text-lg font-bold;
+    letter-spacing: -0.01em;
+    word-wrap: break-word;
+  }
+  
+  h5 {
+    @apply text-base font-bold;
+    word-wrap: break-word;
+  }
+  
+  h6 {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 700;
+    word-wrap: break-word;
+  }
+
+  /* Global font optimizations */
+  html {
+    font-synthesis: none;
+  }
+  
+  body, main {
+    @apply font-sans;
+    font-optical-sizing: auto;
+    font-feature-settings: "kern" 1;
+    text-rendering: optimizeLegibility;
+    font-size: clamp(1rem, 2vw, 1.0625rem);
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  /* Article content styles */
+  .article-content > * {
+    @apply my-3;
+  }
+
+  .article-content {
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+  }
+  
+  @media (min-width: theme(--breakpoint-md)) {
+    .article-content {
+      font-size: 1.0625rem;
+      line-height: 1.6;
+    }
+  }
+
+  .article-content p {
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
+
+  .article-content strong {
+    @apply font-sans font-semibold;
+  }
+
+  .article-content li li {
+    @apply ml-12 py-1;
+  }
+}
+
+@layer components {
+  /* Layout shell: centralizes the app's three-column grid with tokens */
+  .layout-shell {
+    @apply w-full px-4 sm:px-6 lg:px-8 xl:px-0 transition-all duration-300 ease-in-out;
+  }
+  
+  @media (min-width: theme(--breakpoint-xl)) {
+    .layout-shell {
+      display: grid;
+      grid-template-columns: var(--left-rail-width) minmax(0, 1fr) var(--right-rail-width);
+      gap: var(--layout-gap-xl);
+    }
+  }
+  
+  @media (min-width: theme(--breakpoint-2xl)) {
+    .layout-shell {
+      grid-template-columns: var(--left-rail-width-2xl) minmax(0, 1fr) var(--right-rail-width-2xl);
+      gap: var(--layout-gap-2xl);
+    }
+  }
+
+  /* Responsive auto-fit grid for cards/tiles */
+  .grid-autofit {
+    grid-template-columns: repeat(auto-fit, minmax(var(--grid-card-min, 280px), 1fr));
+  }
+  
+  @media (min-width: theme(--breakpoint-md)) {
+    .grid-autofit {
+      gap: 2rem; /* equivalent to spacing.8 */
+    }
+  }
+
+  /* Page container max-width controlled by token */
+  .page-container {
+    max-width: var(--max-width-content);
+  }
+}

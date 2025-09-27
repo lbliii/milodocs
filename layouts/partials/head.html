@@ -207,5 +207,10 @@
 <link rel="dns-prefetch" href="//unpkg.com">
 {{- end -}}
 
-{{ partialCached "head/css.html" . }}
+{{/* Choose CSS processing method based on feature flag */}}
+{{- if site.Params.useHugoNativeCSS | default false -}}
+  {{ partial "head/css-hugo-native.html" . }}
+{{- else -}}
+  {{ partialCached "head/css.html" . }}
+{{- end -}}
 {{ partialCached "head/js.html" . }}

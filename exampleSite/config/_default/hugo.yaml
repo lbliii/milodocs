@@ -20,11 +20,47 @@ imaging:
 build:
   useResourceCacheWhen: "fallback"
   writeStats: true
+  buildStats:
+    enable: true
+    disableIDs: true
+  # Cache busters for optimal CSS processing
+  cachebusters:
+    - source: "assets/notwatching/hugo_stats\\.json"
+      target: "css"
+    - source: "(postcss|tailwind)\\.config\\.js"
+      target: "css"
 
 ## Misc
 enableGitInfo: true 
 enableEmoji: true 
 enableRobotsTXT: true 
+
+# Markup configuration moved to markup.yaml
+
+# Content cascades for better organization
+cascade:
+  - target:
+      kind: 'page'
+    params:
+      searchable: true
+  - target:
+      kind: '{home,section,taxonomy,term}'
+    params:
+      searchable: false
+
+# Caching configuration for performance
+caches:
+  images:
+    dir: ":cacheDir/images"
+    maxAge: "1440h"
+  getresource:
+    dir: ':cacheDir/:project'
+    maxAge: "1h"
+
+# Security configuration moved to security.yaml
+
+# Module configuration moved to module.yaml
+# Additional mounts can be added here if needed beyond the basic ones
 
 # Log Settings
 # ignoreLogs:

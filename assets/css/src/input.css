@@ -158,7 +158,7 @@
 
   /* Global Font Family & Body Text - Uses brand font with fallbacks */
   main { 
-    @apply font-brand;
+    font-family: var(--font-brand);
   }
   
   /* Improve font loading consistency between dev and production */
@@ -221,7 +221,8 @@
   }
 
   .article-content strong {
-    @apply font-brand font-semibold;
+    font-family: var(--font-brand);
+    font-weight: 600;
   }
 
   /* List Styles */

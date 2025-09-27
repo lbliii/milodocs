@@ -1,7 +1,34 @@
 [build]
   publish = "exampleSite/public"
-  command = "cd exampleSite && hugo  --theme ../.."
+  command = "cd exampleSite && hugo --gc --minify --theme ../.."
 
 [build.environment]
   HUGO_VERSION = "0.146.0" 
   HUGO_THEME = "milodocs"
+  NODE_VERSION = "20"
+
+[context.production.environment]
+  HUGO_ENV = "production"
+  HUGO_ENABLEGITINFO = "true"
+
+[context.deploy-preview]
+  command = "cd exampleSite && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL --enableGitInfo --theme ../.."
+
+[context.branch-deploy]
+  command = "cd exampleSite && hugo --gc --minify -b $DEPLOY_PRIME_URL --theme ../.."
+
+# Performance headers
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"

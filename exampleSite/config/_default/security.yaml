@@ -4,6 +4,7 @@ exec:
     - '^go$'
     - '^npx$'
     - '^postcss$'
+    - '^tailwindcss$'
     - '^rst2html.py$'
     - '^rst2html$'
     - '^asciidoctor$'

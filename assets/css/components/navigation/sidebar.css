@@ -229,7 +229,7 @@ li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested
 .sidebar__icon {
   /* Reduced icon size for tighter look */
   /* @apply w-5 h-5 mr-3 flex-shrink-0; */
-  @apply w-4 h-4 mr-3 flex-shrink-0;
+  @apply w-4 h-4 mr-3 shrink-0;
 }
 
 .sidebar__text {
@@ -258,8 +258,10 @@ li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested
 /* Level-specific styling */
 .sidebar__item--level-1 .sidebar__text {
   /* Step down one size from text-lg and slightly reduce weight */
-  /* @apply text-lg font-brand font-bold; */
-  @apply text-base font-brand font-semibold;
+  /* @apply text-lg font-bold; */
+  font-family: var(--font-brand);
+  @apply text-base font-semibold;
+  font-family: var(--font-brand);
 }
 
 .sidebar__item--level-1 {

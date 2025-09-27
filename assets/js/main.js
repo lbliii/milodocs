@@ -47,6 +47,7 @@ async function initializeMiloDocs() {
     // Setup global utilities
     await setupGlobalEnhancements();
     
+    
     log.info('MiloDocs fully initialized');
     log.debug('Debug utilities available:');
     log.debug('  - window.resetNavigation() - Reset sidebar state');
@@ -170,6 +171,7 @@ if (typeof window !== 'undefined') {
     log.info(`Reinitialized ${count} components`);
     return count;
   };
+  
   
   // Debug function specifically for testing static navigation
   window.testStaticNavigation = () => {

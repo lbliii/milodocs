@@ -1,5 +1,5 @@
 {{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
+  {{- partialCached "navigation/topbar/main.html" . .Section -}}
 {{- end -}}
 
 {{- define "sidebar-left" -}}

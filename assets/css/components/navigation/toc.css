@@ -60,7 +60,7 @@
 }
 
 .toc ul ul {
-  @apply pl-4 mt-2 border-l border-opacity-20;
+  @apply pl-4 mt-2 border-l border-gray-300/20;
   border-color: var(--color-border-primary);
 }
 

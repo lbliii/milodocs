@@ -1,0 +1,111 @@
+{{/* Hugo Native Tailwind CSS Processing - New approach for Tailwind 4.x */}}
+{{- $env := hugo.Environment -}}
+{{- $isProductionBuild := or hugo.IsProduction (in (slice "nvidia" "enterprise" "open-source") hugo.Environment) -}}
+
+{{/* Use Hugo's native Tailwind CSS processing */}}
+{{- with resources.Get "css/styles.css" -}}
+  {{- $opts := dict "minify" $isProductionBuild -}}
+  {{- with . | css.TailwindCSS $opts -}}
+    {{- if $isProductionBuild -}}
+      {{- $optimized := . | fingerprint "sha512" -}}
+      {{- if eq hugo.Environment "offline" -}}
+        <link rel="stylesheet" href="{{ $optimized.RelPermalink }}" id="main-css">
+      {{- else -}}
+        <link rel="stylesheet" href="{{ $optimized.RelPermalink }}" integrity="{{ $optimized.Data.Integrity }}" crossorigin="anonymous" id="main-css">
+      {{- end -}}
+    {{- else -}}
+      <link rel="stylesheet" href="{{ .RelPermalink }}" id="main-css">
+      {{- if site.Params.debug -}}
+        <!-- CSS: Hugo native Tailwind processing for {{ hugo.Environment }} environment -->
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- warnf "CSS: styles.css not found for Hugo native processing" -}}
+{{- end -}}
+
+{{/* Critical font preloading with environment-specific fonts */}}
+{{- if and (eq $env "nvidia") (ne $env "offline") -}}
+  {{/* NVIDIA: Preload critical brand fonts for optimal performance (skip in offline) */}}
+  <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/var/NVIDIASansVF_W_Wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="https://images.nvidia.com/etc/designs/nvidiaGDC/clientlibs_base/fonts/nvidia-sans/GLOBAL/NVIDIASans_W_Rg.woff2" as="font" type="font/woff2" crossorigin>
+  
+  {{/* Load NVIDIA-specific fonts */}}
+  {{- $envFonts := resources.Get "css/fonts-nvidia.css" -}}
+  {{- if $envFonts -}}
+    {{- if $isProductionBuild -}}
+      {{- $envFontsOptimized := $envFonts | minify | fingerprint "sha512" -}}
+      <link rel="stylesheet" href="{{ $envFontsOptimized.RelPermalink }}" integrity="{{ $envFontsOptimized.Data.Integrity }}" crossorigin="anonymous">
+    {{- else -}}
+      <link rel="stylesheet" href="{{ $envFonts.RelPermalink }}">
+    {{- end -}}
+  {{- else -}}
+    {{- warnf "Environment CSS: fonts-nvidia.css not found, falling back to default fonts" -}}
+  {{- end -}}
+{{- else if ne $env "offline" -}}
+  {{/* Default: Load standard web fonts */}}
+  {{- $defaultFonts := resources.Get "css/fonts.css" -}}
+  {{- if $defaultFonts -}}
+    {{- if $isProductionBuild -}}
+      {{- $defaultFontsOptimized := $defaultFonts | minify | fingerprint "sha512" -}}
+      <link rel="stylesheet" href="{{ $defaultFontsOptimized.RelPermalink }}" integrity="{{ $defaultFontsOptimized.Data.Integrity }}" crossorigin="anonymous">
+    {{- else -}}
+      <link rel="stylesheet" href="{{ $defaultFonts.RelPermalink }}">
+    {{- end -}}
+  {{- else -}}
+    {{- warnf "Environment CSS: fonts.css not found" -}}
+  {{- end -}}
+{{- else -}}
+  {{/* Offline: Use system fonts only */}}
+  {{- $offlineFonts := resources.Get "css/fonts-offline.css" -}}
+  {{- if $offlineFonts -}}
+    <link rel="stylesheet" href="{{ $offlineFonts.RelPermalink }}">
+  {{- end -}}
+{{- end -}}
+
+{{/* Environment-specific color schemes */}}
+{{- $colorCSS := "" -}}
+{{- if eq $env "open-source" -}}
+  {{- $colorCSS = resources.Get "css/colors-opensource.css" -}}
+{{- else if eq $env "nvidia" -}}
+  {{- $colorCSS = resources.Get "css/colors-nvidia.css" -}}
+{{- else if eq $env "enterprise" -}}
+  {{- $colorCSS = resources.Get "css/colors-enterprise.css" -}}
+{{- else -}}
+  {{- $colorCSS = resources.Get "css/colors.css" -}}
+{{- end -}}
+
+{{- if $colorCSS -}}
+  {{- if $isProductionBuild -}}
+    {{- $colorOptimized := $colorCSS | minify | fingerprint "sha512" -}}
+    <link rel="stylesheet" href="{{ $colorOptimized.RelPermalink }}" integrity="{{ $colorOptimized.Data.Integrity }}" crossorigin="anonymous">
+  {{- else -}}
+    <link rel="stylesheet" href="{{ $colorCSS.RelPermalink }}">
+  {{- end -}}
+{{- end -}}
+
+{{/* Environment-specific CSS custom properties for JavaScript integration */}}
+<style>
+  :root {
+    --hugo-environment: "{{ hugo.Environment }}";
+    --hugo-build: "{{ cond $isProductionBuild "production" "development" }}";
+    --theme-version: "{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}";
+  }
+  
+  {{- if eq $env "nvidia" -}}
+  /* Prevent font loading flash by ensuring smooth transitions */
+  .fonts-loading body, .fonts-loading main {
+    visibility: hidden;
+  }
+  
+  .fonts-loaded body, .fonts-loaded main {
+    visibility: visible;
+  }
+  {{- end -}}
+</style>
+
+{{- if eq $env "nvidia" -}}
+  {{/* Environment-specific font loading optimization */}}
+  {{- $fontInit := resources.Get "js/fonts-init.js" | js.Build (dict "target" "es2018" "format" "iife") -}}
+  <script src="{{ $fontInit.RelPermalink }}" defer></script>
+{{- end -}}

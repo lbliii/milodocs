@@ -1,3 +1,16 @@
 hugoVersion:
   extended: true
   min: "0.146.0"
+
+# Asset and content mounts for theme management
+mounts:
+  - source: "assets"
+    target: "assets"
+  - source: "static"
+    target: "static"
+  - source: "content"
+    target: "content"
+  # Mount hugo_stats.json for CSS optimization
+  - source: "hugo_stats.json"
+    target: "assets/notwatching/hugo_stats.json"
+    disableWatch: true

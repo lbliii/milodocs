@@ -50,8 +50,20 @@
 
 /* Resource Card Styles */
 .card--resource {
-  @apply card;
-  /* padding: 1.5rem; */
+  /* Expand card styles inline */
+  position: relative;
+  background: var(--glass-bg);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  transition:
+    transform var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  /* Resource card specific styles */
   padding: 1rem;
   margin-bottom: 1rem;
 }
@@ -173,7 +185,20 @@
 
 /* Article Card Styles */
 .article-card {
-  @apply card;
+  /* Expand card styles inline */
+  position: relative;
+  background: var(--glass-bg);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  transition:
+    transform var(--timing-medium) var(--easing-standard),
+    border-color var(--timing-medium) var(--easing-standard),
+    box-shadow var(--timing-medium) var(--easing-standard);
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  /* Article card specific styles */
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   display: flex;
