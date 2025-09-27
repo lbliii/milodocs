@@ -20,14 +20,14 @@
 
     <!-- Enhanced Hero Section -->
     <div class="tutorial-overview-hero">
-        <div class="max-w-4xl mx-auto text-center p-8">
+        <div class="mx-auto text-center p-8">
             {{/* Only show frontmatter title if content doesn't start with H1 */}}
             {{- $rawContent := .RawContent -}}
             {{- $startsWithH1 := hasPrefix (strings.TrimSpace $rawContent) "# " -}}
             {{- if not $startsWithH1 -}}
                 <h1 class="text-4xl lg:text-5xl font-black text-text-primary mb-6">{{.Title}}</h1>
             {{- end -}}
-            <p class="text-xl text-text-primary/80 mb-6 max-w-3xl mx-auto leading-relaxed">{{.Description}}</p>
+            <p class="text-xl text-text-primary/80 mb-6 mx-auto leading-relaxed">{{.Description}}</p>
             
             <!-- Tutorial Overview Stats -->
             <div class="flex flex-wrap justify-center gap-6 mb-8">
@@ -129,13 +129,13 @@
     </div>
     
     <!-- Tutorial Content -->
-    <div class="max-w-4xl mx-auto p-8">
+    <div class="mx-auto p-8">
         {{ .Content }}
     </div>
     
     <!-- Prerequisites Section (if any) -->
     {{with .Params.prerequisites}}
-    <div class="step-validation max-w-4xl mx-auto">
+    <div class="step-validation mx-auto">
         <div class="validation-checklist">
             <h4>Before starting this tutorial, ensure you have:</h4>
             {{range .}}

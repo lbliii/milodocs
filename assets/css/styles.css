@@ -3,10 +3,7 @@
 /* Source Hugo stats for optimal CSS purging */
 @source "hugo_stats.json";
 
-/* Include Tailwind layers - required for Tailwind 4.x */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind layers are included automatically via @import "tailwindcss" in Tailwind 4.x */
 
 /* Import component CSS files - Migrated to Tailwind 4.x */
 @import "architecture/index.css";
@@ -48,6 +45,22 @@
   --color-primary: var(--color-brand-600);
   --color-secondary: var(--color-gray-600);
   --color-accent: var(--color-accent-500);
+
+  /* Semantic color utilities - Required for Tailwind 4.x utility generation */
+  /* Light mode defaults - will be overridden by environment-specific CSS */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverse: #ffffff;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+  --color-bg-inverse: #111827;
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f9fafb;
+  --color-surface-active: #f3f4f6;
   
   /* Brand color palette */
   --color-brand-50: #f0f9ff;

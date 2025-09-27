@@ -7,13 +7,13 @@
 {{- end -}}
 
 {{- define "breadcrumbs" -}}
-  <div class="mb-4 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+  <div class="mb-4">
       {{partial "article/header.html" . }}
   </div>
 {{- end -}}
 
 {{ define "content" }}
-  <article class="prose mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+  <article class="prose">
     {{/* Content status warnings */}}
     {{- if site.Params.article.statusWarnings.display -}}
       {{- partial "article/status-warnings.html" . -}}

@@ -28,8 +28,7 @@
 @import "../components/code.css";
 @import "../components/object-model.css";
 
-@tailwind base;
-@tailwind components;
+/* Tailwind 4.x: @tailwind directives removed - using @import approach instead */
 
 @layer components {
   /* Responsive auto-fit grid for cards/tiles */
@@ -231,4 +230,4 @@
   }
 }
 
-@tailwind utilities;
+/* Tailwind utilities included automatically in Tailwind 4.x */

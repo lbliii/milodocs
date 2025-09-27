@@ -13,10 +13,10 @@
 {{- end -}}
 
 {{- define "list" -}}
-  <header class="mb-6 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+  <header class="mb-6">
    <h1 class="text-3xl font-bold text-text-primary mb-4">{{ .Title }}</h1>
     {{- with .Content -}}
-      <div class="prose max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+      <div class="prose">
         {{ . }}
       </div>
     {{- end -}}
