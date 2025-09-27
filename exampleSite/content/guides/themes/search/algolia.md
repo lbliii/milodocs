@@ -99,7 +99,7 @@ Let's create our search results container element. This element will be hidden b
    ```
 3. Add the partial to your theme's `layouts/_default/baseof.html` layout file. Here's where I've put mine:
    ```html
-     <main class="max-w-screen-xl 2xl:max-w-screen-2xl mx-auto flex">
+     <main class="max-w-(--breakpoint-xl) 2xl:max-w-(--breakpoint-2xl) mx-auto flex">
        {{partial "navigation/sidebar-left.html" . }}
        <div id="pageContainer" class="w-full lg:w-3/5"> <!-- Make sure your page container has an id for targeting -->
          {{- if .IsHome}}{{ block "home" . }}{{ end }}{{else}}{{ block "main" . }}{{ end }}{{- end}}

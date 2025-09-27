@@ -9,7 +9,7 @@ This theme centralizes styling in CSS variables (tokens) and small component cla
 ## Where tokens live
 - Architecture: `assets/css/architecture/`
   - `colors*.css`: color palettes and brand tokens
-  - `elevation-system.css`: shadow/elevation tokens (e.g., `--elevation-2`, `--elevation-hover-4`)
+  - `elevation-system.css`: shadow tokens (e.g., `--elevation-2`, `--elevation-hover-4`)
   - `animation-system.css`: timing/easing/transform tokens
   - `layout-foundations.css`: spacing/width/z-index and layout tokens
 

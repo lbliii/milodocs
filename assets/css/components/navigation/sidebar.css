@@ -259,7 +259,8 @@ li:has(> .sidebar-item > .sidebar-item__toggle[aria-expanded="false"]) > .nested
 .sidebar__item--level-1 .sidebar__text {
   /* Step down one size from text-lg and slightly reduce weight */
   /* @apply text-lg font-brand font-bold; */
-  @apply text-base font-brand font-semibold;
+  @apply text-base font-semibold;
+  font-family: "NVIDIA", "Arial", "Helvetica", sans-serif;
 }
 
 .sidebar__item--level-1 {

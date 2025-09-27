@@ -580,7 +580,7 @@ export class NotificationManager {
       }
 
       .notification__icon {
-        flex-shrink: 0;
+        shrink: 0;
         margin-top: 0.125rem;
       }
 

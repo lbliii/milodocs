@@ -1,7 +1,7 @@
 /* Cards Component - Resource cards, content metadata, and generic card styles */
 
 /* Base Card Styles */
-.card {
+html:not(.no-transitions) .card {
   position: relative;
   /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
   background: var(--glass-bg);
@@ -15,7 +15,24 @@
   transition:
     transform var(--timing-medium) var(--easing-standard),
     border-color var(--timing-medium) var(--easing-standard),
-    box-shadow var(--timing-medium) var(--easing-standard);
+    box-shadow var(--timing-medium) var(--easing-standard),
+    background-color var(--timing-medium) var(--easing-standard),
+    color var(--timing-medium) var(--easing-standard);
+  overflow: hidden;
+  /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+  box-shadow: var(--glass-shadow);
+}
+
+.card {
+  position: relative;
+  /* background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg-secondary) 100%); */
+  background: var(--glass-bg);
+  border-radius: var(--radius-card);
+  /* border: 1px solid var(--color-border-primary); */
+  border: 1px solid var(--glass-border-color);
+  /* backdrop-filter: blur(10px); */
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   overflow: hidden;
   /* box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.1); */
   box-shadow: var(--glass-shadow);
@@ -50,7 +67,14 @@
 
 /* Resource Card Styles */
 .card--resource {
-  @apply card;
+  position: relative;
+  background: var(--glass-bg);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
   /* padding: 1.5rem; */
   padding: 1rem;
   margin-bottom: 1rem;
@@ -173,7 +197,14 @@
 
 /* Article Card Styles */
 .article-card {
-  @apply card;
+  position: relative;
+  background: var(--glass-bg);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--glass-border-color);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   display: flex;

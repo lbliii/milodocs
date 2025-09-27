@@ -1,35 +1,34 @@
 /* This file is used to compile the main.css file. */
 /* Import component CSS files - MUST be first! */
 
-@import "../architecture/index.css";
+@import '../architecture/index.css';
 
-@import "../components/buttons.css";
-@import "../components/tables.css";
-@import "../components/notice.css";
-@import "../components/navigation.css";
-@import "../components/navigation-api.css";
-@import "../components/breadcrumbs.css";
-@import "../components/search.css";
-@import "../components/chat.css";
-@import "../components/article-header.css";
-@import "../components/article/related-content.css";
-@import "../components/article/page-resources.css";
-@import "../components/tiles.css";
-@import "../components/child-links.css";
-@import "../components/cards.css";
-@import "../components/glossary.css";
-@import "../components/quicklinks.css";
-@import "../components/next-prev.css";
-@import "../components/tutorial.css";
-@import "../components/toast.css";
-@import "../components/notebook.css";
-@import "../components/openapi/index.css";
-@import "../components/tabs.css";
-@import "../components/code.css";
-@import "../components/object-model.css";
+@import '../components/buttons.css';
+@import '../components/tables.css';
+@import '../components/notice.css';
+@import '../components/navigation.css';
+@import '../components/navigation-api.css';
+@import '../components/breadcrumbs.css';
+@import '../components/search.css';
+@import '../components/chat.css';
+@import '../components/article-header.css';
+@import '../components/article/related-content.css';
+@import '../components/article/page-resources.css';
+@import '../components/tiles.css';
+@import '../components/child-links.css';
+@import '../components/cards.css';
+@import '../components/glossary.css';
+@import '../components/quicklinks.css';
+@import '../components/next-prev.css';
+@import '../components/tutorial.css';
+@import '../components/toast.css';
+@import '../components/notebook.css';
+@import '../components/openapi/index.css';
+@import '../components/tabs.css';
+@import '../components/code.css';
+@import '../components/object-model.css';
 
-@tailwind base;
-@tailwind components;
+@import 'tailwindcss';
 
 @layer components {
   /* Responsive auto-fit grid for cards/tiles */
@@ -38,7 +37,7 @@
   }
   @screen md {
     .grid-autofit {
-      gap: theme('spacing.8');
+      gap: --spacing(8);
     }
   }
 
@@ -80,7 +79,6 @@
   /* Apply transitions only to specific elements that need them */
   html:not(.no-transitions) .btn,
   html:not(.no-transitions) .nav-link,
-  html:not(.no-transitions) .card,
   html:not(.no-transitions) .collapse__header,
   html:not(.no-transitions) .search-container,
   html:not(.no-transitions) .toast-notification,
@@ -158,7 +156,7 @@
 
   /* Global Font Family & Body Text - Uses brand font with fallbacks */
   main { 
-    @apply font-brand;
+    font-family: "NVIDIA", "Arial", "Helvetica", sans-serif;
   }
   
   /* Improve font loading consistency between dev and production */
@@ -221,7 +219,8 @@
   }
 
   .article-content strong {
-    @apply font-brand font-semibold;
+    font-family: "NVIDIA", "Arial", "Helvetica", sans-serif;
+    font-weight: 600;
   }
 
   /* List Styles */
@@ -230,4 +229,3 @@
   }
 }
 
-@tailwind utilities;

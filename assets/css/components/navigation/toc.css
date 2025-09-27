@@ -60,8 +60,8 @@
 }
 
 .toc ul ul {
-  @apply pl-4 mt-2 border-l border-opacity-20;
-  border-color: var(--color-border-primary);
+  @apply pl-4 mt-2 border-l;
+  border-color: color-mix(in srgb, var(--color-border-primary) 20%, transparent);
 }
 
 /* TOC Link Styling */

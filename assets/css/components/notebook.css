@@ -251,7 +251,7 @@
 
 .notebook-cell--markdown .notebook-cell__number {
   background: color-mix(in srgb, rgb(134, 239, 172) 10%, transparent);
-  color: theme('colors.green.600');
+  color: #059669;
   border-color: color-mix(in srgb, rgb(134, 239, 172) 20%, transparent);
 }
 
@@ -266,19 +266,19 @@
 
 .notebook-cell__status--executed {
   background: color-mix(in srgb, rgb(34, 197, 94) 10%, transparent);
-  color: theme('colors.green.600');
+  color: #059669;
   border: 1px solid color-mix(in srgb, rgb(34, 197, 94) 20%, transparent);
 }
 
 .notebook-cell__status--pending {
   background: color-mix(in srgb, rgb(251, 191, 36) 10%, transparent);
-  color: theme('colors.amber.600');
+  color: #d97706;
   border: 1px solid color-mix(in srgb, rgb(251, 191, 36) 20%, transparent);
 }
 
 .notebook-cell__status--error {
   background: color-mix(in srgb, rgb(239, 68, 68) 10%, transparent);
-  color: theme('colors.red.600');
+  color: #dc2626;
   border: 1px solid color-mix(in srgb, rgb(239, 68, 68) 20%, transparent);
 }
 
@@ -339,7 +339,7 @@
    ======================================== */
 
 .notebook-cell--markdown .notebook-cell__type-icon {
-  color: theme('colors.green.600');
+  color: #059669;
 }
 
 .notebook-cell__markdown-content {
@@ -473,7 +473,7 @@
 /* Stream Output */
 .notebook-cell__output--stream {
   background: var(--color-bg-secondary);
-  color: theme('colors.green.400');
+  color: #4ade80;
   padding: 1rem;
   font-family: theme('fontFamily.mono');
   font-size: 0.875rem;
@@ -537,9 +537,9 @@
 
 /* Error Output */
 .notebook-cell__output--error {
-  background: theme('colors.red.900');
-  color: theme('colors.red.100');
-  border-color: theme('colors.red.700');
+  background: #7f1d1d;
+  color: #fee2e2;
+  border-color: #b91c1c;
   padding: 1rem;
 }
 
@@ -547,7 +547,7 @@
   font-weight: 700;
   font-size: 1rem;
   margin-bottom: 0.5rem;
-  color: theme('colors.red.300');
+  color: #fca5a5;
 }
 
 .notebook-cell__error-value {
@@ -565,7 +565,7 @@
 
 .notebook-cell__traceback-line {
   padding: 0.125rem 0;
-  border-inline-start: 2px solid theme('colors.red.500');
+  border-inline-start: 2px solid #ef4444;
   padding-inline-start: 0.75rem;
   margin: 0.25rem 0;
 }
@@ -642,7 +642,7 @@
    ======================================== */
 
 .notebook-cell--raw .notebook-cell__type-icon {
-  color: theme('colors.purple.600');
+  color: #9333ea;
 }
 
 .notebook-cell__raw-content {
@@ -1085,17 +1085,17 @@
 
 @media (prefers-contrast: high) {
   .notebook__cells {
-    --notebook-border: theme('colors.gray.900');
-    --cell-border: theme('colors.gray.800');
-    --cell-hover-border: theme('colors.blue.700');
-    --cell-active-border: theme('colors.blue.600');
+    --notebook-border: #111827;
+    --cell-border: #1f2937;
+    --cell-hover-border: #1d4ed8;
+    --cell-active-border: #2563eb;
   }
   
   .dark .notebook__cells {
-    --notebook-border: theme('colors.gray.100');
-    --cell-border: theme('colors.gray.300');
-    --cell-hover-border: theme('colors.blue.300');
-    --cell-active-border: theme('colors.blue.400');
+    --notebook-border: #f3f4f6;
+    --cell-border: #d1d5db;
+    --cell-hover-border: #93c5fd;
+    --cell-active-border: #60a5fa;
   }
 }
 
