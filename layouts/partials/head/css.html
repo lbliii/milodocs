@@ -2,7 +2,7 @@
 {{/* Build CSS resources array */}}
 {{- $cssResources := slice -}}
 
-{{/* Add main CSS - Use Hugo's native TailwindCSS processing */}}
+{{/* Add main CSS - Use Hugo's native TailwindCSS v4 processing */}}
 {{- $mainCSS := resources.Get "css/main.css" -}}
 {{- if $mainCSS -}}
   {{/* Use Hugo's native TailwindCSS v4 processing */}}
@@ -10,14 +10,7 @@
   {{- $processedCSS := $mainCSS | css.TailwindCSS $opts -}}
   {{- $cssResources = $cssResources | append $processedCSS -}}
 {{- else -}}
-  {{/* Fallback to legacy CSS processing if TailwindCSS source not available */}}
-  {{- $fallbackCSS := resources.Get "css/src/input.css" -}}
-  {{- if $fallbackCSS -}}
-    {{- $processedCSS := $fallbackCSS | css.PostCSS -}}
-    {{- $cssResources = $cssResources | append $processedCSS -}}
-  {{- else -}}
-    {{- warnf "CSS: Neither main.css nor src/input.css found" -}}
-  {{- end -}}
+  {{- warnf "CSS: main.css not found - TailwindCSS v4 processing disabled" -}}
 {{- end -}}
 
 {{/* Environment-specific resource loading with advanced optimization */}}
