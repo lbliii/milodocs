@@ -1,17 +1,58 @@
-<ul class="space-y-1 {{ if eq .level 1 }}pl-0{{ else }}pl-2{{ end }} list-none" data-level="{{ .level }}">
-    {{ range .dir }}
-    {{ if and (not .Params.hidden) }}
-    <li class="flex flex-col mr-2">
-        <!-- Include the LinkItem partial -->
-        {{ partial "navigation/link-item.html" (dict "page" . "current" $.current "level" $.level) }}
+{{/* Navigation Directory Tree */}}
+<ul class="nav-list nav-list--level-{{ .level }}" 
+    data-nav-level="{{ .level }}">
+  
+  {{ range .sections }}
+    {{ if not .Params.hidden }}
+      <li class="nav-item">
         
-        <!-- Check for nested pages and recursively include the Directory partial -->
+        {{/* Section/page link */}}
+        <div class="nav-item-content">
+          
+          {{/* Section link */}}
+          <a href="{{ .RelPermalink }}" 
+             class="nav-link{{ if eq .RelPermalink $.current.RelPermalink }} nav-link--current{{ end }}"
+             {{ if eq .RelPermalink $.current.RelPermalink }}aria-current="page"{{ end }}>
+            
+            {{/* Icon (if specified) */}}
+            {{ with .Params.nav_icon }}
+              <span class="nav-icon" aria-hidden="true">{{ . }}</span>
+            {{ end }}
+            
+            {{/* Section title */}}
+            <span class="nav-text">{{ .Title }}</span>
+            
+            {{/* Page count (for sections) */}}
+            {{ if and .Pages (site.Params.navigation.showCounts) }}
+              <span class="nav-count" aria-label="{{ len .Pages }} pages">{{ len .Pages }}</span>
+            {{ end }}
+          </a>
+          
+          {{/* Expand/collapse toggle (if has children) */}}
+          {{ if .Pages }}
+            <button type="button" 
+                    class="nav-toggle"
+                    aria-expanded="{{ if or (eq .RelPermalink $.current.RelPermalink) ($.current.IsDescendant .) }}true{{ else }}false{{ end }}"
+                    aria-controls="nav-section-{{ .RelPermalink | anchorize }}"
+                    aria-label="Toggle {{ .Title }} section"
+                    data-nav-toggle>
+              <span class="nav-toggle-icon" aria-hidden="true">▶</span>
+            </button>
+          {{ end }}
+          
+        </div>
+        
+        {{/* Child pages */}}
         {{ if .Pages }}
-            <div class="nested-content" data-collapse-content>
-                {{ partial "navigation/directory.html" (dict "dir" .Pages "current" $.current "level" (add $.level 1)) }}
-            </div>
+          <div id="nav-section-{{ .RelPermalink | anchorize }}"
+               class="nav-children{{ if not (or (eq .RelPermalink $.current.RelPermalink) ($.current.IsDescendant .)) }} nav-children--collapsed{{ end }}"
+               data-nav-children>
+            {{ partial "navigation/directory.html" (dict "sections" .Pages "current" $.current "level" (add $.level 1)) }}
+          </div>
         {{ end }}
-    </li>
+        
+      </li>
     {{ end }}
-    {{ end }}
+  {{ end }}
+  
 </ul>

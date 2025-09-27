@@ -1,83 +1,176 @@
 {{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
+  {{ partial "navigation/topbar/main.html" . }}
 {{- end -}}
 
 {{- define "sidebar-left" -}}
-  {{- partial "navigation/sidebar-left.html" . -}}
+  {{ partial "navigation/sidebar-left.html" . }}
 {{- end -}}
 
 {{- define "content" -}}
-{{- $apiData := .Params.api_data -}}
-{{- $currentMethod := .Params.endpoint.method -}}
-{{- $currentPath := .Params.endpoint.path -}}
-{{- $currentTag := .Params.endpoint.tag -}}
-{{- $operationId := .Params.endpoint.operationId -}}
-{{- $operation := .Params.endpoint.operation -}}
+{{ $apiData := .Params.api_data }}
+{{ $currentMethod := .Params.endpoint.method }}
+{{ $currentPath := .Params.endpoint.path }}
+{{ $currentTag := .Params.endpoint.tag }}
+{{ $operationId := .Params.endpoint.operationId }}
+{{ $operation := .Params.endpoint.operation }}
 
-{{- if not $apiData -}}
-  <div class="error-message">
-    <h2>API Data Not Found</h2>
-    <p>Could not load API data from page front matter.</p>
-  </div>
-  {{ return }}
-{{- end -}}
-
-{{/* Generate metadata and data attributes */}}
-{{ $metadata := partial "openapi/single/metadata.html" (dict 
-    "operation" $operation 
-    "currentMethod" $currentMethod 
-    "currentPath" $currentPath 
-    "operationId" $operationId) }}
-
-<article id="articleContent"
-         class="article-content {{ $metadata.articleData.class }}"
-         data-component="{{ $metadata.articleData.dataComponent }}"
-         data-viewer-type="{{ $metadata.articleData.dataViewerType }}"
-         data-method="{{ $metadata.articleData.dataMethod }}"
-         data-has-parameters="{{ $metadata.articleData.dataHasParameters }}"
-         data-has-request-body="{{ $metadata.articleData.dataHasRequestBody }}"
-         data-has-responses="{{ $metadata.articleData.dataHasResponses }}"
-         data-has-security="{{ $metadata.articleData.dataHasSecurity }}"
-         data-parameter-count="{{ $metadata.articleData.dataParameterCount }}"
-         data-response-count="{{ $metadata.articleData.dataResponseCount }}"
-         data-has-summary="{{ $metadata.articleData.dataHasSummary }}"
-         data-has-description="{{ $metadata.articleData.dataHasDescription }}">
-  
-  <!-- Endpoint Header -->
-  {{ partial "openapi/single/header.html" (dict 
-      "operation" $operation
-      "currentMethod" $currentMethod 
-      "currentPath" $currentPath 
-      "currentTag" $currentTag 
-      "apiData" $apiData 
-      "page" .) }}
-  
-  <!-- Endpoint Content -->
-  <div class="api-endpoint-content">
-    <div class="endpoint-item" 
-         id="{{ $metadata.endpointData.id }}"
-         data-component="{{ $metadata.endpointData.dataComponent }}"
-         data-method="{{ $metadata.endpointData.dataMethod }}"
-         data-path="{{ $metadata.endpointData.dataPath }}"
-         data-operation-id="{{ $metadata.endpointData.dataOperationId }}"
-         data-has-parameters="{{ $metadata.endpointData.dataHasParameters }}"
-         data-has-request-body="{{ $metadata.endpointData.dataHasRequestBody }}"
-         data-has-responses="{{ $metadata.endpointData.dataHasResponses }}"
-         data-has-security="{{ $metadata.endpointData.dataHasSecurity }}"
-         data-has-examples="{{ $metadata.endpointData.dataHasExamples }}">
-      
-      {{ partial "openapi/single/content.html" (dict 
-          "operation" $operation
-          "currentMethod" $currentMethod 
-          "currentPath" $currentPath 
-          "apiData" $apiData 
-          "endpointId" $metadata.endpointId) }}
+{{ if not $apiData }}
+  <div class="api-error" role="alert">
+    <div class="error-content">
+      <h2 class="error-title">API Data Not Found</h2>
+      <p class="error-message">Could not load API data from page front matter.</p>
+      <p class="error-help">Check that the <code>api_data</code> parameter is correctly configured.</p>
     </div>
   </div>
+  {{ return }}
+{{ end }}
 
+<article class="openapi-endpoint" 
+         data-component="openapi-endpoint"
+         data-method="{{ $currentMethod | lower }}"
+         data-path="{{ $currentPath }}"
+         data-operation-id="{{ $operationId }}"
+         itemscope 
+         itemtype="https://schema.org/APIReference">
+  
+  {{/* Endpoint Header */}}
+  <header class="endpoint-header">
+    
+    {{/* Method and Path */}}
+    <div class="endpoint-signature">
+      <span class="endpoint-method endpoint-method--{{ $currentMethod | lower }}"
+            data-method="{{ $currentMethod | upper }}">
+        {{ $currentMethod | upper }}
+      </span>
+      <code class="endpoint-path" itemprop="url">{{ $currentPath }}</code>
+    </div>
+    
+    {{/* Title and Summary */}}
+    <div class="endpoint-info">
+      {{ with $operation.summary }}
+        <h1 class="endpoint-title" itemprop="name">{{ . }}</h1>
+      {{ end }}
+      
+      {{ with $operation.description }}
+        <div class="endpoint-description" itemprop="description">
+          {{ $.Page.RenderString . }}
+        </div>
+      {{ end }}
+      
+      {{/* Tags and Categories */}}
+      {{ with $operation.tags }}
+        <div class="endpoint-tags">
+          <span class="tags-label">Tags:</span>
+          {{ range . }}
+            <span class="endpoint-tag">{{ . }}</span>
+          {{ end }}
+        </div>
+      {{ end }}
+      
+      {{/* Operation ID */}}
+      {{ with $operationId }}
+        <div class="endpoint-meta">
+          <span class="meta-label">Operation ID:</span>
+          <code class="operation-id">{{ . }}</code>
+        </div>
+      {{ end }}
+    </div>
+    
+  </header>
+  
+  {{/* Endpoint Content */}}
+  <div class="endpoint-content">
+    
+    {{/* Parameters Section */}}
+    {{ with $operation.parameters }}
+      <section class="endpoint-section endpoint-parameters">
+        <h2 class="section-title">Parameters</h2>
+        
+        {{ $pathParams := where . "in" "path" }}
+        {{ $queryParams := where . "in" "query" }}
+        {{ $headerParams := where . "in" "header" }}
+        
+        {{ if $pathParams }}
+          <div class="parameter-group">
+            <h3 class="parameter-group-title">Path Parameters</h3>
+            {{ partial "openapi/parameters-table.html" $pathParams }}
+          </div>
+        {{ end }}
+        
+        {{ if $queryParams }}
+          <div class="parameter-group">
+            <h3 class="parameter-group-title">Query Parameters</h3>
+            {{ partial "openapi/parameters-table.html" $queryParams }}
+          </div>
+        {{ end }}
+        
+        {{ if $headerParams }}
+          <div class="parameter-group">
+            <h3 class="parameter-group-title">Header Parameters</h3>
+            {{ partial "openapi/parameters-table.html" $headerParams }}
+          </div>
+        {{ end }}
+        
+      </section>
+    {{ end }}
+    
+    {{/* Request Body Section */}}
+    {{ with $operation.requestBody }}
+      <section class="endpoint-section endpoint-request-body">
+        <h2 class="section-title">Request Body</h2>
+        {{ partial "openapi/request-body.html" . }}
+      </section>
+    {{ end }}
+    
+    {{/* Responses Section */}}
+    {{ with $operation.responses }}
+      <section class="endpoint-section endpoint-responses">
+        <h2 class="section-title">Responses</h2>
+        {{ partial "openapi/responses.html" . }}
+      </section>
+    {{ end }}
+    
+    {{/* Security Section */}}
+    {{ with $operation.security }}
+      <section class="endpoint-section endpoint-security">
+        <h2 class="section-title">Authentication</h2>
+        {{ partial "openapi/security.html" . }}
+      </section>
+    {{ end }}
+    
+    {{/* Examples Section */}}
+    <section class="endpoint-section endpoint-examples">
+      <h2 class="section-title">Try It Out</h2>
+      <div class="api-playground" data-component="api-playground">
+        <div class="playground-controls">
+          <button type="button" 
+                  class="playground-button playground-button--try"
+                  data-action="try-request">
+            <span class="button-icon" aria-hidden="true">▶️</span>
+            <span class="button-text">Send Request</span>
+          </button>
+          
+          <button type="button" 
+                  class="playground-button playground-button--copy"
+                  data-action="copy-curl">
+            <span class="button-icon" aria-hidden="true">📋</span>
+            <span class="button-text">Copy as cURL</span>
+          </button>
+        </div>
+        
+        <div class="playground-output" data-output-container>
+          <div class="output-placeholder">
+            <p>Click "Send Request" to test this endpoint</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+  
 </article>
 {{- end -}}
 
 {{- define "sidebar-right" -}}
-  {{- partial "navigation/sidebar-right.html" . -}}
+  {{ partial "navigation/sidebar-right.html" . }}
 {{- end -}}

@@ -1,33 +1,52 @@
+{{/* Notice Shortcode - Alert boxes for important information */}}
 {{ $type := .Get 0 | default "info" }}
 {{ $title := .Get 1 }}
 {{ $isAlert := or (eq $type "danger") (or (eq $type "warning") (eq $type "security")) }}
 {{ $role := cond $isAlert "alert" "note" }}
-<div class="notice notice--{{ $type }} group"
+
+<div class="notice notice--{{ $type }}" 
      data-component="notice"
      data-notice-type="{{ $type }}"
      role="{{ $role }}"{{ if $isAlert }} aria-live="polite"{{ end }}>
-      <div class="notice__container">
-    <div class="notice__icon-wrapper">
-           {{- $iconName := "" -}}
-            {{- with $type -}}
-                {{- if eq . "danger" -}}{{ $iconName = "danger" }}
-                {{- else if eq . "warning" -}}{{ $iconName = "warning" }}
-                {{- else if eq . "security" -}}{{ $iconName = "security" }}
-                {{- else if eq . "info" -}}{{ $iconName = "info" }}
-                {{- else if eq . "note" -}}{{ $iconName = "note" }}
-                {{- else if eq . "tip" -}}{{ $iconName = "tip" }}
-                {{- else if eq . "snack" -}}{{ $iconName = "snack" }}
-                {{- end -}}
-            {{- end -}}
-           <img src="{{ printf "icons/notice/%s.svg" $iconName | relURL }}" class="notice__icon" alt="" aria-hidden="true">
-        </div>
-            <div class="notice__content">
-      {{- if $title -}}
-        <div class="notice__title">{{ $title }}</div>
-      {{- end -}}
-      <div class="notice__text">
-                {{ $.Page.RenderString .Inner }}
-            </div>
-        </div>
+  
+  <div class="notice-container">
+    
+    {{/* Notice icon */}}
+    <div class="notice-icon-wrapper">
+      {{ $iconName := "" }}
+      {{ if eq $type "danger" }}{{ $iconName = "danger" }}
+      {{ else if eq $type "warning" }}{{ $iconName = "warning" }}
+      {{ else if eq $type "security" }}{{ $iconName = "security" }}
+      {{ else if eq $type "info" }}{{ $iconName = "info" }}
+      {{ else if eq $type "note" }}{{ $iconName = "note" }}
+      {{ else if eq $type "tip" }}{{ $iconName = "tip" }}
+      {{ else if eq $type "success" }}{{ $iconName = "success" }}
+      {{ else }}{{ $iconName = "info" }}{{ end }}
+      
+      <span class="notice-icon notice-icon--{{ $iconName }}" 
+            aria-hidden="true">
+        {{ if eq $iconName "danger" }}❌
+        {{ else if eq $iconName "warning" }}⚠️
+        {{ else if eq $iconName "security" }}🔒
+        {{ else if eq $iconName "info" }}ℹ️
+        {{ else if eq $iconName "note" }}📝
+        {{ else if eq $iconName "tip" }}💡
+        {{ else if eq $iconName "success" }}✅
+        {{ else }}ℹ️{{ end }}
+      </span>
     </div>
+    
+    {{/* Notice content */}}
+    <div class="notice-content">
+      {{ if $title }}
+        <div class="notice-title">{{ $title }}</div>
+      {{ end }}
+      
+      <div class="notice-text">
+        {{ .Page.RenderString .Inner }}
+      </div>
+    </div>
+    
+  </div>
+  
 </div>

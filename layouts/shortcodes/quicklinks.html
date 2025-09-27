@@ -1,33 +1,171 @@
+{{/* Quicklinks Shortcode - Quick navigation cards */}}
+{{ $title := .Get "title" | default "Quick Links" }}
+{{ $links := .Inner | .Page.RenderString }}
 
-<section class="quicklinks" data-component="quicklinks-shortcode">
-    <div class="quicklinks__grid">
-        <div class="quicklinks__item">
-            <div class="quicklinks__header">
-                <img src="{{ "icons/light/star.svg" | relURL }}" alt="" class="icon quicklinks__icon">
-                <h3 class="quicklinks__title">Resources</h3>
-            </div>
-            <p class="quicklinks__description">Check out our repo or read the latest release notes.</p>
-            <div class="quicklinks__actions">
-                <a href="https://github.com/lbliii/milodocs" class="quicklinks__link">
-                    GitHub Repo
-                </a> 
-                {{- $releaseNotesPage := .Site.GetPage "/release-notes" -}}
-                {{- if $releaseNotesPage -}}
-                  <a href="{{ $releaseNotesPage.RelPermalink }}" class="quicklinks__link">
-                {{- else -}}
-                  <a href="{{ "/release-notes" | relURL }}" class="quicklinks__link">
-                {{- end -}}
-                    Release Notes
-                </a>
-            </div>
-        </div>
+<section class="quicklinks" 
+         data-component="quicklinks">
+  
+  <header class="quicklinks-header">
+    <h2 class="quicklinks-title">{{ $title }}</h2>
+  </header>
+  
+  <div class="quicklinks-grid">
+    
+    {{/* Resources card */}}
+    <div class="quicklink-card">
+      
+      <header class="quicklink-header">
+        <span class="quicklink-icon" aria-hidden="true">⭐</span>
+        <h3 class="quicklink-title">Resources</h3>
+      </header>
+      
+      <div class="quicklink-content">
+        <p class="quicklink-description">
+          Check out our repository or read the latest release notes.
+        </p>
         
-        <div class="quicklinks__item">
-            <div class="quicklinks__header">
-                <img src="{{ "icons/light/navigation.svg" | relURL }}" alt="" class="icon quicklinks__icon">
-                <h3 class="quicklinks__title">Example Tile</h3>
-            </div>
-            <p class="quicklinks__description">Put whatever you want here.</p>
+        <div class="quicklink-actions">
+          
+          {{ if site.Params.repository.url }}
+            <a href="{{ site.Params.repository.url }}" 
+               class="quicklink-action"
+               rel="noopener noreferrer"
+               target="_blank">
+              <span class="action-icon" aria-hidden="true">🔗</span>
+              <span class="action-text">GitHub Repo</span>
+            </a>
+          {{ end }}
+          
+          {{ $releaseNotesPage := .Site.GetPage "/release-notes" }}
+          {{ if $releaseNotesPage }}
+            <a href="{{ $releaseNotesPage.RelPermalink }}" 
+               class="quicklink-action">
+              <span class="action-icon" aria-hidden="true">📋</span>
+              <span class="action-text">Release Notes</span>
+            </a>
+          {{ end }}
+          
         </div>
+      </div>
+      
     </div>
+    
+    {{/* Documentation card */}}
+    <div class="quicklink-card">
+      
+      <header class="quicklink-header">
+        <span class="quicklink-icon" aria-hidden="true">📖</span>
+        <h3 class="quicklink-title">Documentation</h3>
+      </header>
+      
+      <div class="quicklink-content">
+        <p class="quicklink-description">
+          Get started with guides, API docs, and examples.
+        </p>
+        
+        <div class="quicklink-actions">
+          
+          {{ $getStartedPage := .Site.GetPage "/get-started" }}
+          {{ if $getStartedPage }}
+            <a href="{{ $getStartedPage.RelPermalink }}" 
+               class="quicklink-action">
+              <span class="action-icon" aria-hidden="true">🚀</span>
+              <span class="action-text">Get Started</span>
+            </a>
+          {{ end }}
+          
+          {{ $apiPage := .Site.GetPage "/api" }}
+          {{ if $apiPage }}
+            <a href="{{ $apiPage.RelPermalink }}" 
+               class="quicklink-action">
+              <span class="action-icon" aria-hidden="true">⚙️</span>
+              <span class="action-text">API Reference</span>
+            </a>
+          {{ end }}
+          
+        </div>
+      </div>
+      
+    </div>
+    
+    {{/* Community card */}}
+    <div class="quicklink-card">
+      
+      <header class="quicklink-header">
+        <span class="quicklink-icon" aria-hidden="true">👥</span>
+        <h3 class="quicklink-title">Community</h3>
+      </header>
+      
+      <div class="quicklink-content">
+        <p class="quicklink-description">
+          Join the community and get help from other users.
+        </p>
+        
+        <div class="quicklink-actions">
+          
+          {{ with site.Params.community.forum }}
+            <a href="{{ . }}" 
+               class="quicklink-action"
+               rel="noopener noreferrer"
+               target="_blank">
+              <span class="action-icon" aria-hidden="true">💬</span>
+              <span class="action-text">Community Forum</span>
+            </a>
+          {{ end }}
+          
+          {{ with site.Params.community.chat }}
+            <a href="{{ . }}" 
+               class="quicklink-action"
+               rel="noopener noreferrer"
+               target="_blank">
+              <span class="action-icon" aria-hidden="true">💬</span>
+              <span class="action-text">Chat</span>
+            </a>
+          {{ end }}
+          
+        </div>
+      </div>
+      
+    </div>
+    
+    {{/* Support card */}}
+    <div class="quicklink-card">
+      
+      <header class="quicklink-header">
+        <span class="quicklink-icon" aria-hidden="true">🛟</span>
+        <h3 class="quicklink-title">Support</h3>
+      </header>
+      
+      <div class="quicklink-content">
+        <p class="quicklink-description">
+          Get help, report issues, or request features.
+        </p>
+        
+        <div class="quicklink-actions">
+          
+          {{ if site.Params.repository.url }}
+            <a href="{{ site.Params.repository.url }}/issues" 
+               class="quicklink-action"
+               rel="noopener noreferrer"
+               target="_blank">
+              <span class="action-icon" aria-hidden="true">🐛</span>
+              <span class="action-text">Report Issue</span>
+            </a>
+          {{ end }}
+          
+          {{ with site.Params.support.email }}
+            <a href="mailto:{{ . }}" 
+               class="quicklink-action">
+              <span class="action-icon" aria-hidden="true">📧</span>
+              <span class="action-text">Contact Support</span>
+            </a>
+          {{ end }}
+          
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+  
 </section>

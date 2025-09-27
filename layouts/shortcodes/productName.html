@@ -1,13 +1,39 @@
-{{- $org := getenv "HUGO_ORG" | default "hpeai" | lower -}} 
+{{/* Product Name Shortcode - Display product name based on environment */}}
+{{ $variant := .Get "variant" | default "enterprise" }}
+{{ $org := getenv "HUGO_ORG" | default "hpeai" | lower }}
 
-{{- $currentPage := . -}} 
-
-{{- with $org -}}
-    {{- if or (eq $org "pachyderm") (eq $org "determined") -}}
-        {{- $currentPage.Page.Params.productNames.community -}}
-    {{- else -}}
-        {{- $currentPage.Page.Params.productNames.enterprise -}}
-    {{- end -}}
-{{- else -}}
-    {{- $currentPage.Page.Params.productNames.enterprise -}}
-{{- end -}}
+<span class="product-name" 
+      data-component="product-name"
+      data-variant="{{ $variant }}"
+      data-org="{{ $org }}">
+  
+  {{ if eq $variant "community" }}
+    {{ with .Page.Params.productNames.community }}
+      {{ . }}
+    {{ else }}
+      {{ .Site.Params.productNames.community | default "Community Edition" }}
+    {{ end }}
+  {{ else if eq $variant "enterprise" }}
+    {{ with .Page.Params.productNames.enterprise }}
+      {{ . }}
+    {{ else }}
+      {{ .Site.Params.productNames.enterprise | default "Enterprise Edition" }}
+    {{ end }}
+  {{ else }}
+    {{/* Auto-detect based on org */}}
+    {{ if or (eq $org "pachyderm") (eq $org "determined") }}
+      {{ with .Page.Params.productNames.community }}
+        {{ . }}
+      {{ else }}
+        {{ .Site.Params.productNames.community | default "Community Edition" }}
+      {{ end }}
+    {{ else }}
+      {{ with .Page.Params.productNames.enterprise }}
+        {{ . }}
+      {{ else }}
+        {{ .Site.Params.productNames.enterprise | default "Enterprise Edition" }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  
+</span>

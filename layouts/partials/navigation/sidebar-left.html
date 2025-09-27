@@ -1,30 +1,93 @@
-<!-- SidebarLeft Partial -->
-<!-- Mobile navigation toggle (visible < xl) -->
-<button type="button" class="fixed top-4 left-4 z-50 xl:hidden bg-brand text-white p-2 rounded-lg shadow-lg" aria-label="Toggle navigation menu" data-component="navigation-mobile-toggle">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-    </svg>
+{{/* Primary Navigation Sidebar */}}
+
+{{/* Mobile navigation toggle */}}
+<button type="button" 
+        class="mobile-nav-toggle" 
+        aria-label="Toggle navigation menu" 
+        data-component="mobile-nav-toggle">
+  <span class="mobile-nav-icon" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
 </button>
 
-<!-- Mobile navigation overlay -->
-<div class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden xl:hidden" data-navigation-overlay></div>
+{{/* Mobile navigation overlay */}}
+<div class="mobile-nav-overlay" 
+     data-mobile-nav-overlay
+     aria-hidden="true"></div>
 
-<!-- Keep desktop width flexible to avoid squeezing content at medium widths -->
-<!-- Unified sidebar: mobile off-canvas (<xl) + desktop sticky (xl+) -->
-<aside id="sidebar-left" class="sidebar block fixed xl:sticky left-0 top-0 xl:top-16 z-40 h-full xl:h-[calc(100vh-4rem)] w-80 xl:w-auto -translate-x-full xl:translate-x-0 transition-all duration-300 ease-in-out overflow-y-auto pr-1" data-component="navigation-sidebar-left" role="navigation" aria-label="Primary">
-    <!-- Mobile header -->
-    <div class="sidebar__header flex xl:hidden items-center justify-between p-4">
-        <h2 class="text-lg font-semibold">Navigation</h2>
-        <button type="button" class="sidebar__close-button p-2 rounded-lg" aria-label="Close navigation menu" data-navigation-close>
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
+{{/* Primary navigation sidebar */}}
+<nav class="primary-nav" 
+     id="primary-navigation"
+     data-component="primary-nav"
+     role="navigation" 
+     aria-label="Primary navigation">
+  
+  {{/* Mobile header */}}
+  <header class="primary-nav-header">
+    <h2 class="primary-nav-title">Documentation</h2>
+    
+    <button type="button" 
+            class="primary-nav-close" 
+            aria-label="Close navigation menu" 
+            data-mobile-nav-close>
+      <span class="close-icon" aria-hidden="true">×</span>
+    </button>
+  </header>
+  
+  {{/* Navigation content */}}
+  <div class="primary-nav-content">
+    
+    {{/* Search in navigation */}}
+    {{ if site.Params.navigation.showSearch }}
+      <div class="nav-search" data-component="nav-search">
+        <form class="nav-search-form" role="search">
+          <label for="nav-search-input" class="sr-only">Search documentation</label>
+          <input type="search" 
+                 id="nav-search-input"
+                 class="nav-search-input"
+                 placeholder="Search docs..."
+                 data-nav-search-input>
+          <button type="submit" 
+                  class="nav-search-button"
+                  aria-label="Submit search">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+          </button>
+        </form>
+      </div>
+    {{ end }}
+    
+    {{/* Navigation tree */}}
+    <div class="nav-tree" data-component="nav-tree">
+      {{ $currentPage := . }}
+      {{ partial "navigation/directory.html" (dict "sections" .Site.Sections "current" $currentPage "level" 1) }}
     </div>
     
-    <div class="sidebar__link-tree pt-4 md:pt-4 px-4 md:px-0 h-full w-full" data-link-tree>
-        {{ $currentpg := . }}
-        <!-- Include the Directory partial -->
-        {{ partial "navigation/directory.html" (dict "dir" .Site.Sections "current" $currentpg "level" 1) }}
-    </div>
-</aside>
+    {{/* Navigation footer */}}
+    <footer class="primary-nav-footer">
+      
+      {{/* Version information */}}
+      {{ with site.Params.version }}
+        <div class="nav-version">
+          <span class="nav-version-label">Version</span>
+          <span class="nav-version-number">{{ .number | default "latest" }}</span>
+        </div>
+      {{ end }}
+      
+      {{/* Feedback link */}}
+      {{ with site.Params.feedback.url }}
+        <a href="{{ . }}" 
+           class="nav-feedback-link"
+           rel="noopener noreferrer"
+           target="_blank">
+          <span class="feedback-icon" aria-hidden="true">💬</span>
+          Send feedback
+        </a>
+      {{ end }}
+      
+    </footer>
+    
+  </div>
+  
+</nav>

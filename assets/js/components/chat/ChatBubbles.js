@@ -47,7 +47,7 @@ export class ChatBubbles {
    */
   createLoadingBubble() {
     const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble bot p-2 rounded-lg text-black font-regular text-sm is-loading';
+    bubble.className = 'chat-bubble chat-bubble--bot is-loading';
     
     // Use LoadingStateManager for consistent loading display
     const loaderId = showLoading(bubble, {

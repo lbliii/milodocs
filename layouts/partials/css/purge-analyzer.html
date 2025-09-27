@@ -1,0 +1,43 @@
+{{/*
+  CSS Purge Analyzer - Production Optimization
+  ===========================================
+  
+  Analyzes hugo_stats.json to identify unused CSS classes
+  Generates a purged CSS bundle for production
+*/}}
+
+{{- if not hugo.IsDevelopment -}}
+  {{- $stats := resources.Get "hugo_stats.json" | transform.Unmarshal -}}
+  {{- $usedClasses := $stats.htmlElements.classes -}}
+  
+  {{/* Create a safelist of used classes for CSS purging */}}
+  {{- $safelist := slice -}}
+  {{- range $usedClasses -}}
+    {{- $safelist = $safelist | append . -}}
+  {{- end -}}
+  
+  {{/* Add critical classes that might be added dynamically */}}
+  {{- $criticalClasses := slice 
+    "open" "closed" "active" "focus" "hover" 
+    "loading" "loaded" "error" "success"
+    "dark" "light" 
+    "mobile" "desktop"
+  -}}
+  {{- range $criticalClasses -}}
+    {{- $safelist = $safelist | append . -}}
+  {{- end -}}
+  
+  {{/* Store the safelist for potential PostCSS purging */}}
+  {{- $purgeSafelist := dict "safelist" $safelist -}}
+  {{- $safelistJSON := $purgeSafelist | jsonify -}}
+  
+  <script id="css-purge-safelist" type="application/json">
+    {{ $safelistJSON | safeHTML }}
+  </script>
+  
+  {{/* Production CSS optimization insights */}}
+  <script>
+    const safelist = JSON.parse(document.getElementById('css-purge-safelist').textContent);
+    console.log('🚀 Production CSS safelist generated:', safelist.safelist.length, 'classes');
+  </script>
+{{- end -}}

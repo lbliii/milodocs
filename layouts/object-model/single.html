@@ -1,195 +1,332 @@
 {{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
+  {{ partial "navigation/topbar/main.html" . }}
 {{- end -}}
 
 {{- define "sidebar-left" -}}
-  {{- partial "navigation/sidebar-left.html" . -}}
+  {{ partial "navigation/sidebar-left.html" . }}
 {{- end -}}
 
 {{- define "content" -}}
-<article
-  id="articleContent"
-  class="article-content container mx-auto px-4 py-8"
-  data-component="object-model"
-  data-schema-path="{{ .Params.schema }}"
->
-  {{- $schemaPath := .Params.schema -}}
-  {{- $schema := index .Site.Data (replace $schemaPath ".yaml" "") -}}
-  {{- $objectModel := $schema.ObjectModel -}}
+{{ $schemaPath := .Params.schema }}
 
-  <section class="space-y-3 object-model__intro">
-    <h1 class="object-model__title text-3xl font-bold">Object Model Reference</h1>
-    {{ with $objectModel.Description }}
-      <div class="object-model__intro-text">{{ . | markdownify }}</div>
+{{ if not $schemaPath }}
+  <div class="schema-error" role="alert">
+    <div class="error-content">
+      <h2 class="error-title">Schema Path Missing</h2>
+      <p class="error-message">No schema path specified in front matter.</p>
+      <p class="error-help">Add <code>schema: "path/to/schema.yaml"</code> to the page front matter.</p>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+{{ $schema := index .Site.Data (replace $schemaPath ".yaml" "") }}
+{{ $objectModel := $schema.ObjectModel }}
+
+{{ if not $objectModel }}
+  <div class="schema-error" role="alert">
+    <div class="error-content">
+      <h2 class="error-title">Object Model Not Found</h2>
+      <p class="error-message">Could not load object model from schema: <code>{{ $schemaPath }}</code></p>
+      <p class="error-help">Check that the schema file exists and contains an ObjectModel section.</p>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+<article class="object-model-reference" 
+         data-component="object-model-reference"
+         data-schema-path="{{ $schemaPath }}"
+         itemscope 
+         itemtype="https://schema.org/APIReference">
+  
+  <header class="object-model-header">
+    <h1 class="object-model-title" itemprop="name">{{ .Title | default "Object Model Reference" }}</h1>
+    
+    {{ with .Content }}
+      <div class="object-model-description" itemprop="description">
+        {{ . }}
+      </div>
     {{ end }}
-  </section>
-
-  {{ range $modelName, $model := $objectModel.Objects }}
-    <section class="object-model__section mt-8">
-      <header class="object-model__header mb-4">
-          <h2 id="{{ $modelName | urlize }}" class="object-model__heading text-2xl font-semibold">
-          <span class="object-model__heading-badge">{{ $modelName }}</span>
-        </h2>
-        {{ with $model.Description }}
-          <div class="object-model__summary mt-2">{{ . | markdownify }}</div>
+    
+    {{ with $objectModel.Description }}
+      <div class="object-model-intro">
+        {{ . | markdownify }}
+      </div>
+    {{ end }}
+    
+    {{/* Quick navigation */}}
+    <nav class="object-model-nav" aria-label="Object model navigation">
+      <h2 class="nav-title">Quick Navigation</h2>
+      <ul class="nav-list">
+        {{ range $modelName, $model := $objectModel.Objects }}
+          <li class="nav-item">
+            <a href="#{{ $modelName | urlize }}" class="nav-link">
+              {{ $modelName }}
+            </a>
+          </li>
         {{ end }}
-      </header>
-
-      <div class="object-model__groups ml-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div class="object-model__group">
-          <h3 id="{{ $modelName | urlize }}-input-attributes" class="object-model__subheading text-xl font-semibold mb-2">Input Attributes</h3>
-          <ul class="object-model__list">
-          {{ range $input := $model.Inputs }}
-            <li class="object-model__item list-none">
-              {{ if $input.options }}
-                <details class="group object-model__details">
-                  <summary class="object-model__summary-row flex cursor-pointer items-start gap-2">
-                    <svg class="object-model__chevron mt-1 h-4 w-4 shrink-0 transition-transform group-open:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                    <div class="object-model__field">
-                      <strong class="object-model__name">{{ $input.name }}</strong>
-                      <span class="object-model__description ml-1">{{ $input.description | markdownify }}</span>
-                    </div>
-                  </summary>
-                  <ul class="object-model__options px-4 py-2">
-                    {{ range $mapNumber, $mapValue := $input.options }}
-                      {{ range $key, $value := . }}
-                        <li class="object-model__option-item py-1">
-                          <span class="object-model__option-key"><code>{{ $key }}</code></span>
-                          <div class="object-model__option-value">{{ $value | markdownify }}</div>
-                        </li>
-                      {{ end }}
+        {{ with $objectModel.Components }}
+          <li class="nav-item nav-item--section">
+            <span class="nav-section">Components</span>
+            <ul class="nav-sublist">
+              {{ range $componentName, $component := . }}
+                <li class="nav-subitem">
+                  <a href="#{{ $componentName | urlize }}" class="nav-link">
+                    {{ $componentName }}
+                  </a>
+                </li>
+              {{ end }}
+            </ul>
+          </li>
+        {{ end }}
+      </ul>
+    </nav>
+  </header>
+  
+  <div class="object-model-content">
+    
+    {{/* Objects section */}}
+    {{ if $objectModel.Objects }}
+      <section class="object-model-section object-model-objects">
+        <h2 class="section-title">Objects</h2>
+        
+        {{ range $modelName, $model := $objectModel.Objects }}
+          <section class="object-definition" 
+                   id="{{ $modelName | urlize }}"
+                   data-object="{{ $modelName }}">
+            
+            <header class="object-header">
+              <h3 class="object-title">
+                <span class="object-name">{{ $modelName }}</span>
+                <a href="#{{ $modelName | urlize }}" 
+                   class="object-anchor"
+                   aria-label="Link to {{ $modelName }}">
+                  #
+                </a>
+              </h3>
+              
+              {{ with $model.Description }}
+                <div class="object-description">
+                  {{ . | markdownify }}
+                </div>
+              {{ end }}
+            </header>
+            
+            <div class="object-attributes">
+              
+              {{/* Input Attributes */}}
+              {{ if $model.Inputs }}
+                <div class="attribute-group">
+                  <h4 class="attribute-group-title" 
+                      id="{{ $modelName | urlize }}-input-attributes">
+                    Input Attributes
+                  </h4>
+                  
+                  <div class="attributes-list">
+                    {{ range $input := $model.Inputs }}
+                      <div class="attribute-item" 
+                           data-attribute="{{ $input.name }}">
+                        
+                        {{ if $input.options }}
+                          <details class="attribute-expandable">
+                            <summary class="attribute-summary">
+                              <span class="attribute-toggle-icon" aria-hidden="true">▶</span>
+                              <div class="attribute-info">
+                                <strong class="attribute-name">{{ $input.name }}</strong>
+                                <div class="attribute-description">{{ $input.description | markdownify }}</div>
+                              </div>
+                            </summary>
+                            
+                            <div class="attribute-options">
+                              <h5 class="options-title">Options</h5>
+                              <dl class="options-list">
+                                {{ range $input.options }}
+                                  {{ range $key, $value := . }}
+                                    <div class="option-item">
+                                      <dt class="option-key">
+                                        <code>{{ $key }}</code>
+                                      </dt>
+                                      <dd class="option-value">
+                                        {{ $value | markdownify }}
+                                      </dd>
+                                    </div>
+                                  {{ end }}
+                                {{ end }}
+                              </dl>
+                            </div>
+                          </details>
+                        {{ else }}
+                          <div class="attribute-simple">
+                            <div class="attribute-marker" aria-hidden="true">—</div>
+                            <div class="attribute-info">
+                              <strong class="attribute-name">{{ $input.name }}</strong>
+                              <div class="attribute-description">{{ $input.description | markdownify }}</div>
+                            </div>
+                          </div>
+                        {{ end }}
+                        
+                      </div>
                     {{ end }}
-                  </ul>
-                </details>
-              {{ else }}
-                <div class="object-model__row flex items-start gap-2">
-                  <svg class="object-model__dash mt-1 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
-                  </svg>
-                  <div class="object-model__field">
-                    <strong class="object-model__name">{{ $input.name }}</strong>
-                    <span class="object-model__description ml-1">{{ $input.description | markdownify }}</span>
                   </div>
                 </div>
               {{ end }}
-            </li>
-          {{ end }}
-          </ul>
-        </div>
-
-        {{ with $model.AioliManaged }}
-        <div class="object-model__group lg:mt-0">
-          <h3 id="{{ $modelName | urlize }}-managed-attributes" class="object-model__subheading text-xl font-semibold mb-2">Managed Attributes</h3>
-          <ul class="object-model__list">
-            {{ range $managed := . }}
-              <li class="object-model__item list-none">
-                {{ if $managed.options }}
-                  <details class="group object-model__details">
-                    <summary class="object-model__summary-row flex cursor-pointer items-start gap-2">
-                      <svg class="object-model__chevron mt-1 h-4 w-4 shrink-0 transition-transform group-open:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                      <div class="object-model__field">
-                        <strong class="object-model__name">{{ $managed.name }}</strong>
-                        <span class="object-model__description ml-1">{{ $managed.description | markdownify }}</span>
-                      </div>
-                    </summary>
-                    <ul class="object-model__options px-4 py-2">
-                      {{ range $mapNumber, $mapValue := $managed.options }}
-                        {{ range $key, $value := . }}
-                          <li class="object-model__option-item py-1">
-                            <span class="object-model__option-key"><code>{{ $key }}</code></span>
-                            <div class="object-model__option-value">{{ $value | markdownify }}</div>
-                          </li>
+              
+              {{/* Managed Attributes */}}
+              {{ with $model.AioliManaged }}
+                <div class="attribute-group">
+                  <h4 class="attribute-group-title" 
+                      id="{{ $modelName | urlize }}-managed-attributes">
+                    Managed Attributes
+                  </h4>
+                  
+                  <div class="attributes-list">
+                    {{ range $managed := . }}
+                      <div class="attribute-item" 
+                           data-attribute="{{ $managed.name }}">
+                        
+                        {{ if $managed.options }}
+                          <details class="attribute-expandable">
+                            <summary class="attribute-summary">
+                              <span class="attribute-toggle-icon" aria-hidden="true">▶</span>
+                              <div class="attribute-info">
+                                <strong class="attribute-name">{{ $managed.name }}</strong>
+                                <div class="attribute-description">{{ $managed.description | markdownify }}</div>
+                              </div>
+                            </summary>
+                            
+                            <div class="attribute-options">
+                              <h5 class="options-title">Options</h5>
+                              <dl class="options-list">
+                                {{ range $managed.options }}
+                                  {{ range $key, $value := . }}
+                                    <div class="option-item">
+                                      <dt class="option-key">
+                                        <code>{{ $key }}</code>
+                                      </dt>
+                                      <dd class="option-value">
+                                        {{ $value | markdownify }}
+                                      </dd>
+                                    </div>
+                                  {{ end }}
+                                {{ end }}
+                              </dl>
+                            </div>
+                          </details>
+                        {{ else }}
+                          <div class="attribute-simple">
+                            <div class="attribute-marker" aria-hidden="true">—</div>
+                            <div class="attribute-info">
+                              <strong class="attribute-name">{{ $managed.name }}</strong>
+                              <div class="attribute-description">{{ $managed.description | markdownify }}</div>
+                            </div>
+                          </div>
                         {{ end }}
-                      {{ end }}
-                    </ul>
-                  </details>
-                {{ else }}
-                  <div class="object-model__row flex items-start gap-2">
-                    <svg class="object-model__dash mt-1 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
-                    </svg>
-                  <div class="object-model__field">
-                      <strong class="object-model__name">{{ $managed.name }}</strong>
-                      <span class="object-model__description ml-1">{{ $managed.description | markdownify }}</span>
-                    </div>
+                        
+                      </div>
+                    {{ end }}
                   </div>
-                {{ end }}
-              </li>
-            {{ end }}
-          </ul>
-        </div>
+                </div>
+              {{ end }}
+              
+            </div>
+          </section>
         {{ end }}
-      </div>
-    </section>
-  {{ end }}
-
-  {{ with $objectModel.Components }}
-    <hr class="my-10 border-zinc-200 dark:border-zinc-800" />
-    {{ range $componentName, $component := . }}
-      <section class="object-model__section mt-8">
-        <header class="object-model__header mb-4">
-          <h2 id="{{ $componentName | urlize }}" class="object-model__heading text-2xl font-semibold">
-            <span class="object-model__heading-badge">{{ $componentName }}</span>
-          </h2>
-           {{ with $component.Description }}
-            <div class="object-model__summary mt-2">{{ . | markdownify }}</div>
-          {{ end }}
-        </header>
-
-        <div class="object-model__group ml-4">
-          <h3 id="{{ $componentName | urlize }}-attributes" class="object-model__subheading text-xl font-semibold mb-2">Attributes</h3>
-          <ul class="object-model__list">
-            {{ range $attribute := $component.Attributes }}
-              <li class="object-model__item list-none">
-                {{ if $attribute.options }}
-                  <details class="group object-model__details">
-                  <summary class="object-model__summary-row flex cursor-pointer items-start gap-2">
-                      <svg class="object-model__chevron mt-1 h-4 w-4 shrink-0 transition-transform group-open:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                      <div class="object-model__field">
-                        <strong class="object-model__name">{{ $attribute.name }}</strong>
-                        <span class="object-model__description ml-1">{{ $attribute.description | markdownify }}</span>
-                      </div>
-                    </summary>
-                    <ul class="object-model__options px-4 py-2">
-                      {{ range $mapNumber, $mapValue := $attribute.options }}
-                        {{ range $key, $value := . }}
-                          <li class="object-model__option-item py-1">
-                            <span class="object-model__option-key"><code>{{ $key }}</code></span>
-                            <div class="object-model__option-value">{{ $value | markdownify }}</div>
-                          </li>
-                        {{ end }}
-                      {{ end }}
-                    </ul>
-                  </details>
-                {{ else }}
-                  <div class="object-model__row flex items-start gap-2">
-                    <svg class="object-model__dash mt-1 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
-                    </svg>
-                  <div class="object-model__field">
-                      <strong class="object-model__name">{{ $attribute.name }}</strong>
-                      <span class="object-model__description ml-1">{{ $attribute.description | markdownify }}</span>
-                    </div>
-                  </div>
-                {{ end }}
-              </li>
-            {{ end }}
-          </ul>
-        </div>
       </section>
     {{ end }}
-  {{ end }}
-
-  {{/* page end */}}
+    
+    {{/* Components section */}}
+    {{ with $objectModel.Components }}
+      <section class="object-model-section object-model-components">
+        <h2 class="section-title">Components</h2>
+        
+        {{ range $componentName, $component := . }}
+          <section class="component-definition" 
+                   id="{{ $componentName | urlize }}"
+                   data-component="{{ $componentName }}">
+            
+            <header class="component-header">
+              <h3 class="component-title">
+                <span class="component-name">{{ $componentName }}</span>
+                <a href="#{{ $componentName | urlize }}" 
+                   class="component-anchor"
+                   aria-label="Link to {{ $componentName }}">
+                  #
+                </a>
+              </h3>
+              
+              {{ with $component.Description }}
+                <div class="component-description">
+                  {{ . | markdownify }}
+                </div>
+              {{ end }}
+            </header>
+            
+            <div class="component-attributes">
+              <div class="attribute-group">
+                <h4 class="attribute-group-title" 
+                    id="{{ $componentName | urlize }}-attributes">
+                  Attributes
+                </h4>
+                
+                <div class="attributes-list">
+                  {{ range $attribute := $component.Attributes }}
+                    <div class="attribute-item" 
+                         data-attribute="{{ $attribute.name }}">
+                      
+                      {{ if $attribute.options }}
+                        <details class="attribute-expandable">
+                          <summary class="attribute-summary">
+                            <span class="attribute-toggle-icon" aria-hidden="true">▶</span>
+                            <div class="attribute-info">
+                              <strong class="attribute-name">{{ $attribute.name }}</strong>
+                              <div class="attribute-description">{{ $attribute.description | markdownify }}</div>
+                            </div>
+                          </summary>
+                          
+                          <div class="attribute-options">
+                            <h5 class="options-title">Options</h5>
+                            <dl class="options-list">
+                              {{ range $attribute.options }}
+                                {{ range $key, $value := . }}
+                                  <div class="option-item">
+                                    <dt class="option-key">
+                                      <code>{{ $key }}</code>
+                                    </dt>
+                                    <dd class="option-value">
+                                      {{ $value | markdownify }}
+                                    </dd>
+                                  </div>
+                                {{ end }}
+                              {{ end }}
+                            </dl>
+                          </div>
+                        </details>
+                      {{ else }}
+                        <div class="attribute-simple">
+                          <div class="attribute-marker" aria-hidden="true">—</div>
+                          <div class="attribute-info">
+                            <strong class="attribute-name">{{ $attribute.name }}</strong>
+                            <div class="attribute-description">{{ $attribute.description | markdownify }}</div>
+                          </div>
+                        </div>
+                      {{ end }}
+                      
+                    </div>
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+          </section>
+        {{ end }}
+      </section>
+    {{ end }}
+    
+  </div>
+  
 </article>
 {{- end -}}
 
 {{- define "sidebar-right" -}}
-{{- partial "navigation/sidebar-right.html" . -}}
+  {{ partial "navigation/sidebar-right.html" . }}
 {{- end -}}

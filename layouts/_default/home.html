@@ -1,40 +1,164 @@
-{{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
-{{- end -}}
+{{/* Homepage Layout */}}
 
-{{- define "sidebar-left" -}}
-  {{- partial "navigation/sidebar-left.html" . -}}
-{{- end -}}
-
-{{- define "breadcrumbs" -}}
-  {{/*  <div class="my-4">
-      {{partial "navigation/breadcrumbs.html" . }}
-  </div>  */}}
-{{- end -}}
-
-{{ define "content" }}
-    <div id="articleContent" class="article-content text-text-primary p-4 mx-auto max-w-6xl 2xl:max-w-7xl">
-      {{if lt (len .Site.Sections) 1}}
-        {{- partial "welcome.html" -}}
-      {{- else -}}
-      {{ .Content }} 
-      {{- end -}}
+{{ define "home-content" }}
+<div class="homepage" data-component="homepage">
+  
+  {{/* Hero section */}}
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">{{ .Title }}</h1>
+      
+      {{ with .Content }}
+        <div class="hero-description">
+          {{ . }}
+        </div>
+      {{ end }}
+      
+      {{ with .Params.hero }}
+        {{ with .cta_text }}
+          <div class="hero-actions">
+            <a href="{{ $.Params.hero.cta_url | default `/get-started/` }}" 
+               class="hero-cta">
+              {{ . }}
+            </a>
+          </div>
+        {{ end }}
+      {{ end }}
     </div>
-    <div class="p-4 mx-auto max-w-6xl 2xl:max-w-7xl">
-      {{- partial "article/tiles.html" . -}}
-    </div>
+  </section>
+  
+  {{/* Quick links section */}}
+  {{ if .Params.quicklinks }}
+    <section class="quicklinks-section">
+      <h2 class="quicklinks-title">Get Started</h2>
+      
+      <div class="quicklinks-grid">
+        {{ range .Params.quicklinks }}
+          <a href="{{ .url }}" class="quicklink-card">
+            {{ with .icon }}
+              <div class="quicklink-icon" aria-hidden="true">{{ . }}</div>
+            {{ end }}
+            <h3 class="quicklink-title">{{ .title }}</h3>
+            <p class="quicklink-description">{{ .description }}</p>
+          </a>
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+  
+  {{/* Featured sections */}}
+  {{ if .Site.Sections }}
+    <section class="featured-sections">
+      <h2 class="featured-sections-title">Documentation</h2>
+      
+      <div class="section-grid">
+        {{ range .Site.Sections }}
+          <article class="section-card" 
+                   data-component="section-card"
+                   itemscope 
+                   itemtype="https://schema.org/CollectionPage">
+            
+            {{/* Section icon or image */}}
+            {{ with .Params.icon }}
+              <div class="section-card-icon" aria-hidden="true">{{ . }}</div>
+            {{ else }}
+              {{ with .Params.featured_image }}
+                <div class="section-card-image">
+                  <img src="{{ . | relURL }}" alt="{{ $.Title }}" loading="lazy">
+                </div>
+              {{ end }}
+            {{ end }}
+            
+            {{/* Section content */}}
+            <div class="section-card-content">
+              <h3 class="section-card-title">
+                <a href="{{ .RelPermalink }}" itemprop="url">
+                  <span itemprop="name">{{ .Title }}</span>
+                </a>
+              </h3>
+              
+              {{ with .Params.description }}
+                <p class="section-card-description" itemprop="description">{{ . }}</p>
+              {{ else }}
+                {{ with .Summary }}
+                  <p class="section-card-description" itemprop="description">{{ . }}</p>
+                {{ end }}
+              {{ end }}
+              
+              {{ if .Pages }}
+                <p class="section-card-count">
+                  {{ len .Pages }} {{ if eq (len .Pages) 1 }}article{{ else }}articles{{ end }}
+                </p>
+              {{ end }}
+            </div>
+            
+            {{/* Recent articles preview */}}
+            {{ if .Pages }}
+              <div class="section-card-preview">
+                <h4 class="section-card-preview-title">Recent articles:</h4>
+                <ul class="section-card-articles">
+                  {{ range first 3 .Pages }}
+                    <li>
+                      <a href="{{ .RelPermalink }}" class="preview-article-link">
+                        {{ .Title }}
+                      </a>
+                    </li>
+                  {{ end }}
+                </ul>
+              </div>
+            {{ end }}
+          </article>
+        {{ end }}
+      </div>
+    </section>
+  {{ else }}
+    {{/* Welcome message when no content exists */}}
+    <section class="welcome-section">
+      {{ partial "welcome.html" . }}
+    </section>
+  {{ end }}
+  
+  {{/* Latest updates */}}
+  {{ $recentPages := where .Site.RegularPages "Section" "!=" "" }}
+  {{ $recentPages = first 6 $recentPages }}
+  {{ if $recentPages }}
+    <section class="recent-updates">
+      <h2 class="recent-updates-title">Latest Updates</h2>
+      
+      <div class="updates-grid">
+        {{ range $recentPages }}
+          <article class="update-card" 
+                   itemscope 
+                   itemtype="https://schema.org/Article">
+            
+            <div class="update-card-meta">
+              <span class="update-section">{{ .Section | title }}</span>
+              <time datetime="{{ .Date.Format `2006-01-02T15:04:05Z07:00` }}" 
+                    itemprop="datePublished">
+                {{ .Date.Format "Jan 2" }}
+              </time>
+            </div>
+            
+            <h3 class="update-card-title">
+              <a href="{{ .RelPermalink }}" itemprop="url">
+                <span itemprop="headline">{{ .Title }}</span>
+              </a>
+            </h3>
+            
+            {{ with .Summary }}
+              <p class="update-card-summary" itemprop="description">
+                {{ . | truncate 100 }}
+              </p>
+            {{ end }}
+          </article>
+        {{ end }}
+      </div>
+      
+      <div class="recent-updates-footer">
+        <a href="/updates/" class="view-all-link">View all updates</a>
+      </div>
+    </section>
+  {{ end }}
+  
+</div>
 {{ end }}
-
-{{ define "home" }}
-  {{- template "content" . -}}
-{{ end }}
-
-{{- define "innerFooter" -}}
-  {{/*  <div class="p-4">
-      {{partial "article/next-prev.html" . }}
-  </div>  */}}
-{{- end -}}
-
-{{- define "sidebar-right" -}}
-  {{- partial "navigation/sidebar-right.html" . -}}
-{{- end -}}

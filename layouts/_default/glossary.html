@@ -1,38 +1,175 @@
 {{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
+  {{ partial "navigation/topbar/main.html" . }}
 {{- end -}}
 
 {{- define "sidebar-left" -}}
-  {{- partial "navigation/sidebar-left.html" . -}}
+  {{ partial "navigation/sidebar-left.html" . }}
 {{- end -}}
 
 {{- define "breadcrumbs" -}}
-  <div class="my-4">
-      {{partial "navigation/breadcrumbs.html" . }}
+  <div class="glossary-breadcrumbs">
+    {{ partial "navigation/breadcrumbs.html" . }}
   </div>
 {{- end -}}
 
 {{- define "list" -}}
-<div class="flex">
-{{- partial "navigation/glossary.html" . -}}
-  <article id="article-container" class="flex flex-col w-full hide-scrollbar mx-2">
-    {{- partial "glossary/entries.html" . -}}
-  </article>
+<div class="glossary-layout">
+  
+  {{/* Glossary Navigation */}}
+  <nav class="glossary-navigation" 
+       aria-label="Glossary navigation"
+       data-component="glossary-navigation">
+    {{ partial "navigation/glossary.html" . }}
+  </nav>
+  
+  {{/* Glossary Content */}}
+  <main class="glossary-content" 
+        data-component="glossary-content">
+    
+    <header class="glossary-header">
+      <h1 class="glossary-title">{{ .Title }}</h1>
+      {{ with .Content }}
+        <div class="glossary-description">
+          {{ . }}
+        </div>
+      {{ end }}
+      
+      {{/* Search and filters */}}
+      <div class="glossary-controls">
+        <div class="glossary-search">
+          <label for="glossary-search-input" class="sr-only">Search glossary terms</label>
+          <input type="search" 
+                 id="glossary-search-input"
+                 class="glossary-search-input"
+                 placeholder="Search terms..."
+                 data-component="glossary-search">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+        </div>
+        
+        <div class="glossary-filters">
+          <label for="category-filter" class="filter-label">Category:</label>
+          <select id="category-filter" 
+                  class="glossary-filter"
+                  data-component="category-filter">
+            <option value="">All categories</option>
+            {{ range .Site.Taxonomies.glossary_categories }}
+              <option value="{{ .Page.Title }}">{{ .Page.Title }} ({{ .Count }})</option>
+            {{ end }}
+          </select>
+        </div>
+      </div>
+    </header>
+    
+    {{/* Glossary Entries */}}
+    <section class="glossary-entries" 
+             data-component="glossary-entries">
+      {{ partial "glossary/entries.html" . }}
+    </section>
+    
+  </main>
+  
 </div>
 {{- end -}}
 
 {{- define "content" -}}
-<div class="flex">
-{{- partial "navigation/glossary.html" . -}}
-  <article id="article-container" class="flex flex-col w-full hide-scrollbar mx-2">
-    {{- partial "glossary/entries.html" . -}}
-  </article>
+<div class="glossary-layout">
+  
+  {{/* Glossary Navigation */}}
+  <nav class="glossary-navigation" 
+       aria-label="Glossary navigation"
+       data-component="glossary-navigation">
+    {{ partial "navigation/glossary.html" . }}
+  </nav>
+  
+  {{/* Single Glossary Term */}}
+  <main class="glossary-term-content" 
+        data-component="glossary-term">
+    
+    <article class="glossary-term" 
+             itemscope 
+             itemtype="https://schema.org/DefinedTerm">
+      
+      <header class="term-header">
+        <h1 class="term-title" itemprop="name">{{ .Title }}</h1>
+        
+        {{/* Term metadata */}}
+        <div class="term-meta">
+          {{ with .Params.category }}
+            <span class="term-category" itemprop="inDefinedTermSet">{{ . }}</span>
+          {{ end }}
+          
+          {{ with .Params.acronym }}
+            <span class="term-acronym">
+              <abbr title="{{ $.Title }}">{{ . }}</abbr>
+            </span>
+          {{ end }}
+          
+          {{ with .Params.aliases }}
+            <div class="term-aliases">
+              <span class="aliases-label">Also known as:</span>
+              {{ range . }}
+                <span class="term-alias">{{ . }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </header>
+      
+      {{/* Term definition */}}
+      <div class="term-definition" itemprop="description">
+        {{ .Content }}
+      </div>
+      
+      {{/* Related terms */}}
+      {{ with .Params.related_terms }}
+        <section class="term-related">
+          <h2 class="related-title">Related Terms</h2>
+          <ul class="related-terms-list">
+            {{ range . }}
+              {{ with site.GetPage (printf "/glossary/%s" .) }}
+                <li class="related-term">
+                  <a href="{{ .RelPermalink }}" class="related-term-link">
+                    {{ .Title }}
+                  </a>
+                  {{ with .Params.short_description }}
+                    <span class="related-term-description">{{ . }}</span>
+                  {{ end }}
+                </li>
+              {{ end }}
+            {{ end }}
+          </ul>
+        </section>
+      {{ end }}
+      
+      {{/* External references */}}
+      {{ with .Params.external_references }}
+        <section class="term-references">
+          <h2 class="references-title">External References</h2>
+          <ul class="references-list">
+            {{ range . }}
+              <li class="reference-item">
+                <a href="{{ .url }}" 
+                   class="reference-link"
+                   rel="noopener noreferrer"
+                   target="_blank">
+                  {{ .title }}
+                </a>
+                {{ with .description }}
+                  <span class="reference-description">{{ . }}</span>
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        </section>
+      {{ end }}
+      
+    </article>
+    
+  </main>
+  
 </div>
 {{- end -}}
 
-{{- define "innerFooter" -}}
-{{- end -}}
-
 {{- define "sidebar-right" -}}
-  {{- partial "navigation/sidebar-right.html" . -}}
+  {{ partial "navigation/sidebar-right.html" . }}
 {{- end -}}

@@ -1,29 +1,118 @@
+{{/* Include Shortcode - Include external file content */}}
 {{ $path := .Get 0 }}
-{{ $lang := .Get 1 | default "s" }}
+{{ $lang := .Get 1 | default "" }}
 {{ $start := .Get 2 | default nil }}
-{{ $stop := .Get 3 | default nil}}
-{{ $content := readFile $path }}
+{{ $stop := .Get 3 | default nil }}
+{{ $title := .Get "title" }}
+{{ $highlight := .Get "highlight" | default true }}
 
-{{/* Optional: Log warning for missing files */}}
-{{ if and $path (not $content) }}
-    {{ warnf "Include shortcode: File not found '%s' on page %s" $path .Page.RelPermalink }}
+{{ if not $path }}
+  <div class="include-error" role="alert">
+    <p class="error-message">File path is required for include shortcode</p>
+  </div>
+  {{ return }}
 {{ end }}
 
-{{/* Original processing logic - unchanged */}}
-{{ $chunked := split $content "\n" }}
-{{ $snippet := "" }}
-{{ $capture := false }}
-{{if eq $start nil }}
-{{ $capture = true }}
-{{end}}
-{{- range $chunked }}
-    {{ if and (not $capture) (in . $start) }}
-        {{ $capture = true }}
-    {{ else if and $capture (in . $stop) }}
-        {{ $capture = false }}
-    {{ else if $capture }}
-        {{ $snippet = print $snippet . "\n" }}
-    {{ end }}
-{{- end }}
+{{ $content := readFile $path }}
 
-{{ printf "```%s\n%s\n```" $lang $snippet | safeHTML }}
+{{ if not $content }}
+  <div class="include-error" role="alert">
+    <div class="error-content">
+      <span class="error-icon" aria-hidden="true">❌</span>
+      <div class="error-details">
+        <p class="error-message">Include shortcode: File not found</p>
+        <code class="error-path">{{ $path }}</code>
+        <p class="error-help">Check that the file exists and the path is correct</p>
+      </div>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+<div class="code-include" 
+     data-component="code-include"
+     data-file-path="{{ $path }}">
+  
+  {{ with $title }}
+    <div class="include-header">
+      <h4 class="include-title">{{ . }}</h4>
+      <div class="include-meta">
+        <span class="file-path">{{ $path }}</span>
+        {{ if or $start $stop }}
+          <span class="snippet-indicator">
+            {{ if $start }}from: {{ $start }}{{ end }}
+            {{ if $stop }}to: {{ $stop }}{{ end }}
+          </span>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+  
+  <div class="include-content">
+    
+    {{/* Process content with start/stop markers */}}
+    {{ $processedContent := $content }}
+    {{ if or $start $stop }}
+      {{ $chunked := split $content "\n" }}
+      {{ $snippet := "" }}
+      {{ $capture := false }}
+      
+      {{/* If no start marker, capture from beginning */}}
+      {{ if eq $start nil }}
+        {{ $capture = true }}
+      {{ end }}
+      
+      {{ range $chunked }}
+        {{ if and (not $capture) (in . $start) }}
+          {{ $capture = true }}
+        {{ else if and $capture (in . $stop) }}
+          {{ $capture = false }}
+        {{ else if $capture }}
+          {{ $snippet = print $snippet . "\n" }}
+        {{ end }}
+      {{ end }}
+      
+      {{ $processedContent = $snippet }}
+    {{ end }}
+    
+    {{/* Render as code block if language specified */}}
+    {{ if $lang }}
+      {{ if $highlight }}
+        {{ highlight $processedContent $lang "" }}
+      {{ else }}
+        <pre class="include-code"><code class="language-{{ $lang }}">{{ $processedContent }}</code></pre>
+      {{ end }}
+    {{ else }}
+      {{/* Render as markdown if no language specified */}}
+      <div class="include-markdown">
+        {{ $processedContent | .Page.RenderString }}
+      </div>
+    {{ end }}
+    
+  </div>
+  
+  {{/* Include actions */}}
+  <div class="include-actions">
+    
+    <button type="button" 
+            class="include-action include-action--copy"
+            data-action="copy-content"
+            aria-label="Copy included content">
+      <span class="action-icon" aria-hidden="true">📋</span>
+      <span class="action-text">Copy</span>
+    </button>
+    
+    {{ if fileExists $path }}
+      <a href="{{ $path | relURL }}" 
+         class="include-action include-action--view"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="View source file">
+        <span class="action-icon" aria-hidden="true">👁️</span>
+        <span class="action-text">View source</span>
+      </a>
+    {{ end }}
+    
+  </div>
+  
+</div>

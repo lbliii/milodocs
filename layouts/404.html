@@ -1,7 +1,68 @@
-{{ define "main" }}
-  <div class="my-4">
-    {{partial "navigation/breadcrumbs.html" . }}
-  </div>
-  <h1 class="text-text-primary p-4">{{ .Title }}</h1>
-{{ end }}
+{{/* 404 Error Page */}}
 
+{{ define "single-content" }}
+<div class="error-page" data-component="error-page">
+  
+  <div class="error-content">
+    
+    <div class="error-visual" aria-hidden="true">
+      <span class="error-code">404</span>
+    </div>
+    
+    <header class="error-header">
+      <h1 class="error-title">Page Not Found</h1>
+      <p class="error-description">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+    </header>
+    
+    <div class="error-actions">
+      <a href="{{ "/" | relURL }}" class="error-action error-action--primary">
+        Go to Homepage
+      </a>
+      
+      <button type="button" 
+              class="error-action error-action--secondary"
+              onclick="history.back()"
+              aria-label="Go back to previous page">
+        Go Back
+      </button>
+    </div>
+    
+    {{/* Search suggestion */}}
+    <div class="error-help">
+      <h2 class="error-help-title">What you can do:</h2>
+      <ul class="error-help-list">
+        <li>Check the URL for typos</li>
+        <li>Use the search function to find what you're looking for</li>
+        <li>Browse our main sections below</li>
+        <li>Contact us if you think this is an error</li>
+      </ul>
+    </div>
+    
+    {{/* Helpful links */}}
+    {{ if .Site.Sections }}
+      <nav class="error-navigation" aria-label="Main sections">
+        <h2 class="error-nav-title">Browse Documentation</h2>
+        
+        <div class="error-nav-grid">
+          {{ range first 6 .Site.Sections }}
+            <a href="{{ .RelPermalink }}" class="error-nav-card">
+              <h3 class="error-nav-card-title">{{ .Title }}</h3>
+              {{ with .Params.description }}
+                <p class="error-nav-card-description">{{ . }}</p>
+              {{ else }}
+                {{ with .Summary }}
+                  <p class="error-nav-card-description">{{ . | truncate 100 }}</p>
+                {{ end }}
+              {{ end }}
+            </a>
+          {{ end }}
+        </div>
+      </nav>
+    {{ end }}
+    
+  </div>
+  
+</div>
+{{ end }}

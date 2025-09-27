@@ -1,58 +1,55 @@
-{{- $title := .Get "title" | default "Expand" -}}
-{{- $description := .Get "description" -}}
-{{- $variant := .Get "variant" | default "default" -}}
-{{- $id := .Get "id" | default (printf "collapse-%s-%d" (md5 .Inner) (now.UnixNano)) -}}
+{{/* Collapse Shortcode - Collapsible content sections */}}
+{{ $title := .Get "title" | default "Expand" }}
+{{ $description := .Get "description" }}
+{{ $variant := .Get "variant" | default "default" }}
+{{ $id := .Get "id" | default (printf "collapse-%s-%d" (md5 .Inner) (now.UnixNano)) }}
+{{ $expanded := .Get "expanded" | default false }}
 
-{{- if ne hugo.Environment "pdf" -}}
-<section class="collapse{{ if ne $variant "default" }} collapse--{{ $variant }}{{ end }}" 
-         id="{{ $id }}"
-         data-collapse-state="collapsed"
-         data-component-state="ready">
-    <div class="collapse__header"
-         role="button"
-         tabindex="0"
-         aria-expanded="false"
-         aria-controls="{{ $id }}-body"
-         data-target="{{ $id }}-body">
-        
-        <div class="collapse__icon-wrapper">
-            <svg class="collapse__icon" 
-                 xmlns="http://www.w3.org/2000/svg" 
-                 fill="none" 
-                 viewBox="0 0 24 24" 
-                 stroke-width="2.5" 
-                 stroke="currentColor"
-                 aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-        </div>
-        
-        <div class="collapse__content-wrapper">
-            {{- with $title -}}
-            <h3 class="collapse__title">{{ . }}</h3>
-            {{- end -}}
-            {{- with $description -}}
-            <p class="collapse__description">{{ . }}</p>
-            {{- end -}}
-        </div>
-    </div>
+{{ if ne hugo.Environment "pdf" }}
+  <details class="collapse collapse--{{ $variant }}" 
+           id="{{ $id }}"
+           data-component="collapse"
+           data-variant="{{ $variant }}"
+           {{ if $expanded }}open{{ end }}>
     
-    <div class="collapse__body" 
-         id="{{ $id }}-body"
+    <summary class="collapse-summary"
+             id="{{ $id }}-header"
+             data-collapse-trigger>
+      
+      <div class="collapse-indicator">
+        <span class="collapse-icon" aria-hidden="true">▶</span>
+      </div>
+      
+      <div class="collapse-header-content">
+        <h3 class="collapse-title">{{ $title }}</h3>
+        {{ with $description }}
+          <p class="collapse-description">{{ . }}</p>
+        {{ end }}
+      </div>
+      
+    </summary>
+    
+    <div class="collapse-content" 
+         id="{{ $id }}-content"
          role="region"
          aria-labelledby="{{ $id }}-header">
-        <div class="collapse__body-content">
-            {{ .Inner | markdownify }}
-        </div>
+      
+      <div class="collapse-inner">
+        {{ .Inner | .Page.RenderString }}
+      </div>
+      
     </div>
-</section>
-
-{{/* Inline JS removed. Collapse handled by Collapse components. */}}
-
-{{- else -}}
-{{/* PDF fallback - just show content */}}
-{{- with $title -}}
-<h4>{{ . }}</h4>
-{{- end -}}
-{{ .Inner | markdownify }}
-{{- end -}}
+    
+  </details>
+{{ else }}
+  {{/* PDF fallback - show content without collapse */}}
+  <div class="collapse-pdf-fallback">
+    <h4 class="collapse-pdf-title">{{ $title }}</h4>
+    {{ with $description }}
+      <p class="collapse-pdf-description">{{ . }}</p>
+    {{ end }}
+    <div class="collapse-pdf-content">
+      {{ .Inner | .Page.RenderString }}
+    </div>
+  </div>
+{{ end }}

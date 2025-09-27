@@ -1,1 +1,94 @@
-
+{{/* Site Header */}}
+<div class="site-header-container">
+  
+  {{/* Site branding */}}
+  <div class="site-branding">
+    <a href="{{ "/" | relURL }}" 
+       class="site-logo-link"
+       aria-label="Go to homepage">
+      {{ partial "logo.html" . }}
+    </a>
+    
+    {{ if not site.Params.header.hideSiteTitle }}
+      <div class="site-title-group">
+        <h1 class="site-title">
+          <a href="{{ "/" | relURL }}">{{ site.Title }}</a>
+        </h1>
+        {{ with site.Params.tagline }}
+          <p class="site-tagline">{{ . }}</p>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+  
+  {{/* Header navigation */}}
+  {{ if site.Menus.header }}
+    <nav class="header-navigation" 
+         role="navigation" 
+         aria-label="Header navigation">
+      <ul class="header-nav-list">
+        {{ range site.Menus.header }}
+          <li class="header-nav-item">
+            <a href="{{ .URL }}" 
+               class="header-nav-link"
+               {{ if .Pre }}aria-label="{{ .Pre }}"{{ end }}
+               {{ if eq .URL $.RelPermalink }}aria-current="page"{{ end }}>
+              {{ .Name }}
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+    </nav>
+  {{ end }}
+  
+  {{/* Header actions */}}
+  <div class="header-actions">
+    
+    {{/* Version selector */}}
+    {{ if site.Params.versions }}
+      <div class="version-selector" data-component="version-selector">
+        <label for="version-select" class="sr-only">Select version</label>
+        <select id="version-select" 
+                class="version-select"
+                data-version-select>
+          {{ range site.Params.versions }}
+            <option value="{{ .url }}" 
+                    {{ if .current }}selected{{ end }}>
+              {{ .name }}
+            </option>
+          {{ end }}
+        </select>
+      </div>
+    {{ end }}
+    
+    {{/* Language switcher */}}
+    {{ if hugo.IsMultilingual }}
+      <div class="language-switcher" data-component="language-switcher">
+        <label for="language-select" class="sr-only">Select language</label>
+        <select id="language-select" 
+                class="language-select"
+                data-language-select>
+          {{ range site.Languages }}
+            <option value="{{ .Lang }}" 
+                    {{ if eq .Lang site.Language.Lang }}selected{{ end }}>
+              {{ .LanguageName }}
+            </option>
+          {{ end }}
+        </select>
+      </div>
+    {{ end }}
+    
+    {{/* Theme toggle */}}
+    {{ if not site.Params.theme.disableToggle }}
+      <button type="button" 
+              class="theme-toggle"
+              aria-label="Toggle dark mode"
+              data-component="theme-toggle">
+        <span class="theme-toggle-icon theme-toggle-icon--light" aria-hidden="true">☀</span>
+        <span class="theme-toggle-icon theme-toggle-icon--dark" aria-hidden="true">☽</span>
+      </button>
+    {{ end }}
+    
+  </div>
+  
+</div>

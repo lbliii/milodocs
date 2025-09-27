@@ -1,74 +1,205 @@
 {{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
+  {{ partial "navigation/topbar/main.html" . }}
 {{- end -}}
 
 {{- define "sidebar-left" -}}
-  {{- partial "navigation/sidebar-left.html" . -}}
+  {{ partial "navigation/sidebar-left.html" . }}
 {{- end -}}
 
 {{- define "content" -}}
+{{ $notebookPath := .Params.notebook_path }}
 
-      <article id="articleContent" class="article-content"
-               data-component="notebook-progressive-reveal">
-  
-  {{- $notebookPath := .Params.notebook_path -}}
-  {{- with resources.Get $notebookPath -}}
-    {{- $resource := . -}}
-    {{- $content := $resource.Content | safeHTML -}}
-    {{- with $content | transform.Unmarshal -}}
-      {{- $decodedNotebook := . -}}
+{{ if not $notebookPath }}
+  <div class="notebook-error" role="alert">
+    <div class="error-content">
+      <h2 class="error-title">Notebook Path Missing</h2>
+      <p class="error-message">No notebook path specified in front matter.</p>
+      <p class="error-help">Add <code>notebook_path: "path/to/notebook.ipynb"</code> to the page front matter.</p>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+{{ with resources.Get $notebookPath }}
+  {{ $resource := . }}
+  {{ $content := $resource.Content | safeHTML }}
+  {{ with $content | transform.Unmarshal }}
+    {{ $decodedNotebook := . }}
+    
+    <article class="jupyter-notebook" 
+             data-component="jupyter-notebook"
+             data-notebook-path="{{ $notebookPath }}"
+             data-cell-count="{{ len $decodedNotebook.cells }}"
+             itemscope 
+             itemtype="https://schema.org/SoftwareApplication">
       
-      {{ partial "notebook/header.html" . }}
-      
-      <!-- Notebook Toolbar -->
-      <div class="notebook__toolbar">
-        <div class="notebook__cell-counter">
-          <span data-visible-cells="5">5</span> / <span data-total-cells="{{ len $decodedNotebook.cells }}">{{ len $decodedNotebook.cells }}</span> cells
-        </div>
+      {{/* Notebook Header */}}
+      <header class="notebook-header">
         
-                        <div class="notebook__actions">
-                  {{/* Notebook Launch Dropdown */}}
-                  {{ partial "notebook/launch-dropdown.html" $ }}
-                </div>
-      </div>
-      
-      <div class="notebook__cells" 
-           data-component="notebook-collapse"
-           data-notebook-id="{{ .Permalink | base64Encode }}"
-           data-cell-count="{{ len $decodedNotebook.cells }}">
-          {{ range $index, $cell := $decodedNotebook.cells }}
-            {{/* Add hidden class to all cells except first few */}}
-            {{ $isInitiallyVisible := lt $index 5 }}
-            <div class="notebook-cell-wrapper{{ if not $isInitiallyVisible }} notebook-cell--hidden{{ end }}" 
-                 data-cell-index="{{ $index }}">
-              {{ if eq $cell.cell_type "markdown" }}
-                {{ partial "notebook/cell-markdown.html" (dict "cell" $cell "index" $index) }}
-              {{ else if eq $cell.cell_type "code" }}
-                {{ partial "notebook/cell-code.html" (dict "cell" $cell "index" $index) }}
-              {{ else if eq $cell.cell_type "raw" }}
-                {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
-              {{ else }}
-                {{/* Unknown cell type - render as raw */}}
-                {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
-              {{ end }}
+        {{/* Title and metadata */}}
+        <div class="notebook-info">
+          <h1 class="notebook-title" itemprop="name">{{ .Title }}</h1>
+          
+          {{ with .Content }}
+            <div class="notebook-description" itemprop="description">
+              {{ . }}
             </div>
           {{ end }}
+          
+          {{/* Notebook metadata */}}
+          <div class="notebook-meta">
+            <dl class="notebook-meta-list">
+              
+              <div class="meta-item">
+                <dt class="meta-label">Kernel</dt>
+                <dd class="meta-value">
+                  {{ with $decodedNotebook.metadata.kernelspec.display_name }}
+                    <span class="kernel-name">{{ . }}</span>
+                  {{ else }}
+                    <span class="kernel-name">Not specified</span>
+                  {{ end }}
+                </dd>
+              </div>
+              
+              <div class="meta-item">
+                <dt class="meta-label">Language</dt>
+                <dd class="meta-value">
+                  {{ with $decodedNotebook.metadata.language_info.name }}
+                    <span class="language-name">{{ . | title }}</span>
+                    {{ with $.metadata.language_info.version }}
+                      <span class="language-version">{{ . }}</span>
+                    {{ end }}
+                  {{ else }}
+                    <span class="language-name">Python</span>
+                  {{ end }}
+                </dd>
+              </div>
+              
+              <div class="meta-item">
+                <dt class="meta-label">Cells</dt>
+                <dd class="meta-value">
+                  <span class="cell-count">{{ len $decodedNotebook.cells }}</span>
+                </dd>
+              </div>
+              
+            </dl>
+          </div>
+        </div>
+        
+        {{/* Notebook controls */}}
+        <div class="notebook-controls">
+          
+          {{/* Cell visibility controls */}}
+          <div class="visibility-controls">
+            <span class="cell-counter">
+              <span class="visible-count" data-visible-cells="5">5</span> / 
+              <span class="total-count">{{ len $decodedNotebook.cells }}</span> cells
+            </span>
+            
+            <button type="button" 
+                    class="control-button expand-all"
+                    data-action="expand-all"
+                    aria-label="Show all cells">
+              <span class="button-icon" aria-hidden="true">📖</span>
+              <span class="button-text">Show all</span>
+            </button>
+            
+            <button type="button" 
+                    class="control-button collapse-all"
+                    data-action="collapse-all"
+                    aria-label="Hide extra cells">
+              <span class="button-icon" aria-hidden="true">📕</span>
+              <span class="button-text">Collapse</span>
+            </button>
+          </div>
+          
+          {{/* Notebook actions */}}
+          <div class="notebook-actions">
+            {{ partial "notebook/launch-dropdown.html" . }}
+            
+            <button type="button" 
+                    class="action-button download-notebook"
+                    data-action="download"
+                    aria-label="Download notebook">
+              <span class="button-icon" aria-hidden="true">⬇️</span>
+              <span class="button-text">Download</span>
+            </button>
+          </div>
+          
+        </div>
+        
+      </header>
+      
+      {{/* Notebook content */}}
+      <div class="notebook-content" 
+           data-component="notebook-cells"
+           data-notebook-id="{{ .Permalink | base64Encode }}"
+           data-initial-visible="5">
+        
+        {{ range $index, $cell := $decodedNotebook.cells }}
+          {{ $isInitiallyVisible := lt $index 5 }}
+          
+          <div class="notebook-cell-wrapper{{ if not $isInitiallyVisible }} notebook-cell--hidden{{ end }}" 
+               data-cell-index="{{ $index }}"
+               data-cell-type="{{ $cell.cell_type }}">
+            
+            {{ if eq $cell.cell_type "markdown" }}
+              {{ partial "notebook/cell-markdown.html" (dict "cell" $cell "index" $index) }}
+            {{ else if eq $cell.cell_type "code" }}
+              {{ partial "notebook/cell-code.html" (dict "cell" $cell "index" $index) }}
+            {{ else if eq $cell.cell_type "raw" }}
+              {{ partial "notebook/cell-raw.html" (dict "cell" $cell "index" $index) }}
+            {{ else }}
+              {{/* Unknown cell type - render as raw */}}
+              <div class="notebook-cell notebook-cell--unknown" 
+                   id="cell-{{ $index }}"
+                   data-cell-type="{{ $cell.cell_type }}">
+                
+                <div class="cell-header">
+                  <span class="cell-type">{{ $cell.cell_type | title }}</span>
+                  <span class="cell-index">[{{ $index }}]</span>
+                </div>
+                
+                <div class="cell-content">
+                  <pre class="cell-source"><code>{{ delimit $cell.source "\n" }}</code></pre>
+                </div>
+                
+              </div>
+            {{ end }}
+            
+          </div>
+        {{ end }}
+        
+        {{/* Load more cells section */}}
+        <div class="notebook-load-more" 
+             data-component="load-more-cells"
+             hidden>
+          
+          <button type="button" 
+                  class="load-more-button"
+                  data-action="load-more">
+            <span class="button-icon" aria-hidden="true">⬇️</span>
+            <span class="button-text">Load more cells</span>
+            <span class="cells-remaining">({{ sub (len $decodedNotebook.cells) 5 }} remaining)</span>
+          </button>
+          
+        </div>
+        
       </div>
       
-
-      
-      {{/* Enhanced metadata for JavaScript */}}
+      {{/* Notebook metadata for JavaScript */}}
       <script type="application/json" id="notebook-metadata">
       {
         "totalCells": {{ len $decodedNotebook.cells }},
         "initiallyVisible": 5,
-        "batchSize": 20,
+        "batchSize": 10,
+        "notebookPath": {{ $notebookPath | jsonify }},
         "cells": [
           {{ range $index, $cell := $decodedNotebook.cells }}
             {
               "index": {{ $index }},
-              "type": "{{ $cell.cell_type }}",
-              "id": "cell-{{ $cell.cell_type }}-{{ $index }}",
+              "type": {{ $cell.cell_type | jsonify }},
+              "id": "cell-{{ $index }}",
               {{ with $cell.execution_count }}"executionCount": {{ . }},{{ end }}
               "hasOutput": {{ if $cell.outputs }}true{{ else }}false{{ end }}
             }{{ if ne $index (sub (len $decodedNotebook.cells) 1) }},{{ end }}
@@ -77,20 +208,28 @@
       }
       </script>
       
-    {{- else -}}
-      {{- errorf "Failed to unmarshal notebook: %s" $notebookPath -}}
-    {{- end -}}
-  {{- else -}}
-    {{- errorf "Failed to get notebook resource: %s" $notebookPath -}}
-    {{- errorf "Current working directory: %s" (os.Getwd) -}}
-  {{- end -}}
-</article>
-
-{{/* Inline JS removed. Notebook cells use Collapse/Notebook components. */}}
-
-
+    </article>
+    
+  {{ else }}
+    <div class="notebook-error" role="alert">
+      <div class="error-content">
+        <h2 class="error-title">Notebook Parse Error</h2>
+        <p class="error-message">Failed to parse notebook: <code>{{ $notebookPath }}</code></p>
+        <p class="error-help">Check that the file is a valid Jupyter notebook (.ipynb) file.</p>
+      </div>
+    </div>
+  {{ end }}
+{{ else }}
+  <div class="notebook-error" role="alert">
+    <div class="error-content">
+      <h2 class="error-title">Notebook Not Found</h2>
+      <p class="error-message">Could not find notebook: <code>{{ $notebookPath }}</code></p>
+      <p class="error-help">Check that the file exists in the <code>assets/</code> directory.</p>
+    </div>
+  </div>
+{{ end }}
 {{- end -}}
 
 {{- define "sidebar-right" -}}
-{{- partial "navigation/sidebar-right.html" . -}}
-{{- end -}} 
+  {{ partial "navigation/sidebar-right.html" . }}
+{{- end -}}

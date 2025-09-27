@@ -1,25 +1,71 @@
-{{/* Article Header - Parent component managing breadcrumbs and metadata */}}
-{{- $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
-
-<div class="article-header" data-component="article-header">
-  <div class="article-header__navigation">
-    {{/* Pure breadcrumbs navigation */}}
-    {{- partial "navigation/breadcrumbs.html" . -}}
+{{/* Article Header Component */}}
+<header class="article-header" 
+        data-component="article-header">
+  
+  {{/* Article navigation */}}
+  <nav class="article-nav" aria-label="Article navigation">
     
-    <div class="article-header__actions">
-      {{/* Copy Page Component */}}
-      {{- partial "article/copy-page.html" . -}}
+    {{/* Breadcrumbs */}}
+    <div class="article-breadcrumbs">
+      {{ partial "navigation/breadcrumbs.html" . }}
     </div>
-  </div>
-
-  {{/* Collapsible metadata panel */}}
-  {{- if $hasMetadata -}}
-  <div 
-    id="article-metadata-panel" 
-    class="article-header__metadata-panel"
-    aria-hidden="true"
-    data-metadata-panel>
-    {{- partial "article/metadata.html" . -}}
-  </div>
-  {{- end -}}
-</div>
+    
+    {{/* Article actions */}}
+    <div class="article-actions">
+      
+      {{/* Copy page URL */}}
+      <button type="button" 
+              class="article-action article-action--copy"
+              data-component="copy-button"
+              data-copy-text="{{ .Permalink }}"
+              aria-label="Copy page URL">
+        <span class="action-icon" aria-hidden="true">🔗</span>
+        <span class="action-text">Copy link</span>
+      </button>
+      
+      {{/* Edit page (if repository is configured) */}}
+      {{ if and site.Params.repository.url .File }}
+        <a href="{{ site.Params.repository.url }}/edit/{{ site.Params.repository.branch | default `main` }}/content/{{ .File.Path }}"
+           class="article-action article-action--edit"
+           rel="noopener noreferrer"
+           target="_blank"
+           aria-label="Edit this page">
+          <span class="action-icon" aria-hidden="true">✏️</span>
+          <span class="action-text">Edit page</span>
+        </a>
+      {{ end }}
+      
+      {{/* Print page */}}
+      <button type="button" 
+              class="article-action article-action--print"
+              onclick="window.print()"
+              aria-label="Print this page">
+        <span class="action-icon" aria-hidden="true">🖨</span>
+        <span class="action-text">Print</span>
+      </button>
+      
+    </div>
+    
+  </nav>
+  
+  {{/* Article metadata panel (collapsible) */}}
+  {{ $hasMetadata := or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount }}
+  {{ if $hasMetadata }}
+    <details class="article-metadata-panel" 
+             data-component="metadata-panel"
+             id="article-metadata-panel">
+      
+      <summary class="metadata-panel-toggle" 
+               aria-label="Toggle article metadata">
+        <span class="toggle-text">Article details</span>
+        <span class="toggle-icon" aria-hidden="true">▼</span>
+      </summary>
+      
+      <div class="metadata-panel-content">
+        {{ partial "article/metadata.html" . }}
+      </div>
+      
+    </details>
+  {{ end }}
+  
+</header>

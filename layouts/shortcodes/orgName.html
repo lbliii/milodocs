@@ -1,1 +1,13 @@
-{{- with .Site.Params.names.organization}}{{.}}{{end}}
+{{/* Organization Name Shortcode - Display organization name */}}
+<span class="organization-name" 
+      data-component="organization-name">
+  {{ with .Site.Params.names.organization }}
+    {{ . }}
+  {{ else }}
+    {{ with .Site.Params.organization.name }}
+      {{ . }}
+    {{ else }}
+      {{ .Site.Title }}
+    {{ end }}
+  {{ end }}
+</span>

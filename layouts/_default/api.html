@@ -1,25 +1,151 @@
-{{- define "main" }}
-{{- $reference := .Page.Params.reference -}}
+{{- define "main" -}}
+{{ $reference := .Page.Params.reference }}
 
-{{- range $data, $spec := .Site.Data -}}
-{{- if eq $data $reference -}}
-{{- with $spec -}}
-
-<section id="apiContainer" class="w-full overflow-y-auto">
-    <div class="flex flex-col m-4">
-    <!-- API Information Card -->
-    <div class="p-4 border border-zinc-200 rounded mb-4 text-text-primary">
-        <h2>{{ .info.title }}</h2>
-        <p>{{ $.Page.RenderString .info.description }}</p>
-        <p><strong>Version:</strong> {{ .info.version }}</p>
+<article class="api-documentation" 
+         data-component="api-documentation"
+         data-api-reference="{{ $reference }}">
+  
+  <header class="api-header">
+    <div class="api-navigation">
+      {{ partial "navigation/breadcrumbs.html" . }}
     </div>
-    <!-- Paths List -->
-    {{- partial "api/paths.html" $spec.paths -}}
-    <!-- Components -->
-    {{- partial "api/components.html" $spec.components -}}  
-    </div>
-</section>
-{{- end -}}
-{{- end -}}
-{{- end -}}
+  </header>
+  
+  {{ range $data, $spec := .Site.Data }}
+    {{ if eq $data $reference }}
+      {{ with $spec }}
+        
+        <div class="api-content">
+          
+          {{/* API Information */}}
+          <section class="api-info">
+            <header class="api-info-header">
+              <h1 class="api-title">{{ .info.title }}</h1>
+              
+              <div class="api-metadata">
+                <dl class="api-meta-list">
+                  
+                  <div class="api-meta-item">
+                    <dt class="meta-label">Version</dt>
+                    <dd class="meta-value">
+                      <span class="api-version">{{ .info.version }}</span>
+                    </dd>
+                  </div>
+                  
+                  {{ with .info.contact }}
+                    <div class="api-meta-item">
+                      <dt class="meta-label">Contact</dt>
+                      <dd class="meta-value">
+                        {{ if .url }}
+                          <a href="{{ .url }}" 
+                             class="api-contact-link"
+                             rel="noopener noreferrer"
+                             target="_blank">
+                            {{ .name | default .url }}
+                          </a>
+                        {{ else }}
+                          <span class="api-contact">{{ .name }}</span>
+                        {{ end }}
+                        {{ with .email }}
+                          <a href="mailto:{{ . }}" 
+                             class="api-contact-email">{{ . }}</a>
+                        {{ end }}
+                      </dd>
+                    </div>
+                  {{ end }}
+                  
+                  {{ with .info.license }}
+                    <div class="api-meta-item">
+                      <dt class="meta-label">License</dt>
+                      <dd class="meta-value">
+                        {{ if .url }}
+                          <a href="{{ .url }}" 
+                             class="api-license-link"
+                             rel="noopener noreferrer"
+                             target="_blank">
+                            {{ .name }}
+                          </a>
+                        {{ else }}
+                          <span class="api-license">{{ .name }}</span>
+                        {{ end }}
+                      </dd>
+                    </div>
+                  {{ end }}
+                  
+                </dl>
+              </div>
+            </header>
+            
+            {{ with .info.description }}
+              <div class="api-description">
+                {{ $.Page.RenderString . }}
+              </div>
+            {{ end }}
+            
+            {{ with .servers }}
+              <section class="api-servers">
+                <h2 class="servers-title">Base URLs</h2>
+                <ul class="servers-list">
+                  {{ range . }}
+                    <li class="server-item">
+                      <code class="server-url">{{ .url }}</code>
+                      {{ with .description }}
+                        <span class="server-description">{{ . }}</span>
+                      {{ end }}
+                    </li>
+                  {{ end }}
+                </ul>
+              </section>
+            {{ end }}
+            
+          </section>
+          
+          {{/* API Endpoints */}}
+          {{ with .paths }}
+            <section class="api-endpoints">
+              <h2 class="endpoints-title">API Endpoints</h2>
+              {{ partial "api/paths.html" . }}
+            </section>
+          {{ end }}
+          
+          {{/* API Components */}}
+          {{ with .components }}
+            <section class="api-components">
+              <h2 class="components-title">API Components</h2>
+              {{ partial "api/components.html" . }}
+            </section>
+          {{ end }}
+          
+          {{/* API Security */}}
+          {{ with .security }}
+            <section class="api-security">
+              <h2 class="security-title">Authentication</h2>
+              {{ partial "api/security.html" . }}
+            </section>
+          {{ end }}
+          
+          {{/* API Tags */}}
+          {{ with .tags }}
+            <section class="api-tags">
+              <h2 class="tags-title">API Categories</h2>
+              <div class="tags-grid">
+                {{ range . }}
+                  <div class="tag-item">
+                    <h3 class="tag-name">{{ .name }}</h3>
+                    {{ with .description }}
+                      <p class="tag-description">{{ . }}</p>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+            </section>
+          {{ end }}
+          
+        </div>
+        
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  
+</article>
 {{- end -}}

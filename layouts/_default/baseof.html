@@ -1,93 +1,105 @@
 <!DOCTYPE html>
-<html lang="{{ or site.Language.LanguageCode site.Language.Lang }}" dir="{{ or site.Language.LanguageDirection `ltr` }}" class="no-js {{ if eq (site.Params.theme.mode | default "dark") "dark" }}dark{{ end }}">
+<html lang="{{ or site.Language.LanguageCode site.Language.Lang }}" 
+      dir="{{ or site.Language.LanguageDirection `ltr` }}"
+      data-theme="{{ site.Params.theme.mode | default `auto` }}"
+      data-environment="{{ hugo.Environment }}"
+      data-hugo-version="{{ hugo.Version }}">
 <head>
-  {{ with (templates.Defer (dict "key" "global")) }}
-    {{ partial "head.html" . }}
-  {{ end }}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  
+  {{/* SEO and meta information */}}
+  {{ partial "head.html" . }}
   {{ block "head-extra" . }}{{ end }}
 </head>
-<body class="bg-bg-primary antialiased" 
-      data-environment="{{ hugo.Environment }}" 
-      data-theme="{{ site.Params.theme.mode | default "dark" }}"
-      data-build="{{ cond (or hugo.IsProduction (in (slice "nvidia" "enterprise" "open-source") hugo.Environment)) "production" "development" }}"
-      data-version="{{ site.Params.version.major | default 0 }}.{{ site.Params.version.minor | default 0 }}.{{ site.Params.version.patch | default 0 }}"
-      {{- if site.Params.debug }} data-debug="true"{{- end }}>
-  <header>
-    {{- partial "header.html" . -}}
+<body data-page-kind="{{ .Kind }}" 
+      data-page-type="{{ .Type }}" 
+      data-section="{{ .Section }}"
+      {{ if site.Params.debug }}data-debug="true"{{ end }}>
+  
+  {{/* Skip link for accessibility */}}
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  {{/* Site header */}}
+  <header role="banner" class="site-header">
+    {{ block "site-header" . }}
+      {{ partial "header.html" . }}
+    {{ end }}
   </header>
-  {{- block "top-bar" . -}}{{- end -}}
-
-  {{/* Unified layout config via util partial */}}
-  {{- $cfg := partial "utils/layout-config.html" (dict "site" .Site "page" .) -}}
-  {{- $rightRail := eq (partial "utils/right-rail.html" (dict "site" .Site "page" .)) "true" -}}
-  {{- $leftRailWidth := $cfg.leftRailWidth | default "" -}}
-  {{- $rightRailWidth := $cfg.rightRailWidth | default "" -}}
-  {{- $densityClass := cond (eq $cfg.density "compact") "layout-density--compact" "layout-density--comfortable" -}}
-
-  {{/* Compose style vars for layout-shell */}}
-  {{- $styleVars := slice -}}
-  {{- if not $rightRail -}}
-    {{- $styleVars = $styleVars | append "--right-rail-width:0" | append "--right-rail-width-2xl:0" -}}
-  {{- end -}}
-  {{- with $leftRailWidth -}}
-    {{- $styleVars = $styleVars | append (printf "--left-rail-width:%s" .) | append (printf "--left-rail-width-2xl:%s" .) -}}
-  {{- end -}}
-  {{- with $rightRailWidth -}}
-    {{- $styleVars = $styleVars | append (printf "--right-rail-width:%s" .) | append (printf "--right-rail-width-2xl:%s" .) -}}
-  {{- end -}}
-
-  {{/* <main class=...> */}}
-  <main class="layout-shell {{ $densityClass }}" data-has-right-rail="{{ $rightRail }}" {{ if gt (len $styleVars) 0 }}style="{{ delimit $styleVars ";" }}"{{ end }}>
-    <!-- Left sidebar (present at all sizes; handles mobile off-canvas + xl sticky itself) -->
-    {{- block "sidebar-left" . -}}{{- end -}}
-    {{/* <div id="pageContainer" class="p-4 w-full md:flex-1 min-w-0 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl xl:px-8 2xl:px-12"> */}}
-    <div id="pageContainer" class="p-4 w-full md:flex-1 min-w-0 mx-auto page-container xl:px-8 2xl:px-12">
-      <!-- Loading skeleton for initial page load (opt-in) -->
-      {{ block "loading-skeleton" . }}
-        {{- $lc := partial "utils/layout-config.html" (dict "site" .Site "page" .) -}}
-        {{- if $lc.skeleton -}}
-        <div id="pageLoadingSkeleton" class="space-y-4">
-          <div class="h-8 bg-gray-200 rounded content-skeleton animate-pulse"></div>
-          <div class="space-y-2">
-            <div class="h-4 bg-gray-200 rounded content-skeleton animate-pulse"></div>
-            <div class="h-4 bg-gray-200 rounded w-5/6 content-skeleton animate-pulse"></div>
-            <div class="h-4 bg-gray-200 rounded w-4/6 content-skeleton animate-pulse"></div>
-          </div>
-          <div class="h-6 bg-gray-200 rounded w-3/4 content-skeleton animate-pulse"></div>
-        </div>
-        {{- end -}}
+  
+  {{/* Top navigation bar */}}
+  {{ block "site-navigation" . }}
+    {{ partial "navigation/topbar/main.html" . }}
+  {{ end }}
+  
+  {{/* Main content area */}}
+  <main id="main-content" role="main" class="site-main">
+    <div class="layout-container">
+      
+      {{/* Breadcrumb navigation */}}
+      {{ block "breadcrumbs" . }}
+        {{ if not .IsHome }}
+          <nav aria-label="Breadcrumb" class="breadcrumbs">
+            {{ partial "navigation/breadcrumbs.html" . }}
+          </nav>
+        {{ end }}
       {{ end }}
       
-      <!-- Main content area -->
-      <div id="mainContent" class="transition-opacity duration-300">
-        {{- block "page-header" . -}}{{- end -}}
-        {{- block "pre-content" . -}}{{- end -}}
-        {{- if .IsHome -}}
-          {{- block "home" . -}}{{- end -}}
-        {{- else if or (eq .Kind "section") (eq .Kind "taxonomy") (eq .Kind "term") -}}
-          {{- block "list" . -}}{{- end -}}
-        {{- else -}}
-          {{- if eq .Kind "page" -}}{{- partial "article/summarization.html" . -}}{{- end -}} 
-          {{- block "breadcrumbs" . -}}{{- end -}}
-          {{- block "content" . -}}{{- end -}}
-        {{- end -}}
-        {{- block "post-content" . -}}{{- end -}}
-        {{- block "innerFooter" . -}}{{- end -}}
+      {{/* Content layout */}}
+      <div class="content-layout">
+        
+        {{/* Left sidebar - Primary navigation */}}
+        <aside role="navigation" 
+               aria-label="Primary navigation" 
+               class="content-nav content-nav--primary">
+          {{ block "primary-navigation" . }}
+            {{ partial "navigation/sidebar-left.html" . }}
+          {{ end }}
+        </aside>
+        
+        {{/* Primary content area */}}
+        <div class="content-primary">
+          {{/* Page-specific header */}}
+          {{ block "page-header" . }}{{ end }}
+          
+          {{/* Main content blocks */}}
+          {{- if .IsHome -}}
+            {{ block "home-content" . }}{{ end }}
+          {{- else if or (eq .Kind "section") (eq .Kind "taxonomy") (eq .Kind "term") -}}
+            {{ block "list-content" . }}{{ end }}
+          {{- else -}}
+            {{ block "single-content" . }}{{ end }}
+          {{- end -}}
+          
+          {{/* Page footer actions */}}
+          {{ block "page-footer" . }}{{ end }}
+        </div>
+        
+        {{/* Right sidebar - Table of contents, metadata */}}
+        <aside role="complementary" 
+               aria-label="Page information" 
+               class="content-nav content-nav--secondary">
+          {{ block "secondary-navigation" . }}
+            {{ partial "navigation/sidebar-right.html" . }}
+          {{ end }}
+        </aside>
+        
       </div>
     </div>
-    {{- partial "searchResultsContainer.html" . -}}
-    <!-- Right sidebar column (xl+) -->
-    {{- if $rightRail -}}
-    <div class="hidden xl:block">
-      {{- block "sidebar-right" . -}}{{- end -}}
-    </div>
-    {{- end -}}
   </main>
-  <footer>
-    {{- partial "footer.html" . -}}
-  </footer>
-  {{ block "scripts" . }}{{ end }}
   
-
+  {{/* Site footer */}}
+  <footer role="contentinfo" class="site-footer">
+    {{ block "site-footer" . }}
+      {{ partial "footer.html" . }}
+    {{ end }}
+  </footer>
+  
+  {{/* JavaScript and analytics */}}
+  {{ block "scripts" . }}
+    {{ partial "head/js.html" . }}
+  {{ end }}
+  
 </body>
 </html>

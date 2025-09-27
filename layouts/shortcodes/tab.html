@@ -1,15 +1,43 @@
-<!-- Single-tab shortcode: repeat this to define a group of tabs -->
-{{- $group := .Get "group" | default "default" -}}
-{{- $label := .Get "label" | default (.Get "option") -}}
-{{- $active := or (.Get "active") (eq (lower (.Get "state")) "active") -}}
-{{- $variant := .Get "variant" -}}
+{{/* Tab Shortcode - Single tab within a tab group */}}
+{{ $group := .Get "group" | default "default" }}
+{{ $label := .Get "label" | default (.Get "option") }}
+{{ $active := or (.Get "active") (eq (lower (.Get "state")) "active") }}
+{{ $variant := .Get "variant" }}
+{{ $icon := .Get "icon" }}
+{{ $id := printf "tab-%s-%s" ($group | urlize) ($label | urlize) }}
 
-<div data-component="tab-item"
+{{ if not $label }}
+  <div class="tab-error" role="alert">
+    <p class="error-message">Tab label is required</p>
+  </div>
+  {{ return }}
+{{ end }}
+
+<div class="tab-item" 
+     data-component="tab-item"
      data-group="{{ $group | urlize }}"
      data-label="{{ $label }}"
-     {{ if $variant }}data-variant="{{ $variant }}"{{ end }}
-     {{ if $active }}data-active="true"{{ end }}>
-  {{- $.Page.RenderString .Inner -}}
+     data-tab-id="{{ $id }}"
+     {{ with $variant }}data-variant="{{ . }}"{{ end }}
+     {{ if $active }}data-active="true"{{ end }}
+     id="{{ $id }}"
+     role="tabpanel"
+     {{ if not $active }}hidden{{ end }}
+     aria-labelledby="{{ $id }}-button">
+  
+  {{/* Tab content header (for context when tabs are linearized) */}}
+  <div class="tab-content-header">
+    <h3 class="tab-content-title">
+      {{ with $icon }}
+        <span class="tab-icon" aria-hidden="true">{{ . }}</span>
+      {{ end }}
+      {{ $label }}
+    </h3>
   </div>
-
-
+  
+  {{/* Tab content */}}
+  <div class="tab-content">
+    {{ .Page.RenderString .Inner }}
+  </div>
+  
+</div>

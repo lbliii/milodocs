@@ -1,116 +1,163 @@
-{{- define "top-bar" -}}
-  {{- partial "navigation/topbar/main.html" . -}}
-{{- end -}}
+{{/* Section/List Layout */}}
 
-{{- define "sidebar-left" -}}
-  {{- partial "navigation/sidebar-left.html" . -}}
-{{- end -}}
-
-{{- define "breadcrumbs" -}}
-  <div class="my-4">
-      {{partial "navigation/breadcrumbs.html" . }}
-  </div>
-{{- end -}}
-
-{{- define "list" -}}
-  <header class="mb-6 mx-auto max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
-   <h1 class="text-3xl font-bold text-text-primary mb-4">{{ .Title }}</h1>
-    {{- with .Content -}}
-      <div class="prose max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+{{ define "list-content" }}
+<div class="section-page" data-component="section-page">
+  
+  {{/* Section header */}}
+  <header class="section-header">
+    <h1 class="section-title">{{ .Title }}</h1>
+    
+    {{ with .Content }}
+      <div class="section-description">
         {{ . }}
       </div>
-    {{- end -}}
+    {{ end }}
+    
+    {{ if .Pages }}
+      <p class="section-count">
+        {{ len .Pages }} {{ if eq (len .Pages) 1 }}article{{ else }}articles{{ end }}
+      </p>
+    {{ end }}
   </header>
-
-  {{- $pages := .Pages -}}
-  {{- if $pages -}}
-    <section aria-label="Page listings" class="mx-auto max-w-6xl 2xl:max-w-7xl">
-    {{/* <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"> */}}
-    <div class="grid grid-autofit gap-4 2xl:grid-cols-3">
-        {{- range $pages -}}
-          <article class="card card--tile bg-surface rounded-lg overflow-hidden">
-            {{- with .Params.image -}}
-              <div class="aspect-w-16 aspect-h-9">
-                <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="object-cover w-full h-48" loading="lazy">
-              </div>
-            {{- end -}}
+  
+  {{/* Page listings */}}
+  {{ if .Pages }}
+    <section class="page-listings">
+      <h2 class="sr-only">Articles in this section</h2>
+      
+      <div class="article-grid">
+        {{ range .Pages }}
+          <article class="article-card" 
+                   data-component="article-card"
+                   itemscope 
+                   itemtype="https://schema.org/Article">
             
-            <div class="p-4">
-              <h2 class="text-xl font-semibold mb-3">
-                 <a href="{{ .RelPermalink }}" 
-                    class="text-text-primary hover:text-blue-600 focus:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded focus-ring"
-                   aria-describedby="{{ .RelPermalink | anchorize }}-summary">
-                  {{ .LinkTitle }}
-                </a>
-              </h2>
+            {{/* Article image */}}
+            {{ with .Params.featured_image }}
+              <div class="article-card-image">
+                <img src="{{ . | relURL }}" 
+                     alt="{{ $.Title }}" 
+                     loading="lazy"
+                     itemprop="image">
+              </div>
+            {{ end }}
+            
+            {{/* Article content */}}
+            <div class="article-card-content">
               
-              {{- with .Summary -}}
-                <div id="{{ $.RelPermalink | anchorize }}-summary" class="text-gray-600 text-sm leading-relaxed mb-3">
-                  {{ . | truncate 150 }}
-                </div>
-              {{- end -}}
-              
-              {{/* Enhanced metadata for list items */}}
-              <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500 mt-3">
-                {{- with .Date -}}
-                  <time datetime="{{ .Format "2006-01-02" }}" class="flex items-center">
-                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                    </svg>
+              {{/* Article metadata */}}
+              <div class="article-card-meta">
+                {{ with .Params.category }}
+                  <span class="article-category" itemprop="articleSection">{{ . }}</span>
+                {{ end }}
+                
+                {{ with .Date }}
+                  <time datetime="{{ .Format `2006-01-02T15:04:05Z07:00` }}" itemprop="datePublished">
                     {{ .Format "Jan 2, 2006" }}
                   </time>
-                {{- end -}}
-                {{- with .Params.tags -}}
-                  <span class="inline-flex items-center">
-                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 3a1 1 0 00-1 1v3H6a1 1 0 000 2h3v3a1 1 0 002 0V9h3a1 1 0 000-2h-3V4a1 1 0 00-1-1z"/>
-                    </svg>
-                    {{ delimit . ", " }}
-                  </span>
-                {{- end -}}
+                {{ end }}
+                
+                {{ if .Params.reading_time }}
+                  <span class="reading-time">{{ .ReadingTime }} min read</span>
+                {{ end }}
               </div>
+              
+              {{/* Article title */}}
+              <h3 class="article-card-title">
+                <a href="{{ .RelPermalink }}" 
+                   itemprop="url"
+                   aria-describedby="{{ .RelPermalink | anchorize }}-summary">
+                  <span itemprop="headline">{{ .LinkTitle }}</span>
+                </a>
+              </h3>
+              
+              {{/* Article summary */}}
+              {{ with .Summary }}
+                <p class="article-card-summary" 
+                   id="{{ $.RelPermalink | anchorize }}-summary"
+                   itemprop="description">
+                  {{ . | truncate 150 }}
+                </p>
+              {{ end }}
+              
+              {{/* Article tags */}}
+              {{ with .Params.tags }}
+                <div class="article-card-tags">
+                  {{ range first 3 . }}
+                    <span class="tag" itemprop="keywords">{{ . }}</span>
+                  {{ end }}
+                  {{ if gt (len .) 3 }}
+                    <span class="tag-more">+{{ sub (len .) 3 }} more</span>
+                  {{ end }}
+                </div>
+              {{ end }}
+              
             </div>
           </article>
-        {{- end -}}
+        {{ end }}
       </div>
     </section>
     
     {{/* Pagination */}}
-    {{- $paginator := .Paginate $pages -}}
-    {{- if gt $paginator.TotalPages 1 -}}
-      <nav class="mt-12 flex justify-center" aria-label="Pagination">
-        <div class="flex items-center space-x-2">
-          {{- if $paginator.HasPrev -}}
+    {{ $paginator := .Paginate .Pages }}
+    {{ if gt $paginator.TotalPages 1 }}
+      <nav class="pagination" aria-label="Pagination navigation">
+        <h2 class="sr-only">Page navigation</h2>
+        
+        <div class="pagination-info">
+          <p>
+            Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}
+            ({{ len .Pages }} {{ if eq (len .Pages) 1 }}article{{ else }}articles{{ end }} total)
+          </p>
+        </div>
+        
+        <div class="pagination-controls">
+          {{ if $paginator.HasPrev }}
             <a href="{{ $paginator.Prev.URL }}" 
-               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
+               class="pagination-link pagination-link--prev"
+               rel="prev">
+              <span aria-hidden="true">←</span>
               Previous
             </a>
-          {{- end -}}
+          {{ end }}
           
-          {{- range $paginator.Pagers -}}
-            {{- if eq . $paginator -}}
-             <span class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md" aria-current="page">
-               {{ .PageNumber }}
-             </span>
-            {{- else -}}
-             <a href="{{ .URL }}" class="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
-               {{ .PageNumber }}
-             </a>
-            {{- end -}}
-          {{- end -}}
+          <div class="pagination-numbers">
+            {{ range $paginator.Pagers }}
+              {{ if eq . $paginator }}
+                <span class="pagination-number pagination-number--current" 
+                      aria-current="page"
+                      aria-label="Current page, page {{ .PageNumber }}">
+                  {{ .PageNumber }}
+                </span>
+              {{ else }}
+                <a href="{{ .URL }}" 
+                   class="pagination-number"
+                   aria-label="Go to page {{ .PageNumber }}">
+                  {{ .PageNumber }}
+                </a>
+              {{ end }}
+            {{ end }}
+          </div>
           
-          {{- if $paginator.HasNext -}}
+          {{ if $paginator.HasNext }}
             <a href="{{ $paginator.Next.URL }}" 
-               class="px-3 py-2 text-sm font-medium text-gray-500 bg-surface border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus-ring hit-target">
+               class="pagination-link pagination-link--next"
+               rel="next">
               Next
+              <span aria-hidden="true">→</span>
             </a>
-          {{- end -}}
+          {{ end }}
         </div>
       </nav>
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-
-{{- define "sidebar-right" -}}
-  {{- partial "navigation/sidebar-right.html" . -}}
-{{- end -}}
+    {{ end }}
+    
+  {{ else }}
+    {{/* Empty state */}}
+    <div class="empty-state">
+      <h2>No articles yet</h2>
+      <p>This section doesn't contain any articles yet.</p>
+    </div>
+  {{ end }}
+  
+</div>
+{{ end }}

@@ -15,4 +15,4 @@ cascade:
 
  {{%prod%}} is a [Hugo](https://gohugo.io/) theme made for **documentation engineers** and **technical writers**, by one.
 
-  {{<quicklinks>}}
+  {{<quicklinks />}}

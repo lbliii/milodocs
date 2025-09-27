@@ -1,22 +1,103 @@
-{{/* Content status warnings component */}}
-{{- if .Draft -}}
-  <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 not-prose" data-component="article-status-warnings" data-warning="draft">
-    <div class="flex items-center">
-      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-      </svg>
-      <strong>Draft Content:</strong> This page is currently a draft and may contain incomplete information.
+{{/* Content Status Warnings Component */}}
+<div class="article-status-warnings" 
+     data-component="status-warnings">
+  
+  {{/* Draft warning */}}
+  {{ if .Draft }}
+    <div class="status-warning status-warning--draft" 
+         role="alert"
+         data-warning="draft">
+      
+      <div class="warning-content">
+        <span class="warning-icon" aria-hidden="true">⚠️</span>
+        <div class="warning-text">
+          <strong class="warning-title">Draft Content</strong>
+          <p class="warning-message">This page is currently a draft and may contain incomplete information.</p>
+        </div>
+      </div>
+      
     </div>
-  </div>
-{{- end -}}
-
-{{- with .ExpiryDate -}}{{- if .Before now -}}
-  <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 not-prose" data-component="article-status-warnings" data-warning="expired">
-    <div class="flex items-center">
-      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-      </svg>
-      <strong>Content Expired:</strong> This content expired on {{ .Format "January 2, 2006" }} and may be outdated.
-    </div>
-  </div>
-{{- end -}}{{- end -}}
+  {{ end }}
+  
+  {{/* Expired content warning */}}
+  {{ with .ExpiryDate }}
+    {{ if .Before now }}
+      <div class="status-warning status-warning--expired" 
+           role="alert"
+           data-warning="expired">
+        
+        <div class="warning-content">
+          <span class="warning-icon" aria-hidden="true">❌</span>
+          <div class="warning-text">
+            <strong class="warning-title">Content Expired</strong>
+            <p class="warning-message">
+              This content expired on 
+              <time datetime="{{ .Format `2006-01-02T15:04:05Z07:00` }}">
+                {{ .Format "January 2, 2006" }}
+              </time> 
+              and may be outdated.
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    {{ end }}
+  {{ end }}
+  
+  {{/* Custom status warnings */}}
+  {{ with .Params.status }}
+    {{ if eq . "deprecated" }}
+      <div class="status-warning status-warning--deprecated" 
+           role="alert"
+           data-warning="deprecated">
+        
+        <div class="warning-content">
+          <span class="warning-icon" aria-hidden="true">🚫</span>
+          <div class="warning-text">
+            <strong class="warning-title">Deprecated</strong>
+            <p class="warning-message">
+              This content is deprecated and will be removed in a future version.
+              {{ with $.Params.status_note }}{{ . }}{{ end }}
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    {{ else if eq . "beta" }}
+      <div class="status-warning status-warning--beta" 
+           role="alert"
+           data-warning="beta">
+        
+        <div class="warning-content">
+          <span class="warning-icon" aria-hidden="true">🧪</span>
+          <div class="warning-text">
+            <strong class="warning-title">Beta Feature</strong>
+            <p class="warning-message">
+              This feature is in beta and may change in future releases.
+              {{ with $.Params.status_note }}{{ . }}{{ end }}
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    {{ else if eq . "new" }}
+      <div class="status-warning status-warning--new" 
+           role="alert"
+           data-warning="new">
+        
+        <div class="warning-content">
+          <span class="warning-icon" aria-hidden="true">✨</span>
+          <div class="warning-text">
+            <strong class="warning-title">New Feature</strong>
+            <p class="warning-message">
+              This is a new feature added recently.
+              {{ with $.Params.status_note }}{{ . }}{{ end }}
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    {{ end }}
+  {{ end }}
+  
+</div>

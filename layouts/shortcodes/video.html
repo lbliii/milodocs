@@ -1,16 +1,105 @@
-{{- $src := .Get 0 -}}
-{{- $class := .Get 1 | default "w-full max-w-2xl mx-auto" -}}
-{{- $id := printf "video-%d" (now.UnixMilli) -}}
+{{/* Video Shortcode - Embedded video player */}}
+{{ $src := .Get 0 }}
+{{ $title := .Get "title" }}
+{{ $poster := .Get "poster" }}
+{{ $width := .Get "width" | default "100%" }}
+{{ $height := .Get "height" }}
+{{ $autoplay := .Get "autoplay" | default false }}
+{{ $loop := .Get "loop" | default false }}
+{{ $muted := .Get "muted" | default false }}
+{{ $controls := .Get "controls" | default true }}
+{{ $id := printf "video-%d" (now.UnixMilli) }}
 
-<div class="video-container {{ $class }}">
-  <div id="{{ $id }}" class="player-wrapper relative" data-component="video-player">
-    <div class="loading-placeholder bg-gray-200 animate-pulse rounded-lg" style="aspect-ratio: 16/9;">
-      <div class="flex items-center justify-center h-full">
-        <span class="text-gray-500">Loading video...</span>
+{{ if not $src }}
+  <div class="video-error" role="alert">
+    <p class="error-message">Video source is required</p>
+  </div>
+  {{ return }}
+{{ end }}
+
+<figure class="video-figure" 
+        data-component="video-figure">
+  
+  {{ with $title }}
+    <figcaption class="video-title">{{ . }}</figcaption>
+  {{ end }}
+  
+  <div class="video-container" 
+       data-component="video-player"
+       data-video-id="{{ $id }}">
+    
+    {{/* Video element */}}
+    <video id="{{ $id }}" 
+           class="video-player"
+           {{ with $width }}width="{{ . }}"{{ end }}
+           {{ with $height }}height="{{ . }}"{{ end }}
+           {{ with $poster }}poster="{{ . }}"{{ end }}
+           {{ if $controls }}controls{{ end }}
+           {{ if $autoplay }}autoplay{{ end }}
+           {{ if $loop }}loop{{ end }}
+           {{ if $muted }}muted{{ end }}
+           preload="metadata"
+           data-video-src="{{ $src }}">
+      
+      <source src="{{ $src }}" type="video/mp4">
+      
+      {{/* Fallback for unsupported video */}}
+      <p class="video-fallback">
+        Your browser doesn't support HTML5 video. 
+        <a href="{{ $src }}" 
+           download
+           class="video-download-link">
+          Download the video file
+        </a>.
+      </p>
+      
+    </video>
+    
+    {{/* Loading state */}}
+    <div class="video-loading" 
+         data-loading-state
+         aria-live="polite">
+      <div class="loading-content">
+        <span class="loading-spinner" aria-hidden="true">⏳</span>
+        <span class="loading-text">Loading video...</span>
       </div>
     </div>
+    
+    {{/* Error state */}}
+    <div class="video-error-state" 
+         data-error-state
+         role="alert"
+         hidden>
+      <div class="error-content">
+        <span class="error-icon" aria-hidden="true">❌</span>
+        <span class="error-text">Failed to load video</span>
+        <a href="{{ $src }}" 
+           class="error-download-link"
+           download>
+          Download instead
+        </a>
+      </div>
+    </div>
+    
   </div>
-  <span class="sr-only" data-video-src="{{ $src }}"></span>
-</div>
-
-{{/* Inline JS removed. Initialization handled by data-component="video-player" */}}
+  
+  {{/* Video controls (if custom controls needed) */}}
+  <div class="video-controls">
+    
+    <button type="button" 
+            class="video-control video-control--fullscreen"
+            data-action="toggle-fullscreen"
+            aria-label="Toggle fullscreen">
+      <span class="control-icon" aria-hidden="true">⛶</span>
+    </button>
+    
+    <button type="button" 
+            class="video-control video-control--download"
+            data-action="download-video"
+            aria-label="Download video">
+      <span class="control-icon" aria-hidden="true">⬇️</span>
+    </button>
+    
+  </div>
+  
+</figure>

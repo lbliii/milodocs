@@ -1,16 +1,42 @@
-{{- $source := index (.Params) 0 | default "local" }}
-{{- $major := ""}}
-{{- $minor := ""}}
-{{- $patch := ""}}
-{{- $value := ""}}
-{{- if eq $source "global" }}
-{{- $major = .Site.Params.Version.Major }}
-{{- $minor = .Site.Params.Version.Minor }}
-{{- $patch = .Site.Params.Version.Patch }}
-{{- else}}
-{{- $major = .Page.Params.Version.Major }}
-{{- $minor = .Page.Params.Version.Minor }}
-{{- $patch = .Page.Params.Version.Patch }}
-{{- end}}
-{{- $value = print $major "." $minor "." $patch }}
-{{- $value }}
+{{/* Version Shortcode - Display version numbers */}}
+{{ $source := .Get 0 | default "local" }}
+{{ $format := .Get "format" | default "full" }}
+
+{{ $major := "" }}
+{{ $minor := "" }}
+{{ $patch := "" }}
+
+{{ if eq $source "global" }}
+  {{ $major = .Site.Params.version.major | default .Site.Params.Version.Major }}
+  {{ $minor = .Site.Params.version.minor | default .Site.Params.Version.Minor }}
+  {{ $patch = .Site.Params.version.patch | default .Site.Params.Version.Patch }}
+{{ else }}
+  {{ $major = .Page.Params.version.major | default .Page.Params.Version.Major }}
+  {{ $minor = .Page.Params.version.minor | default .Page.Params.Version.Minor }}
+  {{ $patch = .Page.Params.version.patch | default .Page.Params.Version.Patch }}
+{{ end }}
+
+{{ if not (and $major $minor) }}
+  <span class="version-error">
+    <code>[version not configured]</code>
+  </span>
+  {{ return }}
+{{ end }}
+
+<span class="version-number" 
+      data-component="version"
+      data-version-source="{{ $source }}"
+      data-version-format="{{ $format }}">
+  
+  {{ if eq $format "major" }}
+    {{ $major }}
+  {{ else if eq $format "minor" }}
+    {{ $major }}.{{ $minor }}
+  {{ else if eq $format "patch" }}
+    {{ $major }}.{{ $minor }}.{{ $patch | default "0" }}
+  {{ else }}
+    {{/* Default: full version */}}
+    {{ $major }}.{{ $minor }}.{{ $patch | default "0" }}
+  {{ end }}
+  
+</span>

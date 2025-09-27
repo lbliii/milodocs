@@ -1,11 +1,139 @@
-<!-- Right Sidebar: sticky on xl+, consistent width managed by grid tracks in base layout -->
-<aside id="sidebar-right" class="sticky top-16 hidden xl:block h-[calc(100vh-4rem)] overflow-y-auto pr-2" data-component="navigation-sidebar-right" role="complementary" aria-label="On-page navigation">
-  {{if .Site.Params.article.toc.display}}
-    {{partial "article/toc.html" . }}
-  {{end}}
-  {{if .Site.Params.article.chat.display}}
-   {{ if ne hugo.Environment "offline" }}
-     {{ partial "article/chat.html" . }}
-   {{ end }}
-  {{end}}
-</aside>
+{{/* Right Sidebar - Secondary Navigation */}}
+<div class="sidebar-right-container">
+  
+  {{/* Table of Contents */}}
+  {{ if and .TableOfContents (site.Params.article.toc.display) }}
+    <nav class="page-toc" 
+         aria-label="Page contents"
+         data-component="page-toc">
+      
+      <h2 class="page-toc-title">Contents</h2>
+      
+      <div class="page-toc-content">
+        {{ .TableOfContents }}
+      </div>
+      
+      {{/* Progress indicator */}}
+      {{ if site.Params.article.toc.showProgress }}
+        <div class="reading-progress" 
+             data-component="reading-progress"
+             aria-label="Reading progress">
+          <div class="reading-progress-bar"></div>
+        </div>
+      {{ end }}
+      
+    </nav>
+  {{ end }}
+  
+  {{/* Page metadata */}}
+  {{ if not .IsHome }}
+    <div class="page-meta" data-component="page-meta">
+      
+      <h2 class="page-meta-title">Page Info</h2>
+      
+      <dl class="page-meta-list">
+        
+        {{/* Last updated */}}
+        {{ if .Lastmod }}
+          <div class="page-meta-item">
+            <dt class="page-meta-label">Last updated</dt>
+            <dd class="page-meta-value">
+              <time datetime="{{ .Lastmod.Format `2006-01-02T15:04:05Z07:00` }}">
+                {{ .Lastmod.Format "Jan 2, 2006" }}
+              </time>
+            </dd>
+          </div>
+        {{ end }}
+        
+        {{/* Reading time */}}
+        {{ if .ReadingTime }}
+          <div class="page-meta-item">
+            <dt class="page-meta-label">Reading time</dt>
+            <dd class="page-meta-value">{{ .ReadingTime }} min</dd>
+          </div>
+        {{ end }}
+        
+        {{/* Word count */}}
+        {{ if site.Params.article.showWordCount }}
+          <div class="page-meta-item">
+            <dt class="page-meta-label">Word count</dt>
+            <dd class="page-meta-value">{{ .WordCount }}</dd>
+          </div>
+        {{ end }}
+        
+        {{/* Page source */}}
+        {{ if and site.Params.repository.url (not hugo.IsProduction) }}
+          <div class="page-meta-item">
+            <dt class="page-meta-label">Source</dt>
+            <dd class="page-meta-value">
+              <a href="{{ site.Params.repository.url }}/blob/{{ site.Params.repository.branch | default `main` }}/content/{{ .File.Path }}"
+                 rel="noopener noreferrer"
+                 target="_blank"
+                 class="source-link">
+                Edit page
+              </a>
+            </dd>
+          </div>
+        {{ end }}
+        
+      </dl>
+      
+    </div>
+  {{ end }}
+  
+  {{/* Page actions */}}
+  <div class="page-actions" data-component="page-actions">
+    
+    <h2 class="page-actions-title">Actions</h2>
+    
+    <div class="page-actions-list">
+      
+      {{/* Print page */}}
+      <button type="button" 
+              class="page-action"
+              onclick="window.print()"
+              aria-label="Print this page">
+        <span class="page-action-icon" aria-hidden="true">🖨</span>
+        Print page
+      </button>
+      
+      {{/* Copy page URL */}}
+      <button type="button" 
+              class="page-action"
+              data-copy-url="{{ .Permalink }}"
+              data-component="copy-button"
+              aria-label="Copy page URL">
+        <span class="page-action-icon" aria-hidden="true">🔗</span>
+        Copy link
+      </button>
+      
+      {{/* Report issue */}}
+      {{ with site.Params.repository.issueUrl }}
+        <a href="{{ . }}"
+           class="page-action"
+           rel="noopener noreferrer"
+           target="_blank"
+           aria-label="Report an issue with this page">
+          <span class="page-action-icon" aria-hidden="true">🐛</span>
+          Report issue
+        </a>
+      {{ end }}
+      
+    </div>
+    
+  </div>
+  
+  {{/* Chat/AI Assistant */}}
+  {{ if and site.Params.article.chat.display (ne hugo.Environment "offline") }}
+    <div class="page-chat" data-component="page-chat">
+      
+      <h2 class="page-chat-title">AI Assistant</h2>
+      
+      <div class="page-chat-container">
+        {{ partial "article/chat.html" . }}
+      </div>
+      
+    </div>
+  {{ end }}
+  
+</div>

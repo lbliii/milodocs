@@ -1,58 +1,160 @@
-{{/* Article metadata component - horizontal flow with enhanced UX */}}
-{{- if or .Date .Params.author .ReadingTime .Lastmod .PublishDate .WordCount -}}
-  <div class="metadata" data-component="article-metadata">
-    <div class="metadata__flow">
-      {{/* Primary date - always show creation date first */}}
-      {{- with .Date -}}
-        <div class="metadata__item">
-          <svg class="metadata__icon" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-          </svg>
-          <time datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">
-            {{ .Format "Jan 2, 2006" }}
+{{/* Article Metadata Component */}}
+<div class="article-metadata" 
+     data-component="article-metadata">
+  
+  <h3 class="metadata-title">Article Information</h3>
+  
+  <dl class="metadata-list">
+    
+    {{/* Publication date */}}
+    {{ with .Date }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Published</dt>
+        <dd class="metadata-value">
+          <time datetime="{{ .Format `2006-01-02T15:04:05Z07:00` }}" 
+                itemprop="datePublished">
+            {{ .Format "January 2, 2006" }}
           </time>
-        </div>
-      {{- end -}}
-
-      {{/* Author */}}
-      {{- with .Params.author -}}
-        <div class="metadata__item">
-          <svg class="metadata__icon" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ . }}</span>
-        </div>
-      {{- end -}}
-
-      {{/* Reading time */}}
-      {{- with .ReadingTime -}}
-        <div class="metadata__item">
-          <svg class="metadata__icon" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ . }} min read</span>
-        </div>
-      {{- end -}}
-
-      {{/* Word count */}}
-      {{- with .WordCount -}}
-        <div class="metadata__item">
-          <svg class="metadata__icon" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ . }} words</span>
-        </div>
-      {{- end -}}
-
-      {{/* Last modified - show if different from creation */}}
-      {{- with .Lastmod -}}{{- if ne (.Format "2006-01-02") ($.Date.Format "2006-01-02") -}}
-        <div class="metadata__item metadata__item--secondary">
-          <svg class="metadata__icon" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
-          </svg>
-          <span>Updated {{ .Format "Jan 2" }}</span>
-        </div>
-      {{- end -}}{{- end -}}
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Last modified date */}}
+    {{ if and .Lastmod (ne .Date .Lastmod) }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Last updated</dt>
+        <dd class="metadata-value">
+          <time datetime="{{ .Lastmod.Format `2006-01-02T15:04:05Z07:00` }}" 
+                itemprop="dateModified">
+            {{ .Lastmod.Format "January 2, 2006" }}
+          </time>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Author */}}
+    {{ with .Params.author }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Author</dt>
+        <dd class="metadata-value">
+          <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+            <span itemprop="name">{{ . }}</span>
+            {{ with $.Params.author_url }}
+              <a href="{{ . }}" 
+                 itemprop="url" 
+                 rel="author"
+                 class="author-link">
+                Profile
+              </a>
+            {{ end }}
+          </span>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Contributors */}}
+    {{ with .Params.contributors }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Contributors</dt>
+        <dd class="metadata-value">
+          <ul class="contributors-list">
+            {{ range . }}
+              <li class="contributor" itemprop="contributor" itemscope itemtype="https://schema.org/Person">
+                <span itemprop="name">{{ .name }}</span>
+                {{ with .url }}
+                  <a href="{{ . }}" 
+                     itemprop="url" 
+                     rel="author"
+                     class="contributor-link">
+                    Profile
+                  </a>
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Reading time */}}
+    {{ if .ReadingTime }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Reading time</dt>
+        <dd class="metadata-value">
+          <span class="reading-time">{{ .ReadingTime }} min read</span>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Word count */}}
+    {{ if site.Params.article.showWordCount }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Word count</dt>
+        <dd class="metadata-value">
+          <span class="word-count">{{ .WordCount | lang.NumFmt 0 }}</span>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Category */}}
+    {{ with .Params.category }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Category</dt>
+        <dd class="metadata-value">
+          <span class="article-category" itemprop="articleSection">{{ . }}</span>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Difficulty level */}}
+    {{ with .Params.difficulty }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Difficulty</dt>
+        <dd class="metadata-value">
+          <span class="difficulty difficulty--{{ . | lower }}">{{ . | title }}</span>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Version compatibility */}}
+    {{ with .Params.version }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Version</dt>
+        <dd class="metadata-value">
+          <span class="version-info">{{ . }}</span>
+        </dd>
+      </div>
+    {{ end }}
+    
+    {{/* Source file information (development only) */}}
+    {{ if and (not hugo.IsProduction) .File }}
+      <div class="metadata-item">
+        <dt class="metadata-label">Source</dt>
+        <dd class="metadata-value">
+          <code class="source-path">{{ .File.Path }}</code>
+          {{ if site.Params.repository.url }}
+            <a href="{{ site.Params.repository.url }}/blob/{{ site.Params.repository.branch | default `main` }}/content/{{ .File.Path }}"
+               class="source-link"
+               rel="noopener noreferrer"
+               target="_blank">
+              View source
+            </a>
+          {{ end }}
+        </dd>
+      </div>
+    {{ end }}
+    
+  </dl>
+  
+  {{/* Article status */}}
+  {{ with .Params.status }}
+    <div class="article-status article-status--{{ . | lower }}">
+      <span class="status-label">Status:</span>
+      <span class="status-value">{{ . | title }}</span>
+      {{ with $.Params.status_note }}
+        <span class="status-note">{{ . }}</span>
+      {{ end }}
     </div>
-  </div>
-{{- end -}}
+  {{ end }}
+  
+</div>

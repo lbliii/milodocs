@@ -31,7 +31,7 @@ class AsciinemaEmbed extends Component {
     if (isOffline) {
       // Offline fallback: provide a link to the recording URL if known
       const url = el.getAttribute('data-asciinema-url') || `https://asciinema.org/a/${id}`;
-      el.innerHTML = `<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-sm">Asciinema embed unavailable offline. <a class="underline" href="${url}" target="_blank" rel="noopener">Open recording</a> when online.</div>`;
+      el.innerHTML = `<div class="notice notice--warning"><div class="notice__content">Asciinema embed unavailable offline. <a class="underline" href="${url}" target="_blank" rel="noopener">Open recording</a> when online.</div></div>`;
       return;
     }
     const script = document.createElement('script');

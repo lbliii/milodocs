@@ -1,0 +1,54 @@
+{{/*
+  CSS Stats Analyzer - Development Helper
+  =====================================
+  
+  Uses hugo_stats.json to provide insights about CSS usage
+  Only runs in development mode
+*/}}
+
+{{- if hugo.IsDevelopment -}}
+  {{- $stats := resources.Get "hugo_stats.json" | transform.Unmarshal -}}
+  
+  {{/* Development CSS insights */}}
+  <script>
+    console.group('🎨 MiloDocs CSS Stats');
+    
+    // Class usage analysis
+    const classes = {{ $stats.htmlElements.classes | jsonify }};
+    const totalClasses = classes.length;
+    
+    // Categorize classes
+    const semantic = classes.filter(c => 
+      c.includes('article-') || 
+      c.includes('nav-') || 
+      c.includes('api-') ||
+      c.includes('card-') ||
+      c.includes('button-')
+    );
+    
+    const utility = classes.filter(c => 
+      c.match(/^(p|m|text|bg|flex|grid)-/) ||
+      c.match(/^(absolute|relative|fixed)$/) ||
+      c.match(/^\d+xl:/)
+    );
+    
+    const legacy = classes.filter(c => 
+      c.includes('antialiased') ||
+      c.match(/^(rounded|border|shadow)-/) ||
+      c.startsWith('2xl:') ||
+      c.startsWith('lg:') ||
+      c.startsWith('md:')
+    );
+    
+    console.log('📊 Total classes used:', totalClasses);
+    console.log('🎯 Semantic classes:', semantic.length, '(' + (semantic.length/totalClasses*100).toFixed(1) + '%)');
+    console.log('🔧 Utility classes:', utility.length, '(' + (utility.length/totalClasses*100).toFixed(1) + '%)');
+    console.log('⚠️  Legacy TW classes:', legacy.length, '(' + (legacy.length/totalClasses*100).toFixed(1) + '%)');
+    
+    if (legacy.length> 0) {
+      console.warn('Legacy TailwindCSS classes still in use:', legacy.slice(0, 10));
+    }
+    
+    console.groupEnd();
+  </script>
+{{- end -}}

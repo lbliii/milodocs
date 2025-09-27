@@ -1,11 +1,78 @@
-{{- $file := .Get "file" -}}
-{{- $resource := resources.Get $file -}}
-{{- if not $resource -}}
-    {{- errorf "Readfile shortcode: File not found '%s' on page %s" $file .Page.RelPermalink -}}
-{{- else -}}
-    {{- $content := $resource.Content -}}
-    {{- $rendered := $.Page.RenderString $content -}}
-    {{- $rendered | replaceRE "^## .+\n" "" -}}
-{{- end -}}
+{{/* Readfile Shortcode - Include content from external file */}}
+{{ $file := .Get "file" }}
+{{ $stripHeaders := .Get "stripHeaders" | default true }}
+{{ $title := .Get "title" }}
 
+{{ if not $file }}
+  <div class="readfile-error" role="alert">
+    <p class="error-message">File parameter is required for readfile shortcode</p>
+  </div>
+  {{ return }}
+{{ end }}
+
+{{ $resource := resources.Get $file }}
+
+{{ if not $resource }}
+  <div class="readfile-error" role="alert">
+    <div class="error-content">
+      <span class="error-icon" aria-hidden="true">❌</span>
+      <div class="error-details">
+        <p class="error-message">Readfile: File not found</p>
+        <code class="error-path">{{ $file }}</code>
+        <p class="error-help">Check that the file exists in the <code>assets/</code> directory</p>
+      </div>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+<div class="readfile-content" 
+     data-component="readfile"
+     data-file-path="{{ $file }}">
   
+  {{ with $title }}
+    <header class="readfile-header">
+      <h3 class="readfile-title">{{ . }}</h3>
+      <div class="readfile-meta">
+        <span class="file-source">From: <code>{{ $file }}</code></span>
+      </div>
+    </header>
+  {{ end }}
+  
+  <div class="readfile-body">
+    {{ $content := $resource.Content }}
+    
+    {{/* Strip markdown headers if requested */}}
+    {{ if $stripHeaders }}
+      {{ $content = $content | replaceRE "^## .+\n" "" }}
+      {{ $content = $content | replaceRE "^# .+\n" "" }}
+    {{ end }}
+    
+    {{/* Render the content as markdown */}}
+    {{ $rendered := .Page.RenderString $content }}
+    {{ $rendered }}
+  </div>
+  
+  {{/* File actions */}}
+  <div class="readfile-actions">
+    
+    <button type="button" 
+            class="readfile-action readfile-action--copy"
+            data-action="copy-content"
+            aria-label="Copy file content">
+      <span class="action-icon" aria-hidden="true">📋</span>
+      <span class="action-text">Copy</span>
+    </button>
+    
+    <a href="{{ $resource.RelPermalink }}" 
+       class="readfile-action readfile-action--view"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="View source file">
+      <span class="action-icon" aria-hidden="true">👁️</span>
+      <span class="action-text">View source</span>
+    </a>
+    
+  </div>
+  
+</div>

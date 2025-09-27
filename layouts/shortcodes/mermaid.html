@@ -1,6 +1,79 @@
-{{- $id := printf "mermaid-%d" (now.UnixMilli) -}}
-<div id="{{ $id }}" class="mermaid" data-theme="neutral" style="opacity: 0; transition: opacity 0.3s ease;">
-    {{ .Inner | safeHTML }}
-</div>
-{{/* Inline JS removed. Initialization moved to JS component. */}}
+{{/* Mermaid Shortcode - Diagrams and flowcharts */}}
+{{ $id := printf "mermaid-%d" (now.UnixMilli) }}
+{{ $theme := .Get "theme" | default "neutral" }}
+{{ $title := .Get "title" }}
+
+<figure class="mermaid-diagram" 
+        data-component="mermaid-diagram">
   
+  {{ with $title }}
+    <figcaption class="diagram-title">{{ . }}</figcaption>
+  {{ end }}
+  
+  <div id="{{ $id }}" 
+       class="mermaid-container" 
+       data-component="mermaid"
+       data-theme="{{ $theme }}"
+       data-mermaid-id="{{ $id }}">
+    
+    <div class="mermaid-content">
+      {{ .Inner | safeHTML }}
+    </div>
+    
+    {{/* Loading state */}}
+    <div class="mermaid-loading" 
+         data-loading-state
+         aria-live="polite">
+      <span class="loading-text">Loading diagram...</span>
+      <span class="loading-spinner" aria-hidden="true">⏳</span>
+    </div>
+    
+    {{/* Error state */}}
+    <div class="mermaid-error" 
+         data-error-state
+         role="alert"
+         hidden>
+      <span class="error-icon" aria-hidden="true">❌</span>
+      <span class="error-text">Failed to render diagram</span>
+      <details class="error-details">
+        <summary>Show details</summary>
+        <pre class="error-message"></pre>
+      </details>
+    </div>
+    
+  </div>
+  
+  {{/* Diagram controls */}}
+  <div class="diagram-controls">
+    
+    <button type="button" 
+            class="diagram-control diagram-control--zoom-in"
+            data-action="zoom-in"
+            aria-label="Zoom in">
+      <span class="control-icon" aria-hidden="true">🔍+</span>
+    </button>
+    
+    <button type="button" 
+            class="diagram-control diagram-control--zoom-out"
+            data-action="zoom-out"
+            aria-label="Zoom out">
+      <span class="control-icon" aria-hidden="true">🔍-</span>
+    </button>
+    
+    <button type="button" 
+            class="diagram-control diagram-control--reset"
+            data-action="reset-zoom"
+            aria-label="Reset zoom">
+      <span class="control-icon" aria-hidden="true">🎯</span>
+    </button>
+    
+    <button type="button" 
+            class="diagram-control diagram-control--download"
+            data-action="download-svg"
+            aria-label="Download as SVG">
+      <span class="control-icon" aria-hidden="true">⬇️</span>
+    </button>
+    
+  </div>
+  
+</figure>

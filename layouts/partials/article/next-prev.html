@@ -1,72 +1,140 @@
-{{- if .Site.Params.article.nextPrev.display -}}
-{{$trunc := .Site.Params.article.nextPrev.trunc}}
-{{$current := .}}
-{{$prev := false}}
-{{$next := false}}
-{{- with .CurrentSection -}}
-    {{- $sorted := .RegularPages.ByWeight -}}
-    {{- range $i, $p := $sorted -}}
-        {{- if eq $p.RelPermalink $current.RelPermalink -}}
-            {{- if gt $i 0 -}}
-                {{- $prev = index $sorted (sub $i 1) -}}
-            {{- end -}}
-            {{- if lt (add $i 1) (len $sorted) -}}
-                {{- $next = index $sorted (add $i 1) -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-<nav class="mt-6 flex justify-between items-center gap-4" data-component="article-next-prev">
-    {{with $prev }}
-        <a href="{{.RelPermalink}}" class="article-next-prev__link flex-1 text-left" aria-label="Previous: {{.Title}}">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <div>
-                    <div class="text-xs opacity-70 mb-1">Previous</div>
-                    <div class="font-medium">{{.Title | truncate $trunc}}</div>
-                </div>
-            </div>
-        </a>
-    {{else}}
-        <div class="article-next-prev__link article-next-prev__link--disabled flex-1 text-left">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <div>
-                    <div class="text-xs opacity-70 mb-1">Previous</div>
-                    <div class="font-medium">No previous page</div>
-                </div>
-            </div>
-        </div>
-    {{ end }}
+{{/* Article Next/Previous Navigation */}}
 
-    {{with $next }}
-        <a href="{{.RelPermalink}}" class="article-next-prev__link flex-1 text-right" aria-label="Next: {{.Title}}">
-            <div class="flex items-center justify-end">
-                <div>
-                    <div class="text-xs opacity-70 mb-1">Next</div>
-                    <div class="font-medium">{{.Title | truncate $trunc}}</div>
-                </div>
-                <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                </svg>
-            </div>
-        </a>
-    {{else}}
-        <div class="article-next-prev__link article-next-prev__link--disabled flex-1 text-right">
-            <div class="flex items-center justify-end">
-                <div>
-                    <div class="text-xs opacity-70 mb-1">Next</div>
-                    <div class="font-medium">No next page</div>
-                </div>
-                <svg class="w-5 h-5 ml-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                </svg>
-            </div>
-        </div>
+{{ if site.Params.article.nextPrev.display }}
+  {{/* Calculate previous and next pages */}}
+  {{ $current := . }}
+  {{ $prev := false }}
+  {{ $next := false }}
+  {{ $truncateLength := site.Params.article.nextPrev.trunc | default 30 }}
+  
+  {{/* Find adjacent pages in current section */}}
+  {{ with .CurrentSection }}
+    {{ $sorted := .RegularPages.ByWeight }}
+    {{ range $i, $p := $sorted }}
+      {{ if eq $p.RelPermalink $current.RelPermalink }}
+        {{ if gt $i 0 }}
+          {{ $prev = index $sorted (sub $i 1) }}
+        {{ end }}
+        {{ if lt (add $i 1) (len $sorted) }}
+          {{ $next = index $sorted (add $i 1) }}
+        {{ end }}
+      {{ end }}
     {{ end }}
-</nav>
-{{- end -}}
+  {{ end }}
+  
+  <nav class="article-pagination" 
+       aria-label="Article pagination"
+       data-component="article-pagination">
+    
+    <h2 class="sr-only">Navigate to other articles</h2>
+    
+    <div class="pagination-container">
+      
+      {{/* Previous page */}}
+      <div class="pagination-item pagination-item--prev">
+        {{ if $prev }}
+          <a href="{{ $prev.RelPermalink }}" 
+             class="pagination-link"
+             rel="prev"
+             aria-label="Previous article: {{ $prev.Title }}">
+            
+            <div class="pagination-direction">
+              <span class="direction-icon" aria-hidden="true">←</span>
+              <span class="direction-text">Previous</span>
+            </div>
+            
+            <div class="pagination-content">
+              <h3 class="pagination-title">{{ $prev.Title | truncate $truncateLength }}</h3>
+              {{ with $prev.Summary }}
+                <p class="pagination-summary">{{ . | truncate 80 }}</p>
+              {{ end }}
+            </div>
+            
+          </a>
+        {{ else }}
+          <div class="pagination-link pagination-link--disabled">
+            <div class="pagination-direction">
+              <span class="direction-icon" aria-hidden="true">←</span>
+              <span class="direction-text">Previous</span>
+            </div>
+            <div class="pagination-content">
+              <h3 class="pagination-title">No previous article</h3>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+      
+      {{/* Section overview link */}}
+      {{ with .CurrentSection }}
+        <div class="pagination-item pagination-item--section">
+          <a href="{{ .RelPermalink }}" 
+             class="pagination-section-link"
+             aria-label="View all articles in {{ .Title }}">
+            <span class="section-icon" aria-hidden="true">📚</span>
+            <span class="section-text">{{ .Title }}</span>
+            <span class="section-count">({{ len .RegularPages }} articles)</span>
+          </a>
+        </div>
+      {{ end }}
+      
+      {{/* Next page */}}
+      <div class="pagination-item pagination-item--next">
+        {{ if $next }}
+          <a href="{{ $next.RelPermalink }}" 
+             class="pagination-link"
+             rel="next"
+             aria-label="Next article: {{ $next.Title }}">
+            
+            <div class="pagination-content">
+              <h3 class="pagination-title">{{ $next.Title | truncate $truncateLength }}</h3>
+              {{ with $next.Summary }}
+                <p class="pagination-summary">{{ . | truncate 80 }}</p>
+              {{ end }}
+            </div>
+            
+            <div class="pagination-direction">
+              <span class="direction-text">Next</span>
+              <span class="direction-icon" aria-hidden="true">→</span>
+            </div>
+            
+          </a>
+        {{ else }}
+          <div class="pagination-link pagination-link--disabled">
+            <div class="pagination-content">
+              <h3 class="pagination-title">No next article</h3>
+            </div>
+            <div class="pagination-direction">
+              <span class="direction-text">Next</span>
+              <span class="direction-icon" aria-hidden="true">→</span>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+      
+    </div>
+    
+    {{/* Alternative navigation */}}
+    <div class="pagination-alternatives">
+      
+      {{/* Back to section */}}
+      {{ with .CurrentSection }}
+        <a href="{{ .RelPermalink }}" 
+           class="alternative-link">
+          ← Back to {{ .Title }}
+        </a>
+      {{ end }}
+      
+      {{/* Improve this page */}}
+      {{ if and site.Params.repository.url .File }}
+        <a href="{{ site.Params.repository.url }}/issues/new?title=Feedback%20on%20{{ .Title | urlize }}&body=Page:%20{{ .Permalink }}"
+           class="alternative-link"
+           rel="noopener noreferrer"
+           target="_blank">
+          💬 Improve this page
+        </a>
+      {{ end }}
+      
+    </div>
+    
+  </nav>
+{{ end }}

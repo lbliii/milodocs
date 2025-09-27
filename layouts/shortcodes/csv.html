@@ -1,89 +1,183 @@
-{{- $filename := .Get 0 -}}
-{{- $delimiter := .Get 1 | default "," -}}
-{{- $skipColumns := split (.Get 2 | default "") "," -}}
-{{- $cssClass := .Get 3 | default "table table--dense table--zebra table--glass table--rounded" -}}
-{{- $lazyQuotes := .Get 4 | default false -}}
+{{/* CSV Shortcode - Display CSV data as a table */}}
+{{ $filename := .Get 0 }}
+{{ $delimiter := .Get 1 | default "," }}
+{{ $skipColumns := split (.Get 2 | default "") "," }}
+{{ $title := .Get "title" }}
+{{ $description := .Get "description" }}
+{{ $lazyQuotes := .Get 4 | default false }}
 
-{{- $csvResource := resources.Get (printf "csv/%s.csv" $filename) -}}
-{{- $csvContent := "" -}}
+{{ if not $filename }}
+  <div class="csv-error" role="alert">
+    <p class="error-message">CSV filename is required</p>
+  </div>
+  {{ return }}
+{{ end }}
 
-{{- if $csvResource -}}
-    {{- $csvContent = $csvResource.Content -}}
-{{- else -}}
-    {{/* Fallback: try reading from static directory */}}
-    {{- $staticPath := printf "static/csv/%s.csv" $filename -}}
-    {{- $csvContent = readFile $staticPath -}}
-    {{- if not $csvContent -}}
-        {{- errorf "CSV shortcode: File not found in assets/csv/%s.csv or static/csv/%s.csv on page %s" $filename $filename .Page.RelPermalink -}}
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <strong>CSV Error:</strong> File "{{ $filename }}.csv" not found in assets/csv/ or static/csv/ directories.
+{{ $csvResource := resources.Get (printf "csv/%s.csv" $filename) }}
+{{ $csvContent := "" }}
+
+{{ if $csvResource }}
+  {{ $csvContent = $csvResource.Content }}
+{{ else }}
+  {{/* Fallback: try reading from static directory */}}
+  {{ $staticPath := printf "static/csv/%s.csv" $filename }}
+  {{ $csvContent = readFile $staticPath }}
+  {{ if not $csvContent }}
+    <div class="csv-error" role="alert">
+      <div class="error-content">
+        <span class="error-icon" aria-hidden="true">❌</span>
+        <div class="error-details">
+          <p class="error-message">CSV file not found</p>
+          <code class="error-path">{{ $filename }}.csv</code>
+          <p class="error-help">Check that the file exists in <code>assets/csv/</code> or <code>static/csv/</code></p>
         </div>
-    {{- end -}}
-{{- end -}}
+      </div>
+    </div>
+    {{ return }}
+  {{ end }}
+{{ end }}
 
-{{- if $csvContent -}}
-    {{- $unmarshalOptions := dict "delimiter" $delimiter -}}
-    {{- if $lazyQuotes -}}
-        {{- $unmarshalOptions = merge $unmarshalOptions (dict "lazyQuotes" true) -}}
-    {{- end -}}
+{{ if not $csvContent }}
+  <div class="csv-error" role="alert">
+    <p class="error-message">CSV file is empty</p>
+  </div>
+  {{ return }}
+{{ end }}
+
+{{/* Parse CSV data */}}
+{{ $unmarshalOptions := dict "delimiter" $delimiter }}
+{{ if $lazyQuotes }}
+  {{ $unmarshalOptions = merge $unmarshalOptions (dict "lazyQuotes" true) }}
+{{ end }}
+
+{{ $csvData := "" }}
+{{ if $csvResource }}
+  {{ $csvData = $csvResource | transform.Unmarshal $unmarshalOptions }}
+{{ else }}
+  {{ $csvData = $csvContent | transform.Unmarshal $unmarshalOptions }}
+{{ end }}
+
+{{ if not $csvData }}
+  <div class="csv-error" role="alert">
+    <div class="error-content">
+      <span class="error-icon" aria-hidden="true">❌</span>
+      <div class="error-details">
+        <p class="error-message">Failed to parse CSV data</p>
+        <code class="error-filename">{{ $filename }}.csv</code>
+        <p class="error-help">Check the file format and delimiter settings</p>
+      </div>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+{{ if eq (len $csvData) 0 }}
+  <div class="csv-warning" role="alert">
+    <div class="warning-content">
+      <span class="warning-icon" aria-hidden="true">⚠️</span>
+      <p class="warning-message">No data found in CSV file: <code>{{ $filename }}</code></p>
+    </div>
+  </div>
+  {{ return }}
+{{ end }}
+
+<figure class="csv-table-figure" 
+        data-component="csv-table">
+  
+  {{/* Table header */}}
+  <header class="csv-table-header">
+    {{ if $title }}
+      <h3 class="csv-table-title">{{ $title }}</h3>
+    {{ end }}
     
-    {{- $csvData := "" -}}
-    {{- if $csvResource -}}
-        {{- $csvData = $csvResource | transform.Unmarshal $unmarshalOptions -}}
-    {{- else -}}
-        {{- $csvData = $csvContent | transform.Unmarshal $unmarshalOptions -}}
-    {{- end -}}
+    {{ with $description }}
+      <p class="csv-table-description">{{ . }}</p>
+    {{ end }}
     
-    {{- if not $csvData -}}
-        {{- errorf "CSV shortcode: Failed to parse CSV data from '%s' on page %s" $filename .Page.RelPermalink -}}
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <strong>CSV Error:</strong> Failed to parse CSV data from "{{ $filename }}". The file may be empty or incorrectly formatted.
-        </div>
-    {{- else if eq (len $csvData) 0 -}}
-        {{- errorf "CSV shortcode: Empty CSV data from '%s' on page %s" $filename .Page.RelPermalink -}}
-        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <strong>CSV Warning:</strong> No data found in "{{ $filename }}".
-        </div>
-    {{- else -}}
-        {{- $headers := index $csvData 0 -}}
-        {{- $filteredHeaders := slice -}}
-        {{- $filteredIndices := slice -}}
-        
-        {{- range $index, $col := $headers -}}
-            {{- if not (in $skipColumns $col) -}}
-                {{- $filteredHeaders = $filteredHeaders | append $col -}}
-                {{- $filteredIndices = $filteredIndices | append $index -}}
-            {{- end -}}
-        {{- end -}}
-        
-        <div class="table__container table__container--rounded">
-            <table class="{{ $cssClass }}" role="table">
-                <caption class="sr-only">Data from {{ $filename }}</caption>
-                <thead class="table__head">
-                    <tr>
-                    {{- range $filteredHeaders -}}
-                        <th scope="col" class="table__cell">
-                            {{- . | markdownify -}}
-                        </th>
-                    {{- end -}}
-                    </tr>
-                </thead>
-                <tbody class="table__body">
-                    {{- range $rowIndex, $row := after 1 $csvData -}}
-                        <tr class="table__row">
-                        {{- range $filteredIndices -}}
-                            <td class="table__cell table__cell--nowrap">
-                                {{- if lt . (len $row) -}}
-                                    {{- index $row . | markdownify -}}
-                                {{- else -}}
-                                    <span class="text-gray-400">—</span>
-                                {{- end -}}
-                            </td>
-                        {{- end -}}
-                        </tr>
-                    {{- end -}}
-                </tbody>
-            </table>
-        </div>
-    {{- end -}}
-{{- end -}}
+    <div class="csv-table-meta">
+      <span class="csv-source">Source: <code>{{ $filename }}.csv</code></span>
+      <span class="csv-rows">{{ sub (len $csvData) 1 }} rows</span>
+    </div>
+  </header>
+  
+  {{/* Process headers and filter columns */}}
+  {{ $headers := index $csvData 0 }}
+  {{ $filteredHeaders := slice }}
+  {{ $filteredIndices := slice }}
+  
+  {{ range $index, $col := $headers }}
+    {{ if not (in $skipColumns $col) }}
+      {{ $filteredHeaders = $filteredHeaders | append $col }}
+      {{ $filteredIndices = $filteredIndices | append $index }}
+    {{ end }}
+  {{ end }}
+  
+  {{/* Scrollable table container */}}
+  <div class="csv-table-container">
+    
+    <table class="csv-table" 
+           data-csv-source="{{ $filename }}">
+      
+      <caption class="csv-table-caption">
+        Data from {{ $filename }}.csv
+        {{ if $skipColumns }}
+          (excluding columns: {{ delimit $skipColumns ", " }})
+        {{ end }}
+      </caption>
+      
+      <thead class="csv-table-head">
+        <tr class="csv-header-row">
+          {{ range $filteredHeaders }}
+            <th scope="col" 
+                class="csv-header-cell"
+                data-column="{{ . | urlize }}">
+              {{ . | markdownify }}
+            </th>
+          {{ end }}
+        </tr>
+      </thead>
+      
+      <tbody class="csv-table-body">
+        {{ range $rowIndex, $row := after 1 $csvData }}
+          <tr class="csv-data-row" 
+              data-row="{{ add $rowIndex 1 }}">
+            {{ range $filteredIndices }}
+              <td class="csv-data-cell"
+                  data-column-index="{{ . }}">
+                {{ if lt . (len $row) }}
+                  {{ index $row . | markdownify }}
+                {{ else }}
+                  <span class="csv-empty-cell" aria-label="Empty cell">—</span>
+                {{ end }}
+              </td>
+            {{ end }}
+          </tr>
+        {{ end }}
+      </tbody>
+      
+    </table>
+    
+  </div>
+  
+  {{/* Table actions */}}
+  <div class="csv-table-actions">
+    
+    <button type="button" 
+            class="csv-action csv-action--export"
+            data-action="export-csv"
+            aria-label="Export table data">
+      <span class="action-icon" aria-hidden="true">⬇️</span>
+      <span class="action-text">Export CSV</span>
+    </button>
+    
+    <button type="button" 
+            class="csv-action csv-action--fullscreen"
+            data-action="toggle-fullscreen"
+            aria-label="Toggle fullscreen view">
+      <span class="action-icon" aria-hidden="true">⛶</span>
+      <span class="action-text">Fullscreen</span>
+    </button>
+    
+  </div>
+  
+</figure>

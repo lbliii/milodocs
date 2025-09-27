@@ -1,4 +1,150 @@
-
-<!-- put anything you want here; it's a blank slate -->
-
-<!-- Algolia search temporarily disabled -->
+{{/* Site Footer */}}
+<div class="site-footer-container">
+  
+  {{/* Footer content grid */}}
+  <div class="footer-content">
+    
+    {{/* Site information */}}
+    <div class="footer-section footer-section--primary">
+      <h2 class="footer-section-title">{{ site.Title }}</h2>
+      
+      {{ with site.Params.description }}
+        <p class="footer-description">{{ . }}</p>
+      {{ end }}
+      
+      {{ with site.Params.footer.copyright }}
+        <p class="footer-copyright">{{ . | markdownify }}</p>
+      {{ else }}
+        <p class="footer-copyright">
+          © {{ now.Format "2006" }} {{ site.Title }}. All rights reserved.
+        </p>
+      {{ end }}
+    </div>
+    
+    {{/* Footer navigation menus */}}
+    {{ if site.Menus.footer }}
+      <nav class="footer-navigation" 
+           role="navigation" 
+           aria-label="Footer navigation">
+        
+        {{ range $menuName, $menu := site.Menus }}
+          {{ if hasPrefix $menuName "footer" }}
+            <div class="footer-nav-section">
+              <h3 class="footer-nav-title">
+                {{ replace $menuName "footer_" "" | title }}
+              </h3>
+              
+              <ul class="footer-nav-list">
+                {{ range $menu }}
+                  <li class="footer-nav-item">
+                    <a href="{{ .URL }}" 
+                       class="footer-nav-link"
+                       {{ if .Pre }}aria-label="{{ .Pre }}"{{ end }}>
+                      {{ .Name }}
+                    </a>
+                  </li>
+                {{ end }}
+              </ul>
+            </div>
+          {{ end }}
+        {{ end }}
+        
+      </nav>
+    {{ end }}
+    
+    {{/* Social links */}}
+    {{ with site.Params.social }}
+      <div class="footer-section footer-section--social">
+        <h3 class="footer-section-title">Connect</h3>
+        
+        <ul class="social-links">
+          {{ with .github }}
+            <li>
+              <a href="{{ . }}" 
+                 class="social-link social-link--github"
+                 rel="noopener noreferrer"
+                 target="_blank"
+                 aria-label="Visit our GitHub repository">
+                <span class="social-icon" aria-hidden="true">GitHub</span>
+              </a>
+            </li>
+          {{ end }}
+          
+          {{ with .twitter }}
+            <li>
+              <a href="{{ . }}" 
+                 class="social-link social-link--twitter"
+                 rel="noopener noreferrer"
+                 target="_blank"
+                 aria-label="Follow us on Twitter">
+                <span class="social-icon" aria-hidden="true">Twitter</span>
+              </a>
+            </li>
+          {{ end }}
+          
+          {{ with .linkedin }}
+            <li>
+              <a href="{{ . }}" 
+                 class="social-link social-link--linkedin"
+                 rel="noopener noreferrer"
+                 target="_blank"
+                 aria-label="Connect on LinkedIn">
+                <span class="social-icon" aria-hidden="true">LinkedIn</span>
+              </a>
+            </li>
+          {{ end }}
+          
+          {{ with .email }}
+            <li>
+              <a href="mailto:{{ . }}" 
+                 class="social-link social-link--email"
+                 aria-label="Send us an email">
+                <span class="social-icon" aria-hidden="true">Email</span>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+    {{ end }}
+    
+  </div>
+  
+  {{/* Footer bottom */}}
+  <div class="footer-bottom">
+    
+    {{/* Legal links */}}
+    {{ if site.Menus.legal }}
+      <nav class="legal-navigation" 
+           role="navigation" 
+           aria-label="Legal information">
+        <ul class="legal-nav-list">
+          {{ range site.Menus.legal }}
+            <li class="legal-nav-item">
+              <a href="{{ .URL }}" 
+                 class="legal-nav-link">
+                {{ .Name }}
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </nav>
+    {{ end }}
+    
+    {{/* Build information */}}
+    {{ if site.Params.footer.showBuildInfo }}
+      <div class="build-info">
+        <p class="build-text">
+          Built with <a href="https://gohugo.io/" rel="noopener">Hugo</a>
+          {{ with site.Params.version.number }}
+            v{{ . }}
+          {{ end }}
+          {{ if not hugo.IsProduction }}
+            <span class="build-env">({{ hugo.Environment }})</span>
+          {{ end }}
+        </p>
+      </div>
+    {{ end }}
+    
+  </div>
+  
+</div>

@@ -1,160 +1,185 @@
-{{/* Page Resources - Display attached files, images, and downloads */}}
-{{- with .Resources -}}
-  {{- $images := .ByType "image" -}}
-  {{- $videos := .ByType "video" -}}
-  {{- $documents := .ByType "application" -}}
-  {{- $others := complement (union $images $videos $documents) . -}}
+{{/* Page Resources Component */}}
+{{ with .Resources }}
+  {{ $images := .ByType "image" }}
+  {{ $videos := .ByType "video" }}
+  {{ $documents := .ByType "application" }}
+  {{ $others := complement (union $images $videos $documents) . }}
   
-  {{- if or $images $videos $documents $others -}}
-    <aside class="content-metadata mt-6 not-prose" data-component="article-page-resources">
-      <div class="toc-header">
-        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-        </svg>
-        <h2 class="text-lg font-semibold">Resources & Downloads</h2>
-      </div>
-
+  {{ if or $images $videos $documents $others }}
+    <aside class="page-resources" 
+           data-component="page-resources">
       
-      {{/* Images */}}
-      {{- if $images -}}
-        <div class="mb-6">
-          <h3 class="metadata-item mb-3">
-            <svg class="metadata-icon" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
-            </svg>
-            <span class="text-base font-medium">Images ({{ len $images }})</span>
-          </h3>
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {{- range $images -}}
-              <div class="card card--resource group relative">
-                <img src="{{ .RelPermalink }}" 
-                     alt="{{ .Title | default "Resource image" }}" 
-                     class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-200"
-                     loading="lazy" />
-                <div class="p-3">
-                  <p class="text-xs truncate" title="{{ .Name }}" style="color: var(--color-text-primary);">
-                    {{ .Title | default .Name }}
-                  </p>
-                  {{- with .Params.description -}}
-                    <p class="text-xs opacity-70 mt-1 line-clamp-2">{{ . }}</p>
-                  {{- end -}}
-                </div>
-              </div>
-            {{- end -}}
-          </div>
-        </div>
-      {{- end -}}
+      <header class="page-resources-header">
+        <h2 class="page-resources-title">
+          <span class="title-icon" aria-hidden="true">📎</span>
+          Resources & Downloads
+        </h2>
+        <p class="page-resources-count">{{ len . }} {{ if eq (len .) 1 }}file{{ else }}files{{ end }} attached</p>
+      </header>
       
-      {{/* Documents and Downloads */}}
-      {{- if $documents -}}
-        <div class="mb-6">
-          <h3 class="metadata-item mb-3">
-            <svg class="metadata-icon" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
-            </svg>
-            <span class="text-base font-medium">Documents ({{ len $documents }})</span>
-          </h3>
-          <div class="space-y-3">
-            {{- range $documents -}}
-              <div class="card card--resource flex items-center justify-between p-4">
-                <div class="flex items-center flex-1 min-w-0">
-                  <svg class="w-5 h-5 mr-3 opacity-60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
-                  </svg>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium truncate" style="color: var(--color-text-primary);">
-                      {{ .Title | default .Name }}
-                    </p>
-                    {{- with .Params.description -}}
-                      <p class="text-sm opacity-70 truncate">{{ . }}</p>
-                    {{- end -}}
-                    <p class="text-xs opacity-60">
+      <div class="page-resources-content">
+        
+        {{/* Images section */}}
+        {{ if $images }}
+          <section class="resource-section resource-section--images">
+            <h3 class="resource-section-title">
+              <span class="section-icon" aria-hidden="true">🖼️</span>
+              Images ({{ len $images }})
+            </h3>
+            
+            <div class="image-grid">
+              {{ range $images }}
+                <div class="image-item" data-component="image-item">
+                  <div class="image-container">
+                    <img src="{{ .RelPermalink }}" 
+                         alt="{{ .Title | default .Name }}" 
+                         class="image-preview"
+                         loading="lazy"
+                         data-image-preview>
+                    <div class="image-overlay">
+                      <button type="button" 
+                              class="image-action"
+                              data-action="view"
+                              aria-label="View full image">
+                        <span class="action-icon" aria-hidden="true">🔍</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="image-meta">
+                    <h4 class="image-title">{{ .Title | default .Name }}</h4>
+                    {{ with .Params.description }}
+                      <p class="image-description">{{ . }}</p>
+                    {{ end }}
+                    <p class="image-details">
                       {{ .MediaType.SubType | upper }}
-                      {{- with .Params.size }} • {{ . }}{{ end }}
+                      {{ with .Width }}{{ . }}×{{ $.Height }}{{ end }}
                     </p>
                   </div>
                 </div>
-                <a href="{{ .RelPermalink }}" 
-                   download="{{ .Name }}"
-                   class="btn btn--primary btn--sm ml-4">
-                  <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                  </svg>
-                  Download
-                </a>
-              </div>
-            {{- end -}}
-          </div>
-        </div>
-      {{- end -}}
-      
-      {{/* Videos */}}
-      {{- if $videos -}}
-        <div class="mb-6">
-          <h3 class="text-base font-medium text-text-primary mb-3 flex items-center">
-            <svg class="w-4 h-4 mr-2 text-current" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
-            </svg>
-            Videos ({{ len $videos }})
-          </h3>
-          <div class="grid gap-4 md:grid-cols-2">
-            {{- range $videos -}}
-              <div class="border border-gray-200 rounded-lg overflow-hidden bg-surface shadow-sm">
-                <video controls class="w-full h-48 bg-zinc-100">
-                  <source src="{{ .RelPermalink }}" type="{{ .MediaType }}">
-                  Your browser does not support the video tag.
-                </video>
-                <div class="p-3">
-                   <p class="text-sm font-medium text-text-primary">
-                    {{ .Title | default .Name }}
-                  </p>
-                  {{- with .Params.description -}}
-                    <p class="text-sm opacity-70 mt-1">{{ . }}</p>
-                  {{- end -}}
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+        
+        {{/* Documents section */}}
+        {{ if $documents }}
+          <section class="resource-section resource-section--documents">
+            <h3 class="resource-section-title">
+              <span class="section-icon" aria-hidden="true">📄</span>
+              Documents ({{ len $documents }})
+            </h3>
+            
+            <div class="document-list">
+              {{ range $documents }}
+                <div class="document-item" data-component="document-item">
+                  <div class="document-info">
+                    <span class="document-icon" aria-hidden="true">📄</span>
+                    <div class="document-content">
+                      <h4 class="document-title">{{ .Title | default .Name }}</h4>
+                      {{ with .Params.description }}
+                        <p class="document-description">{{ . }}</p>
+                      {{ end }}
+                      <p class="document-meta">
+                        {{ .MediaType.SubType | upper }}
+                        {{ with .Params.size }} • {{ . }}{{ end }}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="document-actions">
+                    <a href="{{ .RelPermalink }}" 
+                       class="document-action document-action--download"
+                       download="{{ .Name }}"
+                       aria-label="Download {{ .Name }}">
+                      <span class="action-icon" aria-hidden="true">⬇️</span>
+                      <span class="action-text">Download</span>
+                    </a>
+                  </div>
                 </div>
-              </div>
-            {{- end -}}
-          </div>
-        </div>
-      {{- end -}}
-      
-      {{/* Other file types */}}
-      {{- if $others -}}
-        <div>
-          <h3 class="text-base font-medium text-text-primary mb-3 flex items-center">
-            <svg class="w-4 h-4 mr-2 text-current" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
-            </svg>
-            Other Files ({{ len $others }})
-          </h3>
-          <div class="space-y-2">
-            {{- range $others -}}
-              <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-zinc-100 transition-colors">
-                <div class="flex items-center flex-1 min-w-0">
-                  <svg class="w-5 h-5 mr-3 opacity-60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd"></path>
-                  </svg>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium truncate" style="color: var(--color-text-primary);">
-                      {{ .Title | default .Name }}
-                    </p>
-                    {{- with .Params.description -}}
-                      <p class="text-sm opacity-70 truncate">{{ . }}</p>
-                    {{- end -}}
-                    <p class="text-xs opacity-60">
-                      {{ .MediaType.Type | upper }}/{{ .MediaType.SubType | upper }}
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+        
+        {{/* Videos section */}}
+        {{ if $videos }}
+          <section class="resource-section resource-section--videos">
+            <h3 class="resource-section-title">
+              <span class="section-icon" aria-hidden="true">🎬</span>
+              Videos ({{ len $videos }})
+            </h3>
+            
+            <div class="video-grid">
+              {{ range $videos }}
+                <div class="video-item" data-component="video-item">
+                  <div class="video-container">
+                    <video controls 
+                           class="video-player"
+                           preload="metadata">
+                      <source src="{{ .RelPermalink }}" type="{{ .MediaType }}">
+                      <p>Your browser doesn't support HTML5 video. 
+                         <a href="{{ .RelPermalink }}">Download the video</a> instead.
+                      </p>
+                    </video>
+                  </div>
+                  
+                  <div class="video-meta">
+                    <h4 class="video-title">{{ .Title | default .Name }}</h4>
+                    {{ with .Params.description }}
+                      <p class="video-description">{{ . }}</p>
+                    {{ end }}
+                    <p class="video-details">
+                      {{ .MediaType.SubType | upper }}
+                      {{ with .Params.duration }} • {{ . }}{{ end }}
                     </p>
                   </div>
                 </div>
-                <a href="{{ .RelPermalink }}" 
-                   class="ml-4 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-brand hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand transition-colors">
-                  View
-                </a>
-              </div>
-            {{- end -}}
-          </div>
-        </div>
-      {{- end -}}
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+        
+        {{/* Other files section */}}
+        {{ if $others }}
+          <section class="resource-section resource-section--other">
+            <h3 class="resource-section-title">
+              <span class="section-icon" aria-hidden="true">📁</span>
+              Other Files ({{ len $others }})
+            </h3>
+            
+            <div class="file-list">
+              {{ range $others }}
+                <div class="file-item" data-component="file-item">
+                  <div class="file-info">
+                    <span class="file-icon" aria-hidden="true">📄</span>
+                    <div class="file-content">
+                      <h4 class="file-title">{{ .Title | default .Name }}</h4>
+                      {{ with .Params.description }}
+                        <p class="file-description">{{ . }}</p>
+                      {{ end }}
+                      <p class="file-meta">
+                        {{ .MediaType.Type | upper }}/{{ .MediaType.SubType | upper }}
+                        {{ with .Params.size }} • {{ . }}{{ end }}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="file-actions">
+                    <a href="{{ .RelPermalink }}" 
+                       class="file-action file-action--view"
+                       aria-label="Open {{ .Name }}">
+                      <span class="action-icon" aria-hidden="true">👁️</span>
+                      <span class="action-text">View</span>
+                    </a>
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+        
+      </div>
     </aside>
-  {{- end -}}
-{{- end -}}
+  {{ end }}
+{{ end }}

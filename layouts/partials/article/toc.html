@@ -1,23 +1,98 @@
-{{- if .Params.notebook_path -}}
-    {{- $notebookPath := .Params.notebook_path -}}
-    {{- with resources.Get $notebookPath -}}
-        {{- $resource := . -}}
-        {{- $content := $resource.Content | safeHTML -}}
-        {{- with $content | transform.Unmarshal -}}
-            {{- $decodedNotebook := . -}}
-            <div id="tocContainer" class="hidden toc sticky top-20 h-[calc(100vh-6rem)] overflow-y-auto transition-all duration-300" data-component="article-toc">
-                <nav id="TableOfContents" class="toc__nav" data-component="article-toc">
-                    <ul>
-                        {{- template "toc-items" (dict "level" 1 "items" $decodedNotebook.cells) -}}
-                    </ul>
-                </nav>
-            </div>
-        {{- end -}}
-    {{- end -}}
-{{- else -}}
-    <div id="tocContainer" class="hidden toc sticky top-20 h-[calc(100vh-6rem)] overflow-y-auto transition-all duration-300" data-component="article-toc"> 
-        <nav id="TableOfContents" class="toc__nav" data-component="article-toc">
-            {{ .TableOfContents }}
-        </nav>
+{{/* Table of Contents Component */}}
+
+{{ if .TableOfContents }}
+  <nav class="article-toc" 
+       aria-label="Table of contents"
+       data-component="article-toc">
+    
+    <header class="article-toc-header">
+      <h2 class="article-toc-title">Contents</h2>
+      
+      {{/* TOC controls */}}
+      <div class="article-toc-controls">
+        
+        {{/* Collapse/expand toggle */}}
+        <button type="button" 
+                class="toc-toggle"
+                aria-expanded="true"
+                aria-controls="toc-content"
+                aria-label="Toggle table of contents"
+                data-toc-toggle>
+          <span class="toc-toggle-icon" aria-hidden="true">−</span>
+        </button>
+        
+        {{/* Reading progress indicator */}}
+        {{ if site.Params.article.toc.showProgress }}
+          <div class="reading-progress" 
+               data-component="reading-progress"
+               aria-label="Reading progress"
+               role="progressbar"
+               aria-valuemin="0"
+               aria-valuemax="100"
+               aria-valuenow="0">
+            <div class="reading-progress-bar"></div>
+            <span class="reading-progress-text sr-only">0% complete</span>
+          </div>
+        {{ end }}
+        
+      </div>
+    </header>
+    
+    {{/* TOC content */}}
+    <div id="toc-content" 
+         class="article-toc-content"
+         data-toc-content>
+      
+      {{/* Handle notebook TOC differently */}}
+      {{ if .Params.notebook_path }}
+        {{ $notebookPath := .Params.notebook_path }}
+        {{ with resources.Get $notebookPath }}
+          {{ $resource := . }}
+          {{ $content := $resource.Content | safeHTML }}
+          {{ with $content | transform.Unmarshal }}
+            {{ $decodedNotebook := . }}
+            <ol class="toc-list">
+              {{ template "notebook-toc-items" (dict "level" 1 "items" $decodedNotebook.cells) }}
+            </ol>
+          {{ end }}
+        {{ end }}
+      {{ else }}
+        {{/* Standard markdown TOC */}}
+        <div class="toc-markdown">
+          {{ .TableOfContents }}
+        </div>
+      {{ end }}
+      
     </div>
-{{- end -}}
+    
+    {{/* TOC footer with scroll-to-top */}}
+    <footer class="article-toc-footer">
+      <button type="button" 
+              class="scroll-to-top"
+              onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+              aria-label="Scroll to top of page">
+        <span class="scroll-icon" aria-hidden="true">↑</span>
+        <span class="scroll-text">Top</span>
+      </button>
+    </footer>
+    
+  </nav>
+{{ end }}
+
+{{/* Template for notebook TOC items */}}
+{{ define "notebook-toc-items" }}
+  {{ range $index, $cell := .items }}
+    {{ if eq $cell.cell_type "markdown" }}
+      {{ $source := index $cell.source 0 }}
+      {{ if hasPrefix $source "#" }}
+        <li class="toc-item toc-item--level-{{ .level }}">
+          <a href="#cell-{{ $index }}" 
+             class="toc-link"
+             data-cell-id="{{ $index }}">
+            {{ $source | replaceRE "^#+\\s*" "" | truncate 50 }}
+          </a>
+        </li>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
