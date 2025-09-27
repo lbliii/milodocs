@@ -2,12 +2,20 @@
 {{/* Build CSS resources array */}}
 {{- $cssResources := slice -}}
 
-{{/* Add main CSS */}}
-{{- $mainCSS := resources.Get "css/main.css" -}}
+{{/* Add main CSS - Use Hugo's native PostCSS processing for Tailwind */}}
+{{- $mainCSS := resources.Get "css/src/input.css" -}}
 {{- if $mainCSS -}}
-  {{- $cssResources = $cssResources | append $mainCSS -}}
+  {{/* Use Hugo's native PostCSS processing */}}
+  {{- $processedCSS := $mainCSS | css.PostCSS -}}
+  {{- $cssResources = $cssResources | append $processedCSS -}}
 {{- else -}}
-  {{- warnf "CSS: main.css not found" -}}
+  {{/* Fallback to pre-compiled CSS if PostCSS source not available */}}
+  {{- $fallbackCSS := resources.Get "css/main.css" -}}
+  {{- if $fallbackCSS -}}
+    {{- $cssResources = $cssResources | append $fallbackCSS -}}
+  {{- else -}}
+    {{- warnf "CSS: Neither src/input.css nor main.css found" -}}
+  {{- end -}}
 {{- end -}}
 
 {{/* Environment-specific resource loading with advanced optimization */}}
