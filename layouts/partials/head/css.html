@@ -2,19 +2,21 @@
 {{/* Build CSS resources array */}}
 {{- $cssResources := slice -}}
 
-{{/* Add main CSS - Use Hugo's native PostCSS processing for Tailwind */}}
-{{- $mainCSS := resources.Get "css/src/input.css" -}}
+{{/* Add main CSS - Use Hugo's native TailwindCSS processing */}}
+{{- $mainCSS := resources.Get "css/main.css" -}}
 {{- if $mainCSS -}}
-  {{/* Use Hugo's native PostCSS processing */}}
-  {{- $processedCSS := $mainCSS | css.PostCSS -}}
+  {{/* Use Hugo's native TailwindCSS v4 processing */}}
+  {{- $opts := dict "minify" (not hugo.IsDevelopment) -}}
+  {{- $processedCSS := $mainCSS | css.TailwindCSS $opts -}}
   {{- $cssResources = $cssResources | append $processedCSS -}}
 {{- else -}}
-  {{/* Fallback to pre-compiled CSS if PostCSS source not available */}}
-  {{- $fallbackCSS := resources.Get "css/main.css" -}}
+  {{/* Fallback to legacy CSS processing if TailwindCSS source not available */}}
+  {{- $fallbackCSS := resources.Get "css/src/input.css" -}}
   {{- if $fallbackCSS -}}
-    {{- $cssResources = $cssResources | append $fallbackCSS -}}
+    {{- $processedCSS := $fallbackCSS | css.PostCSS -}}
+    {{- $cssResources = $cssResources | append $processedCSS -}}
   {{- else -}}
-    {{- warnf "CSS: Neither src/input.css nor main.css found" -}}
+    {{- warnf "CSS: Neither main.css nor src/input.css found" -}}
   {{- end -}}
 {{- end -}}
 

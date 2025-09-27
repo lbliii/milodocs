@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ or site.Language.LanguageCode site.Language.Lang }}" dir="{{ or site.Language.LanguageDirection `ltr` }}" class="no-js {{ if eq (site.Params.theme.mode | default "dark") "dark" }}dark{{ end }}">
 <head>
-  {{ partial "head.html" . }}
+  {{ with (templates.Defer (dict "key" "global")) }}
+    {{ partial "head.html" . }}
+  {{ end }}
   {{ block "head-extra" . }}{{ end }}
 </head>
 <body class="bg-bg-primary antialiased" 
